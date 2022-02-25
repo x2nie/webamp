@@ -38,7 +38,7 @@ export default class ColorThemesList extends GuiObj {
     this._select.style.height = "100%";
     this._select.style.color = "gold";
     this._select.style.backgroundColor = "transparent";
-    this._select.style.backgroundImage = UI_ROOT.getBitmap('studio.BaseTexture')._getBackgrondImageCSSAttribute();
+    this._select.style.backgroundImage = UI_ROOT.getBitmap('studio.list.background')._getBackgrondImageCSSAttribute();
 
     // Overflow
     this._select.style.overflowY = "scroll";

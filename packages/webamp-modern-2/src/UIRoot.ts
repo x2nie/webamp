@@ -64,7 +64,8 @@ export class UIRoot {
       (bitmap) => bitmap._id.toLowerCase() === lowercaseId
     );
 
-    assert(found != null, `Could not find bitmap with id ${id}.`);
+    if(found == null) console.warn(`Could not find bitmap with id ${id}.`);
+    // assert(found != null, `Could not find bitmap with id ${id}.`);
     return found;
   }
 
@@ -83,7 +84,8 @@ export class UIRoot {
       (color) => color._id.toLowerCase() === lowercaseId
     );
 
-    assert(found != null, `Could not find color with id ${id}.`);
+    //assert(found != null, `Could not find color with id ${id}.`);
+    if(found == null) console.warn(`Could not find color with id ${id}.`);
     return found;
   }
 
@@ -145,7 +147,7 @@ export class UIRoot {
     // this._activeGammaSet = Array.from(this._gammaSets.values())[0] ?? null;
     // this._setCssVars();
     // TODO: Get latest picked color scheme
-    const [other, firstName] = this._gammaSets.keys();
+    const [firstName] = this._gammaSets.keys();
     // this._activeGammaSetName = firstName;
     this.enableGammaSet(firstName)
   }
@@ -180,11 +182,22 @@ export class UIRoot {
     }
     this._setScrollbarsCss()
   }
+
   _setScrollbarsCss() {
     const self = this;
     function _bitmapVar(id: string){
       const bitmap = self.getBitmap(id);
+      if(!bitmap){
+        return `none /* not found bitmap: ${id} */`
+      }
       return `var(${bitmap.getCSSVar()})`
+    }
+    function _color(id: string){
+      const color = self.getColor('studio.list.text');
+      if(!color){
+        return `inherit /* not found color: ${id} */`
+      }
+      return color.getRgb()
     }
     const scrollbarCss = `
     /* Let's get this party started */
@@ -194,9 +207,8 @@ export class UIRoot {
 
     /* Track */
     ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-        /* -webkit-border-radius: 10px; */
-        /* border-radius: 10px; */
+        background-image: ${_bitmapVar('studio.scrollbar.vertical.background')};
+        background-position: top -55px left -39px;
     }
     ::-webkit-scrollbar-button {
         background-image: ${_bitmapVar('studio.scrollbar.vertical.background')};
@@ -263,6 +275,11 @@ export class UIRoot {
     ::-webkit-scrollbar-corner {
         background: transparent;
     }
+    /* ---------- EOF SCROLLBAR ------------ */
+
+    select option {
+      color: ${_color('studio.list.text')};
+    }
 
     `
     const scrollbarCssEl = document.getElementById('scrollbar-css');
@@ -303,8 +320,16 @@ export class UIRoot {
       case "eject":
         this.audio.eject();
         break;
+      case "toggle":
+        const container = findLast(this.getContainers(), ct => ct._id == param);
+        console.log(container._layouts)
+        container._defaultVisible = true;
+        container.setLayout(container._layouts[0]._id);
+        this._div.appendChild(container.getDiv())
+        // this.audio.eject();
+        break;
       default:
-        assume(false, `Unknown global action: ${action}`);
+        assume(false, `Unknown global action: ${action} ,param: ${param}, actionTarget: ${actionTarget}`);
     }
   }
   draw() {

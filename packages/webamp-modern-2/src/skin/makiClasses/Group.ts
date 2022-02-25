@@ -113,6 +113,9 @@ export default class Group extends GuiObj {
     }
     if (this._background != null) {
       const bitmap = UI_ROOT.getBitmap(this._background);
+      if(!bitmap){
+        return 50;
+      }
       return bitmap.getHeight();
     }
     return super.getheight();
