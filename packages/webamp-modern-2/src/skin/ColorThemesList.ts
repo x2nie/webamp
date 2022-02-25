@@ -36,8 +36,10 @@ export default class ColorThemesList extends GuiObj {
     this._select.style.position = "absolute";
     this._select.style.width = "100%";
     this._select.style.height = "100%";
-    this._select.style.background = "transparent";
     this._select.style.color = "gold";
+    this._select.style.backgroundColor = "transparent";
+    this._select.style.backgroundImage = UI_ROOT.getBitmap('studio.BaseTexture')._getBackgrondImageCSSAttribute();
+
     // Overflow
     this._select.style.overflowY = "scroll";
     if(this._nohscroll){
@@ -46,19 +48,11 @@ export default class ColorThemesList extends GuiObj {
       this._select.style.overflowX = "scroll";
     }
 
-    // var firstOption : HTMLElement = null;
-    // const currentGamma = UI_ROOT._activeGammaSet || UI_ROOT._gammaSets.keys()[0];
     for (const key of UI_ROOT._gammaSets.keys()) {
       const option = document.createElement("option");
       option.value = key;
       option.innerText = key;
-      option.style.width = "200%";
-      if(UI_ROOT._activeGammaSetName===key){
-        // option.selected = true;
-        option.setAttribute('selected', 'selected');
-      }
       this._select.appendChild(option);
-      // if(!firstOption){firstOption=option}
     }
     this._select.value = UI_ROOT._activeGammaSetName;
 
@@ -98,7 +92,6 @@ export default class ColorThemesList extends GuiObj {
         const selected = this._select.value;
         if (selected != null) {
           UI_ROOT.enableGammaSet(selected);
-          // this._select.value = UI_ROOT._activeGammaSetName;
           this._renderBoldSelection()
         }
         return true;
