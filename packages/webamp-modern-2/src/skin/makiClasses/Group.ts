@@ -10,11 +10,13 @@ export default class Group extends GuiObj {
   _instanceId: string;
   _background: string;
   _desktopAlpha: boolean;
+  _relatw: boolean = false;
+  _relath: boolean = false;
   _drawBackground: boolean = true;
-  _minimumHeight: number;
-  _maximumHeight: number;
-  _minimumWidth: number;
-  _maximumWidth: number;
+  _minimumHeight: number = 0;
+  _maximumHeight: number = 0;
+  _minimumWidth: number = 0;
+  _maximumWidth: number = 0;
   _systemObjects: SystemObject[] = [];
   _children: GuiObj[] = [];
 
@@ -34,6 +36,12 @@ export default class Group extends GuiObj {
       case "drawbackground":
         this._drawBackground = Utils.toBool(value);
         this._renderBackground();
+        break;
+      case "relatw":
+        this._relatw = Utils.toBool(value);
+        break;
+      case "relath":
+        this._relath = Utils.toBool(value);
         break;
       case "minimum_h":
         this._minimumHeight = Utils.num(value);
@@ -108,8 +116,11 @@ export default class Group extends GuiObj {
 
   // This shadows `getheight()` on GuiObj
   getheight(): number {
-    if (this._height) {
-      return this._height;
+    if (this._height || this._minimumHeight || this._maximumHeight) {
+      // return Math.min( Math.max(this._height || this._minimumHeight), this._maximumHeight);
+      let h = Math.max(this._height || this._minimumHeight);
+      h = Math.min(h, this._maximumHeight || h);
+      return h
     }
     if (this._background != null) {
       const bitmap = UI_ROOT.getBitmap(this._background);
@@ -123,8 +134,11 @@ export default class Group extends GuiObj {
 
   // This shadows `getwidth()` on GuiObj
   getwidth(): number {
-    if (this._width) {
-      return this._width;
+    if (this._width || this._minimumWidth || this._maximumWidth) {
+      // return Math.min( Math.max(this._width, this._minimumWidth), this._maximumWidth);
+      let w = Math.max(this._width, this._minimumWidth);
+      w = Math.min(w, this._maximumWidth || w);
+      return w
     }
     if (this._background != null) {
       const bitmap = UI_ROOT.getBitmap(this._background);
@@ -149,8 +163,10 @@ export default class Group extends GuiObj {
     // It seems Groups are not responsive to click events.
     this._div.style.pointerEvents = "none";
     this._div.style.overflow = "hidden";
-    this._div.style.height = Utils.px(this._maximumHeight);
-    this._div.style.width = Utils.px(this._maximumWidth);
+    // this._div.style.height = Utils.px(this._maximumHeight);
+    // this._div.style.width = Utils.px(this._maximumWidth);
+    this._div.style.height = this._relath? Utils.relat(this._height) : Utils.px(this.getheight());
+    this._div.style.width = this._relatw? Utils.relat(this._width): Utils.px(this.getwidth());
     this._renderBackground();
     for (const child of this._children) {
       child.draw();

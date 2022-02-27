@@ -13,7 +13,7 @@ export default class Container extends XmlObj {
   static GUID = "e90dc47b4ae7840d0b042cb0fcf775d2";
   _layouts: Layout[] = [];
   _activeLayout: Layout | null = null;
-  _defaultVisible: boolean = true;
+  _visible: boolean = true;
   _id: string;
   _div: HTMLDivElement = document.createElement("div");
   constructor() {
@@ -30,7 +30,7 @@ export default class Container extends XmlObj {
         this._id = value.toLowerCase();
         break;
       case "default_visible":
-        this._defaultVisible = toBool(value);
+        this._visible = toBool(value);
         break;
       default:
         return false;
@@ -58,7 +58,22 @@ export default class Container extends XmlObj {
   getHeight(): number {
     return this._activeLayout.getheight();
   }
+  show() {
+    if(!this._activeLayout){
+      this.switchToLayout(this._layouts[0]._id);
+    }
+    this._visible = true;
+    this._renderLayout()
+  }
+  hide() {
+    this._visible = false;
+    this._renderLayout()
+  }
+  toggle(){
+    if(!this._visible) this.show()
+    else this.hide()
 
+  }
   center() {
     const height = document.documentElement.clientHeight;
     const width = document.documentElement.clientWidth;
@@ -85,6 +100,15 @@ export default class Container extends XmlObj {
     throw new Error(`Could not find a container with the id; "${layoutId}"`);
   }
 
+  /** 
+  * @ret Layout
+  */
+  getCurLayout(): Layout {
+    return this._activeLayout;
+  }
+
+
+
   addLayout(layout: Layout) {
     layout.setParentContainer(this);
     this._layouts.push(layout);
@@ -97,9 +121,10 @@ export default class Container extends XmlObj {
     removeAllChildNodes(this._div);
   }
 
-  setLayout(id: string) {
-    const layout = this.getlayout(id);
-    assert(layout != null, `Could not find layout with id "${id}".`);
+  switchToLayout(layout_id: string) {
+  // switchToLayout(id: string) {
+    const layout = this.getlayout(layout_id);
+    assert(layout != null, `Could not find layout with id "${layout_id}".`);
     UI_ROOT.vm.dispatch(this, "onswitchtolayout", [
       { type: "OBJECT", value: this._activeLayout },
       { type: "OBJECT", value: layout },
@@ -111,7 +136,6 @@ export default class Container extends XmlObj {
       { type: "OBJECT", value: layout },
     ]);
   }
-
   dispatchAction(
     action: string,
     param: string | null,
@@ -119,7 +143,7 @@ export default class Container extends XmlObj {
   ) {
     switch (action) {
       case "SWITCH":
-        this.setLayout(param);
+        this.switchToLayout(param);
         break;
       default:
         UI_ROOT.dispatch(action, param, actionTarget);
@@ -127,7 +151,7 @@ export default class Container extends XmlObj {
   }
 
   _renderLayout() {
-    if (this._defaultVisible && this._activeLayout) {
+    if (this._visible && this._activeLayout) {
       this._activeLayout.draw();
       this._div.appendChild(this._activeLayout.getDiv());
       // this.center();

@@ -102,6 +102,7 @@ for (const cls of classes) {
     }
     const methodDiv = document.createElement("span");
     methodDiv.classList.add("method");
+    console.log(`inspecting: ${cls.name} @ ${method.name} :&gt; ${method.status}`)
     methodDiv.innerText = method.name;
     methodDiv.title = method.name;
     switch (method.status) {

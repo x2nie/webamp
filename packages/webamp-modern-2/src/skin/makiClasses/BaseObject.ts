@@ -4,6 +4,7 @@ import UI_ROOT from "../../UIRoot";
  * This is the base class from which all other classes inherit.
  */
 export default class BaseObject {
+  static GUID = "516549710D874a5191E3A6B53235F3E7";
   constructor() {
     UI_ROOT.addObject(this);
   }
@@ -13,6 +14,7 @@ export default class BaseObject {
    * @ret The class name.
    */
   getClassName(): string {
+    return this.constructor.name;
     throw new Error("Unimplemented");
   }
 

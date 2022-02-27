@@ -1,8 +1,9 @@
-import GuiObj from "./makiClasses/GuiObj";
+// import GuiObj from "./makiClasses/GuiObj";
+import Group from "./makiClasses/Group";
 import UI_ROOT from "../UIRoot";
 import { removeAllChildNodes, toBool } from "../utils";
 
-export default class ColorThemesList extends GuiObj {
+export default class ColorThemesList extends Group {
   _select: HTMLSelectElement = document.createElement("select");
   _nohscroll: boolean = false;
   _nocolheader: boolean = false;
@@ -56,7 +57,7 @@ export default class ColorThemesList extends GuiObj {
     }
     this._select.value = UI_ROOT._activeGammaSetName;
 
-    window.UI_ROOT = UI_ROOT;
+    // window.UI_ROOT = UI_ROOT;
     console.log('_activeGammaSet',UI_ROOT._gammaSets, UI_ROOT._activeGammaSet , UI_ROOT._gammaSets.keys()[0])
 
     if(this._nocolheader){

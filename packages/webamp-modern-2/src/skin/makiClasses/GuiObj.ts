@@ -9,8 +9,8 @@ export default class GuiObj extends XmlObj {
   static GUID = "4ee3e1994becc636bc78cd97b028869c";
   _parent: Group;
   _id: string;
-  _width: number;
-  _height: number;
+  _width: number = 0;
+  _height: number = 0;
   _x: number = 0;
   _y: number = 0;
   _droptarget: string;
@@ -83,10 +83,12 @@ export default class GuiObj extends XmlObj {
         this._id = value.toLowerCase();
         break;
       case "w":
+      case "default_w":
         this._width = num(value);
         this._renderWidth();
         break;
       case "h":
+      case "default_h":
         this._height = num(value);
         this._renderHeight();
         break;

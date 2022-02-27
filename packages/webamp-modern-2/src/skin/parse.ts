@@ -22,6 +22,7 @@ import BitmapFont from "./BitmapFont";
 import Color from "./Color";
 import GammaGroup from "./GammaGroup";
 import ColorThemesList from "./ColorThemesList";
+import WasabiStandardFrameNostatus from "./WasabiStandardFrameNostatus";
 import { UIRoot } from "../UIRoot";
 
 class ParserContext {
@@ -142,7 +143,8 @@ export default class SkinParser {
         return this.colorThemesList(node);
       case "status":
         return this.status(node);
-      case "wasabi:standardframe:nostatus":
+        case "wasabi:standardframe:nostatus":
+        return this.wasabiStandardFrameNostatus(node);
       case "wasabi:mainframe:nostatus":
       case "nstatesbutton":
       case "componentbucket":
@@ -469,6 +471,39 @@ export default class SkinParser {
       return;
     }
     parentGroup.addChild(list);
+  }
+
+  async wasabiStandardFrameNostatus(node: XmlElement) {
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <status> XML node."
+    // );
+
+    // const group = new WasabiStandardFrameNostatus();
+    // status.setXmlAttributes(node.attributes);
+    node.attributes.id = node.attributes.content;
+    await this.group(node);
+
+
+    // const id = node.attributes.content;
+    // const groupDef = this._uiRoot.getGroupDef(id);
+    // if (groupDef != null) {
+    //   group.setXmlAttributes(groupDef.attributes);
+    //   const previousParentGroup = this._context.parentGroup;
+    //   this._context.parentGroup = group;
+    //   await this.traverseChildren(groupDef);
+    //   this._context.parentGroup = previousParentGroup;
+    //   // TODO: Maybe traverse groupDef's children?
+    // }
+
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Status id="${status._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(status);
   }
 
   async layoutStatus(node: XmlElement) {
