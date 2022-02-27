@@ -322,10 +322,10 @@ export class UIRoot {
         break;
       case "toggle":
         const container = findLast(this.getContainers(), ct => ct._id == param);
-        console.log(container._layouts)
+        console.log(container._id, container._layouts)
         container._defaultVisible = true;
         container.setLayout(container._layouts[0]._id);
-        this._div.appendChild(container.getDiv())
+        // this._div.appendChild(container.getDiv())
         // this.audio.eject();
         break;
       default:
