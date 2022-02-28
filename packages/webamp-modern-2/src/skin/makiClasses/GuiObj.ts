@@ -616,7 +616,7 @@ export default class GuiObj extends XmlObj {
       bitmap.setAsBackground(this._div);
     } else {
       this._div.style.setProperty(`--background-image`, "none");
-      this._div.style.setProperty(`--background-position`, "none");
+      // this._div.style.setProperty(`--background-position`, "none");
     }
   }
 

@@ -47,7 +47,7 @@ export default class GammaGroup {
   }
 
   // TODO: Figure out how to actually implement this.
-  transformImage(img: HTMLImageElement): string {
+  transformImage(img: HTMLImageElement, x:number, y:number, w:number, h:number): string {
     // Toggle this to play with gl transforming
     if (false) {
       return glTransformImage(img);
@@ -56,11 +56,11 @@ export default class GammaGroup {
       return (Number(v) / 4096) +1.0;
     });
     const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+    canvas.width = w || img.width;
+    canvas.height = h || img.height;
     const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    const imageData = ctx.getImageData(0, 0, img.width, img.height);
+    ctx.drawImage(img, x ? -x : 0, y ? -y : 0);
+    const imageData = ctx.getImageData(0, 0, w || img.width, h || img.height);
     const data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
       if (this._boost) {

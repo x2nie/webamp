@@ -165,18 +165,24 @@ export class UIRoot {
     for (const bitmap of this._bitmaps) {
       const img = bitmap.getImg();
       const groupId = bitmap.getGammaGroup();
-      if (!map.has(img)) {
-        map.set(img, new Map());
-      }
-      const imgCache = map.get(img);
-      if (!imgCache.has(groupId)) {
+      // if (!map.has(img)) {
+      //   map.set(img, new Map());
+      // }
+      // const imgCache = map.get(img);
+      // if (!imgCache.has(groupId)) {
         const gammaGroup =
           groupId != null ? this._getGammaGroup(groupId) : null;
         const url =
-          gammaGroup == null ? img.src : gammaGroup.transformImage(img);
-        imgCache.set(groupId, url);
-      }
-      const url = imgCache.get(groupId);
+          gammaGroup == null ? img.src : gammaGroup.transformImage(
+            img,
+            bitmap._x,
+            bitmap._y,
+            bitmap._width,
+            bitmap._height
+            );
+        // imgCache.set(groupId, url);
+      // }
+      // const url = imgCache.get(groupId);
       // TODO: Techincally we only need one per image/gammagroup.
       this._div.style.setProperty(bitmap.getCSSVar(), `url(${url})`);
     }
@@ -207,35 +213,22 @@ export class UIRoot {
 
     /* Track */
     ::-webkit-scrollbar-track {
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.button')};
-        background: transparent;
-        background-position: top -55px left -39px;
+        background-image: ${_bitmapVar('studio.scrollbar.vertical.background')};
     }
     ::-webkit-scrollbar-button {
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.button')};
-        background-position: top -37px left 0;
+        background-image: ${_bitmapVar('studio.scrollbar.vertical.left')};
       }
-      ::-webkit-scrollbar-button:vertical {
+    ::-webkit-scrollbar-button:vertical {
         height: 18px;
     }
     ::-webkit-scrollbar-button:vertical:increment {
-        background-position-y: -96px;
+      background-image: ${_bitmapVar('studio.scrollbar.vertical.right')};
     }
     
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        /* -webkit-border-radius: 10px; */
-        /* border-radius: 10px; */
-        /* background: rgba(255,0,0,0.8);  */
-        /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);  */
-        background-color: fuchsia;
-        
         background-image: ${_bitmapVar('studio.scrollbar.vertical.button')};
-        background-position: top -55px left 0;
-        /* background-size: 13px 35px; */
-        /* background-size-y: 35px; */
-        /* background-clip: border-box; */
-        background-repeat: repeat;
+        /*background-repeat: repeat;*/
     }
     ::-webkit-scrollbar-thumb {
         max-height: 42px;
@@ -261,17 +254,21 @@ export class UIRoot {
     ::-webkit-scrollbar:horizontal {
         height: 13px;
     }
+    /* Track */
+    ::-webkit-scrollbar-track:horizontal {
+        background-image: ${_bitmapVar('studio.scrollbar.horizontal.background')};
+    }
     /* Handle */
     ::-webkit-scrollbar-thumb:horizontal {
-        background-position: top -13px left -57px;
-
+        background-image: ${_bitmapVar('studio.scrollbar.horizontal.button')};
+        
     }
     ::-webkit-scrollbar-button:horizontal {
-        background-position: top -13px left -40px;
+        background-image: ${_bitmapVar('studio.scrollbar.horizontal.left')};
         width: 17px;
     }
     ::-webkit-scrollbar-button:horizontal:increment {
-        background-position: top -13px left -98px;
+        background-image: ${_bitmapVar('studio.scrollbar.horizontal.right')};
     }
     ::-webkit-scrollbar-corner {
         background: transparent;

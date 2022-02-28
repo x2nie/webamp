@@ -117,10 +117,10 @@ export default class Bitmap {
       `--${prefix}background-image`,
       this._getBackgrondImageCSSAttribute()
     );
-    div.style.setProperty(
-      `--${prefix}background-position`,
-      this._getBackgrondPositionCSSAttribute()
-    );
+    // div.style.setProperty(
+    //   `--${prefix}background-position`,
+    //   this._getBackgrondPositionCSSAttribute()
+    // );
   }
 
   setAsBackground(div: HTMLDivElement) {
