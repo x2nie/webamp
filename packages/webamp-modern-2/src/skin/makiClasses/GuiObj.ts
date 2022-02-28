@@ -13,6 +13,16 @@ export default class GuiObj extends XmlObj {
   _height: number = 0;
   _x: number = 0;
   _y: number = 0;
+  _minimumHeight: number = 0;
+  _maximumHeight: number = 0;
+  _minimumWidth: number = 0;
+  _maximumWidth: number = 0;
+
+  _relatx: boolean = false;
+  _relaty: boolean = false;
+  _relatw: boolean = false;
+  _relath: boolean = false;
+
   _droptarget: string;
   _visible: boolean = true;
   _alpha: number = 255;
@@ -100,6 +110,34 @@ export default class GuiObj extends XmlObj {
         this._y = num(value) ?? 0;
         this._renderY();
         break;
+
+      case "minimum_h":
+        this._minimumHeight = Utils.num(value);
+        break;
+      case "minimum_w":
+        this._minimumWidth = Utils.num(value);
+        break;
+      case "maximum_h":
+        this._maximumHeight = Utils.num(value);
+        break;
+      case "maximum_w":
+        this._maximumWidth = Utils.num(value);
+        break;
+  
+
+      case "relatw":
+        this._relatw = toBool(value);
+        break;
+      case "relath":
+        this._relath = toBool(value);
+        break;
+      case "relatx":
+        this._relatx = toBool(value);
+        break;
+      case "relaty":
+        this._relaty = toBool(value);
+        break;
+  
       case "droptarget":
         this._droptarget = value;
         break;
@@ -182,8 +220,12 @@ export default class GuiObj extends XmlObj {
       `Expected GUIObj to have a height in ${this.getId()}.`
     );
     */
-    // FIXME
-    return this._height ?? 0;
+    if (this._height || this._minimumHeight || this._maximumHeight) {
+      // return Math.min( Math.max(this._height || this._minimumHeight), this._maximumHeight);
+      let h = Math.max(this._height || this._minimumHeight);
+      h = Math.min(h, this._maximumHeight || h);
+      return h
+    }
   }
 
   /**
@@ -198,6 +240,13 @@ export default class GuiObj extends XmlObj {
       `Expected GUIObj to have a width in ${this.getId()}.`
     );
     */
+    if (this._width || this._minimumWidth || this._maximumWidth) {
+      // return Math.min( Math.max(this._width, this._minimumWidth), this._maximumWidth);
+      let w = Math.max(this._width, this._minimumWidth);
+      w = Math.min(w, this._maximumWidth || w);
+      return w
+    }
+
     return this._width ?? 0;
   }
 
@@ -216,6 +265,15 @@ export default class GuiObj extends XmlObj {
     this._height = h;
     this._renderDimensions();
   }
+
+  getGuiW(): number { return this._width; }
+  getGuiH(): number { return this._height; }
+  getGuiX(): number { return this._x; }
+  getGuiY(): number { return this._y; }
+  getGuiRelatW(): number { return this._relatw ? 1 : 0; }
+  getGuiRelatH(): number { return this._relath ? 1 : 0; }
+  getGuiRelatX(): number { return this._relatx ? 1 : 0; }
+  getGuiRelatY(): number { return this._relaty ? 1 : 0; }
 
   /**
    * Hookable. Event happens when the left mouse

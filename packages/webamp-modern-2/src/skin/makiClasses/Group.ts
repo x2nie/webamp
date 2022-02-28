@@ -10,13 +10,7 @@ export default class Group extends GuiObj {
   _instanceId: string;
   _background: string;
   _desktopAlpha: boolean;
-  _relatw: boolean = false;
-  _relath: boolean = false;
   _drawBackground: boolean = true;
-  _minimumHeight: number = 0;
-  _maximumHeight: number = 0;
-  _minimumWidth: number = 0;
-  _maximumWidth: number = 0;
   _systemObjects: SystemObject[] = [];
   _children: GuiObj[] = [];
 
@@ -36,24 +30,6 @@ export default class Group extends GuiObj {
       case "drawbackground":
         this._drawBackground = Utils.toBool(value);
         this._renderBackground();
-        break;
-      case "relatw":
-        this._relatw = Utils.toBool(value);
-        break;
-      case "relath":
-        this._relath = Utils.toBool(value);
-        break;
-      case "minimum_h":
-        this._minimumHeight = Utils.num(value);
-        break;
-      case "minimum_w":
-        this._minimumWidth = Utils.num(value);
-        break;
-      case "maximum_h":
-        this._maximumHeight = Utils.num(value);
-        break;
-      case "maximum_w":
-        this._maximumWidth = Utils.num(value);
         break;
       default:
         return false;
