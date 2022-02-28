@@ -112,16 +112,16 @@ export default class GuiObj extends XmlObj {
         break;
 
       case "minimum_h":
-        this._minimumHeight = Utils.num(value);
+        this._minimumHeight = num(value);
         break;
       case "minimum_w":
-        this._minimumWidth = Utils.num(value);
+        this._minimumWidth = num(value);
         break;
       case "maximum_h":
-        this._maximumHeight = Utils.num(value);
+        this._maximumHeight = num(value);
         break;
       case "maximum_w":
-        this._maximumWidth = Utils.num(value);
+        this._maximumWidth = num(value);
         break;
   
 
