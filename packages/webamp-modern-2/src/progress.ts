@@ -1,7 +1,7 @@
 // This module is imported early here in order to avoid a circular dependency.
 import { classResolver } from "./skin/resolver";
-import { normalizedObjects, getFormattedId } from "./maki/objects";
 import BaseObject from "./skin/makiClasses/BaseObject";
+import { normalizedObjects, getFormattedId } from "./maki/objects";
 // import { addDropHandler } from "./dropTarget";
 // import JSZip from "jszip";
 
@@ -52,7 +52,8 @@ const classes = [];
 for (const [key, obj] of Object.entries(normalizedObjects)) {
   const name = obj.name;
   const methods = [];
-  const klass = getClass(getFormattedId(key.toLowerCase()));
+  const klass = getClass(getFormattedId(key.toLowerCase())) || getClass(key.toLowerCase());
+  console.log('collecting:', key, getFormattedId(key.toLowerCase()), '=', obj.name, klass)
   for (const method of obj.functions) {
     const params = method.parameters.map(([type, name]) => name);
     const methodName = `${method.name}(${params.join(", ")})`;
@@ -63,7 +64,7 @@ for (const [key, obj] of Object.entries(normalizedObjects)) {
     } else if (klass == null) {
       methods.push({ name: methodName, status: "missing" });
     } else {
-      const impl = klass.prototype[method.name.toLowerCase()];
+      const impl = klass.prototype[method.name] || klass.prototype[method.name.toLowerCase()];
       if (impl == null) {
         methods.push({ name: methodName, status: "missing" });
       } else if (impl.length !== method.parameters.length) {
@@ -73,6 +74,7 @@ for (const [key, obj] of Object.entries(normalizedObjects)) {
       }
     }
   }
+  methods.sort(function(a,b){return a.name > b.name ? 1 :a.name < b.name? -1 : 0})
   classes.push({ name, methods });
 }
 
@@ -102,7 +104,7 @@ for (const cls of classes) {
     }
     const methodDiv = document.createElement("span");
     methodDiv.classList.add("method");
-    console.log(`inspecting: ${cls.name} @ ${method.name} :&gt; ${method.status}`)
+    // console.log(`inspecting: ${cls.name} @ ${method.name} :> ${method.status}`)
     methodDiv.innerText = method.name;
     methodDiv.title = method.name;
     switch (method.status) {

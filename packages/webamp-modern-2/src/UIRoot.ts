@@ -207,11 +207,12 @@ export class UIRoot {
 
     /* Track */
     ::-webkit-scrollbar-track {
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.background')};
+        background-image: ${_bitmapVar('studio.scrollbar.vertical.button')};
+        background: transparent;
         background-position: top -55px left -39px;
     }
     ::-webkit-scrollbar-button {
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.background')};
+        background-image: ${_bitmapVar('studio.scrollbar.vertical.button')};
         background-position: top -37px left 0;
       }
       ::-webkit-scrollbar-button:vertical {
@@ -229,7 +230,7 @@ export class UIRoot {
         /* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);  */
         background-color: fuchsia;
         
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.background')};
+        background-image: ${_bitmapVar('studio.scrollbar.vertical.button')};
         background-position: top -55px left 0;
         /* background-size: 13px 35px; */
         /* background-size-y: 35px; */
@@ -322,7 +323,7 @@ export class UIRoot {
         break;
       case "toggle":
         const container = findLast(this.getContainers(), ct => ct._id == param);
-        console.log(container._id, container._layouts)
+        // console.log(container._id, container._layouts)
         // container._defaultVisible = true;
         // container.setLayout(container._layouts[0]._id);
         container.toggle()

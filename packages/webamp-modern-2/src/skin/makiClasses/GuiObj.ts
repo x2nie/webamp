@@ -86,6 +86,10 @@ export default class GuiObj extends XmlObj {
     this._parent = group;
   }
 
+  getParent(): GuiObj {
+    return this._parent;
+  }
+
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
     switch (key) {
@@ -187,6 +191,9 @@ export default class GuiObj extends XmlObj {
     this._visible = false;
     this._renderVisibility();
   }
+  isVisible(): boolean {
+    return this._visible;
+  }
 
   /**
    * Get the Y position, in the screen, of the
@@ -274,7 +281,12 @@ export default class GuiObj extends XmlObj {
   getGuiRelatH(): number { return this._relath ? 1 : 0; }
   getGuiRelatX(): number { return this._relatx ? 1 : 0; }
   getGuiRelatY(): number { return this._relaty ? 1 : 0; }
+  getAutoWidth(): boolean { return this._relatw; }
+  getAutoHeight(): boolean { return this._relath; }
 
+  isActive(): boolean {
+    return this._div.matches(':focus')
+  }
   /**
    * Hookable. Event happens when the left mouse
    * button was previously down and is now up.
@@ -620,6 +632,7 @@ export default class GuiObj extends XmlObj {
   draw() {
     this._div.setAttribute("data-id", this.getId());
     this._div.setAttribute("data-obj-name", "GuiObj");
+    this._div.setAttribute("tabindex", "0");
     this._renderVisibility();
     this._div.style.position = "absolute";
     this._renderAlpha();
