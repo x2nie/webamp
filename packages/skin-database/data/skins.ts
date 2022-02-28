@@ -8,6 +8,7 @@ import * as S3 from "../s3";
 import * as CloudFlare from "../CloudFlare";
 import SkinModel from "./SkinModel";
 import UserContext from "./UserContext";
+import TweetModel from "./TweetModel";
 
 export const SKIN_TYPE = {
   CLASSIC: 1,
@@ -29,19 +30,16 @@ export async function addSkin({
   filePath,
   uploader,
   modern,
-  readmeText,
 }: {
   md5: string;
   filePath: string;
   uploader: string;
   modern: boolean;
-  readmeText: string | null;
 }) {
   await knex("skins").insert(
     {
       md5,
       skin_type: modern ? SKIN_TYPE.MODERN : SKIN_TYPE.CLASSIC,
-      readme_text: readmeText,
     },
     []
   );
@@ -158,36 +156,40 @@ type SearchIndex = {
   twitterLikes: number;
 };
 
-async function getSearchIndexes(md5s: string[]): Promise<SearchIndex[]> {
-  const skins = await knex("skins")
-    .leftJoin("tweets", "tweets.skin_md5", "=", "skins.md5")
-    .leftJoin("skin_reviews", "skin_reviews.skin_md5", "=", "skins.md5")
-    .leftJoin("files", "files.skin_md5", "=", "skins.md5")
-    .where("skin_type", SKIN_TYPE.CLASSIC)
-    .whereIn("md5", md5s)
-    .groupBy("skins.md5")
-    .select(
-      "skins.md5",
-      "skins.readme_text",
-      "tweets.likes",
-      "skin_reviews.review",
-      "files.file_path"
-    );
+async function getSearchIndexes(
+  ctx: UserContext,
+  md5s: string[]
+): Promise<SearchIndex[]> {
+  const skins = await Promise.all(
+    md5s.map((md5) => {
+      return SkinModel.fromMd5Assert(ctx, md5);
+    })
+  );
 
-  return skins.map((skin) => {
-    return {
-      objectID: skin.md5,
-      md5: skin.md5,
-      nsfw: skin.review === "NSFW",
-      readmeText: skin.readme_text ? truncate(skin.readme_text, 4800) : null,
-      fileName: path.basename(skin.file_path),
-      twitterLikes: Number(skin.likes || 0),
-    };
-  });
+  return Promise.all(
+    skins.map(async (skin) => {
+      const readmeText = await skin.getReadme();
+      const tweets = await skin.getTweets();
+      const likes = tweets.reduce((acc: number, tweet: TweetModel) => {
+        return Math.max(acc, tweet.getLikes());
+      }, 0);
+      return {
+        objectID: skin.getMd5(),
+        md5: skin.getMd5(),
+        nsfw: await skin.getIsNsfw(),
+        readmeText: readmeText ? truncate(readmeText, 4800) : null,
+        fileName: await skin.getFileName(),
+        twitterLikes: likes,
+      };
+    })
+  );
 }
 
-export async function updateSearchIndexs(md5s: string[]): Promise<any> {
-  const skinIndexes = await getSearchIndexes(md5s);
+export async function updateSearchIndexs(
+  ctx: UserContext,
+  md5s: string[]
+): Promise<any> {
+  const skinIndexes = await getSearchIndexes(ctx, md5s);
 
   const results = await searchIndex.partialUpdateObjects(skinIndexes, {
     createIfNotExists: true,
@@ -199,10 +201,14 @@ export async function updateSearchIndexs(md5s: string[]): Promise<any> {
   return results;
 }
 
-export async function updateSearchIndex(md5: string): Promise<any | null> {
-  return updateSearchIndexs([md5]);
+export async function updateSearchIndex(
+  ctx: UserContext,
+  md5: string
+): Promise<any | null> {
+  return updateSearchIndexs(ctx, [md5]);
 }
 
+// Note: This might leave behind some files in file_info.
 export async function deleteSkin(md5: string): Promise<void> {
   console.log(`Deleting skin ${md5}...`);
   console.log(`... sqlite "skins"`);
@@ -427,6 +433,61 @@ export async function getSkinToPostToInstagram(): Promise<string | null> {
   return skin.md5;
 }
 
+export async function getUnreviewedSkinCount(): Promise<number> {
+  const rows = await knex("skins")
+    .where({ skin_type: 1 })
+    .whereNotIn("md5", knex("skin_reviews").select("skin_md5"))
+    .count("*", { as: "unreviewed" });
+  return Number(rows[0].unreviewed);
+}
+
+export async function getApprovedSkinCount(): Promise<number> {
+  const row = await knex("skin_reviews")
+    .first(knex.raw(`COUNT(DISTINCT skin_md5) AS "approved_count"`))
+    .where({ review: "APPROVED" });
+  return Number(row.approved_count);
+}
+
+export async function getRejectedSkinCount(): Promise<number> {
+  const row = await knex("skin_reviews")
+    .first(knex.raw(`COUNT(DISTINCT skin_md5) AS "rejected_count"`))
+    .where({ review: "REJECTED" });
+  return Number(row.rejected_count);
+}
+
+export async function getNsfwSkinCount(): Promise<number> {
+  const row = await knex("skin_reviews")
+    .first(knex.raw(`COUNT(DISTINCT skin_md5) AS "nsfw_count"`))
+    .where({ review: "NSFW" });
+  return Number(row.nsfw_count);
+}
+
+export async function getTweetedSkinCount(): Promise<number> {
+  const rows = await knex("tweets").count("*", { as: "tweeted" });
+  return Number(rows[0].tweeted);
+}
+
+export async function getWebUploadsCount(): Promise<number> {
+  const rows = await knex("files")
+    .where("source_attribution", "Web API")
+    .count("*", { as: "uploads" });
+  return Number(rows[0].uploads);
+}
+
+export async function getUploadsAwaitingProcessingCount(): Promise<number> {
+  const rows = await knex("skin_uploads")
+    .where("status", "UPLOAD_REPORTED")
+    .count("*", { as: "uploads" });
+  return Number(rows[0].uploads);
+}
+
+export async function getUploadsErroredCount(): Promise<number> {
+  const rows = await knex("skin_uploads")
+    .where("status", "ERRORED")
+    .count("*", { as: "uploads" });
+  return Number(rows[0].uploads);
+}
+
 export async function getStats(): Promise<{
   approved: number;
   rejected: number;
@@ -437,50 +498,15 @@ export async function getStats(): Promise<{
   uploadsAwaitingProcessing: number;
   uploadsErrored: number;
 }> {
-  const approved = (
-    await knex("skin_reviews")
-      .first(knex.raw(`COUNT(DISTINCT skin_md5) AS "approved_count"`))
-      .where({ review: "APPROVED" })
-  ).approved_count;
-  const rejected = (
-    await knex("skin_reviews")
-      .first(knex.raw(`COUNT(DISTINCT skin_md5) AS "rejected_count"`))
-      .where({ review: "REJECTED" })
-  ).rejected_count;
-  const nsfw = (
-    await knex("skin_reviews")
-      .first(knex.raw(`COUNT(DISTINCT skin_md5) AS "nsfw_count"`))
-      .where({ review: "NSFW" })
-  ).nsfw_count;
-  const tweeted = (await knex("tweets").count("*", { as: "tweeted" }))[0]
-    .tweeted;
-  const webUploads = (
-    await knex("files")
-      .where("source_attribution", "Web API")
-      .count("*", { as: "uploads" })
-  )[0].uploads;
-
-  const uploadsAwaitingProcessing = (
-    await knex("skin_uploads")
-      .where("status", "UPLOAD_REPORTED")
-      .count("*", { as: "uploads" })
-  )[0].uploads;
-
-  const uploadsErrored = (
-    await knex("skin_uploads")
-      .where("status", "ERRORED")
-      .count("*", { as: "uploads" })
-  )[0].uploads;
-  const tweetable = await getTweetableSkinCount();
   return {
-    approved: Number(approved),
-    rejected: Number(rejected),
-    nsfw: Number(nsfw),
-    tweeted: Number(tweeted),
-    tweetable,
-    webUploads: Number(webUploads),
-    uploadsAwaitingProcessing: Number(uploadsAwaitingProcessing),
-    uploadsErrored: Number(uploadsErrored),
+    approved: await getApprovedSkinCount(),
+    rejected: await getRejectedSkinCount(),
+    nsfw: await getNsfwSkinCount(),
+    tweeted: await getTweetedSkinCount(),
+    tweetable: await getTweetableSkinCount(),
+    webUploads: await getWebUploadsCount(),
+    uploadsAwaitingProcessing: await getUploadsAwaitingProcessingCount(),
+    uploadsErrored: await getUploadsErroredCount(),
   };
 }
 
