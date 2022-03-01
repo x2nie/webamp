@@ -31,7 +31,17 @@ function getClass(guid: string): typeof BaseObject | null {
   } catch (e) {
     return null;
   }
+  finally {
+    let cr;
+    try { cr = classResolver(guid.toLowerCase()) ? 'OK' : null; }
+    catch {}
+
+    console.log(guid, '$', cr)
+  }
 }
+
+const funnyHack = new BaseObject();
+window.normalizedObjects = normalizedObjects;
 
 const totals = document.createElement("div");
 document.body.appendChild(totals);

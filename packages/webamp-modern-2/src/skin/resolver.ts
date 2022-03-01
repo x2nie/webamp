@@ -1,4 +1,5 @@
 import { getClass } from "../maki/objects";
+import BaseObject from "./makiClasses/BaseObject";
 import Button from "./makiClasses/Button";
 import SystemObject from "./makiClasses/SystemObject";
 import Container from "./makiClasses/Container";
@@ -19,6 +20,7 @@ import Config from "./makiClasses/Config";
 import ConfigItem from "./makiClasses/ConfigItem";
 
 const CLASSES = [
+  BaseObject,
   Config,
   // ConfigItem,
   Button,
@@ -46,6 +48,7 @@ for (const klass of CLASSES) {
   }
   GUID_MAP[klass.GUID] = klass;
 }
+window.GUID_MAP = GUID_MAP;
 
 // TODO: We could write a test using the data in object.ts which confirms that
 // this is complete.

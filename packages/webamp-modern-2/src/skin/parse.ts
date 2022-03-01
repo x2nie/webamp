@@ -143,8 +143,10 @@ export default class SkinParser {
         return this.colorThemesList(node);
       case "status":
         return this.status(node);
-        case "wasabi:standardframe:nostatus":
+      case "wasabi:standardframe:nostatus":
         return this.wasabiStandardFrameNostatus(node);
+      case "wasabi:standardframe:status":
+        return this.wasabiStandardFrameStatus(node);
       case "wasabi:mainframe:nostatus":
       case "nstatesbutton":
       case "componentbucket":
@@ -444,7 +446,24 @@ export default class SkinParser {
   }
 
   async component(node: XmlElement) {
+    // await this.traverseChildren(node);
+    //x2nie
+    const previousParent = this._context.parentGroup;
+    
+    const list = new ColorThemesList();
+    list.setXmlAttributes(node.attributes);
+    this._context.parentGroup = list;
+    const { parentGroup } = this._context;
+    if (parentGroup == null) {
+      console.warn(
+        `FIXME: Expected <ColorThemes:List id="${list.getId()}"> to be within a <Layout> | <Group>`
+        );
+        return;
+    }
     await this.traverseChildren(node);
+    parentGroup.addChild(list);
+    this._context.parentGroup = previousParent;
+
   }
 
   async container(node: XmlElement) {
@@ -473,7 +492,50 @@ export default class SkinParser {
     parentGroup.addChild(list);
   }
 
+  async wasabiStandardFrameStatus(node: XmlElement, id: string = 'wasabi.standardframe.statusbar') {
+    const previousParentGroup1 = this._context.parentGroup;
+    
+    const nodeFrame = new XmlElement('nodeFrameStateus',{
+      'id':id, //:'wasabi.standardframe.statusbar',
+      w:'0',
+      h:'0',
+      relatw:'1',
+      relath:'1',
+    });
+    const frame = new Group();
+    frame.setXmlAttributes(nodeFrame.attributes);
+    await this.maybeApplyGroupDef(frame, nodeFrame);
+    this._context.parentGroup = frame;
+    await this.traverseChildren(nodeFrame);
+
+    node.attributes.id = node.attributes.content;
+    this.group(node);
+    await this.traverseChildren(node);
+    // this._context.parentGroup.addChild(frame);
+    //*********************** */
+    // assume(node.children.length === 0, "Unexpected children in XUI XML node.");
+    // const xuiElement = this._uiRoot.getXuiElement(node.name);
+    // assume(
+    //   xuiElement != null,
+    //   `Expected to find xui element with name "${node.name}".`
+    // );
+
+    // const group = new Group();
+    // group.setXmlAttributes(xuiElement.attributes);
+    // const previousParentGroup = this._context.parentGroup;
+    // this._context.parentGroup = group;
+
+    // await this.traverseChildren(xuiElement);
+    // group.setXmlAttributes(node.attributes);
+    // await this.traverseChildren(node);
+
+    this._context.parentGroup = previousParentGroup1;
+
+    this._context.parentGroup.addChild(frame);
+  }
+
   async wasabiStandardFrameNostatus(node: XmlElement) {
+    await this.wasabiStandardFrameStatus(node, 'wasabi.standardframe.nostatusbar');
     // assume(
     //   node.children.length === 0,
     //   "Unexpected children in <status> XML node."
@@ -481,8 +543,8 @@ export default class SkinParser {
 
     // const group = new WasabiStandardFrameNostatus();
     // status.setXmlAttributes(node.attributes);
-    node.attributes.id = node.attributes.content;
-    await this.group(node);
+    // node.attributes.id = node.attributes.content;
+    // await this.group(node);
 
 
     // const id = node.attributes.content;

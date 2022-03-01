@@ -483,6 +483,7 @@ export default class SystemObject extends BaseObject {
    */
   getparam() {
     // TODO
+    return '28,39,-56,-84,0,0,1,1'
   }
 
   /**
@@ -543,7 +544,7 @@ export default class SystemObject extends BaseObject {
    * @param  group_id    The identifier for the group you want to create.
    */
   newgroup(group_id: string): Group {
-    //TODO
+    return new Group()
   }
 
   /**
@@ -1079,6 +1080,8 @@ export default class SystemObject extends BaseObject {
    */
   gettoken(str: string, separator: string, tokennum: number) {
     // TODO
+    const commas = str.split(separator)
+    return commas[tokennum]
   }
 
   /**

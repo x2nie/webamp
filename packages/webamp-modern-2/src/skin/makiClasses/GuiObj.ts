@@ -1,5 +1,5 @@
 import UI_ROOT from "../../UIRoot";
-import { assert, num, toBool, px, assume } from "../../utils";
+import { assert, num, toBool, px, assume, relat } from "../../utils";
 import Bitmap from "../Bitmap";
 import Group from "./Group";
 import XmlObj from "../XmlObj";
@@ -482,6 +482,7 @@ export default class GuiObj extends XmlObj {
 
     const start = {
       left: px(this._x ?? 0),
+      content: "'by-goto-start'",
       top: px(this._y ?? 0),
       width: px(this._width),
       height: px(this._height),
@@ -489,6 +490,7 @@ export default class GuiObj extends XmlObj {
     };
     const end = {
       left: px(this._targetX ?? this._x ?? 0),
+      content: "'by-goto-end'",
       top: px(this._targetY ?? this._y ?? 0),
       width: px(this._targetWidth ?? this._width),
       height: px(this._targetHeight ?? this._height),
@@ -591,19 +593,30 @@ export default class GuiObj extends XmlObj {
     )})`;
   }
   _renderX() {
-    this._div.style.left = px(this._x ?? 0);
+    if(this._relatx) {
+      this._div.style.left = relat(this._x ?? 0);
+    } else {
+      this._div.style.left = px(this._x ?? 0);
+    }
   }
   _renderY() {
-    this._div.style.top = px(this._y ?? 0);
+    if(this._relaty) {
+      this._div.style.top = relat(this._y ?? 0);
+    } else {
+      this._div.style.top = px(this._y ?? 0);
+    }
   }
   _renderWidth() {
-    this._div.style.width = px(this.getwidth());
+    this._div.style.width = this._relatw ? relat(this._width??0) : px(this.getwidth());
   }
   _renderHeight() {
-    this._div.style.height = px(this.getheight());
+    this._div.style.height = this._relath ? relat(this._height??0) : px(this.getheight());
   }
 
   _renderDimensions() {
+    //MMD:plEdit-normal.xml 
+    // <layer id="pl.switcher" x="35" y="0" relatw="1" w="-87" h="30" rectrgn="1" />
+    // <layer id="pl.buttonbg" x="-50" relatx="1" y="2" image="pl.button.bg" />
     this._renderX();
     this._renderY();
     this._renderWidth();

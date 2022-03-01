@@ -319,6 +319,7 @@ export class UIRoot {
         this.audio.eject();
         break;
       case "toggle":
+        if(param=='guid:pl') param='pledit';
         const container = findLast(this.getContainers(), ct => ct._id == param);
         // console.log(container._id, container._layouts)
         // container._defaultVisible = true;

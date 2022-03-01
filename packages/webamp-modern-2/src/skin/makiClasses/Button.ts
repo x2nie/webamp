@@ -103,6 +103,19 @@ export default class Button extends GuiObj {
   leftclick() {
     this.onLeftClick();
   }
+  rightclick() {
+    if (window.CustomEvent) {
+      this._div.dispatchEvent(new CustomEvent('contextmenu'));
+    } else if (document.createEvent) {
+        const ev = document.createEvent('HTMLEvents');
+        ev.initEvent('contextmenu', true, false);
+        this._div.dispatchEvent(ev);
+    }
+    //  else { // Internet Explorer
+    //   this._div.fireEvent('oncontextmenu');
+    // }
+    // this.onLeftClick();
+  }
 
   onLeftClick() {
     UI_ROOT.vm.dispatch(this, "onleftclick", []);
