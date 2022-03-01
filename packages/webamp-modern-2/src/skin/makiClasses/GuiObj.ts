@@ -623,6 +623,12 @@ export default class GuiObj extends XmlObj {
   // JS Can't set the :active pseudo selector. Instead we have a hard-coded
   // pseduo-selector in our stylesheet which references a CSS variable and then
   // we control the value of that variable from JS.
+  setDownBackgroundImage(bitmap: Bitmap | null) {
+    if (bitmap != null) {
+      bitmap.setAsDownBackground(this._div);
+    }
+  }
+
   setActiveBackgroundImage(bitmap: Bitmap | null) {
     if (bitmap != null) {
       bitmap.setAsActiveBackground(this._div);
@@ -632,7 +638,7 @@ export default class GuiObj extends XmlObj {
   draw() {
     this._div.setAttribute("data-id", this.getId());
     this._div.setAttribute("data-obj-name", "GuiObj");
-    this._div.setAttribute("tabindex", "0");
+    // this._div.setAttribute("tabindex", "0");
     this._renderVisibility();
     this._div.style.position = "absolute";
     this._renderAlpha();

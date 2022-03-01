@@ -127,6 +127,10 @@ export default class Bitmap {
     this._setAsBackground(div, "");
   }
 
+  setAsDownBackground(div: HTMLDivElement) {
+    this._setAsBackground(div, "down-");
+  }
+
   setAsActiveBackground(div: HTMLDivElement) {
     this._setAsBackground(div, "active-");
   }
