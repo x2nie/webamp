@@ -12,7 +12,7 @@ import Container from "./Container";
 // -- http://wiki.winamp.com/wiki/Modern_Skin:_Container
 export default class Layout extends Group {
   static GUID = "60906d4e482e537e94cc04b072568861";
-  _parentContainer: Container | null = null;
+  // _parentContainer: Container | null = null;
 
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -29,7 +29,7 @@ export default class Layout extends Group {
   }
 
   setParentContainer(container: Container) {
-    this._parentContainer = container;
+    this._parent = container as unknown as Group;
   }
 
   dispatchAction(
@@ -47,8 +47,8 @@ export default class Layout extends Group {
     }
     switch (action) {
       default:
-        if (this._parentContainer != null) {
-          this._parentContainer.dispatchAction(action, param, actionTarget);
+        if (this._parent != null) {
+          this._parent.dispatchAction(action, param, actionTarget);
         }
     }
   }

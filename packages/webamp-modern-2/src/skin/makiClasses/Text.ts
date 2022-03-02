@@ -39,6 +39,7 @@ export default class Text extends GuiObj {
         this._setDisplay(value);
         break;
       case "text":
+      case "default":
         // (str) A static string to be displayed.
         this._text = value;
         this._renderText();
@@ -162,6 +163,11 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   getText() {
+    console.log('txt=', this._id, this._text, this.getTopParent()._id)
+    if((this._text||'').startsWith(':')){
+      return this.getTopParent()._name || 'aloha!';
+    }
+    return 'Assalamualaikum'
     if (this._display) {
       return this._displayValue;
     }
@@ -229,7 +235,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   draw() {
     super.draw();
     this._renderText();
-    this._div.style.overflow = "hidden";
+    this._div.style.overflow = "visible";
     if (this._bold) {
       this._div.style.fontWeight = "bold";
     }

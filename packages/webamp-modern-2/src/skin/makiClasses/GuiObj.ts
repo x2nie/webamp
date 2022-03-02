@@ -9,6 +9,7 @@ export default class GuiObj extends XmlObj {
   static GUID = "4ee3e1994becc636bc78cd97b028869c";
   _parent: Group;
   _id: string;
+  _name: string;
   _width: number = 0;
   _height: number = 0;
   _x: number = 0;
@@ -97,6 +98,10 @@ export default class GuiObj extends XmlObj {
       case "id":
         this._id = value.toLowerCase();
         break;
+      case "name":
+        this._name = value;
+        break;
+  
       case "w":
       case "default_w":
         this._width = num(value);
@@ -178,6 +183,14 @@ export default class GuiObj extends XmlObj {
 
   getId(): string {
     return this._id;
+  }
+
+  getTopParent(): GuiObj {
+    let obj: GuiObj = this;
+    while (obj._parent) {
+      obj = obj._parent
+    }
+    return obj;
   }
 
   /**
