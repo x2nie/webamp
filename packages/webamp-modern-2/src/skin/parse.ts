@@ -252,7 +252,7 @@ export default class SkinParser {
       "Unexpected children in <script> XML node."
     );
 
-    const { file, id } = node.attributes;
+    const { file, id, param } = node.attributes;
     assert(file != null, "Script element missing `file` attribute");
     // assert(id != null, "Script element missing `id` attribute");
 
@@ -264,7 +264,7 @@ export default class SkinParser {
     // TODO: Try catch?
     const parsedScript = parseMaki(scriptContents);
 
-    const systemObj = new SystemObject(parsedScript);
+    const systemObj = new SystemObject(parsedScript, param);
 
     // TODO: Need to investigate how scripts find their group. In corneramp, the
     // script itself is not in any group. `xml/player.xml:8
@@ -496,21 +496,22 @@ export default class SkinParser {
     const previousParentGroup1 = this._context.parentGroup;
     
     const nodeFrame = new XmlElement('nodeFrameStateus',{
-      'id':id, //:'wasabi.standardframe.statusbar',
+      'id':id, //? 'wasabi.standardframe.statusbar',
       w:'0',
       h:'0',
       relatw:'1',
       relath:'1',
     });
-    const frame = new Group();
+    // const frame = new Group();
+    const frame = new WasabiStandardFrameNostatus(node);
     frame.setXmlAttributes(nodeFrame.attributes);
     await this.maybeApplyGroupDef(frame, nodeFrame);
-    this._context.parentGroup = frame;
-    await this.traverseChildren(nodeFrame);
+    // this._context.parentGroup = frame;
+    // await this.traverseChildren(nodeFrame);
 
-    node.attributes.id = node.attributes.content;
-    this.group(node);
-    await this.traverseChildren(node);
+    // node.attributes.id = node.attributes.content;
+    // this.group(node);
+    // await this.traverseChildren(node);
     // this._context.parentGroup.addChild(frame);
     //*********************** */
     // assume(node.children.length === 0, "Unexpected children in XUI XML node.");

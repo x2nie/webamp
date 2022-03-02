@@ -20,10 +20,12 @@ export default class SystemObject extends BaseObject {
   static GUID = "d6f50f6449b793fa66baf193983eaeef";
   _parentGroup: Group;
   _parsedScript: ParsedMaki;
+  _param: string;
 
-  constructor(parsedScript: ParsedMaki) {
+  constructor(parsedScript: ParsedMaki, param: string) {
     super();
     this._parsedScript = parsedScript;
+    this._param = param;
     UI_ROOT.audio.onSeek(() => {
       UI_ROOT.vm.dispatch(this, "onseek", [
         { type: "INT", value: UI_ROOT.audio.getCurrentTimePercent() * 255 },
@@ -483,7 +485,8 @@ export default class SystemObject extends BaseObject {
    */
   getparam() {
     // TODO
-    return '28,39,-56,-84,0,0,1,1'
+    // return '28,39,-56,-84,0,0,1,1'
+    return this._param;
   }
 
   /**
@@ -544,7 +547,20 @@ export default class SystemObject extends BaseObject {
    * @param  group_id    The identifier for the group you want to create.
    */
   newgroup(group_id: string): Group {
-    return new Group()
+    const group = new Group();
+    const groupDef = UI_ROOT.getGroupDef(group_id);
+    if (groupDef != null) {
+      group.setXmlAttributes(groupDef.attributes);
+      // const previousParentGroup = this._context.parentGroup;
+      // this._context.parentGroup = group;
+      // await this.traverseChildren(groupDef);
+      // this._context.parentGroup = previousParentGroup;
+      // TODO: Maybe traverse groupDef's children?
+    }
+
+    if(this._parentGroup)
+      this._parentGroup.addChild(group)
+    return group;
   }
 
   /**

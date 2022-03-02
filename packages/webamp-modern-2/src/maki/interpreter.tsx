@@ -117,10 +117,10 @@ class Interpreter {
         case 8: {
           const a = this.stack.pop();
           const b = this.stack.pop();
-          assume(
-            typeof a.value == typeof b.value,
-            `Tried to compare a ${a.type} to a ${b.type}.`
-          );
+          // assume(
+          //   typeof a.value == typeof b.value,
+          //   `Tried to compare a ${a.type} to a ${b.type}.`
+          // );
           const result = V.newInt(b.value === a.value);
           this.push(result);
           break;
@@ -290,13 +290,16 @@ class Interpreter {
           let argCount: number = klass.prototype[methodName].length;
 
           const methodDefinition = getMethod(guid, methodName);
+          if( methodName!='init') {
+
           assert(
             argCount === (methodDefinition.parameters.length ?? 0),
             `Arg count mismatch. Expected ${
               methodDefinition.parameters.length ?? 0
             } arguments, but found ${argCount} for ${klass.name}.${methodName}`
           );
-
+          }
+              
           const methodArgs = [];
           while (argCount--) {
             const a = this.stack.pop();
