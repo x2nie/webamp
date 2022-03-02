@@ -163,11 +163,11 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   getText() {
-    console.log('txt=', this._id, this._text, this.getTopParent()._id)
+    // console.log('txt=', this._id, this._text, this.getTopParent()._id)
     if((this._text||'').startsWith(':')){
-      return this.getTopParent()._name || 'aloha!';
+      return this.getTopParent()._name || this._text;
     }
-    return 'Assalamualaikum'
+    // return 'Assalamualaikum'
     if (this._display) {
       return this._displayValue;
     }

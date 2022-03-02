@@ -62,7 +62,7 @@ export default class ColorThemesList extends Group {
     this._select.value = UI_ROOT._activeGammaSetName;
 
     // window.UI_ROOT = UI_ROOT;
-    console.log('_activeGammaSet',UI_ROOT._gammaSets, UI_ROOT._activeGammaSet , UI_ROOT._gammaSets.keys()[0])
+    // console.log('_activeGammaSet',UI_ROOT._gammaSets, UI_ROOT._activeGammaSet , UI_ROOT._gammaSets.keys()[0])
 
     if(this._nocolheader){
       // this._select.style.paddingTop = "0";
