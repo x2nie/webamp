@@ -7,6 +7,7 @@ import Group from "./Group";
 import PRIVATE_CONFIG from "../PrivateConfig";
 import UI_ROOT from "../../UIRoot";
 import GuiObj from "./GuiObj";
+import SkinParser from "../parse";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -548,16 +549,9 @@ export default class SystemObject extends BaseObject {
    */
   newgroup(group_id: string): Group {
     const group = new Group();
-    const groupDef = UI_ROOT.getGroupDef(group_id);
-    if (groupDef != null) {
-      group.setXmlAttributes(groupDef.attributes);
-      // const previousParentGroup = this._context.parentGroup;
-      // this._context.parentGroup = group;
-      // await this.traverseChildren(groupDef);
-      // this._context.parentGroup = previousParentGroup;
-      // TODO: Maybe traverse groupDef's children?
-    }
-
+    const parser = new SkinParser(UI_ROOT);
+    parser.maybeApplyGroupDefId(group, group_id)
+  
     if(this._parentGroup)
       this._parentGroup.addChild(group)
     return group;

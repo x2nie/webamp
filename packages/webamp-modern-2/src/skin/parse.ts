@@ -1,6 +1,5 @@
 import parseXml, { XmlDocument, XmlElement } from "@rgrove/parse-xml";
 import { assert, getCaseInsensitiveFile, assume } from "../utils";
-import JSZip, { JSZipObject } from "jszip";
 import Bitmap from "./Bitmap";
 import ImageManager from "./ImageManager";
 import Layout from "./makiClasses/Layout";
@@ -31,7 +30,6 @@ class ParserContext {
 }
 
 export default class SkinParser {
-  _zip: JSZip;
   _imageManager: ImageManager;
   _path: string[] = [];
   _context: ParserContext = new ParserContext();
@@ -39,19 +37,15 @@ export default class SkinParser {
   _uiRoot: UIRoot;
 
   constructor(
-    zip: JSZip,
     uiRoot: UIRoot /* Once UI_ROOT is not a singleton, we can create that objet in the constructor */
   ) {
-    this._zip = zip;
-    this._imageManager = new ImageManager(zip);
     this._uiRoot = uiRoot;
+    this._imageManager = new ImageManager(this._uiRoot._zip);
   }
   async parse(): Promise<UIRoot> {
     // Load built-in xui elements
     // await this.parseFromUrl("assets/xml/xui/standardframe.xml");
-    const includedXml = await this.getCaseInsensitiveFile("skin.xml").async(
-      "string"
-    );
+    const includedXml = await this._uiRoot.getFileAsString("skin.xml");
 
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
@@ -152,7 +146,6 @@ export default class SkinParser {
       case "componentbucket":
       case "playlisteditor":
       case "wasabi:tabsheet":
-      case "wasabi:standardframe:status":
       case "snappoint":
       case "accelerators":
       case "elementalias":
@@ -256,10 +249,8 @@ export default class SkinParser {
     assert(file != null, "Script element missing `file` attribute");
     // assert(id != null, "Script element missing `id` attribute");
 
-    let scriptContents: ArrayBuffer;
-    const scriptFile = this.getCaseInsensitiveFile(file);
-    assert(scriptFile != null, `ScriptFile file not found at path ${file}`);
-    scriptContents = await scriptFile.async("arraybuffer");
+    const scriptContents: ArrayBuffer = await this._uiRoot.getFileAsBytes(file);
+    assert(scriptContents != null, `ScriptFile file not found at path ${file}`);
 
     // TODO: Try catch?
     const parsedScript = parseMaki(scriptContents);
@@ -405,7 +396,11 @@ export default class SkinParser {
 
   async maybeApplyGroupDef(group: Group, node: XmlElement) {
     const id = node.attributes.id;
-    const groupDef = this._uiRoot.getGroupDef(id);
+    await this.maybeApplyGroupDefId(group, id)
+  }
+
+  async maybeApplyGroupDefId(group: Group, groupdef_id: string) {
+    const groupDef = this._uiRoot.getGroupDef(groupdef_id);
     if (groupDef != null) {
       group.setXmlAttributes(groupDef.attributes);
       const previousParentGroup = this._context.parentGroup;
@@ -679,12 +674,11 @@ export default class SkinParser {
 
     const path = [...this._path, fileName].join("/");
 
-    const zipFile = this.getCaseInsensitiveFile(path);
-    if (zipFile == null) {
+    const includedXml = await this._uiRoot.getFileAsString(path);
+    if (includedXml == null) {
       console.warn(`Zip file not found: ${path} out of: `);
       return;
     }
-    const includedXml = await zipFile.async("string");
 
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
@@ -701,9 +695,6 @@ export default class SkinParser {
     // Ignore this metadata for now
   }
 
-  getCaseInsensitiveFile(filePath: string): JSZipObject {
-    return getCaseInsensitiveFile(this._zip, filePath);
-  }
 }
 
 function parseXmlFragment(xml: string): XmlDocument {

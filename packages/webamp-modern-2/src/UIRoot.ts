@@ -1,7 +1,9 @@
 import Bitmap from "./skin/Bitmap";
+import JSZip, { JSZipObject } from "jszip";
+import SkinParser from "./skin/parse";
 import { XmlElement } from "@rgrove/parse-xml";
 import TrueTypeFont from "./skin/TrueTypeFont";
-import { assert, assume, findLast } from "./utils";
+import { assert, assume, findLast, getCaseInsensitiveFile } from "./utils";
 import BitmapFont from "./skin/BitmapFont";
 import Color from "./skin/Color";
 import GammaGroup from "./skin/GammaGroup";
@@ -346,6 +348,27 @@ export class UIRoot {
       obj.dispose();
     }
   }
+
+  //? Zip things ========================
+  /* because maki need to load a groupdef outside init() */
+  _zip : JSZip;
+
+  setZip(zip : JSZip) {
+    this._zip = zip;
+  }
+
+  async getFileAsString(filePath: string): Promise<string> {
+    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+    if(!zipObj) return null;
+    return await zipObj.async('string');
+  }
+  
+  async getFileAsBytes(filePath: string): Promise<ArrayBuffer> {
+    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+    if(!zipObj) return null;
+    return await zipObj.async('arraybuffer');
+  }
+
 }
 
 // Global Singleton for now

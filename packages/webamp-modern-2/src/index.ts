@@ -42,9 +42,10 @@ async function loadSkin(skinData: Blob) {
 
   setStatus("Loading .wal archive...");
   const zip = await JSZip.loadAsync(skinData);
+  UI_ROOT.setZip(zip);
 
   setStatus("Parsing XML and initializing images...");
-  const parser = new SkinParser(zip, UI_ROOT);
+  const parser = new SkinParser(UI_ROOT);
 
   // This is always the same as the global singleton.
   const uiRoot = await parser.parse();
@@ -64,6 +65,7 @@ async function loadSkin(skinData: Blob) {
     console.log(`loaded container: ${container.getId()}`)
   }
   setStatus("");
+  UI_ROOT.setZip(null);
 }
 
 main();
