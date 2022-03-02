@@ -128,7 +128,8 @@ export default class SkinParser {
       case "wasabi:titlebar":
         return this.wasabiTitleBar(node);
       case "wasabi:button":
-        return this.wasabiButton(node);
+        return this.toggleButton(node);
+        // return this.wasabiButton(node);
       case "truetypefont":
         return this.trueTypeFont(node);
       case "eqvis":

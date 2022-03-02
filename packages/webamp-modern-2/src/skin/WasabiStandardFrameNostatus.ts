@@ -19,12 +19,4 @@ export default class WasabiStandardFrameNostatus extends Group {
     UI_ROOT.vm.dispatch(this._systemObjects[0], "onsetxuiparam", [{type: "STRING", value:'content'}, {type:"STRING", value:'ctbigcontent'}]);
 
   }
-
-  
-
-
-  draw() {
-    super.draw();
-    this._div.setAttribute("data-obj-name", "wasabi:standardframe:nostatusZ");
-  }
 }

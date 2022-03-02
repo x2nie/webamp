@@ -22,7 +22,7 @@ import ConfigItem from "./makiClasses/ConfigItem";
 const CLASSES = [
   BaseObject,
   Config,
-  // ConfigItem,
+  ConfigItem,
   Button,
   SystemObject,
   Container,

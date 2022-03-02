@@ -26,6 +26,7 @@ export default class GuiObj extends XmlObj {
   _droptarget: string;
   _visible: boolean = true;
   _alpha: number = 255;
+  _sysregion: number = 0;
   _ghost: boolean = false;
   _tooltip: string = "";
   _targetX: number | null = null;
@@ -144,6 +145,9 @@ export default class GuiObj extends XmlObj {
   
       case "droptarget":
         this._droptarget = value;
+        break;
+      case "sysregion":
+        this._sysregion = num(value);
         break;
       case "ghost":
         this._ghost = toBool(value);

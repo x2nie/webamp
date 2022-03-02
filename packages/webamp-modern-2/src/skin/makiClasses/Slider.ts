@@ -134,6 +134,8 @@ export default class Slider extends GuiObj {
       case "eq_band":
         this._actionHandler = new EqActionHandler(this, this._param);
         break;
+      case "eq_preamp":
+        break;
       case "pan":
         this._actionHandler = new PanActionHandler(this);
         break;

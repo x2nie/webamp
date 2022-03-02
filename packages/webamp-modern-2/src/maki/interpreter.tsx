@@ -282,12 +282,12 @@ class Interpreter {
           // This is a bit awkward. Because the variables are stored on the stack
           // before the object, we have to find the number of arguments without
           // actually having access to the object instance.
-          if (!klass.prototype[methodName]) {
+          if (!klass.prototype[methodName] && !klass[methodName]) {
             throw new Error(
               `Need to add missing method: ${klass.name}.${methodName}: ${returnType}`
             );
           }
-          let argCount: number = klass.prototype[methodName].length;
+          let argCount: number = ( klass.prototype[methodName] || klass[methodName]).length;
 
           const methodDefinition = getMethod(guid, methodName);
           if( methodName!='init') {

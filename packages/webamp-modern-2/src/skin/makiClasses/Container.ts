@@ -72,7 +72,10 @@ export default class Container extends XmlObj {
   toggle(){
     if(!this._visible) this.show()
     else this.hide()
-
+  }
+  close(){
+    this._activeLayout = null;
+    this.hide()
   }
   center() {
     const height = document.documentElement.clientHeight;

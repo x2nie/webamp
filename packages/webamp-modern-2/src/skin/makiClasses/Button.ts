@@ -66,7 +66,7 @@ export default class Button extends GuiObj {
     }
     if (this._image != null) {
       const bitmap = UI_ROOT.getBitmap(this._image);
-      return bitmap.getHeight();
+      return bitmap ? bitmap.getHeight(): 15;
     }
     return super.getheight();
   }
@@ -78,7 +78,7 @@ export default class Button extends GuiObj {
     }
     if (this._image != null) {
       const bitmap = UI_ROOT.getBitmap(this._image);
-      return bitmap.getWidth();
+      return bitmap? bitmap.getWidth() : 15;
     }
     return super.getwidth();
   }
