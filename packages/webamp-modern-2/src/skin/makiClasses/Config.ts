@@ -1,10 +1,29 @@
 import XmlObj from "../XmlObj";
 import ConfigItem from "./ConfigItem";
 
-export default class Config extends XmlObj {
-  static GUID = "593dba224976d07771f452b90b405536";
+const _items : {[key:string]: ConfigItem} = {};
 
-  public static newitem(itemName: string, itemGuid: string): ConfigItem {
-    return new ConfigItem();
+export default class ConfigClass extends XmlObj {
+  static GUID = "593dba224976d07771f452b90b405536";
+  // _items : {[key:string]: ConfigItem} = {};
+
+  newitem(itemName: string, itemGuid: string): ConfigItem {
+    const cfg = new ConfigItem();
+    cfg._name = itemName;
+    _items[itemGuid] = cfg;
+    return cfg;
+  }
+
+  getitem(itemGuid: string): ConfigItem {
+    let cfg = _items[itemGuid];
+    if(!cfg){
+      cfg = new ConfigItem();
+      _items[itemGuid] = cfg;  
+    } 
+    return cfg;
   }
 }
+
+// Global Singleton for now
+// export const Config = new ConfigClass();
+// export Config;

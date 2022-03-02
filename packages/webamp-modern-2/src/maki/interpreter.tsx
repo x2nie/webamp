@@ -306,12 +306,23 @@ class Interpreter {
             methodArgs.push(a.value);
           }
           const obj = this.stack.pop();
+          //x2nie
+          let _staticMethod = !obj.value;
+          if(obj.value==null && methodName==='newitem'){
+            obj.value = new klass();
+          }
+
+          console.log('>> calling:',methodName,
+           obj.value && obj.value[methodName] && 'VAL^' || '~value!' ,
+           obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  ...methodArgs);
           assert(
             (obj.type === "OBJECT" && typeof obj.value) === "object" &&
               obj.value != null,
             `Guru Meditation: Tried to call method ${klass.name}.${methodName} on null object`
           );
-          let value = obj.value[methodName](...methodArgs);
+          // let value = obj.value[methodName](...methodArgs);
+          // let value = (_staticMethod? obj.value.constructor : obj.value)[methodName](...methodArgs);
+          let value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
 
           if (value === undefined && returnType !== "NULL") {
             throw new Error(

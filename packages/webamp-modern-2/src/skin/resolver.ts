@@ -18,11 +18,12 @@ import Vis from "./makiClasses/Vis";
 import GuiObj from "./makiClasses/GuiObj";
 import Config from "./makiClasses/Config";
 import ConfigItem from "./makiClasses/ConfigItem";
+import ConfigAttribute from "./makiClasses/ConfigAttribute";
 
 const CLASSES = [
   BaseObject,
   Config,
-  ConfigItem,
+  ConfigItem,ConfigAttribute,
   Button,
   SystemObject,
   Container,
@@ -48,7 +49,6 @@ for (const klass of CLASSES) {
   }
   GUID_MAP[klass.GUID] = klass;
 }
-window.GUID_MAP = GUID_MAP;
 
 // TODO: We could write a test using the data in object.ts which confirms that
 // this is complete.
