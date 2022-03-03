@@ -21,7 +21,7 @@ export default class Group extends GuiObj {
   constructor(){
     super()
     this._tag = 'group'
-    this._className = null;
+    // this._className = null;
   }
 
   setXmlAttr(_key: string, value: string): boolean {
@@ -47,8 +47,8 @@ export default class Group extends GuiObj {
     return true;
   }
 
-  // init(whatever:Group = null) {
-  init() {
+  init(whatever:Group = null) {
+  // init() {
     super.init();
     if(this._inited) return;
     this._inited = true;

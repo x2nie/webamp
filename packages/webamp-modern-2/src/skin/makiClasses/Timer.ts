@@ -4,7 +4,7 @@ import BaseObject from "./BaseObject";
 
 export default class Timer extends BaseObject {
   static GUID = "5d0c5bb64b1f7de1168d0fa741199459";
-  _delay: number;
+  _delay: number = 100; //x2nie
   _timeout: NodeJS.Timeout | null = null;
   setdelay(millisec: number) {
     assume(

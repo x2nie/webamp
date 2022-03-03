@@ -5,6 +5,12 @@ import UI_ROOT from "../../UIRoot";
 export default class Layer extends GuiObj {
   static GUID = "5ab9fa1545579a7d5765c8aba97cc6a6";
   _image: string;
+  
+  constructor(){
+    super();
+    // this._div.remove()
+    // this._div = HTMLDivElement = document.createElement("layer");
+  }
 
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -52,9 +58,10 @@ export default class Layer extends GuiObj {
 
   draw() {
     super.draw();
-    this._div.setAttribute("data-obj-name", "Layer");
+    // this._div.setAttribute("data-obj-name", "Layer");
     this._div.style.pointerEvents = this._sysregion==-2? 'none' : 'auto';
     this._div.style.display = this._sysregion==-2? 'none' : 'block';
+    // this._div.style.overflow = "hidden";
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }

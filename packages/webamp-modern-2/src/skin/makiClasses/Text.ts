@@ -136,10 +136,10 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         this._displayValue = "5:58";
         break;
       case "songname":
-        this._displayValue = "Niente da Caprie (3";
-        break;
+        // this._displayValue = "Niente da Caprie (3";
+        // break;
       case "songtitle":
-        this._displayValue = "Niente da Caprie (3";
+        this._displayValue = "Kartolo Niente da Caprie (3";
         break;
       case "songbitrate":
       case "songsamplerate":

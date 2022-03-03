@@ -144,7 +144,7 @@ export default class GuiObj extends XmlObj {
 
 
   init() {
-    this._div = document.createElement(this._tag);
+    // this._div = document.createElement(this._tag);
     this._div.addEventListener("mousedown", (e) => {
       /*
       if (this._backgroundBitmap != null) {
@@ -694,6 +694,7 @@ export default class GuiObj extends XmlObj {
     }
     if (this._ghost) {
       this._div.style.pointerEvents = "none";
+      // this._div.style.opacity = "0";
     } else {
       this._div.style.pointerEvents = "auto";
     }

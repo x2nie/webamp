@@ -314,9 +314,9 @@ class Interpreter {
             obj.value = new klass();
           }
 
-          console.log(klass.name, '>> calling:',methodName, '|', typeof obj.value,
-           obj.value && obj.value[methodName] && 'VAL^' || '~value!' ,
-           obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  methodArgs, '$_$', obj.value);
+          // console.log(klass.name, '>> calling:',methodName, '|', typeof obj.value,
+          //  obj.value && obj.value[methodName] && 'VAL^' || '~value!' ,
+          //  obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  methodArgs, '$_$', obj.value);
            window._obj = obj;
           assert(
             (obj.type === "OBJECT" && typeof obj.value) === "object" &&
@@ -329,6 +329,16 @@ class Interpreter {
           let value = -1;
           try{
             value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
+            // let fun;
+            // if (obj.value[methodName]) {
+            //   // value = obj.value[methodName](...methodArgs);
+            //   fun = obj.value[methodName].bind(obj.value);
+            // } else {
+            //   // value = obj.value.constructor[methodName](...methodArgs);
+            //   fun = obj.value.constructor[methodName].bind(obj.value);
+            // }
+            // value = fun(...methodArgs);
+
           } catch(err) {
             // console.info('failed:', err.message)
             value = null;
@@ -337,7 +347,7 @@ class Interpreter {
               const fun = (obj.value[methodName] || obj.value.constructor[methodName]).bind(obj.value)
               value = fun(...methodArgs);
             } catch(err) {
-              console.warn('error:', err.message)
+              console.warn('error call:',klass.name, '}}',methodName, err.message)
               value = null;
             }
   

@@ -745,7 +745,7 @@ export default class SystemObject extends BaseObject {
    * @ret The name of what is playing.
    */
   getplayitemstring(): string {
-    return "Niente da Caprie";
+    return "Kartolo Cipret";
   }
 
   /**
