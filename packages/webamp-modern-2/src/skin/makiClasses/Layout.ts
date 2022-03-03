@@ -13,6 +13,7 @@ import Container from "./Container";
 export default class Layout extends Group {
   static GUID = "60906d4e482e537e94cc04b072568861";
   // _parentContainer: Container | null = null;
+  _isLayout:boolean=true;
 
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -30,6 +31,9 @@ export default class Layout extends Group {
 
   setParentContainer(container: Container) {
     this._parent = container as unknown as Group;
+  }
+  getcontainer(): Container {
+    return this._parent as unknown as Container;
   }
 
   dispatchAction(

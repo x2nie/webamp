@@ -308,13 +308,16 @@ class Interpreter {
           const obj = this.stack.pop();
           //x2nie
           let _staticMethod = !obj.value;
-          if(obj.value==null && methodName==='newitem'){
+          if(!obj.value/* ==null */ 
+            // && (methodName==='newitem' || methodName==='newattribute'|| methodName==='getparentlayout')
+            ){
             obj.value = new klass();
           }
 
-          console.log('>> calling:',methodName,
+          console.log(klass.name, '>> calling:',methodName, '|', typeof obj.value,
            obj.value && obj.value[methodName] && 'VAL^' || '~value!' ,
-           obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  ...methodArgs);
+           obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  methodArgs, '$_$', obj.value);
+           window._obj = obj;
           assert(
             (obj.type === "OBJECT" && typeof obj.value) === "object" &&
               obj.value != null,
@@ -322,7 +325,23 @@ class Interpreter {
           );
           // let value = obj.value[methodName](...methodArgs);
           // let value = (_staticMethod? obj.value.constructor : obj.value)[methodName](...methodArgs);
-          let value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
+          // let value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
+          let value = -1;
+          try{
+            value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
+          } catch(err) {
+            // console.info('failed:', err.message)
+            value = null;
+            
+            try{
+              const fun = (obj.value[methodName] || obj.value.constructor[methodName]).bind(obj.value)
+              value = fun(...methodArgs);
+            } catch(err) {
+              console.warn('error:', err.message)
+              value = null;
+            }
+  
+          }
 
           if (value === undefined && returnType !== "NULL") {
             throw new Error(

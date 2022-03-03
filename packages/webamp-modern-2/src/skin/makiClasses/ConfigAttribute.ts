@@ -1,4 +1,4 @@
-import XmlObj from "../XmlObj";
+// import XmlObj from "../XmlObj";
 
 export default class ConfigAttribute  {
   //?    GUID = "24DEC283B76E4a368CCC9E24C46B6C73";
@@ -7,17 +7,21 @@ export default class ConfigAttribute  {
   _default: string;
   _value: string;
 
-//   constructor(name:string, defaultValue: string) {
-  constructor() {
+  constructor(name:string, defaultValue: string) {
+//   constructor() {
     // super();
-    // this._name = name;
-    // this._default = defaultValue;
-    this._value = ''
+    this._name = name;
+    this._default = defaultValue;
+    // this._value = ''
   }
   getdata():string{
-      return this._value || this._default;
+    //   return '';
+      return this._value || this._default || '';
   }
   setdata(value:string){
       this._value = value;
+  }
+  ondatachanged(){
+    //   this._value = value;
   }
 }

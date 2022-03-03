@@ -2,6 +2,8 @@ import * as Utils from "../../utils";
 import UI_ROOT from "../../UIRoot";
 import GuiObj from "./GuiObj";
 import SystemObject from "./SystemObject";
+// import Layout from "./Layout";
+// import Layout = require('./Layout');
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export default class Group extends GuiObj {
@@ -14,6 +16,7 @@ export default class Group extends GuiObj {
   _drawBackground: boolean = true;
   _systemObjects: SystemObject[] = [];
   _children: GuiObj[] = [];
+  _isLayout:boolean=false;
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -156,5 +159,17 @@ export default class Group extends GuiObj {
       child.draw();
       this._div.appendChild(child.getDiv());
     }
+  }
+
+  getparentlayout(): Group{
+    let obj: Group = this;
+    while (obj._parent) {
+      // if(obj instanceof Layout) {
+      if(obj._isLayout) {
+        break
+      }
+      obj = obj._parent
+    }
+    return obj;
   }
 }

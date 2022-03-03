@@ -173,6 +173,14 @@ export default class GuiObj extends XmlObj {
     return true;
   }
 
+  setxmlparam(key: string, value: string) {
+    this.setXmlAttr(key, value);
+  }
+  // setxmlparam(key: string, value: any) {
+  //   this.setXmlAttr(key, value.toString());
+  // }
+
+
   init() {
     // pass
   }

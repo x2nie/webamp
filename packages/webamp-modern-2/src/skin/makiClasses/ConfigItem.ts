@@ -1,4 +1,4 @@
-import XmlObj from "../XmlObj";
+// import XmlObj from "../XmlObj";
 import ConfigAttribute from "./ConfigAttribute";
 
 
@@ -8,16 +8,16 @@ export default class ConfigItem {
   _items : {[key:string]: ConfigAttribute} = {};
 
 //   constructor(name:string) {
-  constructor() {
+  // constructor() {
     // super();
     // this._name = name;
-    this._items = {};
-  }
+    // this._items = {};
+  // }
 
   newattribute(name: string, defaultValue: string): ConfigAttribute {
-    // const cfg = new ConfigAttribute(name, defaultValue);
-    const cfg = new ConfigAttribute();
-    this._items[name] = cfg;
+    const cfg = new ConfigAttribute(name, defaultValue);
+    // const cfg = new ConfigAttribute();
+    // this._items[name] = cfg;
     return cfg;
   }
 }

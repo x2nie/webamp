@@ -499,7 +499,7 @@ export default class SystemObject extends BaseObject {
    * @ret
    */
   getscriptgroup(): Group {
-    return this._parentGroup;
+    return this?this._parentGroup: null;
   }
 
   /**

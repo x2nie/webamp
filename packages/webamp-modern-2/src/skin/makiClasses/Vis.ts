@@ -5,6 +5,10 @@ export default class Vis extends GuiObj {
   setmode(mode: number) {
     // TODO
   }
+  setxmlparam(key: string, value: string) {
+    this.setXmlAttr(key, value);
+  }
+
   /*extern Vis.onFrame();
 extern Vis.setRealtime(Boolean onoff);
 extern Boolean Vis.getRealtime();

@@ -3,7 +3,7 @@ import ConfigItem from "./ConfigItem";
 
 const _items : {[key:string]: ConfigItem} = {};
 
-export default class ConfigClass extends XmlObj {
+export default class ConfigClass {
   static GUID = "593dba224976d07771f452b90b405536";
   // _items : {[key:string]: ConfigItem} = {};
 
