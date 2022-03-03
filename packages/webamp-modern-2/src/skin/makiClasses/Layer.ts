@@ -53,7 +53,7 @@ export default class Layer extends GuiObj {
   draw() {
     super.draw();
     // this._div.setAttribute("data-obj-name", "Layer");
-    this._div.style.pointerEvents = this._sysregion==-2? 'none' : 'auto';
+    this._div.style.pointerEvents = this._sysregion==-2 || this._ghost? 'none' : 'auto';
     this._div.style.display = this._sysregion==-2? 'none' : 'block';
     // this._div.style.overflow = "hidden";
     this._div.classList.add("webamp--img");
