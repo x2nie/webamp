@@ -43,7 +43,12 @@ export default class GuiObj extends XmlObj {
   
   constructor() {
     super();
-    this._div = document.createElement(this.constructor.name.toLowerCase().replace('_',''));//may recreate later in init
+    // this._div = document.createElement(this.constructor.name.toLowerCase().replace('_',''));//may recreate later in init
+    this._div = document.createElement(this.getElTag().toLowerCase().replace('_',''));
+  }
+
+  getElTag():string{
+    return this.constructor.name;
   }
 
   setParent(group: Group) {
