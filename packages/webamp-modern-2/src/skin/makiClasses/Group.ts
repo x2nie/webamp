@@ -174,4 +174,8 @@ export default class Group extends GuiObj {
     }
     return obj;
   }
+
+  isLayout():boolean{
+    return this._isLayout;
+  }
 }
