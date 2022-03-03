@@ -26,7 +26,7 @@ export default class Text extends GuiObj {
   _font: string;
   _fontSize: number;
   _color: string;
-  _ticker: boolean;
+  _ticker: string;
   _timeColonWidth: number | null = null;
 
   setXmlAttr(key: string, value: string): boolean {
@@ -75,7 +75,7 @@ export default class Text extends GuiObj {
         break;
       case "ticker":
         /// (bool) Setting this flag causes the object to scroll left and right if the text does not fit the rectangular area of the text object.
-        this._ticker = toBool(value);
+        this._ticker = value;
         break;
       case "timecolonwidth":
         // (int) How many extra pixels wider or smaller should the colon be when displaying time. Default is -1.

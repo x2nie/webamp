@@ -315,7 +315,7 @@ class Interpreter {
           const obj = this.stack.pop();
           //x2nie
           let _staticMethod = !obj.value;
-          if(!obj.value/* ==null */ 
+          if(!!!obj.value/* ==null */ 
             // && (methodName==='newitem' || methodName==='newattribute'|| methodName==='getparentlayout')
             ){
             obj.value = new klass();
@@ -362,7 +362,7 @@ class Interpreter {
               const fun = (obj.value[methodName]? obj.value[methodName] : obj.value.constructor[methodName]).bind(obj.value)
               value = fun(...methodArgs);
             } catch(err) {
-              console.warn('error call:',klass.name, '}}',methodName, err.message)
+              console.warn('error call:',klass.name, '}}',methodName, err.message, 'obj:', obj)
               value = null;
             }
   

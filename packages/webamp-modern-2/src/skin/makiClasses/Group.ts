@@ -41,8 +41,8 @@ export default class Group extends GuiObj {
     return true;
   }
 
-  init(whatever:Group = null) {
-  // init() {
+  // init(whatever:Group = null) {
+  init() {
     super.init();
     if(this._inited) return;
     this._inited = true;
