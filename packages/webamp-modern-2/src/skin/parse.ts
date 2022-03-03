@@ -121,6 +121,7 @@ export default class SkinParser {
         return this.script(node);
       case "scripts":
         return this.scripts(node);
+      case "songticker":
       case "text":
         return this.text(node);
       case "sendparams":
@@ -134,10 +135,14 @@ export default class SkinParser {
         return this.trueTypeFont(node);
       case "eqvis":
         return this.eqvis(node);
+      case "colorthemes:mgr":
       case "colorthemes:list":
         return this.colorThemesList(node);
       case "status":
         return this.status(node);
+      case "wasabi:playlistframe:nostatus":
+      case "wasabi:visframe:nostatus":
+      case "wasabi:medialibraryframe:nostatus":
       case "wasabi:standardframe:nostatus":
         return this.wasabiStandardFrameNostatus(node);
       case "wasabi:standardframe:status":

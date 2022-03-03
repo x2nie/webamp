@@ -16,7 +16,7 @@ export default class Container extends XmlObj {
   _visible: boolean = true;
   _id: string;
   _name: string;
-  _div: HTMLDivElement = document.createElement("div");
+  _div: HTMLDivElement = document.createElement("container");
   constructor() {
     super();
   }
@@ -168,9 +168,10 @@ export default class Container extends XmlObj {
   }
 
   draw() {
-    this._div.setAttribute("data-xml-id", this.getId());
-    this._div.setAttribute("data-obj-name", "Container");
-    this._div.style.position = "absolute";
+    // this._div.setAttribute("data-xml-id", this.getId());
+    this._div.setAttribute("id", this.getId());
+    // this._div.setAttribute("data-obj-name", "Container");
+    // this._div.style.position = "absolute";
     this._renderLayout();
   }
 }

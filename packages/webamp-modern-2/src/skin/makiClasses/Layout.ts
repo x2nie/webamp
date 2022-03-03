@@ -13,6 +13,8 @@ import Container from "./Container";
 export default class Layout extends Group {
   static GUID = "60906d4e482e537e94cc04b072568861";
   // _parentContainer: Container | null = null;
+  _tag: string = 'layout';
+  _div: HTMLDivElement = document.createElement("layout");
   _isLayout:boolean=true;
 
   setXmlAttr(key: string, value: string): boolean {
@@ -59,6 +61,6 @@ export default class Layout extends Group {
 
   draw() {
     super.draw();
-    this._div.setAttribute("data-obj-name", "Layout");
+    // this._div.setAttribute("data-obj-name", "Layout");
   }
 }

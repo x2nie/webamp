@@ -8,6 +8,7 @@ import XmlObj from "../XmlObj";
 export default class GuiObj extends XmlObj {
   static GUID = "4ee3e1994becc636bc78cd97b028869c";
   _parent: Group;
+  _className: string = 'webamp--img';
   _id: string;
   _name: string;
   _width: number = 0;
@@ -36,52 +37,13 @@ export default class GuiObj extends XmlObj {
   _targetHeight: number | null = null;
   _targetAlpha: number | null = null;
   _targetSpeed: number | null = null;
+  _tag: string = 'dove';
   _div: HTMLDivElement = document.createElement("div");
   _backgroundBitmap: Bitmap | null = null;
-
+  
   constructor() {
     super();
-
-    this._div.addEventListener("mousedown", (e) => {
-      /*
-      if (this._backgroundBitmap != null) {
-        const { clientX, clientY } = e;
-        const { x, y } = this._div.getBoundingClientRect();
-        const canvasX = clientX - x;
-        const canvasY = clientY - y;
-        const canvas = this._backgroundBitmap.getCanvas();
-        const ctx = canvas.getContext("2d");
-
-        const opacity = ctx.getImageData(canvasX, canvasY, 1, 1).data[3];
-        if (opacity === 0) {
-          this._div.style.pointerEvents = "none";
-          const newTarget = document.elementFromPoint(clientX, clientY);
-          this._div.style.pointerEvents = "auto";
-          var newEvent = new MouseEvent("click", {
-            clientX,
-            clientY,
-            bubbles: true,
-          });
-          newTarget.dispatchEvent(newEvent);
-          return;
-        }
-      }
-     */
-      this.onLeftButtonDown(e.clientX, e.clientY);
-
-      const mouseUpHandler = (e) => {
-        this.onLeftButtonUp(e.clientX, e.clientY);
-        this._div.removeEventListener("mouseup", mouseUpHandler);
-      };
-      this._div.addEventListener("mouseup", mouseUpHandler);
-    });
-    this._div.addEventListener("mouseenter", (e) => {
-      this.onEnterArea();
-    });
-
-    this._div.addEventListener("mouseleave", (e) => {
-      this.onLeaveArea();
-    });
+    // this._div = document.createElement(this._tag);//may recreate later in init
   }
 
   setParent(group: Group) {
@@ -182,7 +144,47 @@ export default class GuiObj extends XmlObj {
 
 
   init() {
-    // pass
+    this._div = document.createElement(this._tag);
+    this._div.addEventListener("mousedown", (e) => {
+      /*
+      if (this._backgroundBitmap != null) {
+        const { clientX, clientY } = e;
+        const { x, y } = this._div.getBoundingClientRect();
+        const canvasX = clientX - x;
+        const canvasY = clientY - y;
+        const canvas = this._backgroundBitmap.getCanvas();
+        const ctx = canvas.getContext("2d");
+
+        const opacity = ctx.getImageData(canvasX, canvasY, 1, 1).data[3];
+        if (opacity === 0) {
+          this._div.style.pointerEvents = "none";
+          const newTarget = document.elementFromPoint(clientX, clientY);
+          this._div.style.pointerEvents = "auto";
+          var newEvent = new MouseEvent("click", {
+            clientX,
+            clientY,
+            bubbles: true,
+          });
+          newTarget.dispatchEvent(newEvent);
+          return;
+        }
+      }
+     */
+      this.onLeftButtonDown(e.clientX, e.clientY);
+
+      const mouseUpHandler = (e) => {
+        this.onLeftButtonUp(e.clientX, e.clientY);
+        this._div.removeEventListener("mouseup", mouseUpHandler);
+      };
+      this._div.addEventListener("mouseup", mouseUpHandler);
+    });
+    this._div.addEventListener("mouseenter", (e) => {
+      this.onEnterArea();
+    });
+
+    this._div.addEventListener("mouseleave", (e) => {
+      this.onLeaveArea();
+    });
   }
 
   getDiv(): HTMLDivElement {
@@ -610,7 +612,11 @@ export default class GuiObj extends XmlObj {
     this._div.style.opacity = `${this._alpha / 255}`;
   }
   _renderVisibility() {
-    this._div.style.display = this._visible ? "inline-block" : "none";
+    // this._div.style.display = this._visible ? "inline-block" : "none";
+    if(this._visible)
+      this._div.style.removeProperty("display");
+    else
+      this._div.style.display = "none";
   }
   _renderTransate() {
     this._div.style.transform = `translate(${px(this._x ?? 0)}, ${px(
@@ -618,6 +624,7 @@ export default class GuiObj extends XmlObj {
     )})`;
   }
   _renderX() {
+    if(this._x==0 && !this._relatx)return;
     if(this._relatx) {
       this._div.style.left = relat(this._x ?? 0);
     } else {
@@ -625,6 +632,7 @@ export default class GuiObj extends XmlObj {
     }
   }
   _renderY() {
+    if(this._y==0 && !this._relaty)return;
     if(this._relaty) {
       this._div.style.top = relat(this._y ?? 0);
     } else {
@@ -674,11 +682,12 @@ export default class GuiObj extends XmlObj {
   }
 
   draw() {
-    this._div.setAttribute("data-id", this.getId());
-    this._div.setAttribute("data-obj-name", "GuiObj");
+    // this._div.setAttribute("data-id", this.getId());
+    this._div.setAttribute("id", this.getId());
+    // this._div.setAttribute("data-obj-name", "GuiObj");
     // this._div.setAttribute("tabindex", "0");
     this._renderVisibility();
-    this._div.style.position = "absolute";
+    // this._div.style.position = "absolute";
     this._renderAlpha();
     if (this._tooltip) {
       this._div.setAttribute("title", this._tooltip);

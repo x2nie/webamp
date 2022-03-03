@@ -17,6 +17,12 @@ export default class Group extends GuiObj {
   _systemObjects: SystemObject[] = [];
   _children: GuiObj[] = [];
   _isLayout:boolean=false;
+  
+  constructor(){
+    super()
+    this._tag = 'group'
+    this._className = null;
+  }
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -43,6 +49,7 @@ export default class Group extends GuiObj {
 
   // init(whatever:Group = null) {
   init() {
+    super.init();
     if(this._inited) return;
     this._inited = true;
     
@@ -146,7 +153,8 @@ export default class Group extends GuiObj {
   draw() {
     super.draw();
     this._div.setAttribute("data-obj-name", "Group");
-    this._div.classList.add("webamp--img");
+    if(this._className)
+      this._div.classList.add(this._className);
     // It seems Groups are not responsive to click events.
     this._div.style.pointerEvents = "none";
     // this._div.style.overflow = "hidden";

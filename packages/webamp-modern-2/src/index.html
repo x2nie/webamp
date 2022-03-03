@@ -37,11 +37,13 @@
         background-color: black;
         color: silver;
       }
+      layout,
       .webamp--img {
         background-image: var(--background-image);
         background-position: top 0 left 0;
         /* background-position: var(--background-position); */
       }
+      
       .webamp--img:active {
         background-image: var(--down-background-image, var(--background-image));
         /* background-position: var(--active-background-position, var(--background-position)); */
@@ -78,6 +80,7 @@
       [tabindex]:focus {
         box-shadow: inset 0 0 3px red;
       }
+      * {position: absolute;}
     </style>
     <style id="bitmap-css"></style>
     <style id="scrollbar-css"></style>
