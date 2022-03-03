@@ -80,7 +80,10 @@
       [tabindex]:focus {
         box-shadow: inset 0 0 3px red;
       }
-      div {position: absolute;}
+      body > div * {
+        position: absolute;
+        display: inline-block;
+      }
     </style>
     <style id="bitmap-css"></style>
     <style id="scrollbar-css"></style>
