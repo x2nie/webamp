@@ -17,13 +17,20 @@ function validateMaki(program: ParsedMaki) {
     }
     const guid = program.classes[method.typeOffset];
     const methodDefinition = getMethod(guid, method.name);
-    const klass = classResolver(guid);
+    let klass;
+    try{
+      klass = classResolver(guid);
+    } catch(err) {
+      console.warn('invalid', err);
+      continue;
+    }
     const impl = klass.prototype[method.name];
     if (!impl) {
       const classDefinition = getClass(guid);
       console.warn(`Expected to find ${classDefinition.name}.${method.name}`);
     } else if (impl.length != methodDefinition.parameters.length) {
-      throw new Error("Arity Error");
+      console.warn(`Expected params.len= ${methodDefinition.parameters.length} got: ${impl.length} @ ${klass.name}.${method.name}`);
+      // throw new Error("Arity Error");
     }
   }
 }
@@ -317,7 +324,7 @@ class Interpreter {
           // console.log(klass.name, '>> calling:',methodName, '|', typeof obj.value,
           //  obj.value && obj.value[methodName] && 'VAL^' || '~value!' ,
           //  obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  methodArgs, '$_$', obj.value);
-           window._obj = obj;
+          //  window._obj = obj;
           assert(
             (obj.type === "OBJECT" && typeof obj.value) === "object" &&
               obj.value != null,
@@ -328,7 +335,7 @@ class Interpreter {
           // let value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
           let value = -1;
           try{
-            value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
+            // value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
             // let fun;
             // if (obj.value[methodName]) {
             //   // value = obj.value[methodName](...methodArgs);
@@ -339,12 +346,20 @@ class Interpreter {
             // }
             // value = fun(...methodArgs);
 
+            // let value;
+            if (obj.value[methodName]) {
+            value = obj.value[methodName](...methodArgs);
+            } else {
+            value = obj.value.constructor[methodName](...methodArgs);
+            }
+
           } catch(err) {
             // console.info('failed:', err.message)
             value = null;
             
             try{
-              const fun = (obj.value[methodName] || obj.value.constructor[methodName]).bind(obj.value)
+              // const fun = (obj.value[methodName] || obj.value.constructor[methodName]).bind(obj.value)
+              const fun = (obj.value[methodName]? obj.value[methodName] : obj.value.constructor[methodName]).bind(obj.value)
               value = fun(...methodArgs);
             } catch(err) {
               console.warn('error call:',klass.name, '}}',methodName, err.message)

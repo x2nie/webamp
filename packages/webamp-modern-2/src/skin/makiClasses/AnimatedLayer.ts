@@ -109,6 +109,6 @@ extern AnimatedLayer.setRealtime(Boolean onoff);
   draw() {
     super.draw();
     this._renderFrame();
-    this._div.setAttribute("data-obj-name", "AnimatedLayer");
+    // this._div.setAttribute("data-obj-name", "AnimatedLayer");
   }
 }

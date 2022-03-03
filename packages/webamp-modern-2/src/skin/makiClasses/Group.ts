@@ -72,14 +72,14 @@ export default class Group extends GuiObj {
     this._children.push(child);
   }
 
-  findobject(objectId: string): GuiObj | null {
-    const lower = objectId.toLowerCase();
+  findobject(id: string): GuiObj {
+    const lower = id.toLowerCase();
     for (const obj of this._children) {
       if (obj.getId() === lower) {
         return obj;
       }
       if (obj instanceof Group) {
-        const found = obj.findobject(objectId);
+        const found = obj.findobject(id);
         if (found != null) {
           return found;
         }
@@ -146,7 +146,7 @@ export default class Group extends GuiObj {
 
   draw() {
     super.draw();
-    this._div.setAttribute("data-obj-name", "Group");
+    // this._div.setAttribute("data-obj-name", "Group");
     if(this._className)
       this._div.classList.add(this._className);
     // It seems Groups are not responsive to click events.

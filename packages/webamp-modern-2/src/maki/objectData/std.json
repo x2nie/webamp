@@ -3722,6 +3722,16 @@
         "result": "Boolean",
         "name": "isLayout",
         "parameters": []
+      },
+      {
+        "result": "GuiObject",
+        "name": "findObject",
+        "parameters": [
+          [
+            "String",
+            "id"
+          ]
+        ]
       }
     ],
     "name": "Group"
