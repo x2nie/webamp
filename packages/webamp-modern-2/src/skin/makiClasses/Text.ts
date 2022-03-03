@@ -235,7 +235,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   draw() {
     super.draw();
     this._renderText();
-    this._div.style.overflow = "visible";
+    // this._div.style.overflow = "visible";
     if (this._bold) {
       this._div.style.fontWeight = "bold";
     }

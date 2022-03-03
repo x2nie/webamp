@@ -6,12 +6,6 @@ export default class Layer extends GuiObj {
   static GUID = "5ab9fa1545579a7d5765c8aba97cc6a6";
   _image: string;
   
-  constructor(){
-    super();
-    // this._div.remove()
-    // this._div = HTMLDivElement = document.createElement("layer");
-  }
-
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
       return true;

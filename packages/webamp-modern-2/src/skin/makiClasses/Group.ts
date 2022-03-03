@@ -18,13 +18,7 @@ export default class Group extends GuiObj {
   _children: GuiObj[] = [];
   _isLayout:boolean=false;
   
-  constructor(){
-    super()
-    this._tag = 'group'
-    // this._className = null;
-  }
-
-  setXmlAttr(_key: string, value: string): boolean {
+   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
     if (super.setXmlAttr(key, value)) {
       return true;

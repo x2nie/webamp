@@ -38,12 +38,12 @@ export default class GuiObj extends XmlObj {
   _targetAlpha: number | null = null;
   _targetSpeed: number | null = null;
   _tag: string = 'dove';
-  _div: HTMLDivElement = document.createElement("div");
+  _div: HTMLDivElement;// = document.createElement("div");
   _backgroundBitmap: Bitmap | null = null;
   
   constructor() {
     super();
-    // this._div = document.createElement(this._tag);//may recreate later in init
+    this._div = document.createElement(this.constructor.name.toLowerCase().replace('_',''));//may recreate later in init
   }
 
   setParent(group: Group) {
@@ -144,7 +144,6 @@ export default class GuiObj extends XmlObj {
 
 
   init() {
-    // this._div = document.createElement(this._tag);
     this._div.addEventListener("mousedown", (e) => {
       /*
       if (this._backgroundBitmap != null) {

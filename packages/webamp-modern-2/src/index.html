@@ -80,10 +80,30 @@
       [tabindex]:focus {
         box-shadow: inset 0 0 3px red;
       }
-      body > div * {
-        position: absolute;
-        display: inline-block;
+      button {
+        border: none;
+        background: transparent;
+        padding: 0;
       }
+      text {
+        overflow: hidden;
+      }
+      /* body > div *  */
+      container{
+        position: relative;
+      }
+      layout, group, layer, animatedlayer, button, slider, text,
+      colorthemeslist
+      {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+      }
+      /* body > div select>option {
+        position: unset;
+        display: block;
+      } */
     </style>
     <style id="bitmap-css"></style>
     <style id="scrollbar-css"></style>

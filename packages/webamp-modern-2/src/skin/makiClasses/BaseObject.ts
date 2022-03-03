@@ -15,7 +15,7 @@ export default class BaseObject {
    * @ret The class name.
    */
   getclassname(): string {
-    return 'this.constructor.name';
+    return this.constructor.name;
     throw new Error("Unimplemented");
   }
 
