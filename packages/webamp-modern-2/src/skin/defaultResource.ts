@@ -142,6 +142,9 @@ export function getBitmap_system_elements(id:string){
       'wasabi.button.pressed.bottom': {file:'window/window-elements.png', x:'70', y:'163', h:'4', w:'25', gammagroup:'Buttons', },
       'wasabi.button.pressed.bottom.right': {file:'window/window-elements.png', x:'95', y:'163', h:'4', w:'4', gammagroup:'Buttons', },
     
+      // x2nie
+      'studio.button': {file:'window/window-elements.png', x:'1', y:'135', h:'31', w:'31', gammagroup:'Buttons', },
+      'studio.button.pressed': {file:'window/window-elements.png', x:'67', y:'135', h:'31', w:'31', gammagroup:'Buttons', },
     
       // default button
       'studio.button.upperleft': {file:'window/window-elements.png', x:'1', y:'135', h:'2', w:'2', gammagroup:'Buttons', },

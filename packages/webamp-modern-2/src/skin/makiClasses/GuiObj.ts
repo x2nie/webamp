@@ -80,10 +80,12 @@ export default class GuiObj extends XmlObj {
         this._renderHeight();
         break;
       case "x":
+      case "default_x":
         this._x = num(value) ?? 0;
         this._renderX();
         break;
       case "y":
+      case "default_y":
         this._y = num(value) ?? 0;
         this._renderY();
         break;

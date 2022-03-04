@@ -40,6 +40,8 @@ export default class SkinParser {
   _res = {
     bitmaps: {
       // 'studio.basetexture': false,
+      'studio.button': false,
+      'studio.button.pressed': false,
       'studio.scrollbar.vertical.background': false,
       'studio.scrollbar.vertical.left': false,
       'studio.scrollbar.vertical.right': false,
@@ -380,6 +382,9 @@ export default class SkinParser {
     parentGroup.addChild(button);
 
     // assure backgrounds are loaded:
+    this._res.bitmaps["studio.button"] = false;
+    this._res.bitmaps["studio.button.pressed"] = false;
+
     this._res.bitmaps["studio.button.upperLeft"] = false;
     this._res.bitmaps["studio.button.top"] = false;
     this._res.bitmaps["studio.button.upperRight"] = false;

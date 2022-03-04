@@ -1,7 +1,7 @@
 import Button from "./Button";
 
 export default class WasabiButton extends Button {
-  static GUID = "unknown";
+//   static GUID = "unknown";
   _l: HTMLSpanElement = document.createElement("span");
   _r: HTMLSpanElement = document.createElement("span");
   _m: HTMLSpanElement = document.createElement("span");
@@ -16,6 +16,13 @@ export default class WasabiButton extends Button {
     this._div.appendChild(this._l);
     this._div.appendChild(this._m);
     this._div.appendChild(this._r);
+    // this._image = 'studio.button'
+    // this._downimage = 'studio.button.pressed'
+  }
+  init(){
+    super.init();
+    this.setXmlAttr('image','studio.button')
+    this.setXmlAttr('downimage', 'studio.button.pressed');
   }
 
   setXmlAttr(key: string, value: string): boolean {
@@ -38,9 +45,9 @@ export default class WasabiButton extends Button {
     this._div.setAttribute("data-obj-name", "WasabiButton");
   }
 
-  _renderBackground() {
+//   _renderBackground() {
 
-  }
+//   }
   /*
   extern ToggleButton.onToggle(Boolean onoff);
   extern int TOggleButton.getCurCfgVal()
