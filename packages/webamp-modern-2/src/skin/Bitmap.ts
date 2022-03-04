@@ -30,6 +30,7 @@ export default class Bitmap {
           /[^a-zA-Z0-9]/g,
           "-"
         )}-${getId()}`;
+        this._cssVar = `--bitmap-${this.getId().replace(/[^a-zA-Z0-9]/g,"-")}`;//x2nie
         break;
       case "x":
         this._x = num(value) ?? 0;

@@ -8,6 +8,7 @@ import Container from "./makiClasses/Container";
 import Layer from "./makiClasses/Layer";
 import Slider from "./makiClasses/Slider";
 import Button from "./makiClasses/Button";
+import WasabiButton from "./makiClasses/WasabiButton";
 import Text from "./makiClasses/Text";
 import Status from "./makiClasses/Status";
 import { parse as parseMaki } from "../maki/parser";
@@ -23,6 +24,7 @@ import GammaGroup from "./GammaGroup";
 import ColorThemesList from "./ColorThemesList";
 import WasabiStandardFrameNostatus from "./WasabiStandardFrameNostatus";
 import { UIRoot } from "../UIRoot";
+import { getBitmap_system_elements } from "./defaultResource";
 
 class ParserContext {
   container: Container | null = null;
@@ -35,6 +37,20 @@ export default class SkinParser {
   _context: ParserContext = new ParserContext();
   _gammaSet: GammaGroup[] = [];
   _uiRoot: UIRoot;
+  _res = {
+    bitmaps: {
+      // 'studio.basetexture': false,
+      'studio.scrollbar.vertical.background': false,
+      'studio.scrollbar.vertical.left': false,
+      'studio.scrollbar.vertical.right': false,
+      'studio.scrollbar.vertical.button': false,
+      'studio.scrollbar.horizontal.background': false,
+      'studio.scrollbar.horizontal.left': false,
+      'studio.scrollbar.horizontal.right': false,
+      'studio.scrollbar.horizontal.button': false,
+    }, 
+    colors: {} }; //requested by skin, later compared with UiRoot._bitmaps
+  
 
   constructor(
     uiRoot: UIRoot /* Once UI_ROOT is not a singleton, we can create that objet in the constructor */
@@ -52,6 +68,7 @@ export default class SkinParser {
     const parsed = parseXml(includedXml);
 
     await this.traverseChildren(parsed);
+    await this._resolveRes()
 
     return this._uiRoot;
   }
@@ -64,9 +81,49 @@ export default class SkinParser {
     await this.traverseChildren(parsed);
   }
 
+  _scanRes(node: XmlElement){
+    if(node.attributes.background && !this._res.bitmaps[node.attributes.background]){
+      this._res.bitmaps[node.attributes.background] = false; // just add, dont need to check
+      // console.log(node.name, 'bg:', node.attributes.background)
+    } 
+  }
+
+  async _resolveRes(){
+    //? checkmark the already availble
+    // this._uiRoot._bitmaps.forEach(function (bitmap) {
+    //   self._res.bitmaps[bitmap._id.toLowerCase()] = true;
+    // });
+    for(const bitmap of this._uiRoot._bitmaps){
+      this._res.bitmaps[bitmap._id.toLowerCase()] = true;
+    };
+    // console.log(this._res.bitmaps)
+    //? build not available bitmap
+    for (const [key, available] of Object.entries<boolean>(this._res.bitmaps)) {
+      // console.log('trial bitmap:', key, available, typeof available)
+      if(!!!available){
+        const lowercaseId = key.toLowerCase();
+        const dict = getBitmap_system_elements(lowercaseId);
+        if(dict!=null){
+          const bitmapEl = new XmlElement('bitmap', {...dict})
+        //   // parser.traverseChild(bitmapEl);
+          await this.bitmap(bitmapEl);
+          console.log('solving bitmap:', lowercaseId)
+          // return findLast(
+          //   this._bitmaps,
+          //   (bitmap) => bitmap._id.toLowerCase() === lowercaseId
+          // );
+        }
+      }
+    }
+    // this._uiRoot._bitmaps.forEach(function (bitmap) {
+    //   this._res.bitmaps[bitmap._id.toLowerCase()] = true;
+    // });
+  }
+
   async traverseChildren(parent: XmlElement | XmlDocument) {
     for (const child of parent.children) {
       if (child instanceof XmlElement) {
+        this._scanRes(child);
         await this.traverseChild(child);
       }
     }
@@ -105,6 +162,7 @@ export default class SkinParser {
         return this.button(node);
       case "togglebutton":
         return this.toggleButton(node);
+      case "layoutstatus":
       case "group":
         return this.group(node);
       case "layout":
@@ -129,8 +187,8 @@ export default class SkinParser {
       case "wasabi:titlebar":
         return this.wasabiTitleBar(node);
       case "wasabi:button":
-        return this.toggleButton(node);
-        // return this.wasabiButton(node);
+        // return this.toggleButton(node);
+        return this.wasabiButton(node);
       case "truetypefont":
         return this.trueTypeFont(node);
       case "eqvis":
@@ -143,11 +201,11 @@ export default class SkinParser {
       case "wasabi:playlistframe:nostatus":
       case "wasabi:visframe:nostatus":
       case "wasabi:medialibraryframe:nostatus":
+      case "wasabi:mainframe:nostatus":
       case "wasabi:standardframe:nostatus":
         return this.wasabiStandardFrameNostatus(node);
       case "wasabi:standardframe:status":
         return this.wasabiStandardFrameStatus(node);
-      case "wasabi:mainframe:nostatus":
       case "nstatesbutton":
       case "componentbucket":
       case "playlisteditor":
@@ -213,6 +271,7 @@ export default class SkinParser {
     await bitmap.ensureImageLoaded(this._imageManager);
 
     this._uiRoot.addBitmap(bitmap);
+    this._res.bitmaps[node.attributes.id] = true;
   }
 
   async bitmapFont(node: XmlElement) {
@@ -309,7 +368,39 @@ export default class SkinParser {
       "Unexpected children in <button> XML node."
     );
 
-    // TODO: Parse buttons
+    const button = new WasabiButton();
+    button.setXmlAttributes(node.attributes);
+    const { parentGroup } = this._context;
+    if (parentGroup == null) {
+      console.warn(
+        `FIXME: Expected <Button id="${button._id}"> to be within a <Layout> | <Group>`
+      );
+      return;
+    }
+    parentGroup.addChild(button);
+
+    // assure backgrounds are loaded:
+    this._res.bitmaps["studio.button.upperLeft"] = false;
+    this._res.bitmaps["studio.button.top"] = false;
+    this._res.bitmaps["studio.button.upperRight"] = false;
+    this._res.bitmaps["studio.button.left"] = false;
+    this._res.bitmaps["studio.button.middle"] = false;
+    this._res.bitmaps["studio.button.right"] = false;
+    this._res.bitmaps["studio.button.lowerLeft"] = false;
+    this._res.bitmaps["studio.button.bottom"] = false;
+    this._res.bitmaps["studio.button.lowerRight"] = false;
+
+    this._res.bitmaps["studio.button.pressed.upperLeft"] = false;
+    this._res.bitmaps["studio.button.pressed.top"] = false;
+    this._res.bitmaps["studio.button.pressed.upperRight"] = false;
+    this._res.bitmaps["studio.button.pressed.left"] = false;
+    this._res.bitmaps["studio.button.pressed.middle"] = false;
+    this._res.bitmaps["studio.button.pressed.right"] = false;
+    this._res.bitmaps["studio.button.pressed.lowerLeft"] = false;
+    this._res.bitmaps["studio.button.pressed.bottom"] = false;
+    this._res.bitmaps["studio.button.pressed.lowerRight"] = false;
+
+    console.log('wasabi.btn', this._res.bitmaps)
   }
 
   async toggleButton(node: XmlElement) {
@@ -505,7 +596,8 @@ export default class SkinParser {
     });
     // const frame = new Group();
     const frame = new WasabiStandardFrameNostatus(node);
-    frame.setXmlAttributes(nodeFrame.attributes);
+    // frame.setXmlAttributes(nodeFrame.attributes);
+    frame.setXmlAttributes(node.attributes);
     await this.maybeApplyGroupDef(frame, nodeFrame);
     // this._context.parentGroup = frame;
     // await this.traverseChildren(nodeFrame);

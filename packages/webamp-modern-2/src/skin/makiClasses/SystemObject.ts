@@ -548,12 +548,28 @@ export default class SystemObject extends BaseObject {
    * @param  group_id    The identifier for the group you want to create.
    */
   newgroup(group_id: string): Group {
+    const self = this;
+    // console.warn('* new group is called with param:', group_id, this._parentGroup)
     const group = new Group();
     const parser = new SkinParser(UI_ROOT);
-    parser.maybeApplyGroupDefId(group, group_id)
-  
-    if(this._parentGroup)
-      this._parentGroup.addChild(group)
+    parser.maybeApplyGroupDefId(group, group_id).then(
+      function(foo){
+        // console.warn('* THEN= group :',group_id, group)
+         
+        if(self._parentGroup) self._parentGroup.addChild(group)
+        // console.warn('* >>new group :', group)
+        group.init()
+        group.draw()
+      },
+      function(err){
+        console.warn('* THEN =! group :',group_id, err,  group)
+      }
+    )
+    
+    // if(this._parentGroup) this._parentGroup.addChild(group)
+    // // console.warn('* >>new group :', group)
+    // group.init()
+    // group.draw()
     return group;
   }
 

@@ -47,9 +47,9 @@ export default class Group extends GuiObj {
     if(this._inited) return;
     this._inited = true;
     
-    if(arguments.length){
-      return; //it is called by wasabi. dont bother.
-    }
+    // if(arguments.length){
+    //   return; //it is called by wasabi. dont bother.
+    // }
     for (const systemObject of this._systemObjects) {
       systemObject.init();
     }

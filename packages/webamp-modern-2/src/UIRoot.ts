@@ -149,7 +149,7 @@ export class UIRoot {
     // this._activeGammaSet = Array.from(this._gammaSets.values())[0] ?? null;
     // this._setCssVars();
     // TODO: Get latest picked color scheme
-    const [firstName] = this._gammaSets.keys();
+    const [one, firstName] = this._gammaSets.keys();
     // this._activeGammaSetName = firstName;
     this.enableGammaSet(firstName)
   }
