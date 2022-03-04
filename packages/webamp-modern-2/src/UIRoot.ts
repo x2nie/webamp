@@ -241,10 +241,7 @@ export class UIRoot {
     ::-webkit-scrollbar-thumb {
         max-height: 42px;
         min-height: 42px;
-        transform: scaleY(3);
-        position: relative;
-        display: block;
-        z-index: 1;
+        background-repeat: no-repeat;
     }
     ::-webkit-scrollbar-thumb::after {
         content: 'HALO';
