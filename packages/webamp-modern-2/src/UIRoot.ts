@@ -326,12 +326,18 @@ export class UIRoot {
       case "toggle":
         if(param=='guid:pl') param='pledit';
         const container = findLast(this.getContainers(), ct => ct._id == param);
-        // console.log(container._id, container._layouts)
-        // container._defaultVisible = true;
-        // container.setLayout(container._layouts[0]._id);
         container.toggle()
-        // this._div.appendChild(container.getDiv())
-        // this.audio.eject();
+        break;
+      case "close":
+        console.log('close!', document.activeElement)
+        const btn = document.activeElement;
+        const btnContainerEl = btn.closest('container');
+        const container_id = btnContainerEl.getAttribute('id').toLowerCase();
+        for(const closingContainer of this._containers){
+          if(closingContainer._id.toLowerCase() == container_id){
+            closingContainer.close();
+          }
+        }
         break;
       default:
         assume(false, `Unknown global action: ${action} ,param: ${param}, actionTarget: ${actionTarget}`);
