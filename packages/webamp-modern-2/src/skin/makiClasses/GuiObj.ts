@@ -628,7 +628,7 @@ export default class GuiObj extends XmlObj {
     )})`;
   }
   _renderX() {
-    if(this._x==0 && !this._relatx)return;
+    // if(this._x==0 && !this._relatx)return;
     if(this._relatx) {
       this._div.style.left = relat(this._x ?? 0);
     } else {
@@ -636,7 +636,7 @@ export default class GuiObj extends XmlObj {
     }
   }
   _renderY() {
-    if(this._y==0 && !this._relaty)return;
+    // if(this._y==0 && !this._relaty)return;
     if(this._relaty) {
       this._div.style.top = relat(this._y ?? 0);
     } else {
