@@ -345,6 +345,10 @@ export class UIRoot {
   }
   draw() {
     this._div.style.imageRendering = "pixelated";
+    if(window.location.search=='?debug'){
+      // this._div.classList.add("unghost");
+      document.body.classList.add("debug");
+    }
     for (const container of this.getContainers()) {
       container.draw();
       this._div.appendChild(container.getDiv());
