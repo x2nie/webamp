@@ -26,6 +26,7 @@ export default class Timer extends BaseObject {
     if(!this._delay){
       return false;
     }
+    const self=this;
 
     try{
       assume(this._delay != null, "Tried to start a timer without a delay");
@@ -33,7 +34,7 @@ export default class Timer extends BaseObject {
         this.stop();
       }
       this._timeout = setInterval(() => {
-        UI_ROOT.vm.dispatch(this, "ontimer");
+        UI_ROOT.vm.dispatch(self, "ontimer");
       }, this._delay);
       return true
     } 

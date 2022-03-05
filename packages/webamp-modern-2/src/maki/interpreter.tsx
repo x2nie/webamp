@@ -375,10 +375,10 @@ class Interpreter {
           }
           if (value === null) {
             // variables[1] holds global NULL value
-            value = this.variables[1];
+            //value = this.variables[1];
           }
           if (returnType === "BOOLEAN") {
-            assert(typeof value === "boolean", "BOOL should return a boolean");
+            assert(typeof value === "boolean", "BOOL should return a boolean" + ` got ${value} => ${JSON.stringify(value)} `);
             value = value ? 1 : 0;
           }
           if (returnType === "OBJECT") {
