@@ -111,6 +111,7 @@ export class UIRoot {
   }
 
   getGroupDef(id: string): XmlElement | null {
+    if(!id) return null;
     const lowercaseId = id.toLowerCase();
     const found = findLast(
       this._groupDefs,

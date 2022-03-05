@@ -23,9 +23,10 @@ import Color from "./Color";
 import GammaGroup from "./GammaGroup";
 import ColorThemesList from "./ColorThemesList";
 import WasabiStandardFrameNostatus from "./WasabiStandardFrameNostatus";
-import { UIRoot } from "../UIRoot";
+import UI_ROOT, { UIRoot } from "../UIRoot";
 import { getBitmap_system_elements } from "./defaultResource";
 import AlbumArt from "./makiClasses/AlbumArt";
+import WindowHolder from "./makiClasses/WindowHolder";
 
 class ParserContext {
   container: Container | null = null;
@@ -176,11 +177,16 @@ export default class SkinParser {
         return this.button(node);
       case "togglebutton":
         return this.toggleButton(node);
+      case "progressgrid":
+      case "rect":
       case "layoutstatus":
+      case "groupxfade":
       case "group":
         return this.group(node);
       case "layout":
         return this.layout(node);
+      case "windowholder":
+        return this.windowholder(node);
       case "component":
         return this.component(node);
       case "gammaset":
@@ -262,6 +268,17 @@ export default class SkinParser {
 
   async elements(node: XmlElement) {
     await this.traverseChildren(node);
+  }
+
+  async windowholder(node: XmlElement) {
+    const group = new WindowHolder();
+    const previousParent = this._context.parentGroup;
+    await this.maybeApplyGroupDef(group, node);
+    group.setXmlAttributes(node.attributes);
+    this._context.parentGroup = group;
+    await this.traverseChildren(node);
+    this._context.parentGroup = previousParent;
+    this.addToGroup(group);
   }
 
   async group(node: XmlElement) {
@@ -629,7 +646,18 @@ export default class SkinParser {
     const frame = new WasabiStandardFrameNostatus(node);
     // frame.setXmlAttributes(nodeFrame.attributes);
     frame.setXmlAttributes(node.attributes);
+
+    // const groupDef = this._uiRoot.getGroupDef(id);
     await this.maybeApplyGroupDef(frame, nodeFrame);
+
+    
+    const xuitag : string = node.name; //Wasabi:MainFrame:NoStatus
+    const xuiEl : XmlElement = UI_ROOT.getXuiElement(xuitag);
+    if(xuiEl){
+      const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
+      await this.maybeApplyGroupDef(frame, xuiFrame);
+    }
+
     // this._context.parentGroup = frame;
     // await this.traverseChildren(nodeFrame);
 

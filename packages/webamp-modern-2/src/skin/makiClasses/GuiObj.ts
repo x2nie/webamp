@@ -39,7 +39,6 @@ export default class GuiObj extends XmlObj {
   _targetHeight: number | null = null;
   _targetAlpha: number | null = null;
   _targetSpeed: number | null = null;
-  _tag: string = 'dove';
   _div: HTMLElement;// = document.createElement("div");
   _backgroundBitmap: Bitmap | null = null;
   
@@ -319,8 +318,8 @@ export default class GuiObj extends XmlObj {
   getGuiRelatH(): number { return this._relath ? 1 : 0; }
   getGuiRelatX(): number { return this._relatx ? 1 : 0; }
   getGuiRelatY(): number { return this._relaty ? 1 : 0; }
-  getAutoWidth(): boolean { return this._relatw; }
-  getAutoHeight(): boolean { return this._relath; }
+  getautowidth(): boolean { return this._relatw; }
+  getautoheight(): boolean { return this._relath; }
 
   isActive(): boolean {
     return this._div.matches(':focus')
