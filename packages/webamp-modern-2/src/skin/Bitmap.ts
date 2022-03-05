@@ -46,6 +46,9 @@ export default class Bitmap {
         break;
       case "file":
         this._file = value;
+        if(this._file.startsWith('../Winamp Modern/')){
+          this._file = this._file.replace('../Winamp Modern/','')
+        }
         break;
       case "gammagroup":
         this._gammagroup = value;
@@ -113,7 +116,7 @@ export default class Bitmap {
     return `${width} ${height}`;
   }
 
-  _setAsBackground(div: HTMLDivElement, prefix: string) {
+  _setAsBackground(div: HTMLElement, prefix: string) {
     div.style.setProperty(
       `--${prefix}background-image`,
       this._getBackgrondImageCSSAttribute()
@@ -124,19 +127,19 @@ export default class Bitmap {
     // );
   }
 
-  setAsBackground(div: HTMLDivElement) {
+  setAsBackground(div: HTMLElement) {
     this._setAsBackground(div, "");
   }
 
-  setAsDownBackground(div: HTMLDivElement) {
+  setAsDownBackground(div: HTMLElement) {
     this._setAsBackground(div, "down-");
   }
 
-  setAsActiveBackground(div: HTMLDivElement) {
+  setAsActiveBackground(div: HTMLElement) {
     this._setAsBackground(div, "active-");
   }
 
-  setAsHoverBackground(div: HTMLDivElement) {
+  setAsHoverBackground(div: HTMLElement) {
     this._setAsBackground(div, "hover-");
   }
 

@@ -90,6 +90,7 @@ export default class SystemObject extends BaseObject {
    * @param  defvalue  The defautl value to return if no item is found.
    */
   getprivateint(section: string, item: string, defvalue: number): number {
+    console.log('getPrivateInt', section, item, defvalue);
     return PRIVATE_CONFIG.getPrivateInt(section, item, defvalue);
   }
 
@@ -412,6 +413,7 @@ export default class SystemObject extends BaseObject {
    */
   setprivateint(section: string, item: string, value: number) {
     PRIVATE_CONFIG.setPrivateInt(section, item, value);
+    console.log('setPrivateInt', section, item, value);
   }
 
   /**
@@ -551,15 +553,17 @@ export default class SystemObject extends BaseObject {
     const self = this;
     // console.warn('* new group is called with param:', group_id, this._parentGroup)
     const group = new Group();
-    const parser = new SkinParser(UI_ROOT);
+    // const parser = new SkinParser(UI_ROOT);
+    const parser = SkinParser.getCurrentParser();
     parser.maybeApplyGroupDefId(group, group_id).then(
       function(foo){
         // console.warn('* THEN= group :',group_id, group)
          
         if(self._parentGroup) self._parentGroup.addChild(group)
-        // console.warn('* >>new group :', group)
+        console.warn('* >>new group ',group_id, ':', group)
         group.init()
         group.draw()
+        self._parentGroup._div.appendChild(group.getDiv());
       },
       function(err){
         console.warn('* THEN =! group :',group_id, err,  group)

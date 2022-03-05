@@ -647,11 +647,14 @@ class Interpreter {
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
+            case "BOOLEAN": //x2nie
+              b.value = b.value? 1 : 0;
+              break;
             case "STRING":
             case "OBJECT":
-            case "BOOLEAN":
+            // case "BOOLEAN":
             case "NULL":
-              throw new Error("Tried to add non-numbers.");
+              throw new Error("Tried to add non-numbers. " + b.type);
           }
           if (b.value && a.value) {
             this.push(a);

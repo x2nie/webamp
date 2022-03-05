@@ -40,7 +40,7 @@ export default class GuiObj extends XmlObj {
   _targetAlpha: number | null = null;
   _targetSpeed: number | null = null;
   _tag: string = 'dove';
-  _div: HTMLDivElement;// = document.createElement("div");
+  _div: HTMLElement;// = document.createElement("div");
   _backgroundBitmap: Bitmap | null = null;
   
   constructor() {
@@ -198,7 +198,7 @@ export default class GuiObj extends XmlObj {
     });
   }
 
-  getDiv(): HTMLDivElement {
+  getDiv(): HTMLElement {
     return this._div;
   }
 

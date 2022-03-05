@@ -52,9 +52,9 @@ export default class MapObj extends XmlObj {
     return this._id;
   }
 
-  getDiv(): HTMLDivElement {
-    return this._div;
-  }
+  // getDiv(): HTMLElement {
+  //   return this._div;
+  // }
 
   getWidth(): number {
     return this._activeLayout.getwidth();

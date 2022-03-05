@@ -1,5 +1,5 @@
 import UI_ROOT from "../../UIRoot";
-import { assert, px, removeAllChildNodes, toBool } from "../../utils";
+import { assert, px, removeAllChildNodes, num, toBool } from "../../utils";
 import Layout from "./Layout";
 import XmlObj from "../XmlObj";
 
@@ -16,7 +16,9 @@ export default class Container extends XmlObj {
   _visible: boolean = true;
   _id: string;
   _name: string;
-  _div: HTMLDivElement = document.createElement("container");
+  _x: number = 0;
+  _y: number = 0;
+  _div: HTMLElement = document.createElement("container");
   constructor() {
     super();
   }
@@ -36,6 +38,17 @@ export default class Container extends XmlObj {
       case "default_visible":
         this._visible = toBool(value);
         break;
+      case "x":
+      case "default_x":
+        this._x = num(value) ?? 0;
+        // this._renderX();
+        break;
+      case "y":
+      case "default_y":
+        this._y = num(value) ?? 0;
+        // this._renderY();
+        break;
+    
       default:
         return false;
     }
@@ -52,7 +65,7 @@ export default class Container extends XmlObj {
     return this._id;
   }
 
-  getDiv(): HTMLDivElement {
+  getDiv(): HTMLElement {
     return this._div;
   }
 
@@ -161,6 +174,9 @@ export default class Container extends XmlObj {
     if (this._visible && this._activeLayout) {
       this._activeLayout.draw();
       this._div.appendChild(this._activeLayout.getDiv());
+      this._div.style.left = px(this._x ?? 0);
+      this._div.style.top = px(this._y ?? 0);
+
       // this.center();
     } else {
       removeAllChildNodes(this._div);

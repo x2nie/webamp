@@ -37,6 +37,20 @@ export default class Layout extends Group {
     return this._parent as unknown as Container;
   }
 
+  gettop(): number {
+    return this._parent._y;
+  }
+
+  /**
+   * Get the X position, in the screen, of the
+   * left edge of the object.
+   *
+   * @ret The left edge's position (in screen coordinates).
+   */
+  getleft(): number {
+    return this._parent._x;
+  }
+
   dispatchAction(
     action: string,
     param: string | null,

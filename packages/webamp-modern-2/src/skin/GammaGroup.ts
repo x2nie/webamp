@@ -55,12 +55,14 @@ export default class GammaGroup {
     const [r, g, b] = this._value.split(",").map((v) => {
       return (Number(v) / 4096) +1.0;
     });
+    const W = w || img.width;
+    const H = h || img.height;
     const canvas = document.createElement("canvas");
-    canvas.width = w || img.width;
-    canvas.height = h || img.height;
+    canvas.width = W;
+    canvas.height = H;
     const ctx = canvas.getContext("2d");
     ctx.drawImage(img, x ? -x : 0, y ? -y : 0);
-    const imageData = ctx.getImageData(0, 0, w || img.width, h || img.height);
+    const imageData = ctx.getImageData(0, 0, W, H);
     const data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
       if (this._boost) {

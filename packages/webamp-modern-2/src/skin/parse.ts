@@ -25,11 +25,14 @@ import ColorThemesList from "./ColorThemesList";
 import WasabiStandardFrameNostatus from "./WasabiStandardFrameNostatus";
 import { UIRoot } from "../UIRoot";
 import { getBitmap_system_elements } from "./defaultResource";
+import AlbumArt from "./makiClasses/AlbumArt";
 
 class ParserContext {
   container: Container | null = null;
   parentGroup: Group | /* Group includes Layout | */ null = null;
 }
+
+let _CURRENT_PARSER: SkinParser;
 
 export default class SkinParser {
   _imageManager: ImageManager;
@@ -59,7 +62,13 @@ export default class SkinParser {
   ) {
     this._uiRoot = uiRoot;
     this._imageManager = new ImageManager(this._uiRoot._zip);
+    _CURRENT_PARSER = this;
   }
+
+  public static getCurrentParser(): SkinParser {
+    return _CURRENT_PARSER;
+  }
+
   async parse(): Promise<UIRoot> {
     // Load built-in xui elements
     // await this.parseFromUrl("assets/xml/xui/standardframe.xml");
@@ -133,6 +142,8 @@ export default class SkinParser {
   }
   async traverseChild(node: XmlElement) {
     switch (node.name.toLowerCase()) {
+      case "albumart":
+        return this.albumart(node);
       case "wasabixml":
         return this.wasabiXml(node);
       case "winampabstractionlayer":
@@ -462,6 +473,17 @@ export default class SkinParser {
 
   async groupdef(node: XmlElement) {
     this._uiRoot.addGroupDef(node);
+  }
+
+  async albumart(node: XmlElement) {
+    const group = new AlbumArt();
+    const previousParent = this._context.parentGroup;
+    // await this.maybeApplyGroupDef(group, node);
+    group.setXmlAttributes(node.attributes);
+    // this._context.parentGroup = group;
+    // await this.traverseChildren(node);
+    this._context.parentGroup = previousParent;
+    this.addToGroup(group);
   }
 
   async layer(node: XmlElement) {
