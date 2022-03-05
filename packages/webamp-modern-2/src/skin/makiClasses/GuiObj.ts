@@ -1,5 +1,5 @@
 import UI_ROOT from "../../UIRoot";
-import { assert, num, toBool, px, assume, relat } from "../../utils";
+import { assert, findLast, num, toBool, px, assume, relat } from "../../utils";
 import Bitmap from "../Bitmap";
 import Group from "./Group";
 import XmlObj from "../XmlObj";
@@ -71,7 +71,7 @@ export default class GuiObj extends XmlObj {
         break;
   
       case "autowidthsource":
-        this._autowidthsource = value
+        this._autowidthsource = value.toLowerCase();
         break;
       case "w":
       case "default_w":
@@ -318,8 +318,18 @@ export default class GuiObj extends XmlObj {
   getGuiRelatH(): number { return this._relath ? 1 : 0; }
   getGuiRelatX(): number { return this._relatx ? 1 : 0; }
   getGuiRelatY(): number { return this._relaty ? 1 : 0; }
-  getautowidth(): boolean { return this._relatw; }
-  getautoheight(): boolean { return this._relath; }
+  getautowidth(): number { 
+    const child = findLast(
+      this._children,
+      (c) => c._id.toLowerCase() == this._autowidthsource
+    );
+    if(child){
+      return child._div.getBoundingClientRect().width; 
+      // return child._width;
+    }
+    return 1;
+  }
+  getautoheight(): number { return this._div.getBoundingClientRect().height; }
 
   isActive(): boolean {
     return this._div.matches(':focus')
