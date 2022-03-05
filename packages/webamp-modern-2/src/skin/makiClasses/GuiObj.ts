@@ -60,6 +60,11 @@ export default class GuiObj extends XmlObj {
     return this._parent;
   }
 
+  addChild(child: GuiObj) {
+    child.setParent(this as unknown as Group);
+    this._children.push(child);
+  }
+
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
     switch (key) {

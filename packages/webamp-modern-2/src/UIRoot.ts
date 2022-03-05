@@ -134,15 +134,17 @@ export class UIRoot {
   }
 
   enableGammaSet(id: string) {
-    const found = this._gammaSets.get(id.toLowerCase());
-    assume(
-      found != null,
-      `Could not find gammaset for id "${id}" from set of ${Array.from(
-        this._gammaSets.keys()
-      ).join(", ")}`
-    );
-    this._activeGammaSetName = id;
-    this._activeGammaSet = found;
+    if(id){
+      const found = this._gammaSets.get(id.toLowerCase());
+      assume(
+        found != null,
+        `Could not find gammaset for id "${id}" from set of ${Array.from(
+          this._gammaSets.keys()
+        ).join(", ")}`
+      );
+      this._activeGammaSetName = id;
+      this._activeGammaSet = found;
+    }
     this._setCssVars();
   }
 
@@ -150,9 +152,9 @@ export class UIRoot {
     // this._activeGammaSet = Array.from(this._gammaSets.values())[0] ?? null;
     // this._setCssVars();
     // TODO: Get latest picked color scheme
-    const [one, firstName] = this._gammaSets.keys();
+    const [firstName] = this._gammaSets.keys();
     // this._activeGammaSetName = firstName;
-    this.enableGammaSet(firstName)
+    this.enableGammaSet(firstName || '')
   }
 
   _getGammaGroup(id: string): GammaGroup | null {
@@ -167,6 +169,8 @@ export class UIRoot {
     const cssRules = []
     for (const bitmap of this._bitmaps) {
       const img = bitmap.getImg();
+      const url = img.src;
+      /*
       const groupId = bitmap.getGammaGroup();
       // if (!map.has(img)) {
       //   map.set(img, new Map());
@@ -188,6 +192,7 @@ export class UIRoot {
       // const url = imgCache.get(groupId);
       // TODO: Techincally we only need one per image/gammagroup.
       // this._div.style.setProperty(bitmap.getCSSVar(), `url(${url})`);
+      */
       cssRules.push(`${bitmap.getCSSVar()}: url(${url});`);
     }
     cssRules.unshift(':root{')

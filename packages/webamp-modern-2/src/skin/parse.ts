@@ -27,6 +27,7 @@ import UI_ROOT, { UIRoot } from "../UIRoot";
 import { getBitmap_system_elements } from "./defaultResource";
 import AlbumArt from "./makiClasses/AlbumArt";
 import WindowHolder from "./makiClasses/WindowHolder";
+import WasabiTitle from "./makiClasses/WasabiTitle";
 
 class ParserContext {
   container: Container | null = null;
@@ -539,17 +540,17 @@ export default class SkinParser {
     parentGroup.addChild(layer);
   }
 
-  async maybeApplyGroupDef(group: Group, node: XmlElement) {
+  async maybeApplyGroupDef(group: GuiObj, node: XmlElement) {
     const id = node.attributes.id;
     await this.maybeApplyGroupDefId(group, id)
   }
 
-  async maybeApplyGroupDefId(group: Group, groupdef_id: string) {
+  async maybeApplyGroupDefId(group: GuiObj, groupdef_id: string) {
     const groupDef = this._uiRoot.getGroupDef(groupdef_id);
     if (groupDef != null) {
       group.setXmlAttributes(groupDef.attributes);
       const previousParentGroup = this._context.parentGroup;
-      this._context.parentGroup = group;
+      this._context.parentGroup = group as Group;
       await this.traverseChildren(groupDef);
       this._context.parentGroup = previousParentGroup;
       // TODO: Maybe traverse groupDef's children?
@@ -804,6 +805,19 @@ export default class SkinParser {
       node.children.length === 0,
       "Unexpected children in <wasabiTitleBar> XML node."
     );
+    const title = new WasabiTitle();    
+    await this.maybeApplyGroupDef(title, node);
+    title.setXmlAttributes(node.attributes);
+
+    const { parentGroup } = this._context;
+    if (parentGroup == null) {
+      console.warn(
+        `FIXME: Expected <Layer id="${title._id}"> to be within a <Layout> | <Group>`
+      );
+      return;
+    }
+    parentGroup.addChild(title);
+
   }
 
   async trueTypeFont(node: XmlElement) {
