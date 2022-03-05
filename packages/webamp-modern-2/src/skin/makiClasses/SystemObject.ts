@@ -1104,10 +1104,10 @@ export default class SystemObject extends BaseObject {
    * @param  separator   The separator to use.
    * @param  tokennum    The token to retreive.
    */
-  gettoken(str: string, separator: string, tokennum: number) {
+  gettoken(str: string, separator: string, tokennum: number):string {
     // TODO
     const commas = str.split(separator)
-    return commas[tokennum]
+    return commas[tokennum] || ''
   }
 
   /**
@@ -1586,6 +1586,20 @@ export default class SystemObject extends BaseObject {
   random(max: number): number {
     // TODO: Should this return an int?
     return Math.random() * max;
+  }
+
+  // =========================== BOF x2nie changes
+  // onEqFreqChanged(isiso: number){
+  oneqfreqchanged(isiso: number){
+
+  }
+
+  getsonginfotext():string{
+    return this.getplayitemstring()
+  }
+
+  getsonginfotexttranslated():string{
+    return this.getplayitemstring()
   }
 }
 

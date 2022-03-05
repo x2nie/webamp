@@ -19,6 +19,10 @@ export default class ToggleButton extends Button {
     return true;
   }
 
+  ontoggle(onoff: boolean){
+    
+  }
+
   draw() {
     super.draw();
     this._div.setAttribute("data-obj-name", "ToggleButton");

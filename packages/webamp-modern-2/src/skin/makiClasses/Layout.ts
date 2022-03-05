@@ -13,9 +13,8 @@ import Container from "./Container";
 export default class Layout extends Group {
   static GUID = "60906d4e482e537e94cc04b072568861";
   // _parentContainer: Container | null = null;
-  _tag: string = 'layout';
-  _div: HTMLDivElement = document.createElement("layout");
   _isLayout:boolean=true;
+  _snap = {left:0, top:0, right:0, bottom:0}
 
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -57,6 +56,13 @@ export default class Layout extends Group {
           this._parent.dispatchAction(action, param, actionTarget);
         }
     }
+  }
+
+  snapadjust(left:number, top:number, right:number, bottom:number){
+    this._snap.left=left;
+    this._snap.top=top;
+    this._snap.right=right;
+    this._snap.bottom=bottom;
   }
 
   draw() {

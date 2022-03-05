@@ -15,7 +15,7 @@ export default class Group extends GuiObj {
   _desktopAlpha: boolean;
   _drawBackground: boolean = true;
   _systemObjects: SystemObject[] = [];
-  _children: GuiObj[] = [];
+  // _children: GuiObj[] = []; //moved to GuiObj
   _isLayout:boolean=false;
   
    setXmlAttr(_key: string, value: string): boolean {

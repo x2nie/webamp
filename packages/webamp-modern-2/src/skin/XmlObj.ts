@@ -3,7 +3,7 @@ import BaseObject from "./makiClasses/BaseObject";
 export default class XmlObj extends BaseObject {
   setXmlAttributes(attributes: { [attrName: string]: string }) {
     for (const [key, value] of Object.entries(attributes)) {
-      this.setXmlAttr(key, value);
+      this.setXmlAttr(key, value==="@HAVE_LIBRARY@"?'1': value);
     }
   }
 

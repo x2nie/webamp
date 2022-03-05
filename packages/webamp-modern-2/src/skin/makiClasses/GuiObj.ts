@@ -8,6 +8,7 @@ import XmlObj from "../XmlObj";
 export default class GuiObj extends XmlObj {
   static GUID = "4ee3e1994becc636bc78cd97b028869c";
   _parent: Group;
+  _children: GuiObj[] = [];
   _className: string = 'webamp--img';
   _id: string;
   _name: string;

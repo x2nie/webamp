@@ -313,8 +313,11 @@ export default class SkinParser {
       "Unexpected children in <script> XML node."
     );
 
-    const { file, id, param } = node.attributes;
+    let { file, id, param } = node.attributes;
     assert(file != null, "Script element missing `file` attribute");
+    if(file.startsWith('../Winamp Modern/')){
+      file = file.replace('../Winamp Modern/','')
+    }
     // assert(id != null, "Script element missing `id` attribute");
 
     const scriptContents: ArrayBuffer = await this._uiRoot.getFileAsBytes(file);
