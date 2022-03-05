@@ -20,11 +20,12 @@ import GuiObj from "./makiClasses/GuiObj";
 import Config from "./makiClasses/Config";
 import ConfigItem from "./makiClasses/ConfigItem";
 import ConfigAttribute from "./makiClasses/ConfigAttribute";
+import WinampConfig, {WinampConfigGroup} from "./makiClasses/WinampConfig";
 
 const CLASSES = [
   BaseObject,
-  Config,
-  ConfigItem,ConfigAttribute,
+  Config, ConfigItem, ConfigAttribute,
+  WinampConfig, WinampConfigGroup,
   Button,
   SystemObject,
   Container,
