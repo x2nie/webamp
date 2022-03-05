@@ -84,7 +84,8 @@ export default class SkinParser {
   }
 
   _scanRes(node: XmlElement){
-    if(node.attributes.background && !this._res.bitmaps[node.attributes.background]){
+    // if(node.attributes.background!=null && !!!this._res.bitmaps[node.attributes.background]){
+    if(node.attributes.background){
       this._res.bitmaps[node.attributes.background] = false; // just add, dont need to check
       // console.log(node.name, 'bg:', node.attributes.background)
     } 

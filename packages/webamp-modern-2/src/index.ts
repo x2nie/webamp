@@ -24,8 +24,9 @@ async function main() {
   setStatus("Downloading skin...");
   // const response = await fetch("assets/CornerAmp_Redux.wal");
   // const response = await fetch("assets/Default_winamp3_build499.wal");
-  const response = await fetch("assets/MMD3.wal");
-  // const response = await fetch("assets/WinampModern.wal"); // official winamp 5.8
+  // const response = await fetch("assets/MMD3.wal");
+  // const response = await fetch("assets/wa3_default.wal"); // official winamp 5.8
+  const response = await fetch("assets/WinampModern.wal"); // official winamp 5.8
   // const response = await fetch("assets/WinampModernPP.wal");
   // const response = await fetch("assets/octave_v1_by_boostr29_d1a8nu.wal");
   // const response = await fetch("assets/WacupModern.wal");

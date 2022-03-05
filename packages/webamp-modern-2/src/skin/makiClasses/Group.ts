@@ -161,6 +161,11 @@ export default class Group extends GuiObj {
       child.draw();
       this._div.appendChild(child.getDiv());
     }
+    if(this._autowidthsource){
+      // this._div.style.removeProperty('width');
+      this._div.classList.add('autowidthsource');
+    }
+
   }
 
   getparentlayout(): Group{

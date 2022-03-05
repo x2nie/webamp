@@ -24,6 +24,7 @@ export default class GuiObj extends XmlObj {
   _relaty: boolean = false;
   _relatw: boolean = false;
   _relath: boolean = false;
+  _autowidthsource: string;
 
   _droptarget: string;
   _visible: boolean = true;
@@ -69,6 +70,9 @@ export default class GuiObj extends XmlObj {
         this._name = value;
         break;
   
+      case "autowidthsource":
+        this._autowidthsource = value
+        break;
       case "w":
       case "default_w":
         this._width = num(value);
@@ -705,5 +709,6 @@ export default class GuiObj extends XmlObj {
       this._div.style.pointerEvents = "auto";
     }
     this._renderDimensions();
+
   }
 }

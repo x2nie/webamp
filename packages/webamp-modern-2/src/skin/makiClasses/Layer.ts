@@ -28,7 +28,7 @@ export default class Layer extends GuiObj {
     }
     if (this._image != null) {
       const bitmap = UI_ROOT.getBitmap(this._image);
-      return bitmap.getHeight();
+      if(bitmap) return bitmap.getHeight();
     }
     return super.getheight();
   }
@@ -40,7 +40,7 @@ export default class Layer extends GuiObj {
     }
     if (this._image != null) {
       const bitmap = UI_ROOT.getBitmap(this._image);
-      return bitmap.getWidth();
+      if(bitmap) return bitmap.getWidth();
     }
     return super.getwidth();
   }
@@ -59,4 +59,6 @@ export default class Layer extends GuiObj {
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }
+  //setRegionFromMap(regionMap:Map, threshold:number)
+
 }

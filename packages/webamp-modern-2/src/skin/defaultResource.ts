@@ -302,6 +302,15 @@ export function getBitmap_system_elements(id:string){
       'wasabi.label.bottom': {file:'window/window-elements.png', x:'148', y:'124', w:'30', h:'2', gammagroup:'Display', },
       'wasabi.label.bottom.right': {file:'window/window-elements.png', x:'189', y:'124', w:'2', h:'2', gammagroup:'Display', },
       'wasabi.label.arrow.down': {file:'window/window-elements.png', x:'154', y:'130', h:'6', w:'9', gammagroup:'Display', },
+
+      //? standardframe-elements.xml
+      'wasabi.frame.top.left': {file:'window/titlebar.png', x:'0', y:'0', h:'18', w:'10', gammagroup:'Titlebar', },
+      'wasabi.frame.top': {file:'window/titlebar.png', x:'10', y:'0', h:'18', w:'10', gammagroup:'Titlebar', },
+      'wasabi.frame.top.right': {file:'window/titlebar.png', x:'43', y:'0', h:'18', w:'10', gammagroup:'Titlebar', },
+
+      'wasabi.frame.top.left.region': {file:'window/titlebar.png', x:'0', y:'120', h:'18', w:'10', },
+      'wasabi.frame.top.right.region': {file:'window/titlebar.png', x:'43', y:'120', h:'18', w:'10', },
+
     
     }
     const ret = dict[id];
