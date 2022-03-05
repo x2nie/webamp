@@ -61,4 +61,7 @@ export default class Layer extends GuiObj {
   }
   //setRegionFromMap(regionMap:Map, threshold:number)
 
+  isinvalid():boolean {
+    return false;
+  }
 }

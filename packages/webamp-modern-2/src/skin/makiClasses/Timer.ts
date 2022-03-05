@@ -7,11 +7,14 @@ export default class Timer extends BaseObject {
   _delay: number = 100; //x2nie
   _timeout: NodeJS.Timeout | null = null;
   setdelay(millisec: number) {
-    assume(
-      this._timeout == null,
-      "Tried to change the delay on a running timer"
-    );
+    // assume(
+    //   this._timeout == null,
+    //   "Tried to change the delay on a running timer"
+    // );
+    const running = this.isrunning();
+    if(running) this.stop();
     this._delay = millisec;
+    if(running) this.start()
   }
   stop() {
     if (this._timeout != null) {
@@ -19,11 +22,25 @@ export default class Timer extends BaseObject {
       this._timeout = null;
     }
   }
-  start() {
-    assume(this._delay != null, "Tried to start a timer without a delay");
-    this._timeout = setInterval(() => {
-      UI_ROOT.vm.dispatch(this, "ontimer");
-    }, this._delay);
+  start():boolean {
+    if(!this._delay){
+      return false;
+    }
+
+    try{
+      assume(this._delay != null, "Tried to start a timer without a delay");
+      if(this.isrunning()){
+        this.stop();
+      }
+      this._timeout = setInterval(() => {
+        UI_ROOT.vm.dispatch(this, "ontimer");
+      }, this._delay);
+      return true
+    } 
+    catch(err){
+      return false
+    }
+    return false
   }
 
   isrunning(): boolean {

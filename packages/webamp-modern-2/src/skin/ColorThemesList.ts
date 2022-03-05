@@ -42,7 +42,7 @@ export default class ColorThemesList extends Group {
     this._select.style.color = "gold";
     this._select.style.border = "none";
     this._select.style.backgroundColor = "transparent";
-    this._select.style.backgroundImage = UI_ROOT.getBitmap('studio.list.background')._getBackgrondImageCSSAttribute();
+    //error on wacup: this._select.style.backgroundImage = UI_ROOT.getBitmap('studio.list.background')._getBackgrondImageCSSAttribute();
     this._select.style.pointerEvents = "auto";
 
     // Overflow
