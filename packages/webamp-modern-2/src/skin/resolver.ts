@@ -21,11 +21,13 @@ import Config from "./makiClasses/Config";
 import ConfigItem from "./makiClasses/ConfigItem";
 import ConfigAttribute from "./makiClasses/ConfigAttribute";
 import WinampConfig, {WinampConfigGroup} from "./makiClasses/WinampConfig";
+import CompnentBucket from "./makiClasses/ComponentBucket";
 
 const CLASSES = [
   BaseObject,
   Config, ConfigItem, ConfigAttribute,
   WinampConfig, WinampConfigGroup,
+  CompnentBucket,
   Button,
   SystemObject,
   Container,
