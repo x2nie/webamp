@@ -64,6 +64,9 @@ async function loadSkin(skinData: Blob) {
   for (const container of uiRoot.getContainers()) {
     console.log(`loading container: ${container.getId()}`)
     container.init();
+    setTimeout(() => {
+      container._invalidate();
+    }, 1000);
     // console.log(`loaded container: ${container.getId()}`)
   }
   setStatus("");

@@ -1,6 +1,7 @@
 import Group from "./Group";
 import * as Utils from "../../utils";
 import Container from "./Container";
+import UI_ROOT from "../../UIRoot";
 
 // > A layout is a special kind of group, which shown inside a container. Each
 // > layout represents an appearance for that window. Layouts give you the ability
@@ -90,5 +91,16 @@ export default class Layout extends Group {
   draw() {
     super.draw();
     // this._div.setAttribute("data-obj-name", "Layout");
+  }
+
+  _invalidate(){
+    // UI_ROOT.audio.onSeek(() => {
+      UI_ROOT.vm.dispatch(this, "onresize", [
+        { type: "INT", value: 0 },
+        { type: "INT", value: 0 },
+        { type: "INT", value: this.getwidth() },
+        { type: "INT", value: this.getheight() },
+      ]);
+    // });
   }
 }

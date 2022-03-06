@@ -190,4 +190,8 @@ export default class Container extends XmlObj {
     // this._div.style.position = "absolute";
     this._renderLayout();
   }
+
+  _invalidate(){
+    this.getCurLayout()._invalidate();
+  }
 }
