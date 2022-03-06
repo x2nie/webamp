@@ -20,9 +20,10 @@ export class UIRoot {
   _colors: Color[] = [];
   _groupDefs: XmlElement[] = [];
   _gammaSets: Map<string, GammaGroup[]> = new Map();
+  _dummyGammaGroup: GammaGroup = null;
   _xuiElements: XmlElement[] = [];
-  _activeGammaSet: GammaGroup[] | null = null;
-  _activeGammaSetName : string = null;
+  _activeGammaSet: GammaGroup[] = [];
+  _activeGammaSetName : string = '';
   _containers: Container[] = [];
 
   // A list of all objects created for this skin.
@@ -39,7 +40,7 @@ export class UIRoot {
     this._groupDefs = [];
     this._gammaSets = new Map();
     this._xuiElements = [];
-    this._activeGammaSet = null;
+    this._activeGammaSet = [];
     this._containers = [];
 
     // A list of all objects created for this skin.
@@ -157,30 +158,44 @@ export class UIRoot {
     this.enableGammaSet(firstName || '')
   }
 
-  _getGammaGroup(id: string): GammaGroup | null {
+  _getGammaGroup(id: string): GammaGroup {
+    if(!id) {
+      return this._getGammGroupDummy();
+    }
     const lower = id.toLowerCase();
     const found = findLast(this._activeGammaSet, (gammaGroup) => {
       return gammaGroup.getId().toLowerCase() === lower;
     });
-    return found ?? null;
+    return found ?? this._getGammGroupDummy();
+  }
+
+  _getGammGroupDummy(){
+    if(!this._dummyGammaGroup){ //lazy create
+      this._dummyGammaGroup = new GammaGroup();
+      this._dummyGammaGroup.setXmlAttributes(
+        {
+          id:'dummy',
+          value:"0,0,0"
+        }
+      )
+    }
+    return this._dummyGammaGroup;
   }
 
   _setCssVars() {
     const cssRules = []
     for (const bitmap of this._bitmaps) {
       const img = bitmap.getImg();
-      const url = img.src;
-      /*
+      // const url = img.src;
+      
       const groupId = bitmap.getGammaGroup();
       // if (!map.has(img)) {
       //   map.set(img, new Map());
       // }
       // const imgCache = map.get(img);
       // if (!imgCache.has(groupId)) {
-        const gammaGroup =
-          groupId != null ? this._getGammaGroup(groupId) : null;
-        const url =
-          gammaGroup == null ? img.src : gammaGroup.transformImage(
+        const gammaGroup = this._getGammaGroup(groupId); // fallback to dummyGamm
+        const url = gammaGroup.transformImage(
             img,
             bitmap._x,
             bitmap._y,
@@ -192,7 +207,7 @@ export class UIRoot {
       // const url = imgCache.get(groupId);
       // TODO: Techincally we only need one per image/gammagroup.
       // this._div.style.setProperty(bitmap.getCSSVar(), `url(${url})`);
-      */
+      
       cssRules.push(`${bitmap.getCSSVar()}: url(${url});`);
     }
     cssRules.unshift(':root{')
@@ -331,6 +346,7 @@ export class UIRoot {
         break;
       case "toggle":
         if(param=='guid:pl') param='pledit';
+        else if(param=='guid:ml') param='mlibrary';
         const container = findLast(this.getContainers(), ct => ct._id == param);
         container.toggle()
         break;
