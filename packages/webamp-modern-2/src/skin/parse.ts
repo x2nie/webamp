@@ -78,9 +78,9 @@ export default class SkinParser {
 
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
-    const parsed = parseXml(includedXml);
+    const parsed = parseXml(includedXml) as unknown as  XmlElement;
 
-    await this.traverseChildren(parsed);
+    await this.traverseChildren(parsed) ;
     await this._resolveRes()
 
     return this._uiRoot;
@@ -134,9 +134,10 @@ export default class SkinParser {
     // });
   }
 
-  async traverseChildren(parent: XmlElement | XmlDocument) {
+  async traverseChildren(parent: XmlElement) {
     for (const child of parent.children) {
       if (child instanceof XmlElement) {
+        // console.log('traverse->', parent.name, child.name)
         this._scanRes(child);
         await this.traverseChild(child);
       }
@@ -551,7 +552,7 @@ export default class SkinParser {
       group.setXmlAttributes(groupDef.attributes);
       const previousParentGroup = this._context.parentGroup;
       this._context.parentGroup = group as Group;
-      await this.traverseChildren(groupDef);
+      await this.traverseChildren(groupDef, group);
       this._context.parentGroup = previousParentGroup;
       // TODO: Maybe traverse groupDef's children?
     }
@@ -868,8 +869,8 @@ export default class SkinParser {
 
 }
 
-function parseXmlFragment(xml: string): XmlDocument {
+function parseXmlFragment(xml: string): XmlElement {
   // Note: Included files don't have a single root node, so we add a synthetic one.
   // A different XML parser library might make this unnessesary.
-  return parseXml(`<wrapper>${xml}</wrapper>`);
+  return parseXml(`<wrapper>${xml}</wrapper>`) as unknown as XmlElement;
 }
