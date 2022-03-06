@@ -220,14 +220,13 @@ export default class SkinParser {
         return this.colorThemesList(node);
       case "status":
         return this.status(node);
-      case "wasabi:playlistframe:nostatus":
-      case "wasabi:visframe:nostatus":
-      case "wasabi:medialibraryframe:nostatus":
       case "wasabi:mainframe:nostatus":
+      case "wasabi:medialibraryframe:nostatus":
+      case "wasabi:playlistframe:nostatus":
       case "wasabi:standardframe:nostatus":
-        return this.wasabiStandardFrameNostatus(node);
       case "wasabi:standardframe:status":
-        return this.wasabiStandardFrameStatus(node);
+      case "wasabi:visframe:nostatus":
+        return this.wasabiFrame(node);
       case "nstatesbutton":
       case "componentbucket":
       case "playlisteditor":
@@ -634,6 +633,40 @@ export default class SkinParser {
     parentGroup.addChild(list);
   }
 
+  /** taken from Winamp Modern skin */
+  _getWasabiGroupDef(xmlTag: string): string{
+    switch (xmlTag) {
+      case "Wasabi:MainFrame:NoStatus":
+        return 'wasabi.mainframe.nostatusbar';
+      case "Wasabi:PlaylistFrame:NoStatus":
+        return 'wasabi.playlistframe.nostatusbar';
+
+      case "Wasabi:MediaLibraryFrame:NoStatus":
+        return 'wasabi.medialibraryframe.nostatusbar';
+      case "Wasabi:VISFrame:NoStatus":
+        return 'wasabi.visframe.nostatusbar';
+
+      case "Wasabi:StandardFrame:Status":
+        return 'wasabi.standardframe.statusbar';
+
+      case "Wasabi:StandardFrame:NoStatus":
+        return 'wasabi.standardframe.nostatusbar';
+
+      case "Wasabi:StandardFrame:Modal":
+        return 'wasabi.standardframe.modal';
+      case "Wasabi:StandardFrame:Static":
+        return 'wasabi.standardframe.static';
+      default:
+        console.warn(`Unhandled <Wasabi:Frame:Tag>: ${xmlTag}`);
+        return;
+    }
+  
+
+  }
+  async wasabiFrame(node: XmlElement) {
+    const groupdef_id = this._getWasabiGroupDef(node.name)
+    await this.wasabiStandardFrameStatus(node, groupdef_id)
+  }
   async wasabiStandardFrameStatus(node: XmlElement, id: string = 'wasabi.standardframe.statusbar') {
     const previousParentGroup1 = this._context.parentGroup;
     
