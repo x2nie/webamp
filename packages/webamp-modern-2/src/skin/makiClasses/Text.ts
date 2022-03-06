@@ -197,7 +197,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         this._renderBitmapFont(font);
       } else if (font == null) {
         this._div.innerText = this.getText();
-        this._div.style.fontFamily = "Ariel";
+        this._div.style.fontFamily = "Arial";
       } else {
         throw new Error("Unexpected font");
       }
