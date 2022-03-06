@@ -8,6 +8,7 @@ import PRIVATE_CONFIG from "../PrivateConfig";
 import UI_ROOT from "../../UIRoot";
 import GuiObj from "./GuiObj";
 import SkinParser from "../parse";
+import AUDIO_PLAYER from "../AudioPlayer";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -1165,7 +1166,17 @@ export default class SystemObject extends BaseObject {
    */
   getstatus(): number {
     // TODO: Pull this from the actual media player
-    return 1;
+    if (AUDIO_PLAYER._context.state === "closed") {
+      return 0;
+    }
+
+    else if (AUDIO_PLAYER._context.state === "running") {
+      return 1;
+    }
+
+    else if (AUDIO_PLAYER._context.state === "suspended") {
+      return -1;
+    }
   }
 
   /**
