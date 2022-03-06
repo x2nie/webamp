@@ -313,6 +313,18 @@ export default class SkinParser {
     );
     const font = new BitmapFont();
     font.setXmlAttributes(node.attributes);
+    // hold on, it is happen that some bitmapfont indirectly refer to other bitmap
+    // <bitmap id="bitmapfont.player.BIGNUM" file="../Winamp Modern/player/numfont.png" x="0" y="0" h="60" w="300" gammagroup="DisplayElements"/>
+    // <bitmapfont id="player.BIGNUM" file="bitmapfont.player.BIGNUM" charwidth="13" charheight="20" hspacing="-1" vspacing="0"/>
+    const found = this._uiRoot.getFileIsExist(node.attributes.file);
+    if(!found){
+      const bitmap = this._uiRoot.getBitmap(node.attributes.file)
+      if(bitmap){
+        font.setXmlAttr('file', bitmap._file);
+      }
+      else console.warn('BitmapFont file not found:', node.attributes.file)
+    }
+
     await font.ensureFontLoaded(this._imageManager);
 
     this._uiRoot.addFont(font);

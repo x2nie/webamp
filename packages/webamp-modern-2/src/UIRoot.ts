@@ -404,6 +404,11 @@ export class UIRoot {
     return await zipObj.async('arraybuffer');
   }
 
+  getFileIsExist(filePath: string): boolean {
+    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+    return !!zipObj;
+  }
+
 }
 
 // Global Singleton for now
