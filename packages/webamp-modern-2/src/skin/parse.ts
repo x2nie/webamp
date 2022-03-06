@@ -649,6 +649,8 @@ export default class SkinParser {
       case "Wasabi:StandardFrame:Status":
         return 'wasabi.standardframe.statusbar';
 
+            // Wasabi:Standardframe:NoStatus
+      case "Wasabi:Standardframe:NoStatus":
       case "Wasabi:StandardFrame:NoStatus":
         return 'wasabi.standardframe.nostatusbar';
 

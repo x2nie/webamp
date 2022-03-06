@@ -79,6 +79,14 @@ export default class Layout extends Group {
     this._snap.bottom=bottom;
   }
 
+  beforeredock(){
+    // TODO:
+  }
+
+  redock(){
+    // TODO:
+  }
+
   draw() {
     super.draw();
     // this._div.setAttribute("data-obj-name", "Layout");

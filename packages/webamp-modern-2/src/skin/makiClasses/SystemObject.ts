@@ -1605,6 +1605,14 @@ export default class SystemObject extends BaseObject {
   getsonginfotexttranslated():string{
     return this.getplayitemstring()
   }
+
+  lockui(){
+    //TODO:
+  }
+
+  unlockui(){
+    //TODO:
+  }
 }
 
 function dumpScriptDebug(script: ParsedMaki) {

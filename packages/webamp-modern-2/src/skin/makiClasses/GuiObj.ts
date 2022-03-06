@@ -233,7 +233,7 @@ export default class GuiObj extends XmlObj {
     this._visible = false;
     this._renderVisibility();
   }
-  isVisible(): boolean {
+  isvisible(): boolean {
     return this._visible;
   }
 
@@ -315,14 +315,14 @@ export default class GuiObj extends XmlObj {
     this._renderDimensions();
   }
 
-  getGuiW(): number { return this._width; }
-  getGuiH(): number { return this._height; }
-  getGuiX(): number { return this._x; }
-  getGuiY(): number { return this._y; }
-  getGuiRelatW(): number { return this._relatw ? 1 : 0; }
-  getGuiRelatH(): number { return this._relath ? 1 : 0; }
-  getGuiRelatX(): number { return this._relatx ? 1 : 0; }
-  getGuiRelatY(): number { return this._relaty ? 1 : 0; }
+  getguiw(): number { return this._width; }
+  getguih(): number { return this._height; }
+  getguix(): number { return this._x; }
+  getguiy(): number { return this._y; }
+  getguirelatw(): number { return this._relatw ? 1 : 0; }
+  getguirelath(): number { return this._relath ? 1 : 0; }
+  getguirelatx(): number { return this._relatx ? 1 : 0; }
+  getguirelaty(): number { return this._relaty ? 1 : 0; }
   getautowidth(): number { 
     const child = findLast(
       this._children,
