@@ -553,8 +553,8 @@ export default class SystemObject extends BaseObject {
     const self = this;
     // console.warn('* new group is called with param:', group_id, this._parentGroup)
     const group = new Group();
-    // const parser = new SkinParser(UI_ROOT);
-    const parser = SkinParser.getCurrentParser();
+    const parser = new SkinParser(UI_ROOT);
+    // const parser = SkinParser.getCurrentParser();
     parser.maybeApplyGroupDefId(group, group_id).then(
       function(foo){
         // console.warn('* THEN= group :',group_id, group)
