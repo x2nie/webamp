@@ -561,8 +561,10 @@ export default class SystemObject extends BaseObject {
          
         if(self._parentGroup) self._parentGroup.addChild(group)
         // console.warn('* >>new group ',group_id, ':', group)
-        group.init()
         group.draw()
+        group.init()
+        setTimeout(() => {
+        }, 1000);
         self._parentGroup._div.appendChild(group.getDiv());
       },
       function(err){

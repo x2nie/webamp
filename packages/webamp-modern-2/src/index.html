@@ -102,11 +102,15 @@
       text {
         overflow: hidden;
       }
+      text i{
+        pointer-events: none;
+        font-style:normal;
+      }
       /* body > div *  */
       container{
         position: relative;
       }
-      layout, group, layer, animatedlayer, button, slider, text,
+      layout, grid, group, layer, animatedlayer, button, slider, text,
       wasabiframe, colorthemeslist
       {
         position: absolute;
@@ -114,6 +118,9 @@
         top: 0;
         display: block;
       }
+      grid left, grid right {height: 100%; display: block; background-image: var(--background-image); position: absolute;}
+      grid left {left: 0;}
+      grid right {right: 0;}
       /* body > div select>option {
         position: unset;
         display: block;

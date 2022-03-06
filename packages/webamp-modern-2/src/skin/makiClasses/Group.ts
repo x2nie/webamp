@@ -118,6 +118,12 @@ export default class Group extends GuiObj {
 
   // This shadows `getwidth()` on GuiObj
   getwidth(): number {
+    if(this._autowidthsource){
+      const widthSource = this.findobject(this._autowidthsource);
+      if(widthSource){
+        return widthSource.getwidth()
+      }
+    }
     if (this._width || this._minimumWidth || this._maximumWidth) {
       // return Math.min( Math.max(this._width, this._minimumWidth), this._maximumWidth);
       let w = Math.max(this._width, this._minimumWidth);

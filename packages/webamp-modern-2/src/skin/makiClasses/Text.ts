@@ -232,6 +232,27 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     }
   }
 
+  _renderBitmapFont1(font: BitmapFont) {
+    this._div.style.whiteSpace = "nowrap";
+    let s = '';
+    for (const char of this.getText().split("")) {
+      s += `<i>${char}</i>`
+    }
+    this._div.innerHTML = s;
+  }
+
+  getwidth(): number {
+    let charWidth = 12+3;
+    if(this._font){
+      const font = UI_ROOT.getFont(this._font);
+      if(font instanceof BitmapFont){
+        charWidth = font._charWidth+3;
+      } 
+    }
+    // return this._div.getBoundingClientRect().width; // cant calc when _dif is out of document
+    return this.getText().length * charWidth;
+  }
+
   draw() {
     super.draw();
     this._renderText();

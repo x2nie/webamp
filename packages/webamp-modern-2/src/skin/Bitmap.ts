@@ -144,6 +144,13 @@ export default class Bitmap {
     this._setAsBackground(div, "hover-");
   }
 
+  setAsBackgroundAndSize(div: HTMLElement) {
+    this._setAsBackground(div, "");
+    // const width = px(this._width);
+    // const height = px(this._height);
+
+  }
+
   getCanvas(): HTMLCanvasElement {
     if (this._canvas == null) {
       assert(this._img != null, "Expected bitmap image to be loaded");

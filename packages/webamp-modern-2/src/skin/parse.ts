@@ -28,6 +28,7 @@ import { getBitmap_system_elements } from "./defaultResource";
 import AlbumArt from "./makiClasses/AlbumArt";
 import WindowHolder from "./makiClasses/WindowHolder";
 import WasabiTitle from "./makiClasses/WasabiTitle";
+import Grid from "./makiClasses/Grid";
 
 class ParserContext {
   container: Container | null = null;
@@ -173,6 +174,8 @@ export default class SkinParser {
         return this.container(node);
       case "layoutstatus":
         return this.layoutStatus(node);
+      case "grid":
+        return this.grid(node);
       case "hideobject":
         return this.hideobject(node);
       case "button":
@@ -235,7 +238,6 @@ export default class SkinParser {
       case "accelerators":
       case "elementalias":
       case "browser":
-      case "grid":
       case "syscmds":
         // TODO
         return;
@@ -523,6 +525,24 @@ export default class SkinParser {
     );
 
     const layer = new Layer();
+    layer.setXmlAttributes(node.attributes);
+    const { parentGroup } = this._context;
+    if (parentGroup == null) {
+      console.warn(
+        `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
+      );
+      return;
+    }
+    parentGroup.addChild(layer);
+  }
+
+  async grid(node: XmlElement) {
+    assume(
+      node.children.length === 0,
+      "Unexpected children in <layer> XML node."
+    );
+
+    const layer = new Grid();
     layer.setXmlAttributes(node.attributes);
     const { parentGroup } = this._context;
     if (parentGroup == null) {
