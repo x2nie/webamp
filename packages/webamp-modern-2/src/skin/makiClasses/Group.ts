@@ -67,10 +67,6 @@ export default class Group extends GuiObj {
     this._systemObjects.push(systemObj);
   }
 
-  addChild(child: GuiObj) {
-    child.setParent(this);
-    this._children.push(child);
-  }
 
   findobject(id: string): GuiObj {
     const lower = id.toLowerCase();
