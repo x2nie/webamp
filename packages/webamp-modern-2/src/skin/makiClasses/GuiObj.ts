@@ -709,6 +709,12 @@ export default class GuiObj extends XmlObj {
     }
   }
 
+  setHoverBackgroundImage(bitmap: Bitmap | null) {
+    if (bitmap != null) {
+      bitmap.setAsHoverBackground(this._div);
+    }
+  }
+
   setActiveBackgroundImage(bitmap: Bitmap | null) {
     if (bitmap != null) {
       bitmap.setAsActiveBackground(this._div);

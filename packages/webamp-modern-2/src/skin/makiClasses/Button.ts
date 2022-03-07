@@ -7,6 +7,7 @@ export default class Button extends GuiObj {
   static GUID = "698eddcd4fec8f1e44f9129b45ff09f9";
   _image: string;
   _downimage: string;
+  _hoverimage: string;
   _activeimage: string;
   _active: boolean = false;
   _action: string | null = null;
@@ -38,6 +39,10 @@ export default class Button extends GuiObj {
         break;
       case "downimage":
         this._downimage = value;
+        this._renderBackground();
+        break;
+      case "hoverimage":
+        this._hoverimage = value;
         this._renderBackground();
         break;
       case "activeimage":
@@ -134,6 +139,13 @@ export default class Button extends GuiObj {
       this.setDownBackgroundImage(downBitmap);
     } else {
       this.setDownBackgroundImage(null);
+    }
+
+    if (this._hoverimage != null) {
+      const hoverimage = UI_ROOT.getBitmap(this._hoverimage);
+      this.setHoverBackgroundImage(hoverimage);
+    } else {
+      this.setHoverBackgroundImage(null);
     }
 
     if (this._activeimage != null) {
