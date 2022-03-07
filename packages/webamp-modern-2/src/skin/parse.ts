@@ -285,7 +285,7 @@ export default class SkinParser {
     this.addToGroup(group);
   }
 
-  async group(node: XmlElement) {
+  async group(node: XmlElement): Promise<Group> {
     const group = new Group();
     const previousParent = this._context.parentGroup;
     await this.maybeApplyGroupDef(group, node);
@@ -294,6 +294,7 @@ export default class SkinParser {
     await this.traverseChildren(node);
     this._context.parentGroup = previousParent;
     this.addToGroup(group);
+    return group
   }
 
   async bitmap(node: XmlElement) {
@@ -346,7 +347,7 @@ export default class SkinParser {
       console.warn(
         `FIXME: Expected <Text id="${text._id}"> to be within a <Layout> | <Group>`
       );
-      return;
+      return text;
     }
     parentGroup.addChild(text);
     return text;
@@ -356,6 +357,12 @@ export default class SkinParser {
     const text = await this.text(node);
     text.setxmlparam('display', 'songtitle')
     return text
+  }
+
+  async wasabiTitleBar(node: XmlElement): Promise<Text> {
+    const text = await this.text(node);
+    text.setxmlparam('text', ':componentname') // or display:componentname?
+    return text  
   }
 
   async script(node: XmlElement) {
@@ -874,26 +881,6 @@ export default class SkinParser {
       node.children.length === 0,
       "Unexpected children in <hideobject> XML node."
     );
-  }
-
-  async wasabiTitleBar(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <wasabiTitleBar> XML node."
-    );
-    const title = new WasabiTitle();    
-    await this.maybeApplyGroupDef(title, node);
-    title.setXmlAttributes(node.attributes);
-
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Layer id="${title._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(title);
-
   }
 
   async trueTypeFont(node: XmlElement) {
