@@ -147,10 +147,10 @@ export class AudioPlayer {
       return STATUS_PLAYING
     } 
     else
-    // if(audio.ended){
-    //   return STATUS_STOPPED
-    // } 
-    // else 
+    if(audio.ended){
+      return STATUS_STOPPED
+    } 
+    else 
     if(audio.paused){
       return STATUS_PAUSED
     } 
