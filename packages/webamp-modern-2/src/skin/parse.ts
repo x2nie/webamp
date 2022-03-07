@@ -204,9 +204,10 @@ export default class SkinParser {
         return this.script(node);
       case "scripts":
         return this.scripts(node);
-      case "songticker":
       case "text":
-        return this.text(node);
+          return this.text(node);
+      case "songticker":
+        return this.songticker(node);
       case "sendparams":
         return this.sendparams(node);
       case "wasabi:titlebar":
@@ -332,7 +333,7 @@ export default class SkinParser {
     this._uiRoot.addFont(font);
   }
 
-  async text(node: XmlElement) {
+  async text(node: XmlElement): Promise<Text> {
     assume(
       node.children.length === 0,
       "Unexpected children in <text> XML node."
@@ -348,6 +349,13 @@ export default class SkinParser {
       return;
     }
     parentGroup.addChild(text);
+    return text;
+  }
+
+  async songticker(node: XmlElement): Promise<Text> {
+    const text = await this.text(node);
+    text.setxmlparam('display', 'songtitle')
+    return text
   }
 
   async script(node: XmlElement) {
