@@ -19,6 +19,10 @@ export default class ToggleButton extends Button {
     return true;
   }
 
+  _handleMouseDown(e: MouseEvent) {
+    this.setactivated(!this._active);
+  }
+
   ontoggle(onoff: boolean){
     
   }
