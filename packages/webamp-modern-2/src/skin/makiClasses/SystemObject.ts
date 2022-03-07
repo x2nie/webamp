@@ -551,24 +551,32 @@ export default class SystemObject extends BaseObject {
    * @ret             The new group.
    * @param  group_id    The identifier for the group you want to create.
    */
-  async newgroup(group_id: string): Promise<Group> {
+  newgroup(group_id: string): Group {
 
     const self = this;
     console.warn('* new group is called with param:', group_id, this._parentGroup)
-    // const group = new Group();
-    // if(self._parentGroup) self._parentGroup.addChild(group)
-    const parser = new SkinParser(UI_ROOT);
-    parser._context.parentGroup = this._parentGroup;
-    const group = await parser.group(new XmlElement('group', {
-      id:group_id,
+    const group = new Group();
+    group.setXmlAttributes(
+      {id:group_id,
       h:'0', relath:'1',
       w:'0', relatw:'1'
-    }))
-    // parser._context.parentGroup = group;
+    }
+
+    )
+    if(self._parentGroup) self._parentGroup.addChild(group)
+    const parser = new SkinParser(UI_ROOT);
+    // parser._context.parentGroup = this._parentGroup;
+    // const group = await parser.group(new XmlElement('group', {
+    //   id:group_id,
+    //   h:'0', relath:'1',
+    //   w:'0', relatw:'1'
+    // }))
+    parser._context.parentGroup = group;
     // const parser = SkinParser.getCurrentParser();
     // await parser.maybeApplyGroupDefId(group, group_id)
-    //.then(
-      //function(foo){
+    parser.maybeApplyGroupDefId(group, group_id)
+    .then(
+      function(foo){
         // console.warn('* THEN= group :',group_id, group)
         
          
@@ -579,11 +587,11 @@ export default class SystemObject extends BaseObject {
         setTimeout(() => {
           group.init()
         }, 100);
-    //   },
-    //   function(err){
-    //     console.warn('* THEN =! group :',group_id, err,  group)
-    //   }
-    // )
+      },
+      function(err){
+        console.warn('* THEN =! group :',group_id, err,  group)
+      }
+    )
     
     // if(this._parentGroup) this._parentGroup.addChild(group)
     // // console.warn('* >>new group :', group)
