@@ -134,7 +134,7 @@ export class AudioPlayer {
   getEq(kind: string): number {
     switch (kind) {
       case "preamp":
-        return this.__preamp.gain.value;
+        return (this.__preamp.gain.value + 12) / 24;
       case "1":
       case "2":
       case "3":
