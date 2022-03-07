@@ -598,7 +598,7 @@ export default class SkinParser {
       group.setXmlAttributes(groupDef.attributes);
       const previousParentGroup = this._context.parentGroup;
       this._context.parentGroup = group as Group;
-      await this.traverseChildren(groupDef, group);
+      await this.traverseChildren(groupDef);
       this._context.parentGroup = previousParentGroup;
       // TODO: Maybe traverse groupDef's children?
     }
@@ -716,59 +716,44 @@ export default class SkinParser {
     const groupdef_id = this._getWasabiGroupDef(node.name)
     await this.wasabiStandardFrameStatus(node, groupdef_id)
   }
+
   async wasabiStandardFrameStatus(node: XmlElement, id: string = 'wasabi.standardframe.statusbar') {
-    const previousParentGroup1 = this._context.parentGroup;
     
-    const nodeFrame = new XmlElement('nodeFrameStateus',{
-      'id':id, //? 'wasabi.standardframe.statusbar',
-      w:'0',
-      h:'0',
-      relatw:'1',
-      relath:'1',
-    });
     // const frame = new Group();
-    const frame = new WasabiStandardFrameNostatus(node);
+    const frame = new WasabiStandardFrameNostatus();
+    this._context.parentGroup.addChild(frame);
     // frame.setXmlAttributes(nodeFrame.attributes);
     frame.setXmlAttributes(node.attributes);
+    
+    const previousParentGroup1 = this._context.parentGroup;
+    this._context.parentGroup = frame;
 
-    // const groupDef = this._uiRoot.getGroupDef(id);
-    await this.maybeApplyGroupDef(frame, nodeFrame);
 
+    if(id) {
+
+      const nodeFrame = new XmlElement('nodeFrameStateus',{
+        'id':id, //? 'wasabi.standardframe.statusbar',
+        w:'0',
+        h:'0',
+        relatw:'1',
+        relath:'1',
+      });
+      // const groupDef = this._uiRoot.getGroupDef(id);
+      await this.maybeApplyGroupDef(frame, nodeFrame);
+    }
+      
     
     const xuitag : string = node.name; //Wasabi:MainFrame:NoStatus
     const xuiEl : XmlElement = UI_ROOT.getXuiElement(xuitag);
     if(xuiEl){
-      const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
-      await this.maybeApplyGroupDef(frame, xuiFrame);
+      if(xuiEl.attributes.id != id){
+        const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
+        await this.maybeApplyGroupDef(frame, xuiFrame);
+      }
     }
-
-    // this._context.parentGroup = frame;
-    // await this.traverseChildren(nodeFrame);
-
-    // node.attributes.id = node.attributes.content;
-    // this.group(node);
-    // await this.traverseChildren(node);
-    // this._context.parentGroup.addChild(frame);
-    //*********************** */
-    // assume(node.children.length === 0, "Unexpected children in XUI XML node.");
-    // const xuiElement = this._uiRoot.getXuiElement(node.name);
-    // assume(
-    //   xuiElement != null,
-    //   `Expected to find xui element with name "${node.name}".`
-    // );
-
-    // const group = new Group();
-    // group.setXmlAttributes(xuiElement.attributes);
-    // const previousParentGroup = this._context.parentGroup;
-    // this._context.parentGroup = group;
-
-    // await this.traverseChildren(xuiElement);
-    // group.setXmlAttributes(node.attributes);
-    // await this.traverseChildren(node);
 
     this._context.parentGroup = previousParentGroup1;
 
-    this._context.parentGroup.addChild(frame);
   }
 
   async wasabiStandardFrameNostatus(node: XmlElement) {

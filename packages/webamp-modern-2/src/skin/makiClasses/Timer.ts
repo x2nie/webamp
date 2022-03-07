@@ -23,6 +23,7 @@ export default class Timer extends BaseObject {
     }
   }
   start():boolean {
+    console.log('timer.start()')
     if(!this._delay){
       return false;
     }

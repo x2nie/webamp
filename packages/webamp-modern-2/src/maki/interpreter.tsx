@@ -362,7 +362,7 @@ class Interpreter {
               const fun = (obj.value[methodName]? obj.value[methodName] : obj.value.constructor[methodName]).bind(obj.value)
               value = fun(...methodArgs);
             } catch(err) {
-              console.warn('error call:',klass.name, '}}',methodName, err.message, 'obj:', obj)
+              console.warn('error call:',klass.name, '}}',methodName, 'args:',methodArgs, 'err:', err.message, 'obj:', obj)
               value = null;
             }
   

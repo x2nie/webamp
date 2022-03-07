@@ -4,7 +4,6 @@ import UI_ROOT from "../UIRoot";
 import { removeAllChildNodes, toBool } from "../utils";
 
 export default class WasabiStandardFrameNostatus extends Group {
-  ___node: XmlElement; // holder for xml attributes, for later xuiInit
   __inited: boolean = false;
   _content: string;
 
@@ -12,10 +11,7 @@ export default class WasabiStandardFrameNostatus extends Group {
     return 'wasabiframe';
   }
 
-  constructor(node:XmlElement) {
-    super();
-    this.___node = node;
-  }
+  
 
   setXmlAttr(_key: string, value: string): boolean {
     const lowerkey = _key.toLowerCase();
@@ -40,9 +36,15 @@ export default class WasabiStandardFrameNostatus extends Group {
     
     super.init()
     // console.error('wasabi:standard->> sending onsetxuiparam:', this._content)
-    UI_ROOT.vm.dispatch(this._systemObjects[0], "onsetxuiparam", [
+    // UI_ROOT.vm.dispatch(this._systemObjects[0], "onsetxuiparam", [
+    // UI_ROOT.vm.dispatch(this, "onsetxuiparam", [
+    for (const systemObject of this._systemObjects) {
+      // systemObject.init();
+      UI_ROOT.vm.dispatch(systemObject, "onsetxuiparam", [
       {type: "STRING", value:'content'}, 
-      {type:"STRING", value:this._content}]);
+      {type:"STRING", value:this._content}
+    ]);
+    }
   }
 
 }
