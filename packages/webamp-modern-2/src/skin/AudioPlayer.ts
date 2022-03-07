@@ -2,6 +2,10 @@ import { clamp, Emitter } from "../utils";
 
 const BANDS = [60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000];
 
+export const STATUS_PAUSED = -1;
+export const STATUS_STOPPED = 0;
+export const STATUS_PLAYING = 1;
+
 export class AudioPlayer {
   _input: HTMLInputElement = document.createElement("input");
   _audio: HTMLAudioElement = document.createElement("audio");
@@ -12,6 +16,7 @@ export class AudioPlayer {
   _eqValues: { [kind: string]: number } = {};
   _eqNodes: { [kind: string]: number } = {};
   _eqEmitter: Emitter = new Emitter();
+  __isStop: boolean = true; //becaue we can't audio.stop() currently
   constructor() {
     this._context = this._context = new (window.AudioContext ||
       window.webkitAudioContext)();
@@ -92,10 +97,12 @@ export class AudioPlayer {
   }
   play() {
     this._audio.play();
+    this.__isStop = false;
   }
   stop() {
     this._audio.pause();
     this._audio.currentTime = 0;
+    this.__isStop = true; // needed to make threestate
   }
   pause() {
     this._audio.pause();
@@ -129,6 +136,25 @@ export class AudioPlayer {
 
   getCurrentTimePercent(): number {
     return this._audio.currentTime / this._audio.duration;
+  }
+
+  getState(): number {
+    if(this.__isStop) { // To distinc with pause
+      return STATUS_STOPPED; 
+    }
+    const audio = this._audio;
+    if(!audio.ended && !audio.paused) {
+      return STATUS_PLAYING
+    } 
+    else
+    // if(audio.ended){
+    //   return STATUS_STOPPED
+    // } 
+    // else 
+    if(audio.paused){
+      return STATUS_PAUSED
+    } 
+    
   }
 
   getEq(kind: string): number {
@@ -218,6 +244,18 @@ export class AudioPlayer {
     this._audio.addEventListener("seeked", handler);
     const dispose = () => {
       this._audio.removeEventListener("seeked", handler);
+    };
+    return dispose;
+  }
+
+  onPlay(cb: () => void): () => void {
+    const handler = () => {
+      // console.log('audio.onPlay!')
+      cb();
+    }
+    this._audio.addEventListener("playing", handler);
+    const dispose = () => {
+      this._audio.removeEventListener("playing", handler);
     };
     return dispose;
   }
