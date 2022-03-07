@@ -496,25 +496,34 @@ export default class GuiObj extends XmlObj {
     ];
 
     const changes: {
-      [key: string]: { start: number; delta: number; renderKey: string };
+      [key: string]: { start: number; delta: number; renderKey: string; target: number; positive: boolean };
     } = {};
 
     for (const [key, targetKey, renderKey] of pairs) {
       const target = this[targetKey];
       if (target != null) {
         const start = this[key];
+        const positive = target > start;
         const delta = target - start;
-        changes[key] = { start, delta, renderKey };
+        changes[key] = { start, delta, renderKey, target, positive };
+      }
+    }
+
+    const clamp = (current, target, positive) => {
+      if(positive) {
+        return Math.min(current, target);
+      } else {
+        return Math.max(current, target);
       }
     }
 
     const update = (time: number) => {
       const timeDiff = time - startTime;
       const progress = timeDiff / duration;
-      for (const [key, { start, delta, renderKey }] of Object.entries(
+      for (const [key, { start, delta, renderKey, target, positive }] of Object.entries(
         changes
       )) {
-        this[key] = start + delta * progress;
+        this[key] = clamp(start + delta * progress, target, positive);
         this[renderKey]();
       }
       if (timeDiff < duration) {
