@@ -39,6 +39,7 @@ export default class GuiObj extends XmlObj {
   _targetHeight: number | null = null;
   _targetAlpha: number | null = null;
   _targetSpeed: number | null = null;
+  _goingToTarget: boolean = false;
   _div: HTMLElement;// = document.createElement("div");
   _backgroundBitmap: Bitmap | null = null;
   
@@ -482,6 +483,7 @@ export default class GuiObj extends XmlObj {
    * Begin transition to previously set target.
    */
   gototarget() {
+    this._goingToTarget = true;
     const duration = this._targetSpeed * 1000;
     const startTime = performance.now();
 
@@ -518,12 +520,20 @@ export default class GuiObj extends XmlObj {
       if (timeDiff < duration) {
         window.requestAnimationFrame(update);
       } else {
+        this._goingToTarget = false;
         // TODO: Clear targets?
         UI_ROOT.vm.dispatch(this, "ontargetreached");
       }
     };
 
     window.requestAnimationFrame(update);
+  }
+
+  /**
+   * isGoingToTarget()
+   */
+   isgoingtotarget(){
+    return this._goingToTarget;
   }
 
   /**
@@ -575,9 +585,7 @@ export default class GuiObj extends XmlObj {
     assume(false, "Unimplemented");
   }
 
-  /**
-   * isGoingToTarget()
-   */
+  
 
   // [WHERE IS THIS?]
 
