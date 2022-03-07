@@ -1612,7 +1612,8 @@ export default class SystemObject extends BaseObject {
   }
 
   getsonginfotext():string{
-    return this.getplayitemstring()
+    // return this.getplayitemstring()
+    return "123kbps stereo 79khz"
   }
 
   getsonginfotexttranslated():string{
