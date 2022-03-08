@@ -359,9 +359,26 @@ export default class SkinParser {
     return text
   }
 
-  async wasabiTitleBar(node: XmlElement): Promise<Text> {
-    const text = await this.text(node);
-    text.setxmlparam('text', ':componentname') // or display:componentname?
+  async wasabiTitleBar(node: XmlElement) {
+    const group = await this.group(node);
+    let text = null;
+    
+    //? Search Wasabi Inheritace
+    const xuitag : string = node.name; //Wasabi:MainFrame:NoStatus
+    const xuiEl : XmlElement = UI_ROOT.getXuiElement(xuitag);
+    if(xuiEl && node.attributes.id != xuiEl.attributes.id){
+      const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
+      await this.maybeApplyGroupDef(group, xuiFrame);
+      text = group.findobject(xuiEl.attributes.embed_xui)
+    } else {
+      text = group.findobject('window.titlebar.title')
+    }
+    
+    // const text = await this.text(node);
+    if(text){
+      text.setxmlparam('text', ':componentname') // or display:componentname?
+    }
+    
     return text  
   }
 
@@ -713,12 +730,6 @@ export default class SkinParser {
 
   }
   async wasabiFrame(node: XmlElement) {
-    const groupdef_id = this._getWasabiGroupDef(node.name)
-    await this.wasabiStandardFrameStatus(node, groupdef_id)
-  }
-
-  async wasabiStandardFrameStatus(node: XmlElement, id: string = 'wasabi.standardframe.statusbar') {
-    
     // const frame = new Group();
     const frame = new WasabiStandardFrameNostatus();
     this._context.parentGroup.addChild(frame);
@@ -728,66 +739,28 @@ export default class SkinParser {
     const previousParentGroup1 = this._context.parentGroup;
     this._context.parentGroup = frame;
 
-
-    if(id) {
-
-      const nodeFrame = new XmlElement('nodeFrameStateus',{
-        'id':id, //? 'wasabi.standardframe.statusbar',
-        w:'0',
-        h:'0',
-        relatw:'1',
-        relath:'1',
-      });
-      // const groupDef = this._uiRoot.getGroupDef(id);
-      await this.maybeApplyGroupDef(frame, nodeFrame);
-    }
-      
-    
+    //? Search Wasabi Inheritace
     const xuitag : string = node.name; //Wasabi:MainFrame:NoStatus
     const xuiEl : XmlElement = UI_ROOT.getXuiElement(xuitag);
     if(xuiEl){
-      if(xuiEl.attributes.id != id){
         const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
         await this.maybeApplyGroupDef(frame, xuiFrame);
-      }
     }
-
+    else {
+      const groupdef_id = this._getWasabiGroupDef(node.name)
+      // const nodeFrame = new XmlElement('nodeFrameStateus',{
+      //   'id':groupdef_id, //? 'wasabi.standardframe.statusbar',
+      //   w:'0',
+      //   h:'0',
+      //   relatw:'1',
+      //   relath:'1',
+      // });
+      const groupDef = this._uiRoot.getGroupDef(groupdef_id);
+      await this.maybeApplyGroupDef(frame, groupDef);
+    }
+      
     this._context.parentGroup = previousParentGroup1;
 
-  }
-
-  async wasabiStandardFrameNostatus(node: XmlElement) {
-    await this.wasabiStandardFrameStatus(node, 'wasabi.standardframe.nostatusbar');
-    // assume(
-    //   node.children.length === 0,
-    //   "Unexpected children in <status> XML node."
-    // );
-
-    // const group = new WasabiStandardFrameNostatus();
-    // status.setXmlAttributes(node.attributes);
-    // node.attributes.id = node.attributes.content;
-    // await this.group(node);
-
-
-    // const id = node.attributes.content;
-    // const groupDef = this._uiRoot.getGroupDef(id);
-    // if (groupDef != null) {
-    //   group.setXmlAttributes(groupDef.attributes);
-    //   const previousParentGroup = this._context.parentGroup;
-    //   this._context.parentGroup = group;
-    //   await this.traverseChildren(groupDef);
-    //   this._context.parentGroup = previousParentGroup;
-    //   // TODO: Maybe traverse groupDef's children?
-    // }
-
-    // const { parentGroup } = this._context;
-    // if (parentGroup == null) {
-    //   console.warn(
-    //     `FIXME: Expected <Status id="${status._id}"> to be within a <Layout> | <Group>`
-    //   );
-    //   return;
-    // }
-    // parentGroup.addChild(status);
   }
 
   async layoutStatus(node: XmlElement) {

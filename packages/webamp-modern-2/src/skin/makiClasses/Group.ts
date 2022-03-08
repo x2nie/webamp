@@ -67,23 +67,6 @@ export default class Group extends GuiObj {
     this._systemObjects.push(systemObj);
   }
 
-
-  findobject(id: string): GuiObj {
-    const lower = id.toLowerCase();
-    for (const obj of this._children) {
-      if (obj.getId() === lower) {
-        return obj;
-      }
-      if (obj instanceof Group) {
-        const found = obj.findobject(id);
-        if (found != null) {
-          return found;
-        }
-      }
-    }
-    return null;
-  }
-
   /* Required for Maki */
   getobject(objectId: string): GuiObj {
     const lower = objectId.toLowerCase();

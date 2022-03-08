@@ -339,6 +339,26 @@ export default class GuiObj extends XmlObj {
   }
   getautoheight(): number { return this._div.getBoundingClientRect().height; }
 
+
+  findobject(id: string): GuiObj {
+    const lower = id.toLowerCase();
+    // find in direct children first
+    for (const obj of this._children) {
+      if (obj.getId() === lower) {
+        return obj;
+      }
+    }
+    // find in grand child 
+    for (const obj of this._children) {
+      const found = obj.findobject(id);
+      if (found != null) {
+        return found;
+      }
+    }
+    return null;
+  }
+
+
   isActive(): boolean {
     return this._div.matches(':focus')
   }

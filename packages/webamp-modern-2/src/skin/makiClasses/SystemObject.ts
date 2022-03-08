@@ -554,7 +554,7 @@ export default class SystemObject extends BaseObject {
   newgroup(group_id: string): Group {
 
     const self = this;
-    console.warn('* new group is called with param:', group_id, this._parentGroup)
+    // console.warn('* new group is called with param:', group_id, this._parentGroup)
     const group = new Group();
     group.setXmlAttributes(
       {id:group_id,
@@ -583,10 +583,10 @@ export default class SystemObject extends BaseObject {
         // if(self._parentGroup) self._parentGroup.addChild(group)
         // console.warn('* >>new group ',group_id, ':', group)
         group.draw()
-        self._parentGroup._div.appendChild(group.getDiv());
-        setTimeout(() => {
+        // setTimeout(() => {
           group.init()
-        }, 100);
+          // }, 100);
+        self._parentGroup._div.appendChild(group.getDiv());
       },
       function(err){
         console.warn('* THEN =! group :',group_id, err,  group)
