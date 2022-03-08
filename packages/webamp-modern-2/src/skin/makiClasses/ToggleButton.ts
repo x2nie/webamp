@@ -21,6 +21,10 @@ export default class ToggleButton extends Button {
     return true;
   }
 
+  getcurcfgval(): number{
+    return this._active? 1 : 0;
+  }
+
   _handleMouseDown(e: MouseEvent) {
     this.setactivated(!this._active);
   }
