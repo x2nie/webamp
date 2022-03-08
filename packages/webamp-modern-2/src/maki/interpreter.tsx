@@ -330,7 +330,8 @@ class Interpreter {
           //  obj.value && obj.value[methodName] && 'VAL^' || '~value!' ,
           //  obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  methodArgs, '$_$', obj.value);
           //  window._obj = obj;
-          assert(
+          // assert(
+          assume(
             (obj.type === "OBJECT" && typeof obj.value) === "object" &&
               obj.value != null,
             `Guru Meditation: Tried to call method ${klass.name}.${methodName} on null object`
