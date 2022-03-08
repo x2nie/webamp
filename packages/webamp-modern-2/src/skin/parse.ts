@@ -22,11 +22,11 @@ import BitmapFont from "./BitmapFont";
 import Color from "./Color";
 import GammaGroup from "./GammaGroup";
 import ColorThemesList from "./ColorThemesList";
-import WasabiStandardFrameNostatus from "./WasabiStandardFrameNostatus";
 import UI_ROOT, { UIRoot } from "../UIRoot";
 import { getBitmap_system_elements } from "./defaultResource";
 import AlbumArt from "./makiClasses/AlbumArt";
 import WindowHolder from "./makiClasses/WindowHolder";
+import WasabiFrame from "./makiClasses/WasabiFrame";
 import WasabiTitle from "./makiClasses/WasabiTitle";
 import Grid from "./makiClasses/Grid";
 
@@ -731,7 +731,7 @@ export default class SkinParser {
   }
   async wasabiFrame(node: XmlElement) {
     // const frame = new Group();
-    const frame = new WasabiStandardFrameNostatus();
+    const frame = new WasabiFrame();
     this._context.parentGroup.addChild(frame);
     // frame.setXmlAttributes(nodeFrame.attributes);
     frame.setXmlAttributes(node.attributes);

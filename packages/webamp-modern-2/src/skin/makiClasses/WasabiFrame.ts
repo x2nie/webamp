@@ -1,9 +1,7 @@
-import Group from "./makiClasses/Group";
-import { XmlElement } from "@rgrove/parse-xml";
-import UI_ROOT from "../UIRoot";
-import { removeAllChildNodes, toBool } from "../utils";
+import Group from "./Group";
+import UI_ROOT from "../../UIRoot";
 
-export default class WasabiStandardFrameNostatus extends Group {
+export default class WasabiFrame extends Group {
   __inited: boolean = false;
   _content: string;
 
