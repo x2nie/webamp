@@ -223,6 +223,7 @@ export default class GuiObj extends XmlObj {
    * Trigger the show event.
    */
   show() {
+    console.log('show()', this?'obj':'null', this._name, this.getId())
     this._visible = true;
     this._renderVisibility();
   }
@@ -231,6 +232,7 @@ export default class GuiObj extends XmlObj {
    * Trigger the hide event.
    */
   hide() {
+    console.log('hide()', this?'obj':'null', this._name, this.getId())
     this._visible = false;
     this._renderVisibility();
   }
@@ -342,7 +344,7 @@ export default class GuiObj extends XmlObj {
     const lower = id.toLowerCase();
     // find in direct children first
     for (const obj of this._children) {
-      if (obj.getId() === lower) {
+      if ((obj.getId() || '').toLowerCase() === lower) {
         return obj;
       }
     }
@@ -674,11 +676,11 @@ export default class GuiObj extends XmlObj {
     this._div.style.opacity = `${this._alpha / 255}`;
   }
   _renderVisibility() {
-    // this._div.style.display = this._visible ? "inline-block" : "none";
-    if(this._visible)
-      this._div.style.removeProperty("display");
-    else
-      this._div.style.display = "none";
+    this._div.style.display = this._visible ? "inline-block" : "none";
+    // if(this._visible)
+    //   this._div.style.removeProperty("display");
+    // else
+    //   this._div.style.display = "none";
   }
   _renderTransate() {
     this._div.style.transform = `translate(${px(this._x ?? 0)}, ${px(

@@ -2,10 +2,20 @@ import UI_ROOT from "../../UIRoot";
 import { assume } from "../../utils";
 import BaseObject from "./BaseObject";
 
+let TIMER_IDS = 0;
+
 export default class Timer extends BaseObject {
   static GUID = "5d0c5bb64b1f7de1168d0fa741199459";
   _delay: number = 100; //x2nie
   _timeout: NodeJS.Timeout | null = null;
+  _nid: number;
+
+  constructor(){
+    super();
+    TIMER_IDS += 1;
+    this._nid = TIMER_IDS;
+  }
+
   setdelay(millisec: number) {
     // assume(
     //   this._timeout == null,
@@ -22,8 +32,8 @@ export default class Timer extends BaseObject {
       this._timeout = null;
     }
   }
-  start():boolean {
-    console.log('timer.start()')
+  async start(): Promise<boolean> {
+    console.log('timer.start()', this._nid)
     if(!this._delay){
       return false;
     }
@@ -35,6 +45,7 @@ export default class Timer extends BaseObject {
         this.stop();
       }
       this._timeout = setInterval(() => {
+        console.log('timer.ontimer()', this._nid)
         UI_ROOT.vm.dispatch(self, "ontimer");
       }, this._delay);
       return true
