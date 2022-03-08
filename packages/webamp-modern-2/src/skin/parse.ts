@@ -34,7 +34,7 @@ class ParserContext {
   parentGroup: Group | /* Group includes Layout | */ null = null;
 }
 
-let _CURRENT_PARSER: SkinParser;
+// let _CURRENT_PARSER: SkinParser;
 
 export default class SkinParser {
   _imageManager: ImageManager;
@@ -64,12 +64,12 @@ export default class SkinParser {
   ) {
     this._uiRoot = uiRoot;
     this._imageManager = new ImageManager(this._uiRoot._zip);
-    _CURRENT_PARSER = this;
+    // _CURRENT_PARSER = this;
   }
 
-  public static getCurrentParser(): SkinParser {
-    return _CURRENT_PARSER;
-  }
+  // public static getCurrentParser(): SkinParser {
+  //   return _CURRENT_PARSER;
+  // }
 
   async parse(): Promise<UIRoot> {
     // Load built-in xui elements
