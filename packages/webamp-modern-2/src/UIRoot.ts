@@ -98,6 +98,14 @@ export class UIRoot {
       (font) => font.getId().toLowerCase() === id.toLowerCase()
     );
 
+    if(!found && id.toLowerCase()==='arial'){
+      const arial = new TrueTypeFont();
+      arial.setXmlAttributes({id, family:'arial'});
+      this.addFont(arial);
+      return arial;
+
+    }
+
     if (found == null) {
       console.warn(`Could not find true type font with id ${id}.`);
     }
