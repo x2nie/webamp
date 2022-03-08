@@ -27,7 +27,6 @@ import { getBitmap_system_elements } from "./defaultResource";
 import AlbumArt from "./makiClasses/AlbumArt";
 import WindowHolder from "./makiClasses/WindowHolder";
 import WasabiFrame from "./makiClasses/WasabiFrame";
-import WasabiTitle from "./makiClasses/WasabiTitle";
 import Grid from "./makiClasses/Grid";
 
 class ParserContext {
