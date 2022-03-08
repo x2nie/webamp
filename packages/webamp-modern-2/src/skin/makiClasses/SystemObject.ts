@@ -551,6 +551,7 @@ export default class SystemObject extends BaseObject {
    * @ret             The new group.
    * @param  group_id    The identifier for the group you want to create.
    */
+  // async newgroup(group_id: string): Promise<Group> {
   newgroup(group_id: string): Group {
 
     const self = this;
@@ -563,7 +564,7 @@ export default class SystemObject extends BaseObject {
     }
 
     )
-    if(self._parentGroup) self._parentGroup.addChild(group)
+    if(self._parentGroup) self._parentGroup.addChild(group); // its also set parent
     const parser = new SkinParser(UI_ROOT);
     // parser._context.parentGroup = this._parentGroup;
     // const group = await parser.group(new XmlElement('group', {
@@ -579,14 +580,14 @@ export default class SystemObject extends BaseObject {
       function(foo){
         // console.warn('* THEN= group :',group_id, group)
         
-         
         // if(self._parentGroup) self._parentGroup.addChild(group)
         // console.warn('* >>new group ',group_id, ':', group)
         group.draw()
+        // if(self._parentGroup) self._parentGroup.reInitSys()
         // setTimeout(() => {
           group.init()
-          // }, 100);
-        self._parentGroup._div.appendChild(group.getDiv());
+          // }, 500);
+          self._parentGroup._div.appendChild(group.getDiv());
       },
       function(err){
         console.warn('* THEN =! group :',group_id, err,  group)
@@ -597,6 +598,9 @@ export default class SystemObject extends BaseObject {
     // // console.warn('* >>new group :', group)
     // group.init()
     // group.draw()
+    // while(!answered){
+    //   //nothing here, let wait because we can't go to return asynchronously
+    // }
     return group;
   }
 
@@ -778,8 +782,11 @@ export default class SystemObject extends BaseObject {
     msgtitle: string,
     flag: number,
     notanymore_id: string
-  ) {
+  ): number {
     // TODO
+    // console.warn('messagebox{', message, 'title:', msgtitle, 'flag:', flag)
+    alert(`[${msgtitle}] ${message}`)
+    return 1
   }
 
   /**
@@ -863,6 +870,7 @@ export default class SystemObject extends BaseObject {
    */
   getcurrenttrackrating(): number {
     // TODO
+    return 1
   }
   /**
    * Requires 5.5
