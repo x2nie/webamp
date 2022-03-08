@@ -7,7 +7,7 @@ import XmlObj from "../XmlObj";
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#GuiObject_.28Global_params.29
 export default class GuiObj extends XmlObj {
   static GUID = "4ee3e1994becc636bc78cd97b028869c";
-  _parent: Group;
+  _parent: Group | GuiObj;
   _children: GuiObj[] = [];
   _className: string = 'webamp--img';
   _id: string;
@@ -295,7 +295,9 @@ export default class GuiObj extends XmlObj {
     if (this._width || this._minimumWidth || this._maximumWidth) {
       // return Math.min( Math.max(this._width, this._minimumWidth), this._maximumWidth);
       let w = Math.max(this._width, this._minimumWidth);
-      w = Math.min(w, this._maximumWidth || w);
+      if(this._maximumHeight){
+        w = Math.min(w, this._maximumWidth || w);
+      }
       return w
     }
 
@@ -341,6 +343,15 @@ export default class GuiObj extends XmlObj {
 
 
   findobject(id: string): GuiObj {
+    const ret = this._findobject(id);
+    if(!ret){
+      // console.log(`findObject at ${this.getId()} failed:`, id)
+
+    }
+    return ret;
+  }
+
+  _findobject(id: string): GuiObj { // too complex to consol.log here
     const lower = id.toLowerCase();
     // find in direct children first
     for (const obj of this._children) {

@@ -28,7 +28,6 @@ import AlbumArt from "./makiClasses/AlbumArt";
 import WindowHolder from "./makiClasses/WindowHolder";
 import WasabiFrame from "./makiClasses/WasabiFrame";
 import Grid from "./makiClasses/Grid";
-import { clone, cloneAttribute } from "./clone";
 
 class ParserContext {
   container: Container | null = null;
@@ -37,7 +36,7 @@ class ParserContext {
 
 // let _CURRENT_PARSER: SkinParser;
 
-export default class SkinParser {
+export default class SkinParserSynchronously {
   _imageManager: ImageManager;
   _path: string[] = [];
   _context: ParserContext = new ParserContext();
@@ -72,28 +71,28 @@ export default class SkinParser {
   //   return _CURRENT_PARSER;
   // }
 
-  async parse(): Promise<UIRoot> {
-    // Load built-in xui elements
-    // await this.parseFromUrl("assets/xml/xui/standardframe.xml");
-    const includedXml = await this._uiRoot.getFileAsString("skin.xml");
+//   parse(): Promise<UIRoot> {
+//     // Load built-in xui elements
+//     // this.parseFromUrl("assets/xml/xui/standardframe.xml");
+//     const includedXml = this._uiRoot.getFileAsString("skin.xml");
 
-    // Note: Included files don't have a single root node, so we add a synthetic one.
-    // A different XML parser library might make this unnessesary.
-    const parsed = parseXml(includedXml) as unknown as  XmlElement;
+//     // Note: Included files don't have a single root node, so we add a synthetic one.
+//     // A different XML parser library might make this unnessesary.
+//     const parsed = parseXml(includedXml) as unknown as  XmlElement;
 
-    await this.traverseChildren(parsed) ;
-    await this._resolveRes()
+//     this.traverseChildren(parsed) ;
+//     this._resolveRes()
 
-    return this._uiRoot;
-  }
+//     return this._uiRoot;
+//   }
 
   // Some XML files are built-in, so we want to be able to
-  async parseFromUrl(url: string): Promise<void> {
-    const response = await fetch(url);
-    const xml = await response.text();
-    const parsed = parseXmlFragment(xml);
-    await this.traverseChildren(parsed);
-  }
+//   parseFromUrl(url: string): Promise<void> {
+//     const response = fetch(url);
+//     const xml = response.text();
+//     const parsed = parseXmlFragment(xml);
+//     this.traverseChildren(parsed);
+//   }
 
   _scanRes(node: XmlElement){
     // if(node.attributes.background!=null && !!!this._res.bitmaps[node.attributes.background]){
@@ -103,7 +102,7 @@ export default class SkinParser {
     } 
   }
 
-  async _resolveRes(){
+  _resolveRes(){
     //? checkmark the already availble
     // this._uiRoot._bitmaps.forEach(function (bitmap) {
     //   self._res.bitmaps[bitmap._id.toLowerCase()] = true;
@@ -121,7 +120,7 @@ export default class SkinParser {
         if(dict!=null){
           const bitmapEl = new XmlElement('bitmap', {...dict})
         //   // parser.traverseChild(bitmapEl);
-          await this.bitmap(bitmapEl);
+          this.bitmap(bitmapEl);
           console.log('solving bitmap:', lowercaseId)
           // return findLast(
           //   this._bitmaps,
@@ -135,16 +134,16 @@ export default class SkinParser {
     // });
   }
 
-  async traverseChildren(parent: XmlElement) {
+  traverseChildren(parent: XmlElement) {
     for (const child of parent.children) {
       if (child instanceof XmlElement) {
         // console.log('traverse->', parent.name, child.name)
         this._scanRes(child);
-        await this.traverseChild(child);
+        this.traverseChild(child);
       }
     }
   }
-  async traverseChild(node: XmlElement) {
+  traverseChild(node: XmlElement) {
     switch (node.name.toLowerCase()) {
       case "albumart":
         return this.albumart(node);
@@ -165,7 +164,7 @@ export default class SkinParser {
       case "color":
         return this.color(node);
       case "groupdef":
-        return await this.groupdef(node);
+        return this.groupdef(node);
       case "animatedlayer":
         return this.animatedLayer(node);
       case "layer":
@@ -262,55 +261,55 @@ export default class SkinParser {
 
   /* Individual Element Parsers */
 
-  async wasabiXml(node: XmlElement) {
-    await this.traverseChildren(node);
+  wasabiXml(node: XmlElement) {
+    this.traverseChildren(node);
   }
 
-  async winampAbstractionLayer(node: XmlElement) {
-    await this.traverseChildren(node);
+  winampAbstractionLayer(node: XmlElement) {
+    this.traverseChildren(node);
   }
 
-  async elements(node: XmlElement) {
-    await this.traverseChildren(node);
+  elements(node: XmlElement) {
+    this.traverseChildren(node);
   }
 
-  async windowholder(node: XmlElement) {
+  windowholder(node: XmlElement) {
     const group = new WindowHolder();
     const previousParent = this._context.parentGroup;
-    await this.maybeApplyGroupDef(group, node);
+    this.maybeApplyGroupDef(group, node);
     group.setXmlAttributes(node.attributes);
     this._context.parentGroup = group;
-    await this.traverseChildren(node);
+    this.traverseChildren(node);
     this._context.parentGroup = previousParent;
     this.addToGroup(group);
   }
 
-  async group(node: XmlElement): Promise<Group> {
+  group(node: XmlElement): Group {
     const group = new Group();
     const previousParent = this._context.parentGroup;
-    await this.maybeApplyGroupDef(group, node);
+    this.maybeApplyGroupDef(group, node);
     group.setXmlAttributes(node.attributes);
     this._context.parentGroup = group;
-    await this.traverseChildren(node);
+    this.traverseChildren(node);
     this._context.parentGroup = previousParent;
     this.addToGroup(group);
     return group
   }
 
-  async bitmap(node: XmlElement) {
+  bitmap(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <bitmap> XML node."
     );
     const bitmap = new Bitmap();
     bitmap.setXmlAttributes(node.attributes);
-    await bitmap.ensureImageLoaded(this._imageManager);
+    bitmap.ensureImageLoaded(this._imageManager);
 
     this._uiRoot.addBitmap(bitmap);
     this._res.bitmaps[node.attributes.id] = true;
   }
 
-  async bitmapFont(node: XmlElement) {
+  bitmapFont(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <bitmapFont> XML node."
@@ -329,12 +328,12 @@ export default class SkinParser {
       else console.warn('BitmapFont file not found:', node.attributes.file)
     }
 
-    await font.ensureFontLoaded(this._imageManager);
+    font.ensureFontLoaded(this._imageManager);
 
     this._uiRoot.addFont(font);
   }
 
-  async text(node: XmlElement): Promise<Text> {
+  text(node: XmlElement): Text {
     assume(
       node.children.length === 0,
       "Unexpected children in <text> XML node."
@@ -353,14 +352,14 @@ export default class SkinParser {
     return text;
   }
 
-  async songticker(node: XmlElement): Promise<Text> {
-    const text = await this.text(node);
+  songticker(node: XmlElement): Text {
+    const text = this.text(node);
     text.setxmlparam('display', 'songtitle')
     return text
   }
 
-  async wasabiTitleBar(node: XmlElement) {
-    const group = await this.group(node);
+  wasabiTitleBar(node: XmlElement) {
+    const group = this.group(node);
     let text = null;
     
     //? Search Wasabi Inheritace
@@ -368,13 +367,13 @@ export default class SkinParser {
     const xuiEl : XmlElement = UI_ROOT.getXuiElement(xuitag);
     if(xuiEl && node.attributes.id != xuiEl.attributes.id){
       const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
-      await this.maybeApplyGroupDef(group, xuiFrame);
+      this.maybeApplyGroupDef(group, xuiFrame);
       text = group.findobject(xuiEl.attributes.embed_xui)
     } else {
       text = group.findobject('window.titlebar.title')
     }
     
-    // const text = await this.text(node);
+    // const text = this.text(node);
     if(text){
       text.setxmlparam('text', ':componentname') // or display:componentname?
     }
@@ -382,7 +381,7 @@ export default class SkinParser {
     return text  
   }
 
-  async script(node: XmlElement) {
+  script(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <script> XML node."
@@ -395,14 +394,13 @@ export default class SkinParser {
     }
     // assert(id != null, "Script element missing `id` attribute");
 
-    const scriptContents: ArrayBuffer = await this._uiRoot.getFileAsBytes(file);
+    const scriptContents: ArrayBuffer = this._uiRoot.getFileAsBytes(file);
     assert(scriptContents != null, `ScriptFile file not found at path ${file}`);
 
     // TODO: Try catch?
     const parsedScript = parseMaki(scriptContents);
 
-    const systemObj = new SystemObject(id, parsedScript, param);
-    // systemObj.___id = id;
+    const systemObj = new SystemObject(parsedScript, param);
 
     // TODO: Need to investigate how scripts find their group. In corneramp, the
     // script itself is not in any group. `xml/player.xml:8
@@ -413,11 +411,11 @@ export default class SkinParser {
     }
   }
 
-  async scripts(node: XmlElement) {
-    await this.traverseChildren(node);
+  scripts(node: XmlElement) {
+    this.traverseChildren(node);
   }
 
-  async sendparams(node: XmlElement) {
+  sendparams(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <sendparams> XML node."
@@ -426,7 +424,7 @@ export default class SkinParser {
     // TODO: Parse sendparams
   }
 
-  async button(node: XmlElement) {
+  button(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <button> XML node."
@@ -444,7 +442,7 @@ export default class SkinParser {
     parentGroup.addChild(button);
   }
 
-  async wasabiButton(node: XmlElement) {
+  wasabiButton(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <button> XML node."
@@ -488,7 +486,7 @@ export default class SkinParser {
     console.log('wasabi.btn', this._res.bitmaps)
   }
 
-  async toggleButton(node: XmlElement) {
+  toggleButton(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <button> XML node."
@@ -506,7 +504,7 @@ export default class SkinParser {
     parentGroup.addChild(button);
   }
 
-  async color(node: XmlElement) {
+  color(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <color> XML node."
@@ -518,7 +516,7 @@ export default class SkinParser {
     this._uiRoot.addColor(color);
   }
 
-  async slider(node: XmlElement) {
+  slider(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <slider> XML node."
@@ -536,34 +534,22 @@ export default class SkinParser {
     parentGroup.addChild(slider);
   }
 
-  async groupdef(node: XmlElement) {
+  groupdef(node: XmlElement) {
     this._uiRoot.addGroupDef(node);
-    
-    // lets make a clonnable
-    const group = new Group();
-    const previousParent = this._context.parentGroup;
-    // await this.maybeApplyGroupDef(group, node);
-    group.setXmlAttributes(node.attributes);
-    this._context.parentGroup = group;
-    await this.traverseChildren(node);
-    this._context.parentGroup = previousParent;
-    // this.addToGroup(group);
-
-    this._uiRoot._clonnableGroup[node.attributes.id] = group;
   }
 
-  async albumart(node: XmlElement) {
+  albumart(node: XmlElement) {
     const group = new AlbumArt();
     const previousParent = this._context.parentGroup;
-    // await this.maybeApplyGroupDef(group, node);
+    // this.maybeApplyGroupDef(group, node);
     group.setXmlAttributes(node.attributes);
     // this._context.parentGroup = group;
-    // await this.traverseChildren(node);
+    // this.traverseChildren(node);
     this._context.parentGroup = previousParent;
     this.addToGroup(group);
   }
 
-  async layer(node: XmlElement) {
+  layer(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <layer> XML node."
@@ -581,7 +567,7 @@ export default class SkinParser {
     parentGroup.addChild(layer);
   }
 
-  async grid(node: XmlElement) {
+  grid(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <layer> XML node."
@@ -599,7 +585,7 @@ export default class SkinParser {
     parentGroup.addChild(layer);
   }
 
-  async animatedLayer(node: XmlElement) {
+  animatedLayer(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <animatedlayer> XML node."
@@ -617,33 +603,26 @@ export default class SkinParser {
     parentGroup.addChild(layer);
   }
 
-  async maybeApplyGroupDef(group: GuiObj, node: XmlElement) {
+  maybeApplyGroupDef(group: GuiObj, node: XmlElement) {
     const id = node.attributes.id;
-    await this.maybeApplyGroupDefId(group, id)
+    this.maybeApplyGroupDefId(group, id)
   }
 
-  async maybeApplyGroupDefId1(group: GuiObj, groupdef_id: string) {
-    const groupDef = this._uiRoot._clonnableGroup[groupdef_id];
-    if (groupDef != null) {
-      cloneAttribute(groupDef, group, group._parent);
-    }
-
-  }
-  async maybeApplyGroupDefId(group: GuiObj, groupdef_id: string) {
+  maybeApplyGroupDefId(group: GuiObj, groupdef_id: string) {
     const groupDef = this._uiRoot.getGroupDef(groupdef_id);
     if (groupDef != null) {
       group.setXmlAttributes(groupDef.attributes);
       const previousParentGroup = this._context.parentGroup;
       this._context.parentGroup = group as Group;
-      await this.traverseChildren(groupDef);
+      this.traverseChildren(groupDef);
       this._context.parentGroup = previousParentGroup;
       // TODO: Maybe traverse groupDef's children?
     }
   }
 
-  async layout(node: XmlElement) {
+  layout(node: XmlElement) {
     const layout = new Layout();
-    await this.maybeApplyGroupDef(layout, node);
+    this.maybeApplyGroupDef(layout, node);
     layout.setXmlAttributes(node.attributes);
 
     const { container } = this._context;
@@ -651,16 +630,16 @@ export default class SkinParser {
     container.addLayout(layout);
 
     this._context.parentGroup = layout;
-    await this.traverseChildren(node);
+    this.traverseChildren(node);
   }
 
-  async gammaset(node: XmlElement) {
+  gammaset(node: XmlElement) {
     this._gammaSet = [];
-    await this.traverseChildren(node);
+    this.traverseChildren(node);
     this._uiRoot.addGammaSet(node.attributes.id, this._gammaSet);
   }
 
-  async gammagroup(node: XmlElement) {
+  gammagroup(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <gammagroup> XML node."
@@ -670,8 +649,8 @@ export default class SkinParser {
     this._gammaSet.push(gammaGroup);
   }
 
-  async component(node: XmlElement) {
-    // await this.traverseChildren(node);
+  component(node: XmlElement) {
+    // this.traverseChildren(node);
     //x2nie
     const previousParent = this._context.parentGroup;
     
@@ -685,21 +664,21 @@ export default class SkinParser {
         );
         return;
     }
-    await this.traverseChildren(node);
+    this.traverseChildren(node);
     parentGroup.addChild(list);
     this._context.parentGroup = previousParent;
 
   }
 
-  async container(node: XmlElement) {
+  container(node: XmlElement) {
     const container = new Container();
     container.setXmlAttributes(node.attributes);
     this._context.container = container;
     this._uiRoot.addContainers(container);
-    await this.traverseChildren(node);
+    this.traverseChildren(node);
   }
 
-  async colorThemesList(node: XmlElement) {
+  colorThemesList(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <ColorThemes:List> XML node."
@@ -749,12 +728,12 @@ export default class SkinParser {
   
 
   }
-  async wasabiFrame(node: XmlElement) {
+  wasabiFrame(node: XmlElement) {
     // const frame = new Group();
     const frame = new WasabiFrame();
     this._context.parentGroup.addChild(frame);
     // frame.setXmlAttributes(nodeFrame.attributes);
-    // frame.setXmlAttributes(node.attributes);
+    frame.setXmlAttributes(node.attributes);
     
     const previousParentGroup1 = this._context.parentGroup;
     this._context.parentGroup = frame;
@@ -764,7 +743,7 @@ export default class SkinParser {
     const xuiEl : XmlElement = UI_ROOT.getXuiElement(xuitag);
     if(xuiEl){
         const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
-        await this.maybeApplyGroupDef(frame, xuiFrame);
+        this.maybeApplyGroupDef(frame, xuiFrame);
     }
     else {
       const groupdef_id = this._getWasabiGroupDef(node.name)
@@ -776,22 +755,21 @@ export default class SkinParser {
       //   relath:'1',
       // });
       const groupDef = this._uiRoot.getGroupDef(groupdef_id);
-      await this.maybeApplyGroupDef(frame, groupDef);
+      this.maybeApplyGroupDef(frame, groupDef);
     }
-    frame.setXmlAttributes(node.attributes);
       
     this._context.parentGroup = previousParentGroup1;
 
   }
 
-  async layoutStatus(node: XmlElement) {
+  layoutStatus(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <layoutStatus> XML node."
     );
   }
 
-  async xuiElement(node: XmlElement) {
+  xuiElement(node: XmlElement) {
     assume(node.children.length === 0, "Unexpected children in XUI XML node.");
     const xuiElement = this._uiRoot.getXuiElement(node.name);
     assume(
@@ -804,16 +782,16 @@ export default class SkinParser {
     const previousParentGroup = this._context.parentGroup;
     this._context.parentGroup = group;
 
-    await this.traverseChildren(xuiElement);
+    this.traverseChildren(xuiElement);
     group.setXmlAttributes(node.attributes);
-    await this.traverseChildren(node);
+    this.traverseChildren(node);
 
     this._context.parentGroup = previousParentGroup;
 
     this._context.parentGroup.addChild(group);
   }
 
-  async status(node: XmlElement) {
+  status(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <status> XML node."
@@ -830,14 +808,14 @@ export default class SkinParser {
     }
     parentGroup.addChild(status);
   }
-  async eqvis(node: XmlElement) {
+  eqvis(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <eqvis> XML node."
     );
   }
 
-  async vis(node: XmlElement) {
+  vis(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <vis> XML node."
@@ -855,26 +833,26 @@ export default class SkinParser {
     parentGroup.addChild(vis);
   }
 
-  async hideobject(node: XmlElement) {
+  hideobject(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <hideobject> XML node."
     );
   }
 
-  async trueTypeFont(node: XmlElement) {
+  trueTypeFont(node: XmlElement) {
     assume(
       node.children.length === 0,
       "Unexpected children in <truetypefont> XML node."
     );
     const font = new TrueTypeFont();
     font.setXmlAttributes(node.attributes);
-    await font.ensureFontLoaded(this._imageManager);
+    font.ensureFontLoaded(this._imageManager);
 
     this._uiRoot.addFont(font);
   }
 
-  async include(node: XmlElement) {
+  include(node: XmlElement) {
     const { file } = node.attributes;
     assert(file != null, "Include element missing `file` attribute");
 
@@ -887,7 +865,7 @@ export default class SkinParser {
 
     const path = [...this._path, fileName].join("/");
 
-    const includedXml = await this._uiRoot.getFileAsString(path);
+    const includedXml = this._uiRoot.getFileAsString(path);
     if (includedXml == null) {
       console.warn(`Zip file not found: ${path} out of: `);
       return;
@@ -897,7 +875,7 @@ export default class SkinParser {
     // A different XML parser library might make this unnessesary.
     const parsed = parseXmlFragment(includedXml);
 
-    await this.traverseChildren(parsed);
+    this.traverseChildren(parsed);
 
     for (const _dir of directories) {
       this._path.pop();

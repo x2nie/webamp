@@ -13,6 +13,7 @@ export function assert(condition: boolean, message: string) {
 export function assume(condtion: boolean, message: string) {
   // return assert(condtion, message);
   if(!condtion) console.warn(message);
+  return condtion;
 }
 
 export function getCaseInsensitiveFile(

@@ -50,12 +50,15 @@ export default class Group extends GuiObj {
     // if(arguments.length){
     //   return; //it is called by wasabi. dont bother.
     // }
-    for (const systemObject of this._systemObjects) {
-      systemObject.init();
-    }
     for (const child of this._children) {
       child.init();
     }
+    for (const systemObject of this._systemObjects) {
+      systemObject.init();
+    }
+    // for (const child of this._children) {
+    //   child.init();
+    // }
   }
 
   getId() {
@@ -155,6 +158,7 @@ export default class Group extends GuiObj {
 
   getparentlayout(): Group{
     let obj: Group = this;
+    // console.log('getParentLayout', this.getId(), this._parent)
     while (obj._parent) {
       // if(obj instanceof Layout) {
       if(obj._isLayout) {
@@ -162,10 +166,43 @@ export default class Group extends GuiObj {
       }
       obj = obj._parent
     }
+    console.log('>>getParentLayout', this.getId(), 'got:', obj)
     return obj;
   }
 
   isLayout():boolean{
     return this._isLayout;
   }
+
+  __logSelf(){
+    const id= this.getId() || this._name;
+    for (var attribut in this) {
+        if (this[attribut] === null) {
+            // cloneObj[attribut] = this[attribut].clone();
+            console.log(id, 'null:', attribut, '=', this[attribut])
+        } else 
+        if (typeof this[attribut] === "object") {
+            // cloneObj[attribut] = this[attribut].clone();
+            console.log(id,'obj:', attribut, '=', this[attribut])
+        } else {
+            // cloneObj[attribut] = this[attribut];
+            console.log(id,'att:', attribut, '=', this[attribut])
+        }
+    }
+  }
 }
+
+/*
+* https://stackoverflow.com/questions/28150967/typescript-cloning-object
+public clone(): any {
+    var cloneObj = new (this.constructor() as any);
+    for (var attribut in this) {
+        if (typeof this[attribut] === "object") {
+            cloneObj[attribut] = this[attribut].clone();
+        } else {
+            cloneObj[attribut] = this[attribut];
+        }
+    }
+    return cloneObj;
+}
+*/

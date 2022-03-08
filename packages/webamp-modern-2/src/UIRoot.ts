@@ -11,6 +11,7 @@ import Container from "./skin/makiClasses/Container";
 import Vm from "./skin/VM";
 import BaseObject from "./skin/makiClasses/BaseObject";
 import AUDIO_PLAYER, { AudioPlayer } from "./skin/AudioPlayer";
+import Group from "./skin/makiClasses/Group";
 
 export class UIRoot {
   _div: HTMLDivElement = document.createElement("div");
@@ -19,6 +20,7 @@ export class UIRoot {
   _fonts: (TrueTypeFont | BitmapFont)[] = [];
   _colors: Color[] = [];
   _groupDefs: XmlElement[] = [];
+  _clonnableGroup = {}
   _gammaSets: Map<string, GammaGroup[]> = new Map();
   _dummyGammaGroup: GammaGroup = null;
   _xuiElements: XmlElement[] = [];
@@ -129,6 +131,24 @@ export class UIRoot {
 
     return found ?? null;
   }
+
+  // addClonnableGroup(groupDef: Group) {
+  //   this._groupDefs.push(groupDef);
+  //   if (groupDef.attributes.xuitag) {
+  //     this._xuiElements.push(groupDef);
+  //   }
+  // }
+
+  // getGroupDef(id: string): XmlElement | null {
+  //   if(!id) return null;
+  //   const lowercaseId = id.toLowerCase();
+  //   const found = findLast(
+  //     this._groupDefs,
+  //     (def) => def.attributes.id.toLowerCase() === lowercaseId
+  //   );
+
+  //   return found ?? null;
+  // }
 
   addContainers(container: Container) {
     this._containers.push(container);
@@ -400,6 +420,7 @@ export class UIRoot {
     this._zip = zip;
   }
 
+
   async getFileAsString(filePath: string): Promise<string> {
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
     if(!zipObj) return null;
@@ -411,6 +432,18 @@ export class UIRoot {
     if(!zipObj) return null;
     return await zipObj.async('arraybuffer');
   }
+
+  // getFileSynchString(filePath: string): string {
+  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+  //   if(!zipObj) return null;
+  //   return zipObj.nodeStream('string');
+  // }
+  
+  // getFileSynchBytes(filePath: string): ArrayBuffer {
+  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+  //   if(!zipObj) return null;
+  //   return zipObj.async('arraybuffer');
+  // }
 
   getFileIsExist(filePath: string): boolean {
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);

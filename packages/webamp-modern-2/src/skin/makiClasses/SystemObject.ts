@@ -10,6 +10,7 @@ import GuiObj from "./GuiObj";
 import SkinParser from "../parse";
 import AUDIO_PLAYER from "../AudioPlayer";
 import { XmlElement } from "@rgrove/parse-xml";
+import { cloneAttribute } from "../clone";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -24,9 +25,11 @@ export default class SystemObject extends BaseObject {
   _parentGroup: Group;
   _parsedScript: ParsedMaki;
   _param: string;
+  _id: string;
 
-  constructor(parsedScript: ParsedMaki, param: string) {
+  constructor(id: string, parsedScript: ParsedMaki, param: string) {
     super();
+    this._id = id;
     this._parsedScript = parsedScript;
     this._param = param;
     UI_ROOT.audio.onSeek(() => {
@@ -503,6 +506,7 @@ export default class SystemObject extends BaseObject {
    * @ret
    */
   getscriptgroup(): Group {
+    // console.log('-------- getScriptGroup:', this?this._parentGroup && this._parentGroup.getId():'NONE!')
     return this?this._parentGroup: null;
   }
 
@@ -552,6 +556,38 @@ export default class SystemObject extends BaseObject {
    * @param  group_id    The identifier for the group you want to create.
    */
   // async newgroup(group_id: string): Promise<Group> {
+  newgroup00(group_id: string): Group {
+
+    const self = this;
+    // console.warn('* new group is called with param:', group_id, this._parentGroup)
+    const group = new Group();
+    group.setXmlAttributes({
+      id:group_id,
+      h:'0', relath:'1',
+      w:'0', relatw:'1'
+    })
+    // if(self._parentGroup) self._parentGroup.addChild(group); // its also set parent
+    // cloneAttribute()
+    const groupDef = UI_ROOT._clonnableGroup[group_id];
+    if (groupDef != null) {
+      cloneAttribute(groupDef, group, this._parentGroup);
+    }
+    group.setXmlAttributes({
+      id:group_id,
+      h:'0', relath:'1',
+      w:'0', relatw:'1'
+    })
+    if(self._parentGroup) self._parentGroup.addChild(group); // its also set parent
+
+    group.draw()
+        // group.__logSelf()
+        // if(self._parentGroup) self._parentGroup.reInitSys()
+        // setTimeout(() => {
+          group.init()
+          // }, 500);
+          self._parentGroup._div.appendChild(group.getDiv());
+    return group;
+  }
   newgroup(group_id: string): Group {
 
     const self = this;
@@ -583,6 +619,7 @@ export default class SystemObject extends BaseObject {
         // if(self._parentGroup) self._parentGroup.addChild(group)
         // console.warn('* >>new group ',group_id, ':', group)
         group.draw()
+        group.__logSelf()
         // if(self._parentGroup) self._parentGroup.reInitSys()
         // setTimeout(() => {
           group.init()

@@ -326,6 +326,7 @@ class Interpreter {
             obj.value = new klass();
           }
 
+          let fine = //false;
           // console.log(klass.name, '>> calling:',methodName, '|', typeof obj.value,
           //  obj.value && obj.value[methodName] && 'VAL^' || '~value!' ,
           //  obj.value && obj.value.constructor[methodName] && 'CTOR^' || '~ctor!' ,  methodArgs, '$_$', obj.value);
@@ -334,8 +335,12 @@ class Interpreter {
           assume(
             (obj.type === "OBJECT" && typeof obj.value) === "object" &&
               obj.value != null,
-            `Guru Meditation: Tried to call method ${klass.name}.${methodName} on null object`
+            // `Guru Meditation: Tried to call method ${klass.name}.${methodName} on null object`
+            `Guru Meditation: Tried to call method ${klass.name}.${methodName} on null ${this.variables[0].value._id}`
           );
+          // if(!fine){
+          //   console.log(this.variables)
+          // }
           // let value = obj.value[methodName](...methodArgs);
           // let value = (_staticMethod? obj.value.constructor : obj.value)[methodName](...methodArgs);
           // let value = (obj.value[methodName] || obj.value.constructor[methodName])(...methodArgs);
@@ -368,7 +373,7 @@ class Interpreter {
               const fun = (obj.value[methodName]? obj.value[methodName] : obj.value.constructor[methodName]).bind(obj.value)
               value = fun(...methodArgs);
             } catch(err) {
-              console.warn('error call:',klass.name, '}}',methodName, 'args:',methodArgs, 'err:', err.message, 'obj:', obj)
+              // console.warn('error call:',klass.name, '}}',methodName, 'args:',methodArgs, 'err:', err.message, 'obj:', obj)
               value = null;
             }
   

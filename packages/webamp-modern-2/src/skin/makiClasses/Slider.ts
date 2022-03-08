@@ -1,5 +1,5 @@
 import UI_ROOT from "../../UIRoot";
-import { assume, clamp, num, px } from "../../utils";
+import { assume, clamp, num, px, relat } from "../../utils";
 import GuiObj from "./GuiObj";
 
 interface ActionHandler {
@@ -20,8 +20,8 @@ export default class Slider extends GuiObj {
   _downThumb: string;
   _hoverThumb: string;
   _action: string | null = null;
-  _low: number;
-  _high: number;
+  _low: number = 0;
+  _high: number = 1;
   _position: number = 0;
   _param: string | null = null;
   _thumbDiv: HTMLDivElement = document.createElement("div");
@@ -209,8 +209,14 @@ export default class Slider extends GuiObj {
           (1 - this._position) * (this.getheight() - bitmap.getHeight());
         this._thumbDiv.style.top = px(top);
       } else {
-        const left = this._position * (this.getwidth() - bitmap.getWidth());
+        // const left = (1 - this._position * (this.getwidth() - bitmap.getWidth());
+        const curwidth = this._div.getBoundingClientRect().width;
+        const left = this._position * (curwidth - bitmap.getWidth());
+        // console.log('thumb.left', this._position, left, 'w:',this.getwidth(),'bmp.w:', bitmap.getWidth())
         this._thumbDiv.style.left = px(left);
+        // this._thumbDiv.style.left = `${this._position*100}%`;
+        // this._thumbDiv.style.left = relat(bitmap.getWidth());
+        // this._thumbDiv.style.left = `calc(${this._position*100}% - ${bitmap.getWidth()}px)`;
       }
     }
   }
