@@ -37,6 +37,11 @@ export default class SystemObject extends BaseObject {
         { type: "INT", value: UI_ROOT.audio.getCurrentTimePercent() * 255 },
       ]);
     });
+    UI_ROOT.audio.onVolumeChanged(() => {
+      UI_ROOT.vm.dispatch(this, "onvolumechanged", [
+        { type: "INT", value: UI_ROOT.audio.getVolume() * 255 },
+      ]);
+    });
   }
 
   init() {
@@ -590,7 +595,13 @@ export default class SystemObject extends BaseObject {
           self._parentGroup._div.appendChild(group.getDiv());
     return group;
   }
+
   newgroup(group_id: string): Group {
+    const group = this._parentGroup.findobject(group_id) as Group;
+    return group
+  }
+
+  newgroup2(group_id: string): Group {
 
     const self = this;
     // console.warn('* new group is called with param:', group_id, this._parentGroup)
@@ -724,6 +735,7 @@ export default class SystemObject extends BaseObject {
    * @ret The current volume.
    **/
   getvolume(): number {
+    console.log('volume:', UI_ROOT.audio.getVolume() * 255);
     return UI_ROOT.audio.getVolume() * 255;
   }
 
@@ -1693,6 +1705,10 @@ export default class SystemObject extends BaseObject {
 
   unlockui(){
     //TODO:
+  }
+
+  translate(str: string): string{
+    return str;
   }
 }
 

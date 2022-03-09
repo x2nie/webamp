@@ -187,7 +187,7 @@ export default class SkinParser {
       case "layoutstatus":
       case "groupxfade":
       case "group":
-        return this.group(node);
+        return await this.group(node);
       case "layout":
         return this.layout(node);
       case "windowholder":
@@ -779,6 +779,21 @@ export default class SkinParser {
       await this.maybeApplyGroupDef(frame, groupDef);
     }
     frame.setXmlAttributes(node.attributes);
+
+    //?content
+    if(node.attributes.content){
+      const content = await this.group(new XmlElement(
+        'group', 
+        {
+          id:node.attributes.content,
+          w:'0',
+          h:'0',
+          relatw:'1',
+          relath:'1',
+        }
+      ))
+      frame.addChild(content)
+    }
       
     this._context.parentGroup = previousParentGroup1;
 

@@ -315,13 +315,23 @@ class PanActionHandler implements ActionHandler {
 
 // eslint-disable-next-line rulesdir/proper-maki-types
 class VolumeActionHandler implements ActionHandler {
+  // _subscription: () => void;
   _subscription: () => void;
+
   constructor(slider: Slider) {
     this._subscription = () => {};
+    slider._position = UI_ROOT.audio.getVolume();
+    slider._renderThumbPosition();
+
+    this._subscription =  UI_ROOT.audio.onVolumeChanged(() => {
+      slider._position = UI_ROOT.audio.getVolume();
+      slider._renderThumbPosition();
+    });
   }
 
   onsetposition(position: number): void {
     // TODO
+    UI_ROOT.audio.setVolume(position/255);
   }
   dispose(): void {
     this._subscription();

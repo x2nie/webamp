@@ -1,9 +1,13 @@
 import Group from "./Group";
 import UI_ROOT from "../../UIRoot";
+import { num } from "../../utils";
 
 export default class WasabiFrame extends Group {
   __inited: boolean = false;
   _content: string;
+  _shade: string;
+  _padtitleleft: string;
+  _padtitleright: string;
 
   getElTag():string{
     return 'wasabiframe';
@@ -20,6 +24,15 @@ export default class WasabiFrame extends Group {
     switch (lowerkey) {
       case "content":
         this._content = value;
+        break;
+      case "shade":
+        this._shade = value;
+        break;
+      case "padtitleleft":
+        this._padtitleleft = value;
+        break;
+      case "padtitleright":
+        this._padtitleright = value;
         break;
       default:
         return false;
@@ -42,11 +55,19 @@ export default class WasabiFrame extends Group {
 
     for (const systemObject of this._systemObjects) {
       // systemObject.init();
-      UI_ROOT.vm.dispatch(systemObject, "onsetxuiparam", [
-        {type: "STRING", value:'content'}, 
-        {type:"STRING", value:this._content}
-      ]);
+      ['content', 'shade', 'padtitleleft', 'padtitleright'].forEach(
+        (att)=>{
+          const myValue = this['_'+att];
+          if(myValue != null) {
+            UI_ROOT.vm.dispatch(systemObject, "onsetxuiparam", [
+              {type: "STRING", value: att }, 
+              {type: "STRING", value:this['_'+att]}
+            ]);
+          }
+        }
+      );
     }
+
   }
 
 }

@@ -248,6 +248,15 @@ export class AudioPlayer {
     return dispose;
   }
 
+  onVolumeChanged(cb: () => void): () => void {
+    const handler = () => cb();
+    this._audio.addEventListener("volumechange", handler);
+    const dispose = () => {
+      this._audio.removeEventListener("volumechange", handler);
+    };
+    return dispose;
+  }
+
   onPlay(cb: () => void): () => void {
     const handler = () => {
       // console.log('audio.onPlay!')
