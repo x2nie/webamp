@@ -1244,18 +1244,7 @@ export default class SystemObject extends BaseObject {
    * @ret STATUS_PAUSED (-1) if paused, STATUS_STOPPED (0) if stopped, STATUS_PLAYING (1) if playing.
    */
   getstatus(): number {
-    // TODO: Pull this from the actual media player
-    if (AUDIO_PLAYER._context.state === "closed") {
-      return 0;
-    }
-
-    else if (AUDIO_PLAYER._context.state === "running") {
-      return 1;
-    }
-
-    else if (AUDIO_PLAYER._context.state === "suspended") {
-      return -1;
-    }
+    return AUDIO_PLAYER.getState();
   }
 
   /**

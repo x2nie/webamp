@@ -96,15 +96,17 @@ export class AudioPlayer {
     return this._audio.volume;
   }
   play() {
-    this._audio.play();
     this.__isStop = false;
+    this._audio.play();
   }
   stop() {
+    this.__isStop = true; // needed to make threestate
+    if(this._audio.paused) {this._audio.play()}; // for trigger the event change
     this._audio.pause();
     this._audio.currentTime = 0;
-    this.__isStop = true; // needed to make threestate
   }
   pause() {
+    this.__isStop = false; // needed to make threestate
     this._audio.pause();
   }
 
@@ -139,7 +141,7 @@ export class AudioPlayer {
   }
 
   getState(): number {
-    if(this.__isStop) { // To distinc with pause
+    if(!!this.__isStop) { // To distinc with pause
       return STATUS_STOPPED; 
     }
     const audio = this._audio;
@@ -154,7 +156,22 @@ export class AudioPlayer {
     if(audio.paused){
       return STATUS_PAUSED
     } 
-    
+  }
+
+  onStateChange(cb: () => void): () => void {
+    const handler = () => {
+      // console.log('audio.onPlay!')
+      cb();
+    }
+    this._audio.addEventListener("playing", handler);
+    this._audio.addEventListener("pause", handler);
+    this._audio.addEventListener("ended", handler);
+    const dispose = () => {
+      this._audio.removeEventListener("playing", handler);
+      this._audio.removeEventListener("pause", handler);
+      this._audio.removeEventListener("ended", handler);
+    };
+    return dispose;
   }
 
   getEq(kind: string): number {
