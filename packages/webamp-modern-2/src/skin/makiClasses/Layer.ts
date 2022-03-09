@@ -64,7 +64,9 @@ export default class Layer extends GuiObj {
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }
-  //setRegionFromMap(regionMap:Map, threshold:number)
+  setregionfrommap(regionMap:any, threshold:number, reverse:boolean) {
+    //TODO:
+  }
 
   isinvalid():boolean {
     return false;

@@ -320,6 +320,10 @@ export default class GuiObj extends XmlObj {
     this._renderDimensions();
   }
 
+  getxmlparam(param:string): string { 
+    const _ = this['_'+param];
+    return _ != null ? _.toString() : null;
+  }
   getguiw(): number { return this._width; }
   getguih(): number { return this._height; }
   getguix(): number { return this._x; }
