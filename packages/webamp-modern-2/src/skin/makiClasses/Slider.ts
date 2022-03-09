@@ -27,13 +27,16 @@ export default class Slider extends GuiObj {
   _thumbDiv: HTMLDivElement = document.createElement("div");
   _actionHandler: null | ActionHandler;
 
+  getRealWidth(){
+    return this._div.getBoundingClientRect().width;    
+  }
   constructor() {
     super();
     this._thumbDiv.addEventListener("mousedown", (downEvent: MouseEvent) => {
       const bitmap = UI_ROOT.getBitmap(this._thumb);
       const startX = downEvent.clientX;
       const startY = downEvent.clientY;
-      const width = this.getwidth() - bitmap.getWidth();
+      const width = this.getRealWidth() - bitmap.getWidth();
       const height = this.getheight() - bitmap.getHeight();
       const initialPostition = this._position;
 
@@ -258,6 +261,7 @@ export default class Slider extends GuiObj {
 // eslint-disable-next-line rulesdir/proper-maki-types
 class SeekActionHandler implements ActionHandler {
   _subscription: () => void;
+
   constructor(slider: Slider) {
     const update = () => {
       slider._position = UI_ROOT.audio.getCurrentTimePercent();
@@ -269,6 +273,7 @@ class SeekActionHandler implements ActionHandler {
   }
 
   onsetposition(position: number): void {
+    console.log('seek:', position)
     UI_ROOT.audio.seekToPercent(position / MAX);
   }
   dispose(): void {
@@ -330,7 +335,7 @@ class VolumeActionHandler implements ActionHandler {
   }
 
   onsetposition(position: number): void {
-    // TODO
+    console.log('setVolume:', position/255)
     UI_ROOT.audio.setVolume(position/255);
   }
   dispose(): void {

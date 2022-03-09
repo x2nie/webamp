@@ -899,7 +899,7 @@ export default class SkinParser {
     const fileName = directories.pop();
 
     const path = [...parent_dir, ...directories, fileName].join("/");
-    console.log('build-path.', `parentdir:${parent_dir}; curdir:${directories}; file:${fileName}`)
+    // console.log('build-path.', `parentdir:${parent_dir}; curdir:${directories}; file:${fileName}`)
 
     const includedXml = await this._uiRoot.getFileAsString(path);
     if (includedXml == null) {
