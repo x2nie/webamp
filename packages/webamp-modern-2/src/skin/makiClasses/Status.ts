@@ -13,9 +13,7 @@ export default class Status extends GuiObj {
 
   constructor(){
     super()
-    UI_ROOT.audio.onPlay(() => this._updateStatus());
-    UI_ROOT.audio._audio.addEventListener('pause', () => this._updateStatus());
-    UI_ROOT.audio._audio.addEventListener('ended', () => this._updateStatus());
+    UI_ROOT.audio.onStateChange(() => this._updateStatus());
   }
 
   _updateStatus(){
