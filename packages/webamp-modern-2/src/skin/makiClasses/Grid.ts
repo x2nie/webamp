@@ -13,8 +13,10 @@ export default class Grid extends GuiObj {
   constructor(){
       super();
       this._left = document.createElement('left');
+      this._middle = document.createElement('middle');
       this._right = document.createElement('right');
       this._div.appendChild(this._left)
+      this._div.appendChild(this._middle)
       this._div.appendChild(this._right)
   }
   
@@ -24,8 +26,9 @@ export default class Grid extends GuiObj {
     }
     switch (key) {
       case "middle":
-        this._image = value;
-        this._renderBackground();
+        // this._image = value;
+        // this._renderBackground();
+        this._setBitmap(this._middle, value);
         break;
       case "left":
         this._setBitmap(this._left, value);

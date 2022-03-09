@@ -29,6 +29,7 @@ import WindowHolder from "./makiClasses/WindowHolder";
 import WasabiFrame from "./makiClasses/WasabiFrame";
 import Grid from "./makiClasses/Grid";
 import { clone, cloneAttribute } from "./clone";
+import ProgressGrid from "./makiClasses/ProgressGrid";
 
 class ParserContext {
   container: Container | null = null;
@@ -183,6 +184,7 @@ export default class SkinParser {
       case "togglebutton":
         return this.toggleButton(node);
       case "progressgrid":
+        return this.progressGrid(node);
       case "rect":
       case "layoutstatus":
       case "groupxfade":
@@ -588,6 +590,24 @@ export default class SkinParser {
     );
 
     const layer = new Grid();
+    layer.setXmlAttributes(node.attributes);
+    const { parentGroup } = this._context;
+    if (parentGroup == null) {
+      console.warn(
+        `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
+      );
+      return;
+    }
+    parentGroup.addChild(layer);
+  }
+
+  async progressGrid(node: XmlElement) {
+    assume(
+      node.children.length === 0,
+      "Unexpected children in <layer> XML node."
+    );
+
+    const layer = new ProgressGrid();
     layer.setXmlAttributes(node.attributes);
     const { parentGroup } = this._context;
     if (parentGroup == null) {
