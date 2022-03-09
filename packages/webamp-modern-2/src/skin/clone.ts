@@ -1,10 +1,19 @@
 import Group from "./makiClasses/Group";
 import GuiObj from "./makiClasses/GuiObj";
 import SystemObject from "./makiClasses/SystemObject";
+import { classResolver } from "./resolver";
+
+function hack() {
+    // Without this Snowpack will try to treeshake out resolver causing a circular
+    // dependency.
+    classResolver("A funny joke about why this is needed.");
+}
 
 export function clone(src:any, parent: GuiObj): GuiObj {
     // const dst = new (src.constructor() as any);
-    const dst = new src.constructor();
+    // const dst = new src.constructor();
+    const klass = classResolver(src.constructor().GUID)
+    const dst = new klass();
     // const dst = Object.create(src);
     cloneAttribute(src, dst, parent);
     return dst;
@@ -32,6 +41,9 @@ export function cloneAttribute(src:any, dst: GuiObj, parent: GuiObj) {
                     dst._backgroundBitmap = value;
                     break
                 case "_div":
+                    const newDiv = (value as HTMLElement).cloneNode(true);
+                    dst._div = newDiv as HTMLElement;
+                    break;
                 case "_others":
                     // skip
                     break;

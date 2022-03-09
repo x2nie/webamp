@@ -165,7 +165,7 @@ export default class SkinParser {
       case "color":
         return this.color(node);
       case "groupdef":
-        return await this.groupdef(node);
+        return this.groupdef(node);
       case "animatedlayer":
         return this.animatedLayer(node);
       case "layer":

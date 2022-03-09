@@ -50,15 +50,15 @@ export default class Group extends GuiObj {
     // if(arguments.length){
     //   return; //it is called by wasabi. dont bother.
     // }
-    for (const child of this._children) {
-      child.init();
-    }
-    for (const systemObject of this._systemObjects) {
-      systemObject.init();
-    }
     // for (const child of this._children) {
     //   child.init();
     // }
+    for (const systemObject of this._systemObjects) {
+      systemObject.init();
+    }
+    for (const child of this._children) {
+      child.init();
+    }
   }
 
   getId() {

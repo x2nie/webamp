@@ -10,7 +10,7 @@ import GuiObj from "./GuiObj";
 import SkinParser from "../parse";
 import AUDIO_PLAYER from "../AudioPlayer";
 import { XmlElement } from "@rgrove/parse-xml";
-import { cloneAttribute } from "../clone";
+import { clone, cloneAttribute } from "../clone";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -556,24 +556,26 @@ export default class SystemObject extends BaseObject {
    * @param  group_id    The identifier for the group you want to create.
    */
   // async newgroup(group_id: string): Promise<Group> {
-  newgroup00(group_id: string): Group {
+  newgroup0(group_id: string): Group {
 
     const self = this;
     // console.warn('* new group is called with param:', group_id, this._parentGroup)
-    const group = new Group();
-    group.setXmlAttributes({
-      id:group_id,
-      h:'0', relath:'1',
-      w:'0', relatw:'1'
-    })
+    // const group = new Group();
+    let group;
+    // group.setXmlAttributes({
+    //   id:group_id,
+    //   h:'0', relath:'1',
+    //   w:'0', relatw:'1'
+    // })
     // if(self._parentGroup) self._parentGroup.addChild(group); // its also set parent
     // cloneAttribute()
     const groupDef = UI_ROOT._clonnableGroup[group_id];
     if (groupDef != null) {
-      cloneAttribute(groupDef, group, this._parentGroup);
+      // cloneAttribute(groupDef, group, this._parentGroup);
+      group = clone(groupDef, this._parentGroup);
     }
     group.setXmlAttributes({
-      id:group_id,
+      // id:group_id,
       h:'0', relath:'1',
       w:'0', relatw:'1'
     })
