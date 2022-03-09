@@ -875,17 +875,16 @@ export default class SkinParser {
   }
 
   async include(node: XmlElement) {
-    const { file } = node.attributes;
+    const { file, parent_path } = node.attributes;
     assert(file != null, "Include element missing `file` attribute");
 
-    const directories = file.split("/");
+    const parent_dir = parent_path? parent_path.split("/"): [];
+
+    const directories = file.replace('@DEFAULTSKINPATH@','').split("/");
     const fileName = directories.pop();
 
-    for (const dir of directories) {
-      this._path.push(dir);
-    }
-
-    const path = [...this._path, fileName].join("/");
+    const path = [...parent_dir, ...directories, fileName].join("/");
+    console.log('build-path.', `parentdir:${parent_dir}; curdir:${directories}; file:${fileName}`)
 
     const includedXml = await this._uiRoot.getFileAsString(path);
     if (includedXml == null) {
@@ -897,11 +896,15 @@ export default class SkinParser {
     // A different XML parser library might make this unnessesary.
     const parsed = parseXmlFragment(includedXml);
 
+    const current_dir = directories.join('/')
+    for(const element of parsed.children){
+      if(element instanceof XmlElement && element.name == 'include'){
+        element.attributes.parent_path = current_dir;
+      }
+    }
+
     await this.traverseChildren(parsed);
 
-    for (const _dir of directories) {
-      this._path.pop();
-    }
   }
 
   skininfo(node: XmlElement) {
