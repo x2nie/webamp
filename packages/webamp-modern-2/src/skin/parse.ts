@@ -136,16 +136,17 @@ export default class SkinParser {
     // });
   }
 
-  // async traverseChildren(parent: XmlElement) {
-  //   for (const child of parent.children) {
-  //     if (child instanceof XmlElement) {
-  //       // console.log('traverse->', parent.name, child.name)
-  //       this._scanRes(child);
-  //       await this.traverseChild(child);
-  //     }
-  //   }
-  // }
   async traverseChildren(node: XmlElement, parent: any = null) {
+    for (const child of node.children) {
+      if (child instanceof XmlElement) {
+        // console.log('traverse->', parent.name, child.name)
+        this._scanRes(child);
+        await this.traverseChild(child, parent);
+      }
+    }
+  }
+
+  async traverseChildren0(node: XmlElement, parent: any = null) {
     return Promise.all(
       node.children.map( (child) => {
         if (child instanceof XmlElement) {
@@ -200,7 +201,7 @@ export default class SkinParser {
       case "layoutstatus":
       case "groupxfade":
       case "group":
-        return this.group(node, parent);
+        return await this.group(node, parent);
       case "layout":
         return this.layout(node, parent);
       case "windowholder":
@@ -243,7 +244,7 @@ export default class SkinParser {
       case "wasabi:standardframe:nostatus":
       case "wasabi:standardframe:status":
       case "wasabi:visframe:nostatus":
-        return this.wasabiFrame(node, parent);
+        return await this.wasabiFrame(node, parent);
       case "nstatesbutton":
       case "componentbucket":
       case "playlisteditor":
@@ -325,7 +326,7 @@ export default class SkinParser {
   }
 
   async group(node: XmlElement, parent: any): Promise<Group> {
-    return this.newGroup(Group, node, parent)
+    return await this.newGroup(Group, node, parent)
     // const group = new Group();
     // const previousParent = this._context.parentGroup;
     // await this.maybeApplyGroupDef(group, node);
@@ -987,12 +988,29 @@ export default class SkinParser {
     const parsed = parseXmlFragment(includedXml);
 
     const current_dir = directories.join('/')
-    for(const element of parsed.children){
-      if(element instanceof XmlElement && element.name == 'include'){
-        element.attributes.parent_path = current_dir;
-      }
-    }
 
+    const nonGroupDefs = [];
+    for(const element of parsed.children)
+    {
+      if(element instanceof XmlElement)
+      {
+        const lower = element.name.toLowerCase();
+        if(lower=='groupdef')
+        {
+          this._uiRoot.addGroupDef(element);
+          continue;
+        } 
+        else if(lower=='include')
+        {
+          element.attributes.parent_path = current_dir;
+        }
+        nonGroupDefs.push(element)
+      } 
+    }
+    //replace children
+    parsed.children.splice(0, parsed.children.length, ...nonGroupDefs);
+
+    // await this.traverseChildren({children:}, parent);
     await this.traverseChildren(parsed, parent);
 
   }
