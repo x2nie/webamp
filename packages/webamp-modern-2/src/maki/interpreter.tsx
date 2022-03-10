@@ -389,7 +389,11 @@ class Interpreter {
             //value = this.variables[1];
           }
           if (returnType === "BOOLEAN") {
-            assert(typeof value === "boolean", "BOOL should return a boolean" + ` got ${value} => ${JSON.stringify(value)} `);
+            // assert(typeof value === "boolean", "BOOL should return a boolean" + ` got ${value} => ${JSON.stringify(value)} `);
+            assume(typeof value === "boolean", "BOOL should return a boolean" + ` got ${value} => ${JSON.stringify(value)} `
+            +`  method ${klass.name}.${methodName} FROM ${this.variables[0].value._id}`
+
+            );
             value = value ? 1 : 0;
           }
           if (returnType === "OBJECT") {
