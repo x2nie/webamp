@@ -86,6 +86,7 @@ export default class Grid extends GuiObj {
     // this._div.style.pointerEvents = this._sysregion==-2 || this._ghost? 'none' : 'auto';
     this._div.style.pointerEvents = 'none';
     // this._div.style.overflow = "hidden";
+    this._div.style.removeProperty("display");
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }
