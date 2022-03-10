@@ -13,7 +13,7 @@ export default class Status extends GuiObj {
 
   constructor(){
     super()
-    UI_ROOT.audio.onStateChange(() => this._updateStatus());
+    UI_ROOT.audio.on('statchanged', () => this._updateStatus());
   }
 
   _updateStatus(){
