@@ -37,6 +37,10 @@ export default class SystemObject extends BaseObject {
         { type: "INT", value: UI_ROOT.audio.getCurrentTimePercent() * 255 },
       ]);
     });
+    UI_ROOT.audio.on('play',() => UI_ROOT.vm.dispatch(this, "onplay", []));
+    UI_ROOT.audio.on('pause',() => UI_ROOT.vm.dispatch(this, "onpause", []));
+    UI_ROOT.audio.on('stop',() => UI_ROOT.vm.dispatch(this, "onstop", []));
+    // UI_ROOT.audio.onPlay(() => UI_ROOT.vm.dispatch(this, "onplay", []));
     UI_ROOT.audio.onVolumeChanged(() => {
       UI_ROOT.vm.dispatch(this, "onvolumechanged", [
         { type: "INT", value: UI_ROOT.audio.getVolume() * 255 },
@@ -1679,8 +1683,11 @@ export default class SystemObject extends BaseObject {
 
   }
 
+  
+
   getsonginfotext():string{
     // return this.getplayitemstring()
+    // console.log('getSongInfoText!')
     return "123kbps stereo 79khz"
   }
 
@@ -1698,6 +1705,10 @@ export default class SystemObject extends BaseObject {
 
   translate(str: string): string{
     return str;
+  }
+
+  isvideofullscreen(): number {
+    return 0;
   }
 }
 
