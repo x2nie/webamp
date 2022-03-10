@@ -64,7 +64,7 @@ async function loadSkin(skinData: Blob) {
   setStatus("Initializing Maki...");
   console.log('Initializing Maki', 
   '##############################')
-  
+
 for (const container of uiRoot.getContainers()) {
     console.log(
       '=============================',

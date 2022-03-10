@@ -176,10 +176,10 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   // extern Text.setText(String txt); // changes the display/text="something" param
   settext(txt: string) {
-    if (this._text != txt) {
+    // if (this._text != txt) {
       this._text = txt;
       this._renderText();
-    }
+    // }
   }
   // overrides the display/text parameter with a custom string, set "" to cancel
   setalternatetext(txt: string) {

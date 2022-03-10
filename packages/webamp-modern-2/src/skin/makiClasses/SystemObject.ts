@@ -1099,7 +1099,7 @@ export default class SystemObject extends BaseObject {
    * @param  value   The integer to change into a string.
    */
   integertostring(value: number): string {
-    return String(value);
+    return String( Math.round(value) );
   }
 
   /**

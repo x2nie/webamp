@@ -29,7 +29,7 @@ export default class GuiObj extends XmlObj {
 
   _droptarget: string;
   _visible: boolean = true;
-  _alpha: number = 255;
+  _alpha: number = null;
   _sysregion: number = 0;
   _ghost: boolean = false;
   _tooltip: string = "";
@@ -349,7 +349,7 @@ export default class GuiObj extends XmlObj {
   findobject(id: string): GuiObj {
     const ret = this._findobject(id);
     if(!ret && id !='sysmenu'){
-      console.warn(`findObject( ${id} ) failed, @${this.getId()}`)
+      console.warn(`findObject(${id}) failed, @${this.getId()}`)
     }
     return ret;
   }
@@ -687,7 +687,7 @@ export default class GuiObj extends XmlObj {
   }
 
   _renderAlpha() {
-    this._div.style.opacity = `${this._alpha / 255}`;
+    if(this._alpha!=null) this._div.style.opacity = `${this._alpha / 255}`;
   }
   _renderVisibility() {
     this._div.style.display = this._visible ? "inline-block" : "none";
@@ -701,7 +701,7 @@ export default class GuiObj extends XmlObj {
   //     this._y ?? 0
   //   )})`;
   // }
-  
+
   _renderX() {
     this._div.style.left = this._relatx=='1' ? relat(this._x ?? 0) : px(this._x ?? 0);
   }
