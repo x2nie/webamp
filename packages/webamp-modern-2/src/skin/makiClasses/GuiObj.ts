@@ -348,8 +348,8 @@ export default class GuiObj extends XmlObj {
 
   findobject(id: string): GuiObj {
     const ret = this._findobject(id);
-    if(!ret){
-      // console.warn(`findObject( ${id} ) failed, @${this.getId()}`)
+    if(!ret && id !='sysmenu'){
+      console.warn(`findObject( ${id} ) failed, @${this.getId()}`)
     }
     return ret;
   }
@@ -696,33 +696,27 @@ export default class GuiObj extends XmlObj {
     // else
     //   this._div.style.display = "none";
   }
-  _renderTransate() {
-    this._div.style.transform = `translate(${px(this._x ?? 0)}, ${px(
-      this._y ?? 0
-    )})`;
-  }
+  // _renderTransate() {
+  //   this._div.style.transform = `translate(${px(this._x ?? 0)}, ${px(
+  //     this._y ?? 0
+  //   )})`;
+  // }
+  
   _renderX() {
-    // if(this._x==0 && !this._relatx)return;
-    if(this._relatx) {
-      this._div.style.left = relat(this._x ?? 0);
-    } else {
-      this._div.style.left = px(this._x ?? 0);
-    }
+    this._div.style.left = this._relatx=='1' ? relat(this._x ?? 0) : px(this._x ?? 0);
   }
+
   _renderY() {
-    // if(this._y==0 && !this._relaty)return;
-    if(this._relaty) {
-      this._div.style.top = relat(this._y ?? 0);
-    } else {
-      this._div.style.top = px(this._y ?? 0);
-    }
+    this._div.style.top = this._relaty=='1' ? relat(this._y ?? 0) : px(this._y ?? 0);
   }
+
   _renderWidth() {
     if(this._autowidthsource) return;
-    this._div.style.width = this._relatw ? relat(this._width??0) : px(this.getwidth());
+    this._div.style.width = this._relatw=='1' ? relat(this._width??0) : px(this.getwidth());
   }
+
   _renderHeight() {
-    this._div.style.height = this._relath ? relat(this._height??0) : px(this.getheight());
+    this._div.style.height = this._relath=='1' ? relat(this._height??0) : px(this.getheight());
   }
 
   _renderDimensions() {
