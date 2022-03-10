@@ -166,8 +166,8 @@ export default class Container extends XmlObj {
     param: string | null,
     actionTarget: string | null
   ) {
-    switch (action) {
-      case "SWITCH":
+    switch (action.toLowerCase()) {
+      case "switch":
         this.switchToLayout(param);
         break;
       default:

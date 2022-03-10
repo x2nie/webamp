@@ -42,7 +42,7 @@ export default class SkinParser {
   _imageManager: ImageManager;
   _path: string[] = [];
   // _context: ParserContext = new ParserContext();
-  _gammaSet: GammaGroup[] = [];
+  // _gammaSet: GammaGroup[] = [];
   _uiRoot: UIRoot;
   _res = {
     bitmaps: {
@@ -215,7 +215,7 @@ export default class SkinParser {
       case "slider":
         return this.slider(node, parent);
       case "script":
-        return this.script(node, parent);
+        return await this.script(node, parent);
       case "scripts":
         return this.scripts(node, parent);
       case "text":
@@ -225,7 +225,7 @@ export default class SkinParser {
       case "sendparams":
         return this.sendparams(node, parent);
       case "wasabi:titlebar":
-        return this.wasabiTitleBar(node, parent);
+        return await this.wasabiTitleBar(node, parent);
       case "wasabi:button":
         // return this.toggleButton(node, parent);
         return this.wasabiButton(node, parent);
@@ -296,6 +296,7 @@ export default class SkinParser {
     await this.traverseChildren(node, group);
     // this._context.parentGroup = previousParent;
     this.addToGroup(group, parent);
+    if(node.attributes.instanceid) group.setxmlparam('id',node.attributes.instanceid )
     return group;
   }
 
@@ -459,13 +460,26 @@ export default class SkinParser {
     await this.traverseChildren(node, parent);
   }
 
-  async sendparams(node: XmlElement, parent: any) {
+  async sendparams(node: XmlElement, parent: Group) {
     assume(
       node.children.length === 0,
       "Unexpected children in <sendparams> XML node."
     );
 
     // TODO: Parse sendparams
+    let el = parent;
+    if(node.attributes.group) {
+      el = parent.findobject(node.attributes.group) as Group;
+    }
+    const targets = node.attributes.target.split(';')
+    for(const target of targets){
+      const gui= el.findobject(target);
+      for (let attribute in node.attributes) {
+        if(gui && attribute!='target'){
+          gui.setxmlparam(attribute, node.attributes[attribute])
+        }
+      }
+    }
   }
 
   async button(node: XmlElement, parent: any) {

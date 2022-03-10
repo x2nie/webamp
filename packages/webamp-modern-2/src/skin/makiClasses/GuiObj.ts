@@ -130,6 +130,12 @@ export default class GuiObj extends XmlObj {
       case "droptarget":
         this._droptarget = value;
         break;
+      case "dblclickaction":
+        const [action,param, actionTarget] = value.split(';')
+        this._div.addEventListener("dblclick", (e) => {
+            this.dispatchAction(action, param, actionTarget);
+        });
+        break;
       case "sysregion":
         this._sysregion = num(value);
         break;
@@ -158,6 +164,26 @@ export default class GuiObj extends XmlObj {
   // setxmlparam(key: string, value: any) {
   //   this.setXmlAttr(key, value.toString());
   // }
+
+  handleAction(
+    action: string,
+    param: string | null,
+    actionTarget: string | null
+  ): boolean {
+    return false;
+  }
+
+  // Sends an action up the UI heirarchy
+  dispatchAction(
+    action: string,
+    param: string | null,
+    actionTarget: string | null
+  ) {
+    const handled = this.handleAction(action, param, actionTarget);
+    if (!handled && this._parent != null) {
+      this._parent.dispatchAction(action, param, actionTarget);
+    }
+  }
 
 
   init() {
@@ -666,26 +692,7 @@ export default class GuiObj extends XmlObj {
     return this._alpha;
   }
 
-  handleAction(
-    action: string,
-    param: string | null,
-    actionTarget: string | null
-  ): boolean {
-    return false;
-  }
-
-  // Sends an action up the UI heirarchy
-  dispatchAction(
-    action: string,
-    param: string | null,
-    actionTarget: string | null
-  ) {
-    const handled = this.handleAction(action, param, actionTarget);
-    if (!handled && this._parent != null) {
-      this._parent.dispatchAction(action, param, actionTarget);
-    }
-  }
-
+  
   _renderAlpha() {
     if(this._alpha!=null) this._div.style.opacity = `${this._alpha / 255}`;
   }
