@@ -65,16 +65,12 @@ async function loadSkin(skinData: Blob) {
   console.log('Initializing Maki', 
   '##############################')
 
-for (const container of uiRoot.getContainers()) {
+  for (const container of uiRoot.getContainers()) {
     console.log(
       '=============================',
       `loading container: ${container.getId()}`, 
     )
     container.init();
-    setTimeout(() => {
-    //   container._invalidate();
-    }, 3000);
-    // console.log(`loaded container: ${container.getId()}`)
   }
   setStatus("");
   // UI_ROOT.setZip(null);
