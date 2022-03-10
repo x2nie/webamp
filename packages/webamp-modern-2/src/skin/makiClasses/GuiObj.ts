@@ -21,10 +21,10 @@ export default class GuiObj extends XmlObj {
   _minimumWidth: number = 0;
   _maximumWidth: number = 0;
 
-  _relatx: boolean = false;
-  _relaty: boolean = false;
-  _relatw: boolean = false;
-  _relath: boolean = false;
+  _relatx: string;
+  _relaty: string;
+  _relatw: string;
+  _relath: string;
   _autowidthsource: string;
 
   _droptarget: string;
@@ -115,16 +115,16 @@ export default class GuiObj extends XmlObj {
   
 
       case "relatw":
-        this._relatw = toBool(value);
+        this._relatw = value;
         break;
       case "relath":
-        this._relath = toBool(value);
+        this._relath = value;
         break;
       case "relatx":
-        this._relatx = toBool(value);
+        this._relatx = value;
         break;
       case "relaty":
-        this._relaty = toBool(value);
+        this._relaty = value;
         break;
   
       case "droptarget":
