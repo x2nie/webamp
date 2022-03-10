@@ -148,17 +148,17 @@ export default class Container extends XmlObj {
 
   switchToLayout(layout_id: string) {
   // switchToLayout(id: string) {
-    const layout = this.getlayout(layout_id);
-    assert(layout != null, `Could not find layout with id "${layout_id}".`);
-    UI_ROOT.vm.dispatch(this, "onswitchtolayout", [
-      { type: "OBJECT", value: this._activeLayout },
-      { type: "OBJECT", value: layout },
-    ]);
-    this._activeLayout = layout;
+    const newlayout = this.getlayout(layout_id);
+    assert(newlayout != null, `Could not find layout with id "${layout_id}".`);
+    // UI_ROOT.vm.dispatch(this, "onswitchtolayout", [
+    //   { type: "OBJECT", value: this._activeLayout },
+    //   { type: "OBJECT", value: layout },
+    // ]);
     this._clearCurrentLayout();
+    this._activeLayout = newlayout;
     this._renderLayout();
     UI_ROOT.vm.dispatch(this, "onswitchtolayout", [
-      { type: "OBJECT", value: layout },
+      { type: "OBJECT", value: newlayout },
     ]);
   }
   dispatchAction(
