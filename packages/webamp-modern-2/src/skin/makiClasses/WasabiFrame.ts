@@ -61,7 +61,7 @@ export default class WasabiFrame extends Group {
           if(myValue != null) {
             UI_ROOT.vm.dispatch(systemObject, "onsetxuiparam", [
               {type: "STRING", value: att }, 
-              {type: "STRING", value:this['_'+att]}
+              {type: "STRING", value: myValue}
             ]);
           }
         }

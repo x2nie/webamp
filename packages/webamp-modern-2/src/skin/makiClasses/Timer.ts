@@ -6,7 +6,7 @@ let TIMER_IDS = 0;
 
 export default class Timer extends BaseObject {
   static GUID = "5d0c5bb64b1f7de1168d0fa741199459";
-  _delay: number = 100; //x2nie
+  _delay: number = 5000; //x2nie
   _timeout: NodeJS.Timeout | null = null;
   _nid: number;
 
@@ -33,7 +33,7 @@ export default class Timer extends BaseObject {
     }
   }
   async start(): Promise<boolean> {
-    console.log('timer.start()', this._nid)
+    // console.log('timer.start()', this._nid)
     if(!this._delay){
       return false;
     }
@@ -45,7 +45,7 @@ export default class Timer extends BaseObject {
         this.stop();
       }
       this._timeout = setInterval(() => {
-        console.log('timer.ontimer()', this._nid)
+        // console.log('timer.ontimer()', this._nid)
         UI_ROOT.vm.dispatch(self, "ontimer");
       }, this._delay);
       return true
@@ -64,6 +64,9 @@ export default class Timer extends BaseObject {
     return this._delay;
   }
 
+  getskipped(): number {
+    return 0;
+  }
   /*
 extern Int Timer.getSkipped();
 */

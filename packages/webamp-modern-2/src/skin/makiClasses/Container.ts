@@ -132,9 +132,14 @@ export default class Container extends XmlObj {
   addLayout(layout: Layout) {
     layout.setParentContainer(this);
     this._layouts.push(layout);
-    if (this._activeLayout == null) {
+    if (this._activeLayout == null || layout.getId() == 'normal') {
       this._activeLayout = layout;
     }
+  }
+
+  // parser need it.
+  addChild(layout: Layout) {
+    this.addLayout(layout)
   }
 
   _clearCurrentLayout() {

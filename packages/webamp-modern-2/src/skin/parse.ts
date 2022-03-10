@@ -41,7 +41,7 @@ class ParserContext {
 export default class SkinParser {
   _imageManager: ImageManager;
   _path: string[] = [];
-  _context: ParserContext = new ParserContext();
+  // _context: ParserContext = new ParserContext();
   _gammaSet: GammaGroup[] = [];
   _uiRoot: UIRoot;
   _res = {
@@ -136,103 +136,114 @@ export default class SkinParser {
     // });
   }
 
-  async traverseChildren(parent: XmlElement) {
-    for (const child of parent.children) {
-      if (child instanceof XmlElement) {
-        // console.log('traverse->', parent.name, child.name)
-        this._scanRes(child);
-        await this.traverseChild(child);
-      }
-    }
+  // async traverseChildren(parent: XmlElement) {
+  //   for (const child of parent.children) {
+  //     if (child instanceof XmlElement) {
+  //       // console.log('traverse->', parent.name, child.name)
+  //       this._scanRes(child);
+  //       await this.traverseChild(child);
+  //     }
+  //   }
+  // }
+  async traverseChildren(node: XmlElement, parent: any = null) {
+    return Promise.all(
+      node.children.map( (child) => {
+        if (child instanceof XmlElement) {
+          // console.log('traverse->', parent.name, child.name)
+          this._scanRes(child);
+          return this.traverseChild(child, parent);
+        }
+      })
+    )
   }
-  async traverseChild(node: XmlElement) {
+  async traverseChild(node: XmlElement, parent: any) {
     switch (node.name.toLowerCase()) {
       case "albumart":
-        return this.albumart(node);
+        return this.albumart(node, parent);
       case "wasabixml":
-        return this.wasabiXml(node);
+        return this.wasabiXml(node, parent);
       case "winampabstractionlayer":
-        return this.winampAbstractionLayer(node);
+        return this.winampAbstractionLayer(node, parent);
       case "include":
-        return this.include(node);
+        return await this.include(node, parent);
       case "skininfo":
-        return this.skininfo(node);
+        return this.skininfo(node, parent);
       case "elements":
-        return this.elements(node);
+        return this.elements(node, parent);
       case "bitmap":
         return this.bitmap(node);
       case "bitmapfont":
         return this.bitmapFont(node);
       case "color":
-        return this.color(node);
+        return this.color(node, parent);
       case "groupdef":
-        return this.groupdef(node);
+        return this.groupdef(node, parent);
       case "animatedlayer":
-        return this.animatedLayer(node);
+        return this.animatedLayer(node, parent);
       case "layer":
-        return this.layer(node);
+        return this.layer(node, parent);
       case "container":
-        return this.container(node);
+        return this.container(node, parent);
       case "layoutstatus":
-        return this.layoutStatus(node);
+        return this.layoutStatus(node, parent);
       case "grid":
-        return this.grid(node);
+        return this.grid(node, parent);
       case "hideobject":
-        return this.hideobject(node);
+        return this.hideobject(node, parent);
       case "button":
-        return this.button(node);
+        return this.button(node, parent);
       case "togglebutton":
-        return this.toggleButton(node);
+        return this.toggleButton(node, parent);
       case "progressgrid":
-        return this.progressGrid(node);
+        return this.progressGrid(node, parent);
       case "rect":
       case "layoutstatus":
       case "groupxfade":
       case "group":
-        return await this.group(node);
+        return this.group(node, parent);
       case "layout":
-        return this.layout(node);
+        return this.layout(node, parent);
       case "windowholder":
-        return this.windowholder(node);
+        return this.windowholder(node, parent);
       case "component":
-        return this.component(node);
+        return this.component(node, parent);
       case "gammaset":
-        return this.gammaset(node);
+        return this.gammaset(node, parent);
       case "gammagroup":
-        return this.gammagroup(node);
+        return this.gammagroup(node, parent);
       case "slider":
-        return this.slider(node);
+        return this.slider(node, parent);
       case "script":
-        return this.script(node);
+        return this.script(node, parent);
       case "scripts":
-        return this.scripts(node);
+        return this.scripts(node, parent);
       case "text":
-          return this.text(node);
+          return this.text(node, parent);
       case "songticker":
-        return this.songticker(node);
+        return this.songticker(node, parent);
       case "sendparams":
-        return this.sendparams(node);
+        return this.sendparams(node, parent);
       case "wasabi:titlebar":
-        return this.wasabiTitleBar(node);
+        return this.wasabiTitleBar(node, parent);
       case "wasabi:button":
-        // return this.toggleButton(node);
-        return this.wasabiButton(node);
+        // return this.toggleButton(node, parent);
+        return this.wasabiButton(node, parent);
       case "truetypefont":
-        return this.trueTypeFont(node);
+        return this.trueTypeFont(node, parent);
       case "eqvis":
-        return this.eqvis(node);
+        return this.eqvis(node, parent);
       case "colorthemes:mgr":
       case "colorthemes:list":
-        return this.colorThemesList(node);
+        return this.colorThemesList(node, parent);
       case "status":
-        return this.status(node);
+        return this.status(node, parent);
       case "wasabi:mainframe:nostatus":
       case "wasabi:medialibraryframe:nostatus":
       case "wasabi:playlistframe:nostatus":
       case "wasabi:standardframe:nostatus":
       case "wasabi:standardframe:status":
       case "wasabi:visframe:nostatus":
-        return this.wasabiFrame(node);
+        return this.wasabiFrame(node, parent);
       case "nstatesbutton":
       case "componentbucket":
       case "playlisteditor":
@@ -245,58 +256,85 @@ export default class SkinParser {
         // TODO
         return;
       // TODO: This should be the default fall through
-      // return this.xuiElement(node);
+      // return this.xuiElement(node, parent);
       case "vis":
-        return this.vis(node);
+        return this.vis(node, parent);
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
       case "wrapper":
-        return this.traverseChildren(node);
+        return this.traverseChildren(node, parent);
       default:
         console.warn(`Unhandled XML node type: ${node.name}`);
         return;
     }
   }
 
-  addToGroup(obj: GuiObj) {
-    this._context.parentGroup.addChild(obj);
+  addToGroup(obj: GuiObj, parent: Group) {
+    parent.addChild(obj);
+  }
+
+
+  async newGui<Type>(Type, node: XmlElement, parent: any): Promise<Awaited<Type>> {
+    const gui = new Type();
+    // const previousParent = this._context.parentGroup;
+    // await this.maybeApplyGroupDef(group, node);
+    gui.setXmlAttributes(node.attributes);
+    // this._context.parentGroup = group;
+    // await this.traverseChildren(node, parent);
+    // this._context.parentGroup = previousParent;
+    this.addToGroup(gui, parent);
+    return gui;
+  }
+
+  async newGroup<Type>(Type, node: XmlElement, parent: any): Promise<Awaited<Type>> {
+    const group = new Type();
+    // const previousParent = this._context.parentGroup;
+    await this.maybeApplyGroupDef(group, node);
+    group.setXmlAttributes(node.attributes);
+    // this._context.parentGroup = group;
+    await this.traverseChildren(node, group);
+    // this._context.parentGroup = previousParent;
+    this.addToGroup(group, parent);
+    return group;
   }
 
   /* Individual Element Parsers */
 
-  async wasabiXml(node: XmlElement) {
-    await this.traverseChildren(node);
+  async wasabiXml(node: XmlElement, parent: any) {
+    await this.traverseChildren(node, parent);
   }
 
-  async winampAbstractionLayer(node: XmlElement) {
-    await this.traverseChildren(node);
+  async winampAbstractionLayer(node: XmlElement, parent: any) {
+    await this.traverseChildren(node, parent);
   }
 
-  async elements(node: XmlElement) {
-    await this.traverseChildren(node);
+  async elements(node: XmlElement, parent: any) {
+    await this.traverseChildren(node, parent);
   }
 
-  async windowholder(node: XmlElement) {
-    const group = new WindowHolder();
-    const previousParent = this._context.parentGroup;
-    await this.maybeApplyGroupDef(group, node);
-    group.setXmlAttributes(node.attributes);
-    this._context.parentGroup = group;
-    await this.traverseChildren(node);
-    this._context.parentGroup = previousParent;
-    this.addToGroup(group);
+  async windowholder(node: XmlElement, parent: any) {
+    return this.newGroup(WindowHolder, node, parent)
+    // const group = new WindowHolder();
+    // const previousParent = this._context.parentGroup;
+    // await this.maybeApplyGroupDef(group, node);
+    // group.setXmlAttributes(node.attributes);
+    // this._context.parentGroup = group;
+    // await this.traverseChildren(node, parent);
+    // this._context.parentGroup = previousParent;
+    // this.addToGroup(group);
   }
 
-  async group(node: XmlElement): Promise<Group> {
-    const group = new Group();
-    const previousParent = this._context.parentGroup;
-    await this.maybeApplyGroupDef(group, node);
-    group.setXmlAttributes(node.attributes);
-    this._context.parentGroup = group;
-    await this.traverseChildren(node);
-    this._context.parentGroup = previousParent;
-    this.addToGroup(group);
-    return group
+  async group(node: XmlElement, parent: any): Promise<Group> {
+    return this.newGroup(Group, node, parent)
+    // const group = new Group();
+    // const previousParent = this._context.parentGroup;
+    // await this.maybeApplyGroupDef(group, node);
+    // group.setXmlAttributes(node.attributes);
+    // this._context.parentGroup = group;
+    // await this.traverseChildren(node, parent);
+    // this._context.parentGroup = previousParent;
+    // this.addToGroup(group);
+    // return group
   }
 
   async bitmap(node: XmlElement) {
@@ -336,33 +374,34 @@ export default class SkinParser {
     this._uiRoot.addFont(font);
   }
 
-  async text(node: XmlElement): Promise<Text> {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <text> XML node."
-    );
+  async text(node: XmlElement, parent: any): Promise<Text> {
+    return this.newGui(Text, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <text> XML node."
+    // );
 
-    const text = new Text();
-    text.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Text id="${text._id}"> to be within a <Layout> | <Group>`
-      );
-      return text;
-    }
-    parentGroup.addChild(text);
-    return text;
+    // const text = new Text();
+    // text.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Text id="${text._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return text;
+    // }
+    // parentGroup.addChild(text);
+    // return text;
   }
 
-  async songticker(node: XmlElement): Promise<Text> {
-    const text = await this.text(node);
+  async songticker(node: XmlElement, parent: any): Promise<Text> {
+    const text = await this.text(node, parent);
     text.setxmlparam('display', 'songtitle')
     return text
   }
 
-  async wasabiTitleBar(node: XmlElement) {
-    const group = await this.group(node);
+  async wasabiTitleBar(node: XmlElement, parent: any) {
+    const group = await this.group(node, parent);
     let text = null;
     
     //? Search Wasabi Inheritace
@@ -376,7 +415,7 @@ export default class SkinParser {
       text = group.findobject('window.titlebar.title')
     }
     
-    // const text = await this.text(node);
+    // const text = await this.text(node, parent);
     if(text){
       text.setxmlparam('text', ':componentname') // or display:componentname?
     }
@@ -384,7 +423,7 @@ export default class SkinParser {
     return text  
   }
 
-  async script(node: XmlElement) {
+  async script(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <script> XML node."
@@ -408,18 +447,18 @@ export default class SkinParser {
 
     // TODO: Need to investigate how scripts find their group. In corneramp, the
     // script itself is not in any group. `xml/player.xml:8
-    if (this._context.parentGroup instanceof Group) {
-      this._context.parentGroup.addSystemObject(systemObj);
+    if (parent instanceof Group) {
+      parent.addSystemObject(systemObj);
     } else {
       // Script archives can also live in <groupdef /> but we don't know how to do that.
     }
   }
 
-  async scripts(node: XmlElement) {
-    await this.traverseChildren(node);
+  async scripts(node: XmlElement, parent: any) {
+    await this.traverseChildren(node, parent);
   }
 
-  async sendparams(node: XmlElement) {
+  async sendparams(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <sendparams> XML node."
@@ -428,40 +467,41 @@ export default class SkinParser {
     // TODO: Parse sendparams
   }
 
-  async button(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <button> XML node."
-    );
+  async button(node: XmlElement, parent: any) {
+    return this.newGui(Button, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <button> XML node."
+    // );
 
-    const button = new Button();
-    button.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Button id="${button._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(button);
+    // const button = new Button();
+    // button.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Button id="${button._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(button);
   }
 
-  async wasabiButton(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <button> XML node."
-    );
+  async wasabiButton(node: XmlElement, parent: any) {
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <button> XML node."
+    // );
 
-    const button = new WasabiButton();
-    button.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Button id="${button._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(button);
+    // const button = new WasabiButton();
+    // button.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Button id="${button._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(button);
 
     // assure backgrounds are loaded:
     this._res.bitmaps["studio.button"] = false;
@@ -487,28 +527,32 @@ export default class SkinParser {
     this._res.bitmaps["studio.button.pressed.bottom"] = false;
     this._res.bitmaps["studio.button.pressed.lowerRight"] = false;
 
-    console.log('wasabi.btn', this._res.bitmaps)
+    // console.log('wasabi.btn', this._res.bitmaps)
+    return this.newGui(Button, node, parent)
+
   }
 
-  async toggleButton(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <button> XML node."
-    );
 
-    const button = new ToggleButton();
-    button.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <ToggleButton id="${button._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(button);
+  async toggleButton(node: XmlElement, parent: any) {
+    return this.newGui(ToggleButton, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <button> XML node."
+    // );
+
+    // const button = new ToggleButton();
+    // button.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <ToggleButton id="${button._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(button);
   }
 
-  async color(node: XmlElement) {
+  async color(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <color> XML node."
@@ -520,121 +564,127 @@ export default class SkinParser {
     this._uiRoot.addColor(color);
   }
 
-  async slider(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <slider> XML node."
-    );
+  async slider(node: XmlElement, parent: any) {
+    return this.newGui(Slider, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <slider> XML node."
+    // );
 
-    const slider = new Slider();
-    slider.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Slider id="${slider._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(slider);
+    // const slider = new Slider();
+    // slider.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Slider id="${slider._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(slider);
   }
 
-  async groupdef(node: XmlElement) {
+  async groupdef(node: XmlElement, parent: any) {
     this._uiRoot.addGroupDef(node);
     
-    // lets make a clonnable
-    const group = new Group();
-    const previousParent = this._context.parentGroup;
-    // await this.maybeApplyGroupDef(group, node);
-    group.setXmlAttributes(node.attributes);
-    this._context.parentGroup = group;
-    await this.traverseChildren(node);
-    this._context.parentGroup = previousParent;
-    // this.addToGroup(group);
-
-    this._uiRoot._clonnableGroup[node.attributes.id] = group;
-  }
-
-  async albumart(node: XmlElement) {
-    const group = new AlbumArt();
-    const previousParent = this._context.parentGroup;
-    // await this.maybeApplyGroupDef(group, node);
-    group.setXmlAttributes(node.attributes);
+    // // lets make a clonnable
+    // const group = new Group();
+    // const previousParent = this._context.parentGroup;
+    // // await this.maybeApplyGroupDef(group, node);
+    // group.setXmlAttributes(node.attributes);
     // this._context.parentGroup = group;
-    // await this.traverseChildren(node);
-    this._context.parentGroup = previousParent;
-    this.addToGroup(group);
+    // await this.traverseChildren(node, parent);
+    // this._context.parentGroup = previousParent;
+    // // this.addToGroup(group);
+
+    // this._uiRoot._clonnableGroup[node.attributes.id] = group;
   }
 
-  async layer(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <layer> XML node."
-    );
-
-    const layer = new Layer();
-    layer.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(layer);
+  async albumart(node: XmlElement, parent: any) {
+    return this.newGui(AlbumArt, node, parent)
+    // const group = new AlbumArt();
+    // const previousParent = this._context.parentGroup;
+    // // await this.maybeApplyGroupDef(group, node);
+    // group.setXmlAttributes(node.attributes);
+    // // this._context.parentGroup = group;
+    // // await this.traverseChildren(node);
+    // this._context.parentGroup = previousParent;
+    // this.addToGroup(group);
   }
 
-  async grid(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <layer> XML node."
-    );
+  async layer(node: XmlElement, parent: any) {
+    return this.newGui(Layer, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <layer> XML node."
+    // );
 
-    const layer = new Grid();
-    layer.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(layer);
+    // const layer = new Layer();
+    // layer.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(layer);
   }
 
-  async progressGrid(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <layer> XML node."
-    );
+  async grid(node: XmlElement, parent: any) {
+    return this.newGui(Grid, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <layer> XML node."
+    // );
 
-    const layer = new ProgressGrid();
-    layer.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(layer);
+    // const layer = new Grid();
+    // layer.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(layer);
   }
 
-  async animatedLayer(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <animatedlayer> XML node."
-    );
+  async progressGrid(node: XmlElement, parent: any) {
+    return this.newGui(ProgressGrid, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <layer> XML node."
+    // );
 
-    const layer = new AnimatedLayer();
-    layer.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <animatedlayer id="${layer._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(layer);
+    // const layer = new ProgressGrid();
+    // layer.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Layer id="${layer._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(layer);
+  }
+
+  async animatedLayer(node: XmlElement, parent: any) {
+    return this.newGui(AnimatedLayer, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <animatedlayer> XML node."
+    // );
+
+    // const layer = new AnimatedLayer();
+    // layer.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <animatedlayer id="${layer._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(layer);
   }
 
   async maybeApplyGroupDef(group: GuiObj, node: XmlElement) {
@@ -642,99 +692,103 @@ export default class SkinParser {
     await this.maybeApplyGroupDefId(group, id)
   }
 
-  async maybeApplyGroupDefId1(group: GuiObj, groupdef_id: string) {
-    const groupDef = this._uiRoot._clonnableGroup[groupdef_id];
-    if (groupDef != null) {
-      cloneAttribute(groupDef, group, group._parent);
-    }
+  // async maybeApplyGroupDefId1(group: GuiObj, groupdef_id: string) {
+  //   const groupDef = this._uiRoot._clonnableGroup[groupdef_id];
+  //   if (groupDef != null) {
+  //     cloneAttribute(groupDef, group, group._parent);
+  //   }
+  // }
 
-  }
   async maybeApplyGroupDefId(group: GuiObj, groupdef_id: string) {
     const groupDef = this._uiRoot.getGroupDef(groupdef_id);
     if (groupDef != null) {
       group.setXmlAttributes(groupDef.attributes);
-      const previousParentGroup = this._context.parentGroup;
-      this._context.parentGroup = group as Group;
-      await this.traverseChildren(groupDef);
-      this._context.parentGroup = previousParentGroup;
+      // const previousParentGroup = this._context.parentGroup;
+      // this._context.parentGroup = group as Group;
+      await this.traverseChildren(groupDef, group);
+      // this._context.parentGroup = previousParentGroup;
       // TODO: Maybe traverse groupDef's children?
     }
   }
 
-  async layout(node: XmlElement) {
-    const layout = new Layout();
-    await this.maybeApplyGroupDef(layout, node);
-    layout.setXmlAttributes(node.attributes);
+  async layout(node: XmlElement, parent: any) {
+    return this.newGroup(Layout, node, parent)
+    // const layout = new Layout();
+    // await this.maybeApplyGroupDef(layout, node);
+    // layout.setXmlAttributes(node.attributes);
 
-    const { container } = this._context;
-    assume(container != null, "Expected <Layout> to be in a <container>");
-    container.addLayout(layout);
+    // const { container } = this._context;
+    // assume(container != null, "Expected <Layout> to be in a <container>");
+    // container.addLayout(layout);
 
-    this._context.parentGroup = layout;
-    await this.traverseChildren(node);
+    // this._context.parentGroup = layout;
+    // await this.traverseChildren(node, parent);
   }
 
-  async gammaset(node: XmlElement) {
-    this._gammaSet = [];
-    await this.traverseChildren(node);
-    this._uiRoot.addGammaSet(node.attributes.id, this._gammaSet);
+  async gammaset(node: XmlElement, parent: any) {
+    const gammaSet = [];
+    await this.traverseChildren(node, gammaSet);
+    this._uiRoot.addGammaSet(node.attributes.id, gammaSet);
   }
 
-  async gammagroup(node: XmlElement) {
+  async gammagroup(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <gammagroup> XML node."
     );
     const gammaGroup = new GammaGroup();
     gammaGroup.setXmlAttributes(node.attributes);
-    this._gammaSet.push(gammaGroup);
+    parent.push(gammaGroup);
   }
 
-  async component(node: XmlElement) {
-    // await this.traverseChildren(node);
+  async component(node: XmlElement, parent: any) {
+    // await this.traverseChildren(node, parent);
     //x2nie
-    const previousParent = this._context.parentGroup;
+    return this.newGui(ColorThemesList, node, parent)
+    // ColorThemesList
+    // const previousParent = this._context.parentGroup;
     
-    const list = new ColorThemesList();
-    list.setXmlAttributes(node.attributes);
-    this._context.parentGroup = list;
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <ColorThemes:List id="${list.getId()}"> to be within a <Layout> | <Group>`
-        );
-        return;
-    }
-    await this.traverseChildren(node);
-    parentGroup.addChild(list);
-    this._context.parentGroup = previousParent;
+    // const list = new ColorThemesList();
+    // list.setXmlAttributes(node.attributes);
+    // this._context.parentGroup = list;
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <ColorThemes:List id="${list.getId()}"> to be within a <Layout> | <Group>`
+    //     );
+    //     return;
+    // }
+    // await this.traverseChildren(node, parent);
+    // parentGroup.addChild(list);
+    // this._context.parentGroup = previousParent;
 
   }
 
-  async container(node: XmlElement) {
+  async container(node: XmlElement, parent: any) {
     const container = new Container();
     container.setXmlAttributes(node.attributes);
-    this._context.container = container;
+    // this._context.container = container;
     this._uiRoot.addContainers(container);
-    await this.traverseChildren(node);
+    await this.traverseChildren(node, container);
   }
 
-  async colorThemesList(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <ColorThemes:List> XML node."
-    );
+  async colorThemesList(node: XmlElement, parent: any) {
+    return this.newGui(ColorThemesList, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <ColorThemes:List> XML node."
+    // );
 
-    const list = new ColorThemesList();
-    list.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <ColorThemes:List id="${list.getId()}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(list);
+    // const list = new ColorThemesList();
+    // list.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <ColorThemes:List id="${list.getId()}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(list);
   }
 
   /** taken from Winamp Modern skin */
@@ -769,15 +823,14 @@ export default class SkinParser {
   
 
   }
-  async wasabiFrame(node: XmlElement) {
+  async wasabiFrame(node: XmlElement, parent: any) {
     // const frame = new Group();
     const frame = new WasabiFrame();
-    this._context.parentGroup.addChild(frame);
-    // frame.setXmlAttributes(nodeFrame.attributes);
-    // frame.setXmlAttributes(node.attributes);
+    // this._context.parentGroup.addChild(frame);
+    this.addToGroup(frame, parent);
     
-    const previousParentGroup1 = this._context.parentGroup;
-    this._context.parentGroup = frame;
+    // const previousParentGroup1 = this._context.parentGroup;
+    // this._context.parentGroup = frame;
 
     //? Search Wasabi Inheritace
     const xuitag : string = node.name; //Wasabi:MainFrame:NoStatus
@@ -811,93 +864,95 @@ export default class SkinParser {
           relatw:'1',
           relath:'1',
         }
-      ))
+      ), frame)
       frame.addChild(content)
     }
       
-    this._context.parentGroup = previousParentGroup1;
+    // this._context.parentGroup = previousParentGroup1;
 
   }
 
-  async layoutStatus(node: XmlElement) {
+  async layoutStatus(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <layoutStatus> XML node."
     );
   }
 
-  async xuiElement(node: XmlElement) {
-    assume(node.children.length === 0, "Unexpected children in XUI XML node.");
-    const xuiElement = this._uiRoot.getXuiElement(node.name);
-    assume(
-      xuiElement != null,
-      `Expected to find xui element with name "${node.name}".`
-    );
+  async xuiElement(node: XmlElement, parent: any) {
+  //   assume(node.children.length === 0, "Unexpected children in XUI XML node.");
+  //   const xuiElement = this._uiRoot.getXuiElement(node.name);
+  //   assume(
+  //     xuiElement != null,
+  //     `Expected to find xui element with name "${node.name}".`
+  //   );
 
-    const group = new Group();
-    group.setXmlAttributes(xuiElement.attributes);
-    const previousParentGroup = this._context.parentGroup;
-    this._context.parentGroup = group;
+  //   const group = new Group();
+  //   group.setXmlAttributes(xuiElement.attributes);
+  //   const previousParentGroup = this._context.parentGroup;
+  //   this._context.parentGroup = group;
 
-    await this.traverseChildren(xuiElement);
-    group.setXmlAttributes(node.attributes);
-    await this.traverseChildren(node);
+  //   await this.traverseChildren(xuiElement);
+  //   group.setXmlAttributes(node.attributes);
+  //   await this.traverseChildren(node, parent);
 
-    this._context.parentGroup = previousParentGroup;
+  //   this._context.parentGroup = previousParentGroup;
 
-    this._context.parentGroup.addChild(group);
+  //   this._context.parentGroup.addChild(group);
   }
 
-  async status(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <status> XML node."
-    );
+  async status(node: XmlElement, parent: any) {
+    return this.newGui(Status, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <status> XML node."
+    // );
 
-    const status = new Status();
-    status.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Status id="${status._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(status);
+    // const status = new Status();
+    // status.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Status id="${status._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(status);
   }
-  async eqvis(node: XmlElement) {
+  async eqvis(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <eqvis> XML node."
     );
   }
 
-  async vis(node: XmlElement) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <vis> XML node."
-    );
+  async vis(node: XmlElement, parent: any) {
+    return this.newGui(Vis, node, parent)
+    // assume(
+    //   node.children.length === 0,
+    //   "Unexpected children in <vis> XML node."
+    // );
 
-    const vis = new Vis();
-    vis.setXmlAttributes(node.attributes);
-    const { parentGroup } = this._context;
-    if (parentGroup == null) {
-      console.warn(
-        `FIXME: Expected <Vis id="${vis._id}"> to be within a <Layout> | <Group>`
-      );
-      return;
-    }
-    parentGroup.addChild(vis);
+    // const vis = new Vis();
+    // vis.setXmlAttributes(node.attributes);
+    // const { parentGroup } = this._context;
+    // if (parentGroup == null) {
+    //   console.warn(
+    //     `FIXME: Expected <Vis id="${vis._id}"> to be within a <Layout> | <Group>`
+    //   );
+    //   return;
+    // }
+    // parentGroup.addChild(vis);
   }
 
-  async hideobject(node: XmlElement) {
+  async hideobject(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <hideobject> XML node."
     );
   }
 
-  async trueTypeFont(node: XmlElement) {
+  async trueTypeFont(node: XmlElement, parent: any) {
     assume(
       node.children.length === 0,
       "Unexpected children in <truetypefont> XML node."
@@ -909,7 +964,7 @@ export default class SkinParser {
     this._uiRoot.addFont(font);
   }
 
-  async include(node: XmlElement) {
+  async include(node: XmlElement, parent: any) {
     const { file, parent_path } = node.attributes;
     assert(file != null, "Include element missing `file` attribute");
 
@@ -938,11 +993,11 @@ export default class SkinParser {
       }
     }
 
-    await this.traverseChildren(parsed);
+    await this.traverseChildren(parsed, parent);
 
   }
 
-  skininfo(node: XmlElement) {
+  skininfo(node: XmlElement, parent: any) {
     // Ignore this metadata for now
   }
 

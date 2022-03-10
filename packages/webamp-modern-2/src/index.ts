@@ -66,7 +66,7 @@ async function loadSkin(skinData: Blob) {
     console.log(`loading container: ${container.getId()}`)
     container.init();
     setTimeout(() => {
-      container._invalidate();
+    //   container._invalidate();
     }, 1000);
     // console.log(`loaded container: ${container.getId()}`)
   }
