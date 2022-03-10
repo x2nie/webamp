@@ -33,7 +33,7 @@ export default class Timer extends BaseObject {
     }
   }
   async start(): Promise<boolean> {
-    // console.log('timer.start()', this._nid)
+    console.log('timer.start()', this._nid)
     if(!this._delay){
       return false;
     }
@@ -45,7 +45,7 @@ export default class Timer extends BaseObject {
         this.stop();
       }
       this._timeout = setInterval(() => {
-        // console.log('timer.ontimer()', this._nid)
+        console.log('timer.ontimer()', this._nid)
         UI_ROOT.vm.dispatch(self, "ontimer");
       }, this._delay);
       return true

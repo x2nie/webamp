@@ -28,6 +28,7 @@ async function main() {
   // const response = await fetch("assets/Nullsoft.Winamp.2000.SP4.v1.4-RC2-lite.wal");
   // const response = await fetch("assets/MMD3.wal");
   const response = await fetch("assets/wacup-modern-skin.wal");
+  // const response = await fetch("assets/wacupmodern.wal");
   // const response = await fetch("assets/wa3_default.wal"); // official winamp 5.8
   // const response = await fetch("assets/WinampModern.wal"); // official winamp 5.8
   // const response = await fetch("assets/WinampModernPP.wal");
