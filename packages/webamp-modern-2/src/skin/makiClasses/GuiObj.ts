@@ -349,8 +349,7 @@ export default class GuiObj extends XmlObj {
   findobject(id: string): GuiObj {
     const ret = this._findobject(id);
     if(!ret){
-      // console.log(`findObject at ${this.getId()} failed:`, id)
-
+      console.warn(`findObject at ${this.getId()} failed:`, id)
     }
     return ret;
   }

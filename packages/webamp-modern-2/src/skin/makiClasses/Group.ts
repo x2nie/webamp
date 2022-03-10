@@ -167,7 +167,9 @@ export default class Group extends GuiObj {
       }
       obj = obj._parent
     }
-    console.log('>>getParentLayout', this.getId(), 'got:', obj)
+    if(!obj){
+      console.log('>>getParentLayout', this.getId(), 'got:', obj)
+    }
     return obj;
   }
 
