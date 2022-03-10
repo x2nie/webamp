@@ -95,6 +95,10 @@ export class AudioPlayer {
       this._audio.src = URL.createObjectURL(file);
       this.play();
     };
+
+    //temporary: in the end of playing mp3, lets stop.
+    //TODO: in future, when ended: play next mp3
+    this._audio.addEventListener("ended", ()=> this.stop());
   }
   // 0-1
   getVolume(): number {
