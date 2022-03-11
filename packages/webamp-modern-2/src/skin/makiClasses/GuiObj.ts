@@ -390,7 +390,7 @@ export default class GuiObj extends XmlObj {
     }
     // find in grand child 
     for (const obj of this._children) {
-      const found = obj.findobject(id);
+      const found = obj._findobject(id);
       if (found != null) {
         return found;
       }
