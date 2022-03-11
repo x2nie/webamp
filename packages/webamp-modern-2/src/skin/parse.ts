@@ -192,6 +192,7 @@ export default class SkinParser {
       case "button":
         return this.button(node, parent);
       case "togglebutton":
+      case "nstatesbutton":
         return this.toggleButton(node, parent);
       case "progressgrid":
         return this.progressGrid(node, parent);
@@ -245,7 +246,6 @@ export default class SkinParser {
       case "wasabi:standardframe:status":
       case "wasabi:visframe:nostatus":
         return await this.wasabiFrame(node, parent);
-      case "nstatesbutton":
       case "componentbucket":
       case "playlisteditor":
       case "wasabi:tabsheet":
