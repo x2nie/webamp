@@ -163,6 +163,8 @@ export default class Button extends GuiObj {
   draw() {
     super.draw();
     // this._div.setAttribute("data-obj-name", "Button");
+    this._action && this._div.setAttribute("action", this._action);
+    this._param && this._div.setAttribute("param", this._param);
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }
