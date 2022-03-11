@@ -400,7 +400,17 @@ export default class GuiObj extends XmlObj {
 
 
   findobject(id: string): GuiObj {
-    const ret = this._findobject(id);
+    //? Phase 1: find in this children
+    let ret = this._findobject(id);
+    
+    //? Phase 2: find in this layout's children
+    if(!ret /* && this._parent  */){
+      // const group = this instanceof Group? this as Group : this._parent as Group;
+      const layout = this.getparentlayout()
+      if(layout){
+        ret = layout._findobject(id);
+      }
+    }
     if(!ret && id !='sysmenu'){
       console.warn(`findObject(${id}) failed, @${this.getId()}`)
     }
@@ -432,6 +442,12 @@ export default class GuiObj extends XmlObj {
       }
     }
     return null;
+  }
+
+  getparentlayout(): Group{ //patch needed by this.findobject() above
+    if(this._parent){
+      return this._parent.getparentlayout()
+    }
   }
 
 
