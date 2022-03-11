@@ -177,7 +177,7 @@ export default class SkinParser {
       case "bitmapfont":
         return this.bitmapFont(node);
       case "color":
-        return this.color(node, parent);
+        return await this.color(node, parent);
       case "groupdef":
         return this.groupdef(node, parent);
       case "animatedlayer":

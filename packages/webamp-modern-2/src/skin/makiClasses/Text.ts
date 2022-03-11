@@ -194,6 +194,12 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       if (font instanceof TrueTypeFont) {
         // this._div.innerText = this.getText();
         this._div.style.fontFamily = font.getFontFamily();
+        if(this._color){
+          const color = UI_ROOT.getColor(this._color);
+          if(color){
+            this._div.style.color = color.getRgb()
+          }
+        }
       } else if (font instanceof BitmapFont) {
         // this._renderBitmapFont(font);
         // font.ensureFontLoaded()
@@ -316,7 +322,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     super.draw();
     this._renderBackground();
     this._renderText();
-    // this._div.style.overflow = "visible";
+    
     // this._div.style.width = "auto";
     if (this._bold) {
       this._div.style.fontWeight = "bold";
