@@ -300,7 +300,8 @@ export default class GuiObj extends XmlObj {
    * @ret The top edge's position (in screen coordinates).
    */
   gettop(): number {
-    return this._div.getBoundingClientRect().y;
+    // return this._div.getBoundingClientRect().y;
+    return this._y;
   }
 
   /**
@@ -310,7 +311,8 @@ export default class GuiObj extends XmlObj {
    * @ret The left edge's position (in screen coordinates).
    */
   getleft(): number {
-    return this._div.getBoundingClientRect().x;
+    // return this._div.getBoundingClientRect().x;
+    return this._x;
   }
 
   /**
@@ -386,7 +388,7 @@ export default class GuiObj extends XmlObj {
   getguirelatx(): number { return this._relatx ? 1 : 0; }
   getguirelaty(): number { return this._relaty ? 1 : 0; }
   getautowidth(): number { 
-    const child = findLast(
+    const child = !this._autowidthsource? this : findLast(
       this._children,
       (c) => c._id.toLowerCase() == this._autowidthsource
     );
@@ -400,6 +402,8 @@ export default class GuiObj extends XmlObj {
 
 
   findobject(id: string): GuiObj {
+    if(id.toLowerCase()==this.getId().toLowerCase()) return this;
+
     //? Phase 1: find in this children
     let ret = this._findobject(id);
     
@@ -742,6 +746,22 @@ export default class GuiObj extends XmlObj {
    */
   getalpha(): number {
     return this._alpha;
+  }
+
+  clienttoscreenx(x:number): number {
+    return x;
+  }
+
+  clienttoscreeny(y:number): number {
+    return y;
+  }
+
+  screentoclientx(x:number): number {
+    return x;
+  }
+
+  screentoclienty(y:number): number {
+    return y;
   }
 
   

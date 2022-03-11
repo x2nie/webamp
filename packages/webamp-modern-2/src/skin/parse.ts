@@ -30,6 +30,7 @@ import WasabiFrame from "./makiClasses/WasabiFrame";
 import Grid from "./makiClasses/Grid";
 import { clone, cloneAttribute } from "./clone";
 import ProgressGrid from "./makiClasses/ProgressGrid";
+import WasabiTitle from "./makiClasses/WasabiTitle";
 
 class ParserContext {
   container: Container | null = null;
@@ -406,7 +407,8 @@ export default class SkinParser {
   }
 
   async wasabiTitleBar(node: XmlElement, parent: any) {
-    const group = await this.group(node, parent);
+    // const group = await this.group(node, parent);
+    const group = await this.newGroup(WasabiTitle, node, parent) as Group;
     let text = null;
     
     //? Search Wasabi Inheritace
