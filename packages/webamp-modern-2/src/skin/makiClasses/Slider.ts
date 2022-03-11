@@ -381,6 +381,7 @@ class PanActionHandler implements ActionHandler {
 // eslint-disable-next-line rulesdir/proper-maki-types
 class VolumeActionHandler implements ActionHandler {
   // _subscription: () => void;
+  _changing: boolean = false;
   _subscription: () => void;
 
   constructor(slider: Slider) {
@@ -389,8 +390,10 @@ class VolumeActionHandler implements ActionHandler {
     slider._renderThumbPosition();
 
     this._subscription =  UI_ROOT.audio.onVolumeChanged(() => {
-      slider._position = UI_ROOT.audio.getVolume();
-      slider._renderThumbPosition();
+      if(!this._changing){
+        slider._position = UI_ROOT.audio.getVolume();
+        slider._renderThumbPosition();
+      }
     });
   }
 
@@ -398,8 +401,12 @@ class VolumeActionHandler implements ActionHandler {
     console.log('setVolume:', position/255)
     UI_ROOT.audio.setVolume(position/255);
   }
-  onLeftMouseDown(x:number, y:number){};
-  onLeftMouseUp(x:number, y:number){};
+  onLeftMouseDown(x:number, y:number){
+    this._changing = true;
+  };
+  onLeftMouseUp(x:number, y:number){
+    this._changing = false;
+  };
 
   dispose(): void {
     this._subscription();

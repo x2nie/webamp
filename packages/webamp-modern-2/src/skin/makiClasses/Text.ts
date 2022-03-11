@@ -59,7 +59,8 @@ export default class Text extends GuiObj {
       case "font":
         // (id) The id of a bitmapfont or truetypefont element. If no element with that id can be found, the OS will be asked for a font with that name instead.
         this._font = value;
-        this._renderText();
+        this._renderBackground();
+        // this._renderText();
         break;
       case "align":
         // (str) One of the following three possible strings: "left" "center" "right" -- Default is "left."
@@ -186,6 +187,29 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     // TODO
   }
 
+  _renderBackground() {
+    
+    if (this._font) {
+      const font = UI_ROOT.getFont(this._font);
+      if (font instanceof TrueTypeFont) {
+        // this._div.innerText = this.getText();
+        this._div.style.fontFamily = font.getFontFamily();
+      } else if (font instanceof BitmapFont) {
+        // this._renderBitmapFont(font);
+        // font.ensureFontLoaded()
+        // const bitmap = font != null ? UI_ROOT.getBitmap(font._file) : null;
+        this.setBackgroundImage(font);
+        this._div.style.backgroundSize = "0";
+      } else if (font == null) {
+        // this._div.innerText = this.getText();
+        this._div.style.fontFamily = "Arial";
+      } else {
+        throw new Error("Unexpected font");
+      }
+    }
+
+  }
+
   _renderText() {
     removeAllChildNodes(this._div);
     if (this._font) {
@@ -255,6 +279,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   draw() {
     super.draw();
+    this._renderBackground();
     this._renderText();
     // this._div.style.overflow = "visible";
     // this._div.style.width = "auto";
@@ -264,6 +289,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     if (this._align) {
       this._div.style.textAlign = this._align;
     }
+    this._div.classList.add("webamp--img");
 
     /*
     if (this._color) {

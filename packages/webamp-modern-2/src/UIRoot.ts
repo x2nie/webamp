@@ -212,7 +212,8 @@ export class UIRoot {
 
   _setCssVars() {
     const cssRules = []
-    for (const bitmap of this._bitmaps) {
+    const bitmapFonts: BitmapFont[] = this._fonts.filter(f => f instanceof BitmapFont) as BitmapFont[];
+    for (const bitmap of [...this._bitmaps, ...bitmapFonts]) {
       const img = bitmap.getImg();
       // const url = img.src;
       

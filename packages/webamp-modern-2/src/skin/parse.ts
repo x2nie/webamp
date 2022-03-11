@@ -367,11 +367,14 @@ export default class SkinParser {
       const bitmap = this._uiRoot.getBitmap(node.attributes.file)
       if(bitmap){
         font.setXmlAttr('file', bitmap._file);
+        if(!font._gammagroup)
+          font.setXmlAttr('gammagroup', bitmap._gammagroup);
       }
       else console.warn('BitmapFont file not found:', node.attributes.file)
     }
 
-    await font.ensureFontLoaded(this._imageManager);
+    // await font.ensureFontLoaded(this._imageManager);
+    await font.ensureImageLoaded(this._imageManager);
 
     this._uiRoot.addFont(font);
   }

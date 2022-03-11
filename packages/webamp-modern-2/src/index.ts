@@ -71,7 +71,10 @@ async function loadSkin(skinData: Blob) {
       '=============================',
       `loading container: ${container.getId()}`, 
     )
+    // setTimeout(() => {
     container.init();
+    // }, 1300);
+
   }
   setStatus("");
   // UI_ROOT.setZip(null);

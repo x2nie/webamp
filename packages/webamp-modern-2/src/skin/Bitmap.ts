@@ -21,7 +21,7 @@ export default class Bitmap {
     }
   }
 
-  setXmlAttr(_key: string, value: string) {
+  setXmlAttr(_key: string, value: string):boolean {
     const key = _key.toLowerCase();
     switch (key) {
       case "id":
