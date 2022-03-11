@@ -189,8 +189,6 @@ export default class SkinParser {
         return this.layoutStatus(node, parent);
       case "grid":
         return this.grid(node, parent);
-      case "hideobject":
-        return this.hideobject(node, parent);
       case "button":
         return this.button(node, parent);
       case "togglebutton":
@@ -222,6 +220,8 @@ export default class SkinParser {
           return this.text(node, parent);
       case "songticker":
         return this.songticker(node, parent);
+      case "hideobject":
+        // return this.hideobject(node, parent);
       case "sendparams":
         return this.sendparams(node, parent);
       case "wasabi:titlebar":
@@ -463,25 +463,15 @@ export default class SkinParser {
     await this.traverseChildren(node, parent);
   }
 
-  async sendparams(node: XmlElement, parent: Group) {
+  async sendparams(node: XmlElement, parent: GuiObj) {
     assume(
       node.children.length === 0,
       "Unexpected children in <sendparams> XML node."
     );
 
     // TODO: Parse sendparams
-    let el = parent;
-    if(node.attributes.group) {
-      el = parent.findobject(node.attributes.group) as Group;
-    }
-    const targets = node.attributes.target.split(';')
-    for(const target of targets){
-      const gui= el.findobject(target);
-      for (let attribute in node.attributes) {
-        if(gui && attribute!='target'){
-          gui.setxmlparam(attribute, node.attributes[attribute])
-        }
-      }
+    if(parent instanceof GuiObj) {
+      parent._metaCommands.push(node);
     }
   }
 
@@ -961,13 +951,6 @@ export default class SkinParser {
     //   return;
     // }
     // parentGroup.addChild(vis);
-  }
-
-  async hideobject(node: XmlElement, parent: any) {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <hideobject> XML node."
-    );
   }
 
   async trueTypeFont(node: XmlElement, parent: any) {

@@ -3,6 +3,7 @@ import { assert, findLast, num, toBool, px, assume, relat } from "../../utils";
 import Bitmap from "../Bitmap";
 import Group from "./Group";
 import XmlObj from "../XmlObj";
+import { XmlElement } from "@rgrove/parse-xml";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#GuiObject_.28Global_params.29
 export default class GuiObj extends XmlObj {
@@ -42,6 +43,8 @@ export default class GuiObj extends XmlObj {
   _goingToTarget: boolean = false;
   _div: HTMLElement;// = document.createElement("div");
   _backgroundBitmap: Bitmap | null = null;
+
+  _metaCommands: XmlElement[] = [];
   
   constructor() {
     super();
@@ -187,6 +190,30 @@ export default class GuiObj extends XmlObj {
 
 
   init() {
+    //process <sendparams> and <hideobject>
+    for(const node of this._metaCommands) {
+      const cmd = node.name.toLowerCase()
+      const el = node.attributes.group? this.findobject(node.attributes.group) : this;
+      const targets_ids = node.attributes.target.split(';')
+      for(const target_id of targets_ids){
+        // individual target
+        const gui= el.findobjectF(target_id, `<${cmd}(${target_id})->failed. NOTFOUND. @${this.getId()}`); 
+        if(gui==null){
+          // console.warn('  --',cmd, 'failed:not-found:',target_id, '@'+this.getId());
+          continue;
+        }
+        if(cmd=='sendparams'){
+          for (let attribute in node.attributes) {
+            if(gui && attribute!='target'){
+              gui.setxmlparam(attribute, node.attributes[attribute])
+            }
+          }
+        } else if(cmd=='hideobject') {
+          gui.hide()
+        }
+      }
+    }
+
     this._div.addEventListener("mousedown", (e) => {
       /*
       if (this._backgroundBitmap != null) {
@@ -376,6 +403,15 @@ export default class GuiObj extends XmlObj {
     const ret = this._findobject(id);
     if(!ret && id !='sysmenu'){
       console.warn(`findObject(${id}) failed, @${this.getId()}`)
+    }
+    return ret;
+  }
+
+  /* internal findObject with custom error msg */
+  findobjectF(id: string, msg: string): GuiObj {
+    const ret = this._findobject(id);
+    if(!ret && id !='sysmenu'){
+      console.warn(msg)
     }
     return ret;
   }
