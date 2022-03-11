@@ -7,17 +7,22 @@ export default class Layer extends GuiObj {
   _image: string;
   _isMouseTrap: boolean = false;
   
-  setXmlAttr(key: string, value: string): boolean {
-    if(key.toLowerCase() === 'id' && value.toLowerCase().startsWith('mousetrap')){
+  setXmlAttr(_key: string, value: string): boolean {
+    const key = _key.toLowerCase();
+    if(key === 'id' && value.toLowerCase().startsWith('mousetrap')){
       this._isMouseTrap = true;
     }
-    if (super.setXmlAttr(key, value)) {
+    if (super.setXmlAttr(_key, value)) {
       return true;
     }
     switch (key) {
       case "image":
         this._image = value;
         this._renderBackground();
+        break;
+      case "activealpha":
+      case "inactivealpha":
+        this._div.setAttribute(key, value);
         break;
       default:
         return false;

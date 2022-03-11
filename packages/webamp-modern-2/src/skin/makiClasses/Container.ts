@@ -193,6 +193,7 @@ export default class Container extends XmlObj {
     this._div.setAttribute("id", this.getId());
     // this._div.setAttribute("data-obj-name", "Container");
     // this._div.style.position = "absolute";
+    this._div.setAttribute("tabindex", "1");
     this._renderLayout();
   }
 }

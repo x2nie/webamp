@@ -58,6 +58,10 @@ export default class Button extends GuiObj {
       case "action_target":
         this._actionTarget = value;
         break;
+      case "activealpha":
+      case "inactivealpha":
+        this._div.setAttribute(key, value);
+        break;    
       default:
         return false;
     }
@@ -167,6 +171,13 @@ export default class Button extends GuiObj {
     this._param && this._div.setAttribute("param", this._param);
     this._div.classList.add("webamp--img");
     this._renderBackground();
+  }
+
+  hide() {
+    if(document.activeElement == this._div){
+      this.getparentlayout()._parent._div.focus()
+    }
+    super.hide()
   }
 
   /*

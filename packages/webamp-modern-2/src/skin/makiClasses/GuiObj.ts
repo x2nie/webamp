@@ -208,7 +208,7 @@ export default class GuiObj extends XmlObj {
               gui.setxmlparam(attribute, node.attributes[attribute])
             }
           }
-        } else if(cmd=='hideobject') {
+        } else if(cmd=='hideobject' && target_id != 'close') {
           gui.hide()
         }
       }

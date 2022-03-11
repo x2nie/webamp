@@ -175,6 +175,24 @@
       #main #seekerghost {
         opacity: .7;
       }
+      
+
+      /* titleBar active state */
+      /* [activeAlpha=0] {opacity: 0;} */
+      [inactivealpha='0'] {opacity: 0;}
+      container:focus-within [activealpha='0'],
+      container:active [activealpha='0'] {
+        opacity: 0;
+      }
+      container:focus-within [inactivealpha='0'],
+      container:active [inactivealpha='0'] {
+        opacity: 1;
+      }
+      /* container:focus layout,
+      container:focus-within layout,
+      container:active layout{
+        border: 1px solid red;
+      } */
     </style>
     <style id="bitmap-css"></style>
     <style id="scrollbar-css"></style>
