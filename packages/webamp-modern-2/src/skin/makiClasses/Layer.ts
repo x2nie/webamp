@@ -1,5 +1,6 @@
 import GuiObj from "./GuiObj";
 import UI_ROOT from "../../UIRoot";
+import { num } from "../../utils";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
 export default class Layer extends GuiObj {
@@ -19,10 +20,6 @@ export default class Layer extends GuiObj {
       case "image":
         this._image = value;
         this._renderBackground();
-        break;
-      case "activealpha":
-      case "inactivealpha":
-        this._div.setAttribute(key, value);
         break;
       default:
         return false;

@@ -1,6 +1,7 @@
 import GuiObj from "./GuiObj";
 import UI_ROOT from "../../UIRoot";
 import { V } from "../../maki/v";
+import { num } from "../../utils";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cbutton.2F.3E_.26_.3Ctogglebutton.2F.3E
 export default class Button extends GuiObj {
@@ -58,10 +59,6 @@ export default class Button extends GuiObj {
       case "action_target":
         this._actionTarget = value;
         break;
-      case "activealpha":
-      case "inactivealpha":
-        this._div.setAttribute(key, value);
-        break;    
       default:
         return false;
     }

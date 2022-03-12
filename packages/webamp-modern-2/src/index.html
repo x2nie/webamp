@@ -199,12 +199,13 @@
       /* titleBar active state */
       /* [activeAlpha=0] {opacity: 0;} */
       [inactivealpha='0'] {opacity: 0;}
+      [inactivealpha='128'] {opacity: 0.5;}
       container:focus-within [activealpha='0'],
       container:active [activealpha='0'] {
         opacity: 0;
       }
-      container:focus-within [inactivealpha='0'],
-      container:active [inactivealpha='0'] {
+      container:focus-within [inactivealpha],
+      container:active [inactivealpha] {
         opacity: 1;
       }
       /* container:focus layout,

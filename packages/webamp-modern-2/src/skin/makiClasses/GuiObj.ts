@@ -149,6 +149,12 @@ export default class GuiObj extends XmlObj {
         this._visible = toBool(value);
         this._renderVisibility();
         break;
+      case "activealpha":
+      case "inactivealpha":
+        this._div.setAttribute(key, value);
+        // this._div.setAttribute(key, `${parseFloat(value)/255*100}`);
+        break;
+    
       case "tooltip":
         this._tooltip = value;
         break;
