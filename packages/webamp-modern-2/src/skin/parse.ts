@@ -403,6 +403,7 @@ export default class SkinParser {
   async songticker(node: XmlElement, parent: any): Promise<Text> {
     const text = await this.text(node, parent);
     text.setxmlparam('display', 'songtitle')
+    text.setxmlparam('ticker', '1')
     return text
   }
 

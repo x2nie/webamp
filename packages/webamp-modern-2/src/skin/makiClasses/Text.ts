@@ -9,6 +9,7 @@ import {
   px,
   toBool,
 } from "../../utils";
+import Timer from "./Timer";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Ctext.2F.3E_.26_.3CWasabi:Text.2F.3E
 export default class Text extends GuiObj {
@@ -25,9 +26,19 @@ export default class Text extends GuiObj {
   _font_obj: TrueTypeFont | BitmapFont;
   _fontSize: number;
   _color: string;
-  _ticker: string;
+  _ticker: boolean = false;
   _paddingX: number = 2;
   _timeColonWidth: number | null = null;
+  _textWrapper: HTMLElement;
+  _scrollTimer: Timer;
+  _scrollDirection: -1 | 1;
+  _scrollPaused: boolean = false;
+
+  constructor() {
+    super()
+    this._textWrapper = document.createElement('wrap');
+    this._div.appendChild(this._textWrapper);
+  }
 
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -75,7 +86,7 @@ export default class Text extends GuiObj {
         break;
       case "ticker":
         /// (bool) Setting this flag causes the object to scroll left and right if the text does not fit the rectangular area of the text object.
-        this._ticker = value;
+        this._ticker = toBool(value);
         break;
       case "timecolonwidth":
         // (int) How many extra pixels wider or smaller should the colon be when displaying time. Default is -1.
@@ -105,6 +116,12 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         return false;
     }
     return true;
+  }
+
+  init(){
+    super.init();
+    if(this._ticker) {this._prepareScrolling()}
+    
   }
 
   _setDisplay(display: string) {
@@ -187,6 +204,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     // TODO
   }
 
+  //to speedup, we spit render. This is only rendering style
   _prepareCss() {
     if (!this._font_obj) {
       this._font_obj = UI_ROOT.getFont(this._font_id);
@@ -233,7 +251,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       if (font instanceof BitmapFont) {
         this._renderBitmapFont(font);
       } else {
-        this._div.innerText = this.getText();
+        this._textWrapper.innerText = this.getText();
       }
   }
 
@@ -251,7 +269,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   _renderBitmapFont(font: BitmapFont) {
-    removeAllChildNodes(this._div);
+    removeAllChildNodes(this._textWrapper);
     this._div.style.whiteSpace = "nowrap";
     const useColonWidth = this._useColonWidth();
     if (this.getText() != null) {
@@ -261,7 +279,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         if (char === ":" && useColonWidth) {
           charNode.style.width = px(this._timeColonWidth);
         }
-        this._div.appendChild(charNode);
+        this._textWrapper.appendChild(charNode);
       }
     }
   }
@@ -364,8 +382,39 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       this._div.style.color = color.getRbg();
     }
     */
+  }
 
-    
+  _prepareScrolling(){
+    this._scrollDirection = -1;
+    const timer = this._scrollTimer = new Timer();
+    timer.setdelay(50);
+    timer.setOnTimer(()=>{
+      this.doScrollText();
+    })
+    timer.start()    
+  }
+  
+  doScrollText(){
+    // console.log('scrolling!', this._textWrapper.style.left);
+    const curL = parseInt(this._textWrapper.style.left) || 0;
+    const step = 1; //pixel
+    const container = this._div.getBoundingClientRect();
+    const wrapper = this._textWrapper.getBoundingClientRect();
+    if(wrapper.width <= container.width) return;
+    // const cw = wrapper.width;
+    // var l = container.width - wrapper.width
+    var l = curL + step * this._scrollDirection;
+    if(l+ wrapper.width < container.width){ // too left
+      this._scrollDirection *= -1; //? flip dir!
+      l = curL + step * this._scrollDirection;
+    }
+    else if(l > step){ // too right
+      this._scrollDirection *= -1; //? flip dir!
+      l = curL + step * this._scrollDirection;
+    }
+    this._textWrapper.style.left = px(Math.round(l))
+
+
   }
 
   dispose() {

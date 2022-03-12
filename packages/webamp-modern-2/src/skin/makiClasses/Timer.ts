@@ -9,6 +9,7 @@ export default class Timer extends BaseObject {
   _delay: number = 5000; //x2nie
   _timeout: NodeJS.Timeout | null = null;
   _nid: number;
+  _onTimer: ()=>void = null;
 
   constructor(){
     super();
@@ -45,8 +46,9 @@ export default class Timer extends BaseObject {
         this.stop();
       }
       this._timeout = setInterval(() => {
-        console.log('timer.ontimer()', this._nid)
-        UI_ROOT.vm.dispatch(self, "ontimer");
+        // console.log('timer.ontimer()', this._nid)
+        // UI_ROOT.vm.dispatch(self, "ontimer");
+        self.doTimer();
       }, this._delay);
       return true
     } 
@@ -54,6 +56,23 @@ export default class Timer extends BaseObject {
       return false
     }
     return false
+  }
+
+  doTimer(){
+    // console.log('timer.ontimer()', this._nid)
+    if(this._onTimer!=null){
+      this._onTimer()
+    } else {
+      UI_ROOT.vm.dispatch(this, "ontimer");   
+    }
+  }
+
+  setOnTimer(callback:()=>void){
+    const handler = ()=>{
+      callback();
+    }
+    this._onTimer = handler;
+    // this._onTimer = callback;
   }
 
   isrunning(): boolean {
