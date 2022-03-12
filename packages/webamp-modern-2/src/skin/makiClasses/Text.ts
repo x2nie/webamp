@@ -65,6 +65,7 @@ export default class Text extends GuiObj {
         // (bool) Force the system to make the display string all uppercase before display.
         this._forceuppercase = toBool(value);
         this._prepareCss();
+        this._renderText();
         break;
       case "font":
         // (id) The id of a bitmapfont or truetypefont element. If no element with that id can be found, the OS will be asked for a font with that name instead.
@@ -221,7 +222,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       }
       this._div.style.fontFamily = font.getFontFamily();
       this._div.style.fontSize = px(this._fontSize ?? 12);
-      this._forceuppercase && (this._div.style.textTransform = 'uppercase');
+      this._div.style.textTransform = this._forceuppercase? 'uppercase': 'none';
       if (this._bold) {
         this._div.style.fontWeight = "bold";
       }
