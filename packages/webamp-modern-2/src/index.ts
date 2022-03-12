@@ -61,6 +61,7 @@ async function loadSkin(skinData: Blob) {
 
   setStatus("Rendering skin for the first time...");
   uiRoot.draw();
+  uiRoot.init();
 
   setStatus("Initializing Maki...");
   console.log('Initializing Maki', 

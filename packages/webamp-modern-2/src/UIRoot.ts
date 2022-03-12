@@ -12,6 +12,7 @@ import Vm from "./skin/VM";
 import BaseObject from "./skin/makiClasses/BaseObject";
 import AUDIO_PLAYER, { AudioPlayer } from "./skin/AudioPlayer";
 import Group from "./skin/makiClasses/Group";
+import SystemObject from "./skin/makiClasses/SystemObject";
 
 export class UIRoot {
   _div: HTMLDivElement = document.createElement("div");
@@ -27,6 +28,7 @@ export class UIRoot {
   _activeGammaSet: GammaGroup[] = [];
   _activeGammaSetName : string = '';
   _containers: Container[] = [];
+  _systemObjects: SystemObject[] = [];
 
   // A list of all objects created for this skin.
   _objects: BaseObject[] = [];
@@ -451,6 +453,18 @@ export class UIRoot {
     return !!zipObj;
   }
 
+
+  //? System things ========================
+  /* because maki need to be run if not inside any Group @init() */
+  addSystemObject(systemObj: SystemObject) {
+    // systemObj.setParentGroup(this);
+    this._systemObjects.push(systemObj);
+  }
+  init(){
+    for (const systemObject of this._systemObjects) {
+      systemObject.init();
+    }
+  }
 }
 
 // Global Singleton for now

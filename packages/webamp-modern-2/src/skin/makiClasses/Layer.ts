@@ -39,6 +39,7 @@ export default class Layer extends GuiObj {
       const bitmap = UI_ROOT.getBitmap(this._image);
       if(bitmap) return bitmap.getHeight();
     }
+    return 0;
     return super.getheight();
   }
 
@@ -51,6 +52,7 @@ export default class Layer extends GuiObj {
       const bitmap = UI_ROOT.getBitmap(this._image);
       if(bitmap) return bitmap.getWidth();
     }
+    return 0;
     return super.getwidth();
   }
 
@@ -64,8 +66,9 @@ export default class Layer extends GuiObj {
     // this._div.setAttribute("data-obj-name", "Layer");
     // this._div.style.pointerEvents = this._sysregion==-2 || this._ghost? 'none' : 'auto';
     this._div.style.pointerEvents = this._isMouseTrap? 'auto': 'none';
+    // this._div.style.pointerEvents = 'auto';
     this._div.style.display = this._sysregion==-2? 'none' : 'block';
-    // this._div.style.overflow = "hidden";
+    this._div.style.overflow = "hidden";
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }

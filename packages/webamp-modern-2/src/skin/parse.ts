@@ -459,6 +459,7 @@ export default class SkinParser {
       parent.addSystemObject(systemObj);
     } else {
       // Script archives can also live in <groupdef /> but we don't know how to do that.
+      UI_ROOT.addSystemObject(systemObj);
     }
   }
 
@@ -849,6 +850,7 @@ export default class SkinParser {
     if(xuiEl){
         const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
         await this.maybeApplyGroupDef(frame, xuiFrame);
+        console.warn('WasabiFrame succes to apply xuitag=', xuitag, node.attributes.id)
     }
     else {
       const groupdef_id = this._getWasabiGroupDef(node.name)
@@ -860,7 +862,12 @@ export default class SkinParser {
       //   relath:'1',
       // });
       const groupDef = this._uiRoot.getGroupDef(groupdef_id);
-      await this.maybeApplyGroupDef(frame, groupDef);
+      if(groupDef){
+        await this.maybeApplyGroupDef(frame, groupDef);
+        console.info('WasabiFrame success to apply groupDef.id=', groupdef_id)
+      } else {
+        console.warn('WasabiFrame failed to apply groupDef.id=', groupdef_id)
+      }
     }
     frame.setXmlAttributes(node.attributes);
 

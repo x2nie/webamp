@@ -181,7 +181,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     }
   }
 
-  getText() {
+  gettext() {
     // console.log('txt=', this._id, this._text, this.getTopParent()._id)
     if((this._text||'').startsWith(':')){
       return this.getTopParent()._name || this._text;
@@ -212,7 +212,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     }
     const font = this._font_obj;
     if (font instanceof TrueTypeFont){
-      // this._div.innerText = this.getText();
+      // this._div.innerText = this.gettext();
       this._div.style.fontFamily = font.getFontFamily();
       if(this._color){
         const color = UI_ROOT.getColor(this._color);
@@ -240,7 +240,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       this._div.style.setProperty('--charwidth', px(font._charWidth));
       this._div.style.setProperty('--charheight', px(font._charHeight));
     } else if (font == null) {
-      // this._div.innerText = this.getText();
+      // this._div.innerText = this.gettext();
       this._div.style.fontFamily = "Arial";
     } else {
       throw new Error("Unexpected font");
@@ -252,7 +252,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       if (font instanceof BitmapFont) {
         this._renderBitmapFont(font);
       } else {
-        this._textWrapper.innerText = this.getText();
+        this._textWrapper.innerText = this.gettext();
       }
   }
 
@@ -273,8 +273,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     removeAllChildNodes(this._textWrapper);
     this._div.style.whiteSpace = "nowrap";
     const useColonWidth = this._useColonWidth();
-    if (this.getText() != null) {
-      for (const char of this.getText().split("")) {
+    if (this.gettext() != null) {
+      for (const char of this.gettext().split("")) {
         const charNode = font.renderLetter(char);
         // TODO: This is quite hacky.
         if (char === ":" && useColonWidth) {
@@ -288,7 +288,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   _renderBitmapFont1(font: BitmapFont) {
     this._div.style.whiteSpace = "nowrap";
     let s = '';
-    for (const char of this.getText().split("")) {
+    for (const char of this.gettext().split("")) {
       s += `<i>${char}</i>`
     }
     this._div.innerHTML = s;
@@ -303,7 +303,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   //     } 
   //   }
   //   // return this._div.getBoundingClientRect().width; // cant calc when _dif is out of document
-  //   return this.getText().length * charWidth;
+  //   return this.gettext().length * charWidth;
   // }
 
   getautowidth(): number {
@@ -325,7 +325,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   _getBitmapFontTextWidth(font: BitmapFont): number {
     const charWidth = font._charWidth;
     // this._div.setAttribute('charwidth', charWidth.toString())
-    return this.getText().length * charWidth + (this._paddingX * 2);
+    return this.gettext().length * charWidth + (this._paddingX * 2);
   }
   _getTrueTypeTextWidth(): number {
     /**
@@ -337,9 +337,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
     */
     const self = this;
-    function getTextWidth(text, font) {
+    function gettextWidth(text, font) {
       // re-use canvas object for better performance
-      // const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+      // const canvas = gettextWidth.canvas || (gettextWidth.canvas = document.createElement("canvas"));
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
       context.font = font;
@@ -359,14 +359,14 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     //   return `${fontWeight} ${fontSize} ${fontFamily}`;
     // }
 
-    return getTextWidth(this.getText(), `${this._fontSize}px ${'Arial'}`)
+    return gettextWidth(this.gettext(), `${this._fontSize}px ${'Arial'}`)
 
   }
 
   draw() {
     // this._div.setAttribute('_width_', this.getwidth().toString())
     // this._div.setAttribute('autowidth', this.getautowidth().toString())
-    // this._div.setAttribute('title', this.getText())
+    // this._div.setAttribute('title', this.gettext())
 
     super.draw();
     // this._prepareCss();
@@ -426,8 +426,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   /*
   
-extern String Text.getText();
-extern int Text.getTextWidth();
+extern String Text.gettext();
+extern int Text.gettextWidth();
 extern Text.onTextChanged(String newtxt);
   */
 }
