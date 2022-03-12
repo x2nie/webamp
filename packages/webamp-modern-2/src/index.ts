@@ -3,7 +3,7 @@ import JSZip from "jszip";
 import { classResolver } from "./skin/resolver";
 import SkinParser from "./skin/parse";
 import UI_ROOT from "./UIRoot";
-import { removeAllChildNodes } from "./utils";
+import { getLocationQuery, removeAllChildNodes } from "./utils";
 import { addDropHandler } from "./dropTarget";
 
 function hack() {
@@ -22,12 +22,13 @@ function setStatus(status: string) {
 
 async function main() {
   setStatus("Downloading skin...");
+  const skinPath = getLocationQuery('skin') || "assets/wacup-modern-skin.wal";
   // const response = await fetch("assets/CornerAmp_Redux.wal");
   // const response = await fetch("assets/Default_winamp3_build499.wal");
   // const response = await fetch("assets/makio.wal");
   // const response = await fetch("assets/Nullsoft.Winamp.2000.SP4.v1.4-RC2-lite.wal");
   // const response = await fetch("assets/MMD3.wal");
-  const response = await fetch("assets/wacup-modern-skin.wal");
+  // const response = await fetch("assets/wacup-modern-skin.wal");
   // const response = await fetch("assets/wacupmodern.wal");
   // const response = await fetch("assets/wa3_default.wal"); // official winamp 5.8
   // const response = await fetch("assets/WinampModern.wal"); // official winamp 5.8
@@ -36,8 +37,17 @@ async function main() {
   // const response = await fetch("assets/ClassicModern.wal");
   // const response = await fetch("assets/Enkera.wal");
   // const response = await fetch("assets/simpletutorial1.1.wal");
+  // const data = await response.blob();
+  // await loadSkin(data);
+  await loadSkinPathOrName(skinPath);
+}
+
+async function loadSkinPathOrName(skinPath:string){
+  const response = await fetch(skinPath);
+  // const response = await fetch("assets/simpletutorial1.1.wal");
   const data = await response.blob();
   await loadSkin(data);
+
 }
 
 async function loadSkin(skinData: Blob) {
