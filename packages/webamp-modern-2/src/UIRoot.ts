@@ -46,6 +46,7 @@ export class UIRoot {
     this._xuiElements = [];
     this._activeGammaSet = [];
     this._containers = [];
+    this._systemObjects = [];
 
     // A list of all objects created for this skin.
     this._objects = [];

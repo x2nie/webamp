@@ -12,7 +12,7 @@ function hack() {
   classResolver("A funny joke about why this is needed.");
 }
 
-addDropHandler(loadSkin);
+addDropHandler(loadWalBlob);
 
 const STATUS = document.getElementById("status");
 
@@ -43,14 +43,23 @@ async function main() {
 }
 
 async function loadSkinPathOrName(skinPath:string){
-  const response = await fetch(skinPath);
-  // const response = await fetch("assets/simpletutorial1.1.wal");
-  const data = await response.blob();
-  await loadSkin(data);
+  if(skinPath.endsWith('.wal')){
+    await(loadWalSkin(skinPath))
+  } else {
+    //TODO: support .swz and localhost path/to/skin-name/
+    setStatus("not supported file: "+ skinPath);
+  }
+
 
 }
 
-async function loadSkin(skinData: Blob) {
+async function loadWalSkin(skinPath:string) {
+  const response = await fetch(skinPath);
+  const data = await response.blob();
+  await loadWalBlob(data);
+}
+
+async function loadWalBlob(skinData: Blob) {
   UI_ROOT.reset();
   document.body.appendChild(UI_ROOT.getRootDiv());
 
