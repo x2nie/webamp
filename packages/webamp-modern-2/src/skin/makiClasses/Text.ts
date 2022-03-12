@@ -18,9 +18,7 @@ export default class Text extends GuiObj {
   _disposeDisplaySubscription: () => void | null = null;
   _text: string;
   _bold: boolean;
-  _forceupcase: boolean;
   _forceuppercase: boolean;
-  _forcelocase: boolean;
   _forcelowercase: boolean;
   _align: string;
   _font_id: string;
@@ -49,19 +47,18 @@ export default class Text extends GuiObj {
       case "bold":
         // (str) A static string to be displayed.
         this._bold = toBool(value);
+        this._prepareCss();
         break;
       case "forceupcase":
-        // (bool) Force the system to make the display string all uppercase before display.
-        this._forceupcase = toBool(value);
-        break;
       case "forceuppercase":
         // (bool) Force the system to make the display string all uppercase before display.
         this._forceuppercase = toBool(value);
+        this._prepareCss();
         break;
       case "font":
         // (id) The id of a bitmapfont or truetypefont element. If no element with that id can be found, the OS will be asked for a font with that name instead.
         this._font_id = value;
-        this._renderBackground();
+        this._prepareCss();
         // this._renderText();
         break;
       case "align":
@@ -83,6 +80,7 @@ export default class Text extends GuiObj {
       case "timecolonwidth":
         // (int) How many extra pixels wider or smaller should the colon be when displaying time. Default is -1.
         this._timeColonWidth = num(value);
+        this._prepareCss();
         this._renderText();
       /*
 antialias - (bool) Setting this flag causes the text to be rendered antialiased if possible.
@@ -189,50 +187,53 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     // TODO
   }
 
-  _renderBackground() {
-    
+  _prepareCss() {
     if (!this._font_obj) {
       this._font_obj = UI_ROOT.getFont(this._font_id);
-
     }
     const font = this._font_obj;
-      if (font instanceof TrueTypeFont) {
-        // this._div.innerText = this.getText();
-        this._div.style.fontFamily = font.getFontFamily();
-        if(this._color){
-          const color = UI_ROOT.getColor(this._color);
-          if(color){
-            this._div.style.color = color.getRgb()
-          }
+    if (font instanceof TrueTypeFont){
+      // this._div.innerText = this.getText();
+      this._div.style.fontFamily = font.getFontFamily();
+      if(this._color){
+        const color = UI_ROOT.getColor(this._color);
+        if(color){
+          this._div.style.color = color.getRgb()
         }
-      } else if (font instanceof BitmapFont) {
-        // this._renderBitmapFont(font);
-        // font.ensureFontLoaded()
-        // const bitmap = font != null ? UI_ROOT.getBitmap(font._file) : null;
-        this.setBackgroundImage(font);
-        this._div.style.backgroundSize = "0";
-      } else if (font == null) {
-        // this._div.innerText = this.getText();
-        this._div.style.fontFamily = "Arial";
-      } else {
-        throw new Error("Unexpected font");
       }
+      this._div.style.fontFamily = font.getFontFamily();
+      this._div.style.fontSize = px(this._fontSize ?? 12);
+      this._forceuppercase && (this._div.style.textTransform = 'uppercase');
+      if (this._bold) {
+        this._div.style.fontWeight = "bold";
+      }
+      if (this._align) {
+        this._div.style.textAlign = this._align;
+      }  
+
+    } else if (font instanceof BitmapFont) {
+      // this._renderBitmapFont(font);
+      // font.ensureFontLoaded()
+      // const bitmap = font != null ? UI_ROOT.getBitmap(font._file) : null;
+      this.setBackgroundImage(font);
+      this._div.style.backgroundSize = "0"; //disable parent background, because only children will use it
+      this._div.style.lineHeight = px(this._height);
+      this._div.style.setProperty('--charwidth', px(font._charWidth));
+      this._div.style.setProperty('--charheight', px(font._charHeight));
+    } else if (font == null) {
+      // this._div.innerText = this.getText();
+      this._div.style.fontFamily = "Arial";
+    } else {
+      throw new Error("Unexpected font");
+    }
   }
 
   _renderText() {
-    
       const font = this._font_obj;
-      if (font instanceof TrueTypeFont) {
-        this._div.innerText = this.getText();
-        this._div.style.fontFamily = font.getFontFamily();
-        this._div.style.fontSize = px(this._fontSize ?? 12);
-      } else if (font instanceof BitmapFont) {
+      if (font instanceof BitmapFont) {
         this._renderBitmapFont(font);
-      } else if (font == null) {
-        this._div.innerText = this.getText();
-        this._div.style.fontFamily = "Arial";
       } else {
-        throw new Error("Unexpected font");
+        this._div.innerText = this.getText();
       }
   }
 
@@ -304,7 +305,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
   _getBitmapFontTextWidth(font: BitmapFont): number {
     const charWidth = font._charWidth;
-    this._div.setAttribute('charwidth', charWidth.toString())
+    // this._div.setAttribute('charwidth', charWidth.toString())
     return this.getText().length * charWidth + (this._paddingX * 2);
   }
   _getTrueTypeTextWidth(): number {
@@ -345,20 +346,14 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   draw() {
     // this._div.setAttribute('_width_', this.getwidth().toString())
-    this._div.setAttribute('autowidth', this.getautowidth().toString())
-    this._div.setAttribute('title', this.getText())
+    // this._div.setAttribute('autowidth', this.getautowidth().toString())
+    // this._div.setAttribute('title', this.getText())
 
     super.draw();
-    this._renderBackground();
+    // this._prepareCss();
     this._renderText();
     
     // this._div.style.width = "auto";
-    if (this._bold) {
-      this._div.style.fontWeight = "bold";
-    }
-    if (this._align) {
-      this._div.style.textAlign = this._align;
-    }
     this._div.classList.add("webamp--img");
 
     /*

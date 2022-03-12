@@ -110,8 +110,15 @@
         font-style:normal;
       }
       text span{
+        display: inline-block;
         background-image: inherit;
         vertical-align: bottom;
+        color: transparent;
+        width: var(--charwidth);
+        height: var(--charheight);
+        background-position-x: var(--x);
+        background-position-y: var(--y);
+        overflow: hidden;
       }
       /* body > div *  */
       container{

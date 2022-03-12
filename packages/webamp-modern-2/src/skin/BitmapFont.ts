@@ -3,7 +3,7 @@ import Bitmap from "./Bitmap";
 import ImageManager from "./ImageManager";
 
 const CHARS =
-  "abcdefghijklmnopqrstuvwxyz\"@ \n0123456789\u2026.:()-'!_+\\/[]^&%,=$#\nâöä?*";
+  "abcdefghijklmnopqrstuvwxyz\"@  \n0123456789\u2026.:()-'!_+\\/[]^&%,=$#\nâöä?*";
 
 const CHAR_MAP = {};
 for (const [line, chars] of CHARS.split("\n").entries()) {
@@ -72,20 +72,22 @@ export default class BitmapFont extends Bitmap {
   // the background position just once.
   renderLetter(char: string): HTMLSpanElement {
     const span = document.createElement("span");
-    span.style.display = "inline-block";
-    span.style.width = px(this._charWidth);
-    span.style.height = px(this._charHeight);
+    // span.style.display = "inline-block";
+    // span.style.width = px(this._charWidth);
+    // span.style.height = px(this._charHeight);
     // span.style.backgroundImage = `url(${this._url})`;
     // span.style.verticalAlign = "top";
     const [x, y] = CHAR_MAP[char.toLocaleLowerCase()] ?? CHAR_MAP[" "];
-    span.style.backgroundPositionX = px(-(this._charWidth * x));
-    span.style.backgroundPositionY = px(-(this._charHeight * y));
-    span.style.paddingTop = px((this._verticalSpacing ?? 0) / 2);
-    span.style.paddingBottom = px((this._verticalSpacing ?? 0) / 2);
-    span.style.paddingLeft = px((this._horizontalSpacing ?? 0) / 2);
-    span.style.paddingRight = px((this._horizontalSpacing ?? 0) / 2);
+    // span.style.backgroundPositionX = px(-(this._charWidth * x));
+    // span.style.backgroundPositionY = px(-(this._charHeight * y));
+    // span.style.paddingTop = px((this._verticalSpacing ?? 0) / 2);
+    // span.style.paddingBottom = px((this._verticalSpacing ?? 0) / 2);
+    // span.style.paddingLeft = px((this._horizontalSpacing ?? 0) / 2);
+    // span.style.paddingRight = px((this._horizontalSpacing ?? 0) / 2);
     span.innerText = char; // Keep things accessible
-    span.style.textIndent = "-9999px"; // But hide the characters
+    // span.style.textIndent = "-9999px"; // But hide the characters
+    span.style.setProperty('--x', px(-(this._charWidth * x)));
+    span.style.setProperty('--y', px(-(this._charHeight * y)));
     return span;
   }
 
