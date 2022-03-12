@@ -33,9 +33,11 @@ export default class AnimatedLayer extends Layer {
   gotoframe(framenum: number) {
     this._currentFrame = ensureVmInt(framenum);
     this._renderFrame();
-    UI_ROOT.vm.dispatch(this, "onframe", [
-      { type: "INT", value: this._currentFrame },
-    ]);
+    setTimeout(() => {
+      UI_ROOT.vm.dispatch(this, "onframe", [
+        { type: "INT", value: this._currentFrame },
+      ]);        
+    }, 1); // async
   }
   getcurframe(): number {
     return this._currentFrame;
@@ -110,5 +112,6 @@ extern AnimatedLayer.setRealtime(Boolean onoff);
     super.draw();
     this._renderFrame();
     // this._div.setAttribute("data-obj-name", "AnimatedLayer");
+    this._div.style.pointerEvents = 'auto';
   }
 }

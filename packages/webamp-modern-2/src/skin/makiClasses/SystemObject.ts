@@ -80,7 +80,7 @@ export default class SystemObject extends BaseObject {
    * @ret The mouse's current X pos.
    */
   getmouseposx(): number {
-    return MOUSE_POS.x;
+    return MOUSE_POS.x - this._parentGroup.getparentlayout().getleft();
   }
 
   /**
@@ -90,7 +90,7 @@ export default class SystemObject extends BaseObject {
    * @ret The mouse's current Y pos.
    */
   getmouseposy(): number {
-    return MOUSE_POS.y;
+    return MOUSE_POS.y - this._parentGroup.getparentlayout().gettop();
   }
 
   /**

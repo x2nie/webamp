@@ -26,6 +26,7 @@ export default class MakiMap extends BaseObject {
       "Expected map image to be grey scale"
     );
     assume(data[3] === 255, "Expected map image not have transparency");
+    console.log(`Map.getValue x:${x} y:${y} = ${data[0]}`)
     return data[0];
   }
   getwidth(): number {
