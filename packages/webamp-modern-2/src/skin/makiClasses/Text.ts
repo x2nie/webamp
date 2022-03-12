@@ -27,6 +27,7 @@ export default class Text extends GuiObj {
   _fontSize: number;
   _color: string;
   _ticker: string;
+  _paddingX: number = 5;
   _timeColonWidth: number | null = null;
 
   setXmlAttr(key: string, value: string): boolean {
@@ -271,17 +272,17 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     this._div.innerHTML = s;
   }
 
-  getwidth(): number {
-    let charWidth = 12+3;
-    if(this._font){
-      const font = UI_ROOT.getFont(this._font);
-      if(font instanceof BitmapFont){
-        charWidth = font._charWidth+3;
-      } 
-    }
-    // return this._div.getBoundingClientRect().width; // cant calc when _dif is out of document
-    return this.getText().length * charWidth;
-  }
+  // getwidth(): number {
+  //   let charWidth = 12+3;
+  //   if(this._font){
+  //     const font = UI_ROOT.getFont(this._font);
+  //     if(font instanceof BitmapFont){
+  //       charWidth = font._charWidth+3;
+  //     } 
+  //   }
+  //   // return this._div.getBoundingClientRect().width; // cant calc when _dif is out of document
+  //   return this.getText().length * charWidth;
+  // }
 
   getautowidth(): number {
     /**
@@ -292,6 +293,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     * 
     * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
     */
+    const self = this;
     function getTextWidth(text, font) {
       // re-use canvas object for better performance
       // const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
@@ -299,7 +301,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       const context = canvas.getContext("2d");
       context.font = font;
       const metrics = context.measureText(text);
-      return metrics.width;
+      return metrics.width + (self._paddingX*2);
     }
 
     // function getCssStyle(element, prop) {
@@ -319,6 +321,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   draw() {
+    this._div.setAttribute('_width_', this.getwidth().toString())
+    this._div.setAttribute('autowidth', this.getautowidth().toString())
+
     super.draw();
     this._renderBackground();
     this._renderText();

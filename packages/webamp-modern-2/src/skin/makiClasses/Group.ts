@@ -134,6 +134,17 @@ export default class Group extends GuiObj {
     }
   }
 
+  // _renderWidth() {
+  //   if(this._autowidthsource) return;
+  //   this._div.style.width = this._relatw=='1' ? relat(this._width??0) : px(this.getwidth());
+  //   this._div.style.width = this._relatw? Utils.relat(this._width): Utils.px(this.getwidth());
+  // }
+
+  // _renderHeight() {
+  //   this._div.style.height = this._relath=='1' ? relat(this._height??0) : px(this.getheight());
+  //   this._div.style.height = this._relath? Utils.relat(this._height) : Utils.px(this.getheight());
+  // }
+
   draw() {
     super.draw();
     // this._div.setAttribute("data-obj-name", "Group");
@@ -144,8 +155,6 @@ export default class Group extends GuiObj {
     // this._div.style.overflow = "hidden";
     // this._div.style.height = Utils.px(this._maximumHeight);
     // this._div.style.width = Utils.px(this._maximumWidth);
-    this._div.style.height = this._relath? Utils.relat(this._height) : Utils.px(this.getheight());
-    this._div.style.width = this._relatw? Utils.relat(this._width): Utils.px(this.getwidth());
     this._renderBackground();
     for (const child of this._children) {
       child.draw();
