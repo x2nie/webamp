@@ -23,6 +23,7 @@ export class UIRoot {
   _groupDefs: XmlElement[] = [];
   _clonnableGroup = {}
   _gammaSets: Map<string, GammaGroup[]> = new Map();
+  _gammaNames = {};
   _dummyGammaGroup: GammaGroup = null;
   _xuiElements: XmlElement[] = [];
   _activeGammaSet: GammaGroup[] = [];
@@ -47,6 +48,7 @@ export class UIRoot {
     this._activeGammaSet = [];
     this._containers = [];
     this._systemObjects = [];
+    this._gammaNames = {};
 
     // A list of all objects created for this skin.
     this._objects = [];
@@ -162,7 +164,9 @@ export class UIRoot {
   }
 
   addGammaSet(id: string, gammaSet: GammaGroup[]) {
-    this._gammaSets.set(id.toLowerCase(), gammaSet);
+    const lower = id.toLowerCase()
+    this._gammaNames[lower] = id;
+    this._gammaSets.set(lower, gammaSet);
   }
 
   enableGammaSet(id: string) {

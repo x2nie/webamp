@@ -11,6 +11,13 @@ export default class ColorThemesList extends Group {
   constructor() {
     super();
     this._div.appendChild(this._select);
+    this._select.addEventListener('dblclick', ()=>{
+      const selected = this._select.value;
+        if (selected != null) {
+          UI_ROOT.enableGammaSet(selected);
+          this._renderBoldSelection()
+        }
+    })
   }
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -56,7 +63,7 @@ export default class ColorThemesList extends Group {
     for (const key of UI_ROOT._gammaSets.keys()) {
       const option = document.createElement("option");
       option.value = key;
-      option.innerText = key;
+      option.innerText = UI_ROOT._gammaNames[key];
       this._select.appendChild(option);
     }
     this._select.value = UI_ROOT._activeGammaSetName;
