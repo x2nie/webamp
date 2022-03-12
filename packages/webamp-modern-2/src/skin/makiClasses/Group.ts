@@ -108,7 +108,7 @@ export default class Group extends GuiObj {
     if(this._autowidthsource){
       const widthSource = this.findobject(this._autowidthsource);
       if(widthSource){
-        return widthSource.getwidth()
+        return widthSource.getautowidth()
       }
     }
     if (this._width || this._minimumWidth || this._maximumWidth) {

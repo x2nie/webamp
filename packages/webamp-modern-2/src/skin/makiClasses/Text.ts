@@ -23,11 +23,12 @@ export default class Text extends GuiObj {
   _forcelocase: boolean;
   _forcelowercase: boolean;
   _align: string;
-  _font: string;
+  _font_id: string;
+  _font_obj: TrueTypeFont | BitmapFont;
   _fontSize: number;
   _color: string;
   _ticker: string;
-  _paddingX: number = 5;
+  _paddingX: number = 2;
   _timeColonWidth: number | null = null;
 
   setXmlAttr(key: string, value: string): boolean {
@@ -59,7 +60,7 @@ export default class Text extends GuiObj {
         break;
       case "font":
         // (id) The id of a bitmapfont or truetypefont element. If no element with that id can be found, the OS will be asked for a font with that name instead.
-        this._font = value;
+        this._font_id = value;
         this._renderBackground();
         // this._renderText();
         break;
@@ -190,8 +191,11 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   _renderBackground() {
     
-    if (this._font) {
-      const font = UI_ROOT.getFont(this._font);
+    if (!this._font_obj) {
+      this._font_obj = UI_ROOT.getFont(this._font_id);
+
+    }
+    const font = this._font_obj;
       if (font instanceof TrueTypeFont) {
         // this._div.innerText = this.getText();
         this._div.style.fontFamily = font.getFontFamily();
@@ -213,17 +217,15 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       } else {
         throw new Error("Unexpected font");
       }
-    }
-
   }
 
   _renderText() {
-    removeAllChildNodes(this._div);
-    if (this._font) {
-      const font = UI_ROOT.getFont(this._font);
+    
+      const font = this._font_obj;
       if (font instanceof TrueTypeFont) {
         this._div.innerText = this.getText();
         this._div.style.fontFamily = font.getFontFamily();
+        this._div.style.fontSize = px(this._fontSize ?? 12);
       } else if (font instanceof BitmapFont) {
         this._renderBitmapFont(font);
       } else if (font == null) {
@@ -232,7 +234,6 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       } else {
         throw new Error("Unexpected font");
       }
-    }
   }
 
   _useColonWidth() {
@@ -249,6 +250,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   _renderBitmapFont(font: BitmapFont) {
+    removeAllChildNodes(this._div);
     this._div.style.whiteSpace = "nowrap";
     const useColonWidth = this._useColonWidth();
     if (this.getText() != null) {
@@ -285,6 +287,27 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   // }
 
   getautowidth(): number {
+    // if (this._font) {
+    let textWidth = 0; 
+    const font = this._font_obj;
+    if (font instanceof BitmapFont) 
+    {
+      textWidth = this._getBitmapFontTextWidth(font)
+    } else  {
+      textWidth = this._getTrueTypeTextWidth()
+    }
+    // textWidth += this._x || 0;
+    if(this._relatw=='1'){
+      textWidth += this._width * -1;
+    }
+    return textWidth;
+  }
+  _getBitmapFontTextWidth(font: BitmapFont): number {
+    const charWidth = font._charWidth;
+    this._div.setAttribute('charwidth', charWidth.toString())
+    return this.getText().length * charWidth + (this._paddingX * 2);
+  }
+  _getTrueTypeTextWidth(): number {
     /**
     * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
     * 
@@ -321,8 +344,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   draw() {
-    this._div.setAttribute('_width_', this.getwidth().toString())
+    // this._div.setAttribute('_width_', this.getwidth().toString())
     this._div.setAttribute('autowidth', this.getautowidth().toString())
+    this._div.setAttribute('title', this.getText())
 
     super.draw();
     this._renderBackground();
@@ -346,7 +370,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     }
     */
 
-    this._div.style.fontSize = px(this._fontSize ?? 14);
+    
   }
 
   dispose() {

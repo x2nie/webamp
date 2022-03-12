@@ -383,10 +383,10 @@ export default class GuiObj extends XmlObj {
   getguih(): number { return this._height; }
   getguix(): number { return this._x; }
   getguiy(): number { return this._y; }
-  getguirelatw(): number { return this._relatw ? 1 : 0; }
-  getguirelath(): number { return this._relath ? 1 : 0; }
-  getguirelatx(): number { return this._relatx ? 1 : 0; }
-  getguirelaty(): number { return this._relaty ? 1 : 0; }
+  getguirelatw(): number { return this._relatw=='1' ? 1 : 0; }
+  getguirelath(): number { return this._relath=='1' ? 1 : 0; }
+  getguirelatx(): number { return this._relatx=='1' ? 1 : 0; }
+  getguirelaty(): number { return this._relaty=='1' ? 1 : 0; }
   getautowidth(): number { 
     const child = !this._autowidthsource? this : findLast(
       this._children,
@@ -790,7 +790,7 @@ export default class GuiObj extends XmlObj {
   }
 
   _renderWidth() {
-    if(this._autowidthsource) return;
+    // if(this._autowidthsource) return;
     this._div.style.width = this._relatw=='1' ? relat(this._width??0) : px(this.getwidth());
   }
 

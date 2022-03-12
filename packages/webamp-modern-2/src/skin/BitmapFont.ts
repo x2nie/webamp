@@ -76,7 +76,7 @@ export default class BitmapFont extends Bitmap {
     span.style.width = px(this._charWidth);
     span.style.height = px(this._charHeight);
     // span.style.backgroundImage = `url(${this._url})`;
-    span.style.verticalAlign = "top";
+    // span.style.verticalAlign = "top";
     const [x, y] = CHAR_MAP[char.toLocaleLowerCase()] ?? CHAR_MAP[" "];
     span.style.backgroundPositionX = px(-(this._charWidth * x));
     span.style.backgroundPositionY = px(-(this._charHeight * y));
