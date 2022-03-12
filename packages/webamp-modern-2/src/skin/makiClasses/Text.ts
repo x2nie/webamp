@@ -236,7 +236,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       // const bitmap = font != null ? UI_ROOT.getBitmap(font._file) : null;
       this.setBackgroundImage(font);
       this._div.style.backgroundSize = "0"; //disable parent background, because only children will use it
-      this._div.style.lineHeight = px(this._height);
+      this._div.style.lineHeight = px(this._div.getBoundingClientRect().height);
       this._div.style.setProperty('--charwidth', px(font._charWidth));
       this._div.style.setProperty('--charheight', px(font._charHeight));
     } else if (font == null) {
