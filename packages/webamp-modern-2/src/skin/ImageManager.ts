@@ -1,4 +1,5 @@
 import JSZip from "jszip";
+import UI_ROOT from "../UIRoot";
 import { getCaseInsensitiveFile } from "../utils";
 
 // https://png-pixel.com/
@@ -9,15 +10,21 @@ export default class ImageManager {
   _urlCache: Map<string, string> = new Map();
   _imgCache: Map<string, HTMLImageElement> = new Map();
   _cssVarCache: Map<string, string> = new Map();
-  constructor(private _zip: JSZip) {}
+
+  constructor(/* private _zip: JSZip */) {}
 
   async getUrl(filePath: string): Promise<string | null> {
     if (!this._urlCache.has(filePath)) {
-      const zipFile = getCaseInsensitiveFile(this._zip, filePath);
-      if (zipFile == null) {
+      // const zipFile = getCaseInsensitiveFile(this._zip, filePath);
+      // if (zipFile == null) {
+      //   return null;
+      // }
+      // const imgBlob = await zipFile.async("blob");
+
+      const imgBlob = await UI_ROOT.getFileAsBlob(filePath)
+      if (imgBlob == null) {
         return null;
       }
-      const imgBlob = await zipFile.async("blob");
       const imgUrl = await getUrlFromBlob(imgBlob);
       // const img = await this.getImage(imgUrl);
       // const transformedUrl = transformImage(img);

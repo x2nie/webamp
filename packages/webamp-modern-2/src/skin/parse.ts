@@ -66,7 +66,8 @@ export default class SkinParser {
     uiRoot: UIRoot /* Once UI_ROOT is not a singleton, we can create that objet in the constructor */
   ) {
     this._uiRoot = uiRoot;
-    this._imageManager = new ImageManager(this._uiRoot._zip);
+    // this._imageManager = new ImageManager(this._uiRoot._zip);
+    this._imageManager = new ImageManager();
     // _CURRENT_PARSER = this;
   }
 
@@ -74,10 +75,11 @@ export default class SkinParser {
   //   return _CURRENT_PARSER;
   // }
 
-  async parse(): Promise<UIRoot> {
+  async parse(skinXmlContent:string): Promise<UIRoot> {
     // Load built-in xui elements
     // await this.parseFromUrl("assets/xml/xui/standardframe.xml");
-    const includedXml = await this._uiRoot.getFileAsString("skin.xml");
+    // const includedXml = await this._uiRoot.getFileAsString("skin.xml");
+    const includedXml = skinXmlContent;
 
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
@@ -363,8 +365,8 @@ export default class SkinParser {
     // hold on, it is happen that some bitmapfont indirectly refer to other bitmap
     // <bitmap id="bitmapfont.player.BIGNUM" file="../Winamp Modern/player/numfont.png" x="0" y="0" h="60" w="300" gammagroup="DisplayElements"/>
     // <bitmapfont id="player.BIGNUM" file="bitmapfont.player.BIGNUM" charwidth="13" charheight="20" hspacing="-1" vspacing="0"/>
-    const found = this._uiRoot.getFileIsExist(node.attributes.file);
-    if(!found){
+    // const found = this._uiRoot.getFileIsExist(node.attributes.file);
+    // if(!found){
       const bitmap = this._uiRoot.getBitmap(node.attributes.file)
       if(bitmap){
         font.setXmlAttr('file', bitmap._file);
@@ -372,7 +374,7 @@ export default class SkinParser {
           font.setXmlAttr('gammagroup', bitmap._gammagroup);
       }
       else console.warn('BitmapFont file not found:', node.attributes.file)
-    }
+    // }
 
     // await font.ensureFontLoaded(this._imageManager);
     await font.ensureImageLoaded(this._imageManager);
@@ -987,7 +989,14 @@ export default class SkinParser {
     const path = [...parent_dir, ...directories, fileName].join("/");
     // console.log('build-path.', `parentdir:${parent_dir}; curdir:${directories}; file:${fileName}`)
 
-    const includedXml = await this._uiRoot.getFileAsString(path);
+    let includedXml;
+    try{
+      console.info(`trying to load: ${path}. par: "${parent_path}"`);
+      includedXml  = await this._uiRoot.getFileAsString(path);
+    } catch(err) {
+      console.warn(`botFailed to load: ${path}. par:${parent_path}`);
+    }
+    // const includedXml = await this._uiRoot.getFileAsString(path);
     if (includedXml == null) {
       console.warn(`Zip file not found: ${path} out of: `);
       return;
@@ -997,28 +1006,47 @@ export default class SkinParser {
     // A different XML parser library might make this unnessesary.
     const parsed = parseXmlFragment(includedXml);
 
-    const current_dir = directories.join('/')
+    const current_dir = [...parent_dir,...directories].join('/')
 
-    const nonGroupDefs = [];
-    for(const element of parsed.children)
-    {
-      if(element instanceof XmlElement)
+    var self = this;
+    // const recursiveScanChildren = (mother: XmlElement) => {
+    function recursiveScanChildren(mother: XmlElement) {
+      var nonGroupDefs = [];    
+      for(const element of mother.children)
       {
-        const lower = element.name.toLowerCase();
-        if(lower=='groupdef')
+        if(element instanceof XmlElement) 
         {
-          this._uiRoot.addGroupDef(element);
-          continue;
-        } 
-        else if(lower=='include')
-        {
-          element.attributes.parent_path = current_dir;
+          // recursiveScanChildren(element);
+          const lower = element.name.toLowerCase();
+          if(lower=='groupdef')
+          {
+            self._uiRoot.addGroupDef(element);
+            continue;
+          } 
+          else if(lower=='include')
+          {
+            element.attributes.parent_path = current_dir;
+            element.attributes['parent_path'] = current_dir;
+          }
+          recursiveScanChildren(element);
+          nonGroupDefs.push(element)  
         }
-        nonGroupDefs.push(element)
-      } 
+        // else {
+        //   console.warn('not Element:', element.type, element.toJSON())
+        // }
+      }
+      //replace children
+      mother.children.splice(0, mother.children.length, ...nonGroupDefs);
     }
+    recursiveScanChildren(parsed);
+    // for(const element of wrapper.children)
+    // {
+    //   if(element instanceof XmlElement)
+    //   {
+    //   } 
+    // }
     //replace children
-    parsed.children.splice(0, parsed.children.length, ...nonGroupDefs);
+    // parsed.children.splice(0, parsed.children.length, ...nonGroupDefs);
 
     // await this.traverseChildren({children:}, parent);
     await this.traverseChildren(parsed, parent);

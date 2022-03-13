@@ -36,6 +36,9 @@ export class UIRoot {
 
   vm: Vm = new Vm();
   audio: AudioPlayer = AUDIO_PLAYER;
+  getFileAsString: (filePath: string) => Promise<string>;
+  getFileAsBytes: (filePath: string) => Promise<ArrayBuffer>;
+  getFileAsBlob: (filePath: string) => Promise<Blob>;
 
   reset() {
     this.dispose();
@@ -426,19 +429,57 @@ export class UIRoot {
 
   setZip(zip : JSZip) {
     this._zip = zip;
+    if(zip!=null){
+      this.getFileAsString = this.getFileAsStringZip;
+      this.getFileAsBytes  = this.getFileAsBytesZip;
+      this.getFileAsBlob  = this.getFileAsBlobZip;
+    } else {
+      this.getFileAsString = this.getFileAsStringPath;
+      this.getFileAsBytes  = this.getFileAsBytesPath;
+      this.getFileAsBlob  = this.getFileAsBlobPath;
+    }
+  }
+
+  //? Path things ========================
+  /* needed to avoid direct fetch to root path */
+  _skinPath: string;
+
+  setSkinDir(skinPath: string) { // required to end with slash/
+    this._skinPath = skinPath;
   }
 
 
-  async getFileAsString(filePath: string): Promise<string> {
+  async getFileAsStringZip(filePath: string): Promise<string> {
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
     if(!zipObj) return null;
     return await zipObj.async('string');
   }
   
-  async getFileAsBytes(filePath: string): Promise<ArrayBuffer> {
+  async getFileAsBytesZip(filePath: string): Promise<ArrayBuffer> {
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
     if(!zipObj) return null;
     return await zipObj.async('arraybuffer');
+  }
+
+  async getFileAsBlobZip(filePath: string): Promise<Blob> {
+    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+    if(!zipObj) return null;
+    return await zipObj.async('blob');
+  }
+
+  async getFileAsStringPath(filePath: string): Promise<string> {
+    const response = await fetch(this._skinPath + filePath);
+    return await response.text();
+  }
+  
+  async getFileAsBytesPath(filePath: string): Promise<ArrayBuffer> {
+    const response = await fetch(this._skinPath + filePath);
+    return await response.arrayBuffer();
+  }
+
+  async getFileAsBlobPath(filePath: string): Promise<Blob> {
+    const response = await fetch(this._skinPath + filePath);
+    return await response.blob();
   }
 
   // getFileSynchString(filePath: string): string {

@@ -53,6 +53,8 @@ export default class Group extends GuiObj {
     this._inited = true;
     
     super.init();
+
+    // return;
     
     // if(arguments.length){
     //   return; //it is called by wasabi. dont bother.

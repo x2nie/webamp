@@ -45,6 +45,28 @@ async function main() {
 async function loadSkinPathOrName(skinPath:string){
   if(skinPath.endsWith('.wal')){
     await(loadWalSkin(skinPath))
+  } 
+  else if(skinPath.endsWith('.swz')){
+    //TODO: support .swz classic skin
+    setStatus("not supported file: "+ skinPath);
+  } 
+  else if(skinPath.endsWith('/')){
+    //TODO: path/to/skin-name/
+    const response = await fetch(skinPath+"skin.xml");
+    const data = await response.text();
+    if(data) {
+      UI_ROOT.setZip(null);
+      UI_ROOT.setSkinDir(skinPath);
+      UI_ROOT.reset();
+      document.body.appendChild(UI_ROOT.getRootDiv());
+      setStatus("Loading skin from path...");
+      await loadSkinXML(data);
+    } else {
+      setStatus("Skin.xml file not found in: "+ skinPath);
+
+    }
+  
+    
   } else {
     //TODO: support .swz and localhost path/to/skin-name/
     setStatus("not supported file: "+ skinPath);
@@ -66,12 +88,18 @@ async function loadWalBlob(skinData: Blob) {
   setStatus("Loading .wal archive...");
   const zip = await JSZip.loadAsync(skinData);
   UI_ROOT.setZip(zip);
+  const skinXmlContent = await UI_ROOT.getFileAsString("skin.xml");
+  await loadSkinXML(skinXmlContent);
+}
 
+async function loadSkinXML(skinXmlContent:string) {
+  
+  
   setStatus("Parsing XML and initializing images...");
   const parser = new SkinParser(UI_ROOT);
 
   // This is always the same as the global singleton.
-  const uiRoot = await parser.parse();
+  const uiRoot = await parser.parse(skinXmlContent);
 
   const start = performance.now();
   uiRoot.enableDefaultGammaSet();
@@ -97,7 +125,7 @@ async function loadWalBlob(skinData: Blob) {
 
   }
   setStatus("");
-  // UI_ROOT.setZip(null);
+  UI_ROOT.setZip(null);
 }
 
 main();
