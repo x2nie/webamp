@@ -20,6 +20,7 @@ export default class Group extends GuiObj {
   // _children: GuiObj[] = []; //moved to GuiObj
   _isLayout:boolean=false;
   _regionId: string; //svg.id
+  _regionCanvas: HTMLCanvasElement;
   _regionImage: HTMLElement;
   _regionContainer: HTMLElement;
   
@@ -64,6 +65,16 @@ export default class Group extends GuiObj {
     }
     for (const child of this._children) {
       child.init();
+    }
+
+    for (const child of this._children) {
+      // child.draw();
+      if(child._sysregion==-1){
+        this.putAsRegion(child);
+      }
+      // else {
+        // this._div.appendChild(child.getDiv());
+      // }
     }
   }
 
@@ -163,12 +174,12 @@ export default class Group extends GuiObj {
     this._renderBackground();
     for (const child of this._children) {
       child.draw();
-      if(child._sysregion==-1){
-        this.putAsRegion(child);
-      }
-      else {
+      // if(child._sysregion==-1){
+      //   this.putAsRegion(child);
+      // }
+      // else {
         this._div.appendChild(child.getDiv());
-      }
+      // }
     }
     if(this._autowidthsource){
       // this._div.style.removeProperty('width');
@@ -207,21 +218,93 @@ export default class Group extends GuiObj {
   // }
 
   putAsRegion(child: GuiObj){
+    if(this._regionCanvas==null){
+      const canvas = this._regionCanvas = document.createElement("canvas");
+      const bound = this._div.getBoundingClientRect();
+      canvas.width  = bound.width;
+      canvas.height = bound.height;
+      console.log('createRegionCanvas:', bound.width, bound.height)
+      const ctx = canvas.getContext("2d");
+      // const fs = ctx.fillStyle;
+      ctx.fillStyle = 'white';
+      // ctx.fillStyle = 'rgba(0,0,0,0)';
+      ctx.fillRect(0,0, bound.width, bound.height)
+      // ctx.fillStyle = 'transparent';
+      // ctx.fillStyle = fs;
+    }
+    const ctx2 = this._regionCanvas.getContext("2d");
+    const r = child._div.getBoundingClientRect();
+    const bitmap = child._backgroundBitmap;
+    const img = child._backgroundBitmap.getImg()
+    ctx2.drawImage(
+      img, 
+      bitmap._x,
+      bitmap._y,
+      r.width, r.height,
+
+      child._div.offsetLeft, 
+      child._div.offsetTop, 
+      // 0,0,
+      r.width, r.height
+      // bitmap._width, bitmap._height
+      // 500, 500
+      );
+    console.log('createDraw:',  child._div.offsetLeft - bitmap._x, 
+    child._div.offsetTop - bitmap._y, 
+    r.width, r.height,
+    r)
+
+    const imageData = ctx2.getImageData(0, 0, this._regionCanvas.width, this._regionCanvas.height);
+    const data = imageData.data;
+    for (var i = 0; i < data.length; i += 4) {
+      data[i + 3] = data[i + 1] != 255 ? 0 : data[i + 1];
+    }
+    ctx2.putImageData(imageData, 0, 0);
+
+    const url = this._regionCanvas.toDataURL();
+    this._div.style.setProperty('mask-image', `url(${url})`)
+    this._div.style.setProperty('-webkit-mask-image', `url(${url})`);
+    // this._div.style.setProperty('--mask-image', `url(${url})`);
+    document.body.style.setProperty('background-image', `url(${url})`);
+    document.body.style.backgroundRepeat = 'no-repeat';
+    // this._div.style.setProperty('mask-type', 'luminance')
+    // this._div.style.setProperty('-webkit-mask-type', 'luminance')
+
+
+  }
+  putAsRegion0(child: GuiObj){
     if(this._regionImage==null){
       // const a : SVGAElement = new SVGAElement();
       elementIncrement++;
       this._regionId = `svgregion-${elementIncrement}`;
       
       const svg = this._regionImage = document.createElement('svg')
-      svg.setAttribute('id', this._regionId);
+      // svg.setAttribute('id', this._regionId);
       svg.style.position = 'absolute';
       svg.style.width = '100%';
-      svg.style.height = '100%';      
+      svg.style.height = '100%';
+      
+      const defs = document.createElement('defs')
+      svg.appendChild(defs)
+      
+      const mask = document.createElement('mask')
+      mask.setAttribute('id', this._regionId);
+      defs.appendChild(mask)
+
+      mask.innerHTML = '<rect fill="#ffffff" x="0" y="0" width="500" height="500"></rect>'
+
       const fo = this._regionContainer = document.createElement('foreignObject')
-      svg.appendChild(fo)
+      fo.innerHTML = '<div style="background:white;left:0;top:0; width:100%; height:100%;position:relative;"></div>';
+      mask.appendChild(fo)
+
       this._div.appendChild(svg);
+      this._div.style.setProperty('mask-type', 'luminance')
+      this._div.style.setProperty('-webkit-mask-type', 'luminance')
       this._div.style.setProperty('mask-image', `url(#${this._regionId})`)
-      this._div.style.setProperty('-webkit-mask-image', `url(#${this._regionId})`)
+      this._div.style.setProperty('-webkit-mask-image', `url(#${this._regionId})`);
+      this._div.addEventListener('resize', ()=>{
+        console.log('resized!')
+      })
     }
 
     this._regionContainer.appendChild(child.getDiv());
