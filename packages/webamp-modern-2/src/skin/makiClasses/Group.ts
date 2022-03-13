@@ -218,7 +218,7 @@ export default class Group extends GuiObj {
   // }
 
   putAsRegion(child: GuiObj){
-    if(this._regionCanvas==null){
+    if(this._regionCanvas==null || this._regionCanvas.width==0 || this._regionCanvas.height==0){
       const canvas = this._regionCanvas = document.createElement("canvas");
       const bound = this._div.getBoundingClientRect();
       canvas.width  = bound.width;
@@ -231,6 +231,9 @@ export default class Group extends GuiObj {
       ctx.fillRect(0,0, bound.width, bound.height)
       // ctx.fillStyle = 'transparent';
       // ctx.fillStyle = fs;
+    }
+    if(this._regionCanvas.width==0 || this._regionCanvas.height==0){
+      return
     }
     const ctx2 = this._regionCanvas.getContext("2d");
     const r = child._div.getBoundingClientRect();
@@ -266,8 +269,8 @@ export default class Group extends GuiObj {
     this._div.style.setProperty('mask-image', `url(${url})`)
     this._div.style.setProperty('-webkit-mask-image', `url(${url})`);
     // this._div.style.setProperty('--mask-image', `url(${url})`);
-    document.body.style.setProperty('background-image', `url(${url})`);
-    document.body.style.backgroundRepeat = 'no-repeat';
+    // document.body.style.setProperty('background-image', `url(${url})`);
+    // document.body.style.backgroundRepeat = 'no-repeat';
     // this._div.style.setProperty('mask-type', 'luminance')
     // this._div.style.setProperty('-webkit-mask-type', 'luminance')
 
