@@ -81,6 +81,8 @@ export default class Text extends GuiObj {
       case "fontsize":
         // (int) The size to render the chosen font.
         this._fontSize = num(value);
+        //this._renderText(); // 
+        this._invalidateFullWidth()
         break;
       case "color":
         // (int[sic?]) The comma delimited RGB color of the text.
@@ -208,13 +210,13 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   //to speedup, we spit render. This is only rendering style
   _prepareCss() {
-    this._div.style.boxShadow = 'inset 0 0 1px 1px blue'; //debug mode
+    // this._div.style.boxShadow = 'inset 0 0 1px 1px blue'; //debug mode
     if (!this._font_obj) {
       this._font_obj = UI_ROOT.getFont(this._font_id);
     }
     const font = this._font_obj;
     if (font instanceof TrueTypeFont){
-      this._div.style.setProperty('--fontMode', 'TrueType');
+      this._textWrapper.setAttribute('font', 'TrueType');
 
       // this._div.innerText = this.gettext();
       this._div.style.fontFamily = font.getFontFamily();
@@ -237,7 +239,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       
     } else if (font instanceof BitmapFont) {
       
-      this._div.style.setProperty('--fontMode', 'BitmapFont');
+      // this._div.style.setProperty('--fontMode', 'BitmapFont');
+      this._textWrapper.setAttribute('font', 'BitmapFont');
       this._div.style.setProperty('--fontSize', (this._fontSize || '~').toString());
       // this._renderBitmapFont(font);
       // font.ensureFontLoaded()
@@ -257,10 +260,11 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   _renderText() {
-      const font = this._font_obj;
-      //TODO: invalidating text width is only important when srolling?
-      this._invalidateFullWidth(font);
-      if (font instanceof BitmapFont) {
+    //TODO: invalidating text width is only important when srolling?
+    this._invalidateFullWidth();
+    
+    const font = this._font_obj;
+    if (font instanceof BitmapFont) {
         this._renderBitmapFont(font);
       } else {
         this._textWrapper.innerText = this.gettext();
@@ -317,17 +321,19 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   //   return this.gettext().length * charWidth;
   // }
   // it is needed for scrolltext.
-  _invalidateFullWidth(font: TrueTypeFont | BitmapFont){
+  _invalidateFullWidth(){
+    const font = this._font_obj;
     if (font instanceof BitmapFont) {
       this._textFullWidth = this._getBitmapFontTextWidth(font)
     } else {
-      this._textFullWidth = this._getTrueTypeTextWidth()
+      this._textFullWidth = this._getTrueTypeTextWidth(font)
     }
     this._div.style.setProperty('--full-width', px(this._textFullWidth));
   }
 
   getautowidth(): number {
     // if (this._font) {
+    this._invalidateFullWidth();
     let textWidth = this._textFullWidth; 
     // const font = this._font_obj;
     // if (font instanceof BitmapFont) 
@@ -347,7 +353,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     // this._div.setAttribute('charwidth', charWidth.toString())
     return this.gettext().length * charWidth + (this._paddingX * 2);
   }
-  _getTrueTypeTextWidth(): number {
+  _getTrueTypeTextWidth(font: TrueTypeFont): number {
     /**
     * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
     * 
@@ -357,15 +363,16 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
     */
     const self = this;
-    function gettextWidth(text, font) {
+    // function gettextWidth(text, font) {
       // re-use canvas object for better performance
       // const canvas = gettextWidth.canvas || (gettextWidth.canvas = document.createElement("canvas"));
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
-      context.font = font;
-      const metrics = context.measureText(text);
+      context.font = `${this._fontSize || 14}px ${font && font.getFontFamily() || 'Arial'}`;
+      console.log('calcTextWidth:', context.font, self.getId())
+      const metrics = context.measureText(this.gettext());
       return metrics.width + (self._paddingX*2);
-    }
+    // }
 
     // function getCssStyle(element, prop) {
     //     return window.getComputedStyle(element, null).getPropertyValue(prop);
@@ -379,7 +386,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     //   return `${fontWeight} ${fontSize} ${fontFamily}`;
     // }
 
-    return gettextWidth(this.gettext(), `${this._fontSize}px ${'Arial'}`)
+    // return gettextWidth(this.gettext(), `${this._fontSize}px ${'Arial'}`)
 
   }
 
