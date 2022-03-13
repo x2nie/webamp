@@ -5,6 +5,8 @@ import SystemObject from "./SystemObject";
 // import Layout from "./Layout";
 // import Layout = require('./Layout');
 
+let elementIncrement: number = 1;
+
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export default class Group extends GuiObj {
   static GUID = "45be95e5419120725fbb5c93fd17f1f9";
@@ -17,6 +19,9 @@ export default class Group extends GuiObj {
   _systemObjects: SystemObject[] = [];
   // _children: GuiObj[] = []; //moved to GuiObj
   _isLayout:boolean=false;
+  _regionId: string; //svg.id
+  _regionImage: HTMLElement;
+  _regionContainer: HTMLElement;
   
    setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -158,7 +163,12 @@ export default class Group extends GuiObj {
     this._renderBackground();
     for (const child of this._children) {
       child.draw();
-      this._div.appendChild(child.getDiv());
+      if(child._sysregion==-1){
+        this.putAsRegion(child);
+      }
+      else {
+        this._div.appendChild(child.getDiv());
+      }
     }
     if(this._autowidthsource){
       // this._div.style.removeProperty('width');
@@ -186,6 +196,38 @@ export default class Group extends GuiObj {
   isLayout():boolean{
     return this._isLayout;
   }
+
+  // SYSREGION THINGS ==============================
+  // addChild(child: GuiObj) {
+  //   if(child._sysregion==-1){
+  //     this.putAsRegion(child);
+  //   }
+  //   child.setParent(this as unknown as Group);
+  //   this._children.push(child);
+  // }
+
+  putAsRegion(child: GuiObj){
+    if(this._regionImage==null){
+      // const a : SVGAElement = new SVGAElement();
+      elementIncrement++;
+      this._regionId = `svgregion-${elementIncrement}`;
+      
+      const svg = this._regionImage = document.createElement('svg')
+      svg.setAttribute('id', this._regionId);
+      svg.style.position = 'absolute';
+      svg.style.width = '100%';
+      svg.style.height = '100%';      
+      const fo = this._regionContainer = document.createElement('foreignObject')
+      svg.appendChild(fo)
+      this._div.appendChild(svg);
+      this._div.style.setProperty('mask-image', `url(#${this._regionId})`)
+      this._div.style.setProperty('-webkit-mask-image', `url(#${this._regionId})`)
+    }
+
+    this._regionContainer.appendChild(child.getDiv());
+
+  }
+
 
   __logSelf(){
     const id= this.getId() || this._name;
