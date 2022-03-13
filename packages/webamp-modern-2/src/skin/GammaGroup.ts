@@ -53,7 +53,7 @@ export default class GammaGroup {
       return glTransformImage(img);
     }
     const [r, g, b] = this._value.split(",").map((v) => {
-      return (Number(v) / 4096) +1.0;
+      return (Number(v) / 4096) + (/* this._boost==2?2: */ 1.0);
     });
     const W = w || img.width;
     const H = h || img.height;
@@ -65,11 +65,11 @@ export default class GammaGroup {
     const imageData = ctx.getImageData(0, 0, W, H);
     const data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
-      if (this._boost) {
-        data[i] = (data[i] >> 1, 0, 255); // red
-        data[i + 1] = (data[i + 1] >> 1, 0, 255); // green
-        data[i + 2] = (data[i + 2] >> 1, 0, 255); // blue
-      }
+      // if (this._boost) {
+      //   data[i + 0] = (data[i + 0] >> 1, 0, 255); // red
+      //   data[i + 1] = (data[i + 1] >> 1, 0, 255); // green
+      //   data[i + 2] = (data[i + 2] >> 1, 0, 255); // blue
+      // }
       let [ir,ig,ib] = [data[i],data[i+1],data[i+2] ];
       if(this._gray != 0){
         if(this._gray==2)  ir = (ir + ig + ib)/3;
@@ -77,9 +77,26 @@ export default class GammaGroup {
         ig = ir;
         ib = ir;
       }
-      data[i] =     clamp(ir * r, 0, 255); // red
-      data[i + 1] = clamp(ig * g, 0, 255); // green
-      data[i + 2] = clamp(ib * b, 0, 255); // blue
+      const mult = /* this._boost==1? 1 : */ this._boost==2?4 : 1;
+      const brightness = this._boost==1? 128 : this._boost==2? 32 : 0;
+
+      // let [satr,satg,satb] = this._boost?[ir*1.5,ig*1.5,ib*1.5]:[0,0,0];
+      data[i] =     clamp((ir + brightness) * mult * r /** mult*/ /*+ satr*/, 0, 255); // red
+      data[i + 1] = clamp((ig + brightness) * mult * g /** mult*/ /*+ satg*/, 0, 255); // green
+      data[i + 2] = clamp((ib + brightness) * mult * b /** mult*/ /*+ satb*/, 0, 255); // blue
+
+      // if (this._boost) {
+      //   data[i + 0] = clamp((data[i + 0] + brightness) * mult , 0, 255); // red
+      //   data[i + 1] = clamp((data[i + 1] + brightness) * mult , 0, 255); // green
+      //   data[i + 2] = clamp((data[i + 2] + brightness) * mult , 0, 255); // blue
+      // }
+
+      // if (this._boost) {
+      //   data[i + 0] = clamp(data[i + 0] * mult + brightness, 0, 255); // red
+      //   data[i + 1] = clamp(data[i + 1] * mult + brightness, 0, 255); // green
+      //   data[i + 2] = clamp(data[i + 2] * mult + brightness, 0, 255); // blue
+      // }
+
     }
     ctx.putImageData(imageData, 0, 0);
     return canvas.toDataURL();
