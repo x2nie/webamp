@@ -8,6 +8,7 @@ import {
   num,
   px,
   toBool,
+  clamp,
 } from "../../utils";
 import Timer from "./Timer";
 
@@ -33,6 +34,7 @@ export default class Text extends GuiObj {
   _scrollTimer: Timer;
   _scrollDirection: -1 | 1;
   _scrollPaused: boolean = false;
+  _scrollLeft: number = 0; // logically, not visually
   _textFullWidth: number; //calculated, not runtime by css
 
   constructor() {
@@ -369,7 +371,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
       context.font = `${this._fontSize || 14}px ${font && font.getFontFamily() || 'Arial'}`;
-      console.log('calcTextWidth:', context.font, self.getId())
+      // console.log('calcTextWidth:', context.font, self.getId())
       const metrics = context.measureText(this.gettext());
       return metrics.width + (self._paddingX*2);
     // }
@@ -426,8 +428,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   
   doScrollText(){
     // console.log('scrolling!', this._textWrapper.style.left);
-    const curL = parseInt(this._textWrapper.style.left) || 0;
+    const curL = this._scrollLeft;//parseInt(this._textWrapper.style.left) || 0;
     const step = 1; //pixel
+    const idle = 20; //when overflow
     const container = this._div.getBoundingClientRect();
     // const wrapper = this._textWrapper.getBoundingClientRect();
     const wrapperWidth = this._textFullWidth;
@@ -435,14 +438,16 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     // const cw = wrapper.width;
     // var l = container.width - wrapper.width
     var l = curL + step * this._scrollDirection;
-    if(l+ wrapperWidth < container.width){ // too left
+    if(l+ wrapperWidth < container.width - (step*idle)){ // too left
       this._scrollDirection *= -1; //? flip dir!
       l = curL + step * this._scrollDirection;
     }
-    else if(l > step){ // too right
+    else if(l > (step*idle)){ // too right
       this._scrollDirection *= -1; //? flip dir!
       l = curL + step * this._scrollDirection;
     }
+    this._scrollLeft = l;
+    l = clamp(l, -(wrapperWidth - container.width), 0);
     this._textWrapper.style.left = px(Math.round(l))
 
 

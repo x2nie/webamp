@@ -850,7 +850,7 @@ export default class SkinParser {
     if(xuiEl){
         const xuiFrame = new XmlElement('groupdev',{id: xuiEl.attributes.id });
         await this.maybeApplyGroupDef(frame, xuiFrame);
-        console.warn('WasabiFrame succes to apply xuitag=', xuitag, node.attributes.id)
+        console.log('WasabiFrame succes to apply xuitag=', xuitag, node.attributes.id)
     }
     else {
       const groupdef_id = this._getWasabiGroupDef(node.name)
@@ -864,7 +864,7 @@ export default class SkinParser {
       const groupDef = this._uiRoot.getGroupDef(groupdef_id);
       if(groupDef){
         await this.maybeApplyGroupDef(frame, groupDef);
-        console.info('WasabiFrame success to apply groupDef.id=', groupdef_id)
+        console.log('WasabiFrame success to apply groupDef.id=', groupdef_id)
       } else {
         console.warn('WasabiFrame failed to apply groupDef.id=', groupdef_id)
       }
