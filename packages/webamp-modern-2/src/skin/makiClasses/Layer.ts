@@ -65,6 +65,8 @@ export default class Layer extends GuiObj {
     this._div.style.pointerEvents = this._isMouseTrap? 'auto': 'none';
     // this._div.style.pointerEvents = 'auto';
     this._div.style.display = this._sysregion==-2? 'none' : 'block';
+    this._div.style.display = 'block';
+    // this._div.style.display = this._sysregion < 0 ? 'none' : 'block';
     this._div.style.overflow = "hidden";
     this._div.classList.add("webamp--img");
     this._renderBackground();

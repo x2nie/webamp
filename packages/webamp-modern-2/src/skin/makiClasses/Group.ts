@@ -69,7 +69,7 @@ export default class Group extends GuiObj {
 
     for (const child of this._children) {
       // child.draw();
-      if(child._sysregion==-1){
+      if(child._sysregion==-1||child._sysregion==-2){
         this.putAsRegion(child);
       }
       // else {
@@ -257,7 +257,8 @@ export default class Group extends GuiObj {
     const imageData = ctx2.getImageData(0, 0, this._regionCanvas.width, this._regionCanvas.height);
     const data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
-      data[i + 3] = data[i + 1] != 255 ? 0 : data[i + 1];
+      // data[i + 3] = data[i + 1] != 255 ? 0 : data[i + 1];
+      data[i + 3] = data[i + 1];
     }
     ctx2.putImageData(imageData, 0, 0);
 
