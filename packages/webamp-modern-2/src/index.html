@@ -113,20 +113,26 @@
         background-image: inherit;
         background-size: 0px;
         position: relative;
-        line-height: 1;
+        /* line-height: 1; */
+        display: flex;
+        height: 100%;
+        width: var(--full-width);
+        align-items: center;
+        justify-content: center;
       }
       text span{
         user-select: none;
         pointer-events: none;
         display: inline-block;
         background-image: inherit;
-        vertical-align: bottom;
+        /* vertical-align: bottom; */
         color: transparent;
         width: var(--charwidth);
         height: var(--charheight);
         background-position-x: var(--x);
         background-position-y: var(--y);
         overflow: hidden;
+        flex-shrink: 0;
       }
       /* body > div *  */
       container{

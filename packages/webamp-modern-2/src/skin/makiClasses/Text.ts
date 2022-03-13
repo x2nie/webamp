@@ -33,6 +33,7 @@ export default class Text extends GuiObj {
   _scrollTimer: Timer;
   _scrollDirection: -1 | 1;
   _scrollPaused: boolean = false;
+  _textFullWidth: number; //calculated, not runtime by css
 
   constructor() {
     super()
@@ -207,11 +208,14 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   //to speedup, we spit render. This is only rendering style
   _prepareCss() {
+    this._div.style.boxShadow = 'inset 0 0 1px 1px blue'; //debug mode
     if (!this._font_obj) {
       this._font_obj = UI_ROOT.getFont(this._font_id);
     }
     const font = this._font_obj;
     if (font instanceof TrueTypeFont){
+      this._div.style.setProperty('--fontMode', 'TrueType');
+
       // this._div.innerText = this.gettext();
       this._div.style.fontFamily = font.getFontFamily();
       if(this._color){
@@ -230,7 +234,11 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         this._div.style.textAlign = this._align;
       }  
 
+      
     } else if (font instanceof BitmapFont) {
+      
+      this._div.style.setProperty('--fontMode', 'BitmapFont');
+      this._div.style.setProperty('--fontSize', (this._fontSize || '~').toString());
       // this._renderBitmapFont(font);
       // font.ensureFontLoaded()
       // const bitmap = font != null ? UI_ROOT.getBitmap(font._file) : null;
@@ -240,6 +248,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       this._div.style.setProperty('--charwidth', px(font._charWidth));
       this._div.style.setProperty('--charheight', px(font._charHeight));
     } else if (font == null) {
+      this._div.style.setProperty('--fontMode', 'Null');
       // this._div.innerText = this.gettext();
       this._div.style.fontFamily = "Arial";
     } else {
@@ -249,6 +258,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   _renderText() {
       const font = this._font_obj;
+      //TODO: invalidating text width is only important when srolling?
+      this._invalidateFullWidth(font);
       if (font instanceof BitmapFont) {
         this._renderBitmapFont(font);
       } else {
@@ -305,17 +316,26 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   //   // return this._div.getBoundingClientRect().width; // cant calc when _dif is out of document
   //   return this.gettext().length * charWidth;
   // }
+  // it is needed for scrolltext.
+  _invalidateFullWidth(font: TrueTypeFont | BitmapFont){
+    if (font instanceof BitmapFont) {
+      this._textFullWidth = this._getBitmapFontTextWidth(font)
+    } else {
+      this._textFullWidth = this._getTrueTypeTextWidth()
+    }
+    this._div.style.setProperty('--full-width', px(this._textFullWidth));
+  }
 
   getautowidth(): number {
     // if (this._font) {
-    let textWidth = 0; 
-    const font = this._font_obj;
-    if (font instanceof BitmapFont) 
-    {
-      textWidth = this._getBitmapFontTextWidth(font)
-    } else  {
-      textWidth = this._getTrueTypeTextWidth()
-    }
+    let textWidth = this._textFullWidth; 
+    // const font = this._font_obj;
+    // if (font instanceof BitmapFont) 
+    // {
+    //   textWidth = this._getBitmapFontTextWidth(font)
+    // } else  {
+    //   textWidth = this._getTrueTypeTextWidth()
+    // }
     // textWidth += this._x || 0;
     if(this._relatw=='1'){
       textWidth += this._width * -1;
@@ -373,6 +393,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     this._renderText();
     
     // this._div.style.width = "auto";
+    this._div.style.removeProperty('line-height');
+    // this._div.style.display = "block";
     this._div.classList.add("webamp--img");
 
     /*
@@ -400,12 +422,13 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     const curL = parseInt(this._textWrapper.style.left) || 0;
     const step = 1; //pixel
     const container = this._div.getBoundingClientRect();
-    const wrapper = this._textWrapper.getBoundingClientRect();
-    if(wrapper.width <= container.width) return;
+    // const wrapper = this._textWrapper.getBoundingClientRect();
+    const wrapperWidth = this._textFullWidth;
+    if(wrapperWidth <= container.width) return;
     // const cw = wrapper.width;
     // var l = container.width - wrapper.width
     var l = curL + step * this._scrollDirection;
-    if(l+ wrapper.width < container.width){ // too left
+    if(l+ wrapperWidth < container.width){ // too left
       this._scrollDirection *= -1; //? flip dir!
       l = curL + step * this._scrollDirection;
     }

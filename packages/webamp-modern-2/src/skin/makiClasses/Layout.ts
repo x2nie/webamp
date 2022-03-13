@@ -88,6 +88,18 @@ export default class Layout extends Group {
     // TODO:
   }
 
+  getsnapadjustbottom():number{
+    return 100;
+  }
+
+  clienttoscreenh(h:number):number {
+    return h;
+  }
+
+  islayoutanimationsafe():boolean {
+    return true;
+  }
+
   draw() {
     super.draw();
     // this._div.setAttribute("data-obj-name", "Layout");
