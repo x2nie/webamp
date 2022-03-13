@@ -1707,6 +1707,9 @@ export default class SystemObject extends BaseObject {
     return str;
   }
 
+  isvideo(): number {
+    return 0;
+  }
   isvideofullscreen(): number {
     return 0;
   }
