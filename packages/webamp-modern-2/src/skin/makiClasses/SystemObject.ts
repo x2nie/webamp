@@ -5,7 +5,7 @@ import Container from "./Container";
 import { clamp, integerToTime } from "../../utils";
 import Group from "./Group";
 import PRIVATE_CONFIG from "../PrivateConfig";
-import UI_ROOT from "../../UIRoot";
+import UI_ROOT, { UIRoot } from "../../UIRoot";
 import GuiObj from "./GuiObj";
 import SkinParser from "../parse";
 import AUDIO_PLAYER from "../AudioPlayer";
@@ -23,6 +23,7 @@ document.addEventListener("mousemove", (e: MouseEvent) => {
 export default class SystemObject extends BaseObject {
   static GUID = "d6f50f6449b793fa66baf193983eaeef";
   _parentGroup: Group;
+  _parentNoOne: UIRoot; //if has no _parentGroup, we formally set
   _parsedScript: ParsedMaki;
   _param: string;
   _id: string;
@@ -57,6 +58,15 @@ export default class SystemObject extends BaseObject {
     initialVariable.value = this;
 
     UI_ROOT.vm.addScript(this._parsedScript);
+    
+    if(this._parentGroup){
+      console.log('ScriptLoadeding', this._id, this._parentGroup.getId())
+    } else if(this._parentNoOne){
+      console.log('ScriptLoadeding', this._id, 'UiRoot')
+    } else {
+      console.log('ScriptLoadeding', this._id, 'DORMAN!!!!!!!!!!!!!!!!!!!1')
+    }
+
     UI_ROOT.vm.dispatch(this, "onscriptloaded");
   }
 

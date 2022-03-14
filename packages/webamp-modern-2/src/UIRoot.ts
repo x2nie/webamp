@@ -3,7 +3,7 @@ import JSZip, { JSZipObject } from "jszip";
 import SkinParser from "./skin/parse";
 import { XmlElement } from "@rgrove/parse-xml";
 import TrueTypeFont from "./skin/TrueTypeFont";
-import { assert, assume, findLast, getCaseInsensitiveFile } from "./utils";
+import { assert, assume, findLast, getCaseInsensitiveFile, removeAllChildNodes } from "./utils";
 import BitmapFont from "./skin/BitmapFont";
 import Color from "./skin/Color";
 import GammaGroup from "./skin/GammaGroup";
@@ -52,6 +52,7 @@ export class UIRoot {
     this._containers = [];
     this._systemObjects = [];
     this._gammaNames = {};
+    removeAllChildNodes(this._div)
 
     // A list of all objects created for this skin.
     this._objects = [];
@@ -504,12 +505,16 @@ export class UIRoot {
   /* because maki need to be run if not inside any Group @init() */
   addSystemObject(systemObj: SystemObject) {
     // systemObj.setParentGroup(this);
+    systemObj._parentNoOne = this;
     this._systemObjects.push(systemObj);
   }
   init(){
     for (const systemObject of this._systemObjects) {
       systemObject.init();
     }
+  }
+  getId(){
+    return 'UIROOT';
   }
 }
 

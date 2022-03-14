@@ -55,9 +55,9 @@ async function loadSkinPathOrName(skinPath:string){
     const response = await fetch(skinPath+"skin.xml");
     const data = await response.text();
     if(data) {
+      UI_ROOT.reset();
       UI_ROOT.setZip(null);
       UI_ROOT.setSkinDir(skinPath);
-      UI_ROOT.reset();
       document.body.appendChild(UI_ROOT.getRootDiv());
       setStatus("Loading skin from path...");
       await loadSkinXML(data);

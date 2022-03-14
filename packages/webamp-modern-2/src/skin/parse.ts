@@ -1,4 +1,4 @@
-import parseXml, { XmlDocument, XmlElement } from "@rgrove/parse-xml";
+import parseXml, { XmlComment, XmlDocument, XmlElement, XmlText } from "@rgrove/parse-xml";
 import { assert, getCaseInsensitiveFile, assume } from "../utils";
 import Bitmap from "./Bitmap";
 import ImageManager from "./ImageManager";
@@ -39,12 +39,26 @@ class ParserContext {
 
 // let _CURRENT_PARSER: SkinParser;
 
+const RESOURCE_PHASE = 1; //full async + Promise.all()
+const ResourcesTag = [
+    //'groupdef',//'wrapper',
+    'color', 'bitmap', //'bitmapfont',
+    // 'script', //'scripts', 
+    'skininfo', 
+    //'elements', 
+    'accelerators', //'gammaset','gammagroup'
+  ]
+  
+
+const GROUP_PHASE = 2; //full sync mode, because of inheritance
+
 export default class SkinParser {
   _imageManager: ImageManager;
   _path: string[] = [];
-  // _context: ParserContext = new ParserContext();
-  // _gammaSet: GammaGroup[] = [];
+  _includedXml = {}; // {file:xmlelement}
+  _scripts = {}; // {file:SystemObject}
   _uiRoot: UIRoot;
+  _phase: number = 0;
   _res = {
     bitmaps: {
       // 'studio.basetexture': false,
@@ -59,7 +73,8 @@ export default class SkinParser {
       'studio.scrollbar.horizontal.right': false,
       'studio.scrollbar.horizontal.button': false,
     }, 
-    colors: {} }; //requested by skin, later compared with UiRoot._bitmaps
+    colors: {} 
+  }; //requested by skin, later compared with UiRoot._bitmaps
   
 
   constructor(
@@ -85,8 +100,14 @@ export default class SkinParser {
     // A different XML parser library might make this unnessesary.
     const parsed = parseXml(includedXml) as unknown as  XmlElement;
 
+    console.log('RESOURCE_PHASE #################');
+    this._phase = RESOURCE_PHASE;
     await this.traverseChildren(parsed) ;
     await this._resolveRes()
+    
+    console.log('GROUP_PHASE #################');
+    this._phase = GROUP_PHASE;
+    await this.traverseChildren(parsed) ;
 
     return this._uiRoot;
   }
@@ -140,11 +161,25 @@ export default class SkinParser {
   }
 
   async traverseChildren(node: XmlElement, parent: any = null) {
-    for (const child of node.children) {
-      if (child instanceof XmlElement) {
-        // console.log('traverse->', parent.name, child.name)
-        this._scanRes(child);
-        await this.traverseChild(child, parent);
+    if(this._phase == RESOURCE_PHASE){
+      return await Promise.all(
+        node.children.map( (child) => {
+          if (child instanceof XmlElement) {
+            // console.log('traverse->', parent.name, child.name)
+            this._scanRes(child);
+            return this.traverseChild(child, parent);
+          }
+        })
+      )
+    } 
+    else 
+    {
+      for (const child of node.children) {
+        if (child instanceof XmlElement) {
+          // console.log('traverse->', parent.name, child.name)
+          // this._scanRes(child);
+          await this.traverseChild(child, parent);
+        }
       }
     }
   }
@@ -177,7 +212,7 @@ export default class SkinParser {
       case "bitmap":
         return this.bitmap(node);
       case "bitmapfont":
-        return this.bitmapFont(node);
+        return await this.bitmapFont(node);
       case "color":
         return await this.color(node, parent);
       case "groupdef":
@@ -442,18 +477,40 @@ export default class SkinParser {
     let { file, id, param } = node.attributes;
     assert(file != null, "Script element missing `file` attribute");
     if(file.startsWith('../Winamp Modern/')){
-      file = file.replace('../Winamp Modern/','')
+      file = file.replace('../Winamp Modern/','');
+      node.attributes.file = file;
     }
     // assert(id != null, "Script element missing `id` attribute");
 
-    const scriptContents: ArrayBuffer = await this._uiRoot.getFileAsBytes(file);
-    assert(scriptContents != null, `ScriptFile file not found at path ${file}`);
+    let maki = this._scripts[file];
+    
+    if(!maki){
+      this._scripts[file] = true;//just a signal to not load it twice.
 
-    // TODO: Try catch?
-    const parsedScript = parseMaki(scriptContents);
+      
+      const scriptContents: ArrayBuffer = await this._uiRoot.getFileAsBytes(file);
+      assert(scriptContents != null, `ScriptFile file not found at path ${file}`);
+      
+      // TODO: Try catch?
+      // const parsedScript = parseMaki(scriptContents);
+      
+      // const systemObj = new SystemObject(id, parsedScript, param);
+      // systemObj.___id = id;
+
+      // this._scripts[file] = parsedScript;
+      this._scripts[file] = scriptContents;
+      return;
+    }
+
+    if(this._phase==RESOURCE_PHASE){
+      //some maki may included in several place.
+      //ignore for now
+      return
+    }
+
+    const parsedScript = parseMaki(maki);
 
     const systemObj = new SystemObject(id, parsedScript, param);
-    // systemObj.___id = id;
 
     // TODO: Need to investigate how scripts find their group. In corneramp, the
     // script itself is not in any group. `xml/player.xml:8
@@ -461,6 +518,7 @@ export default class SkinParser {
       parent.addSystemObject(systemObj);
     } else {
       // Script archives can also live in <groupdef /> but we don't know how to do that.
+      console.log('>>ScriptLoad at non group: ', `@${file}`, typeof parent, parent==null?'NULL???????':parent)
       UI_ROOT.addSystemObject(systemObj);
     }
   }
@@ -980,65 +1038,128 @@ export default class SkinParser {
   async include(node: XmlElement, parent: any) {
     const { file, parent_path } = node.attributes;
     assert(file != null, "Include element missing `file` attribute");
-
-    const parent_dir = parent_path? parent_path.split("/"): [];
-
-    const directories = file.replace('@DEFAULTSKINPATH@','').split("/");
-    const fileName = directories.pop();
-
-    const path = [...parent_dir, ...directories, fileName].join("/");
-    // console.log('build-path.', `parentdir:${parent_dir}; curdir:${directories}; file:${fileName}`)
-
-    let includedXml;
-    try{
-      console.info(`trying to load: ${path}. par: "${parent_path}"`);
-      includedXml  = await this._uiRoot.getFileAsString(path);
-    } catch(err) {
-      console.warn(`botFailed to load: ${path}. par:${parent_path}`);
-    }
-    // const includedXml = await this._uiRoot.getFileAsString(path);
-    if (includedXml == null) {
-      console.warn(`Zip file not found: ${path} out of: `);
-      return;
-    }
-
-    // Note: Included files don't have a single root node, so we add a synthetic one.
-    // A different XML parser library might make this unnessesary.
-    const parsed = parseXmlFragment(includedXml);
-
-    const current_dir = [...parent_dir,...directories].join('/')
-
-    var self = this;
-    // const recursiveScanChildren = (mother: XmlElement) => {
-    function recursiveScanChildren(mother: XmlElement) {
-      var nonGroupDefs = [];    
-      for(const element of mother.children)
-      {
-        if(element instanceof XmlElement) 
-        {
-          // recursiveScanChildren(element);
-          const lower = element.name.toLowerCase();
-          if(lower=='groupdef')
-          {
-            self._uiRoot.addGroupDef(element);
-            continue;
-          } 
-          else if(lower=='include')
-          {
-            element.attributes.parent_path = current_dir;
-            element.attributes['parent_path'] = current_dir;
-          }
-          recursiveScanChildren(element);
-          nonGroupDefs.push(element)  
-        }
-        // else {
-        //   console.warn('not Element:', element.type, element.toJSON())
-        // }
+    const promises = [];
+    const includes = [];
+    
+    let savedDocument = this._includedXml[file];
+    if(!savedDocument)
+    {
+      this._includedXml[file] = true; //just immediatelly
+      
+      const parent_dir = parent_path? parent_path.split("/"): [];
+      
+      const directories = file.replace('@DEFAULTSKINPATH@','').split("/");
+      const fileName = directories.pop();
+      
+      const path = [...parent_dir, ...directories, fileName].join("/");
+      // console.log('build-path.', `parentdir:${parent_dir}; curdir:${directories}; file:${fileName}`)
+      
+      let includedXml:string;
+      try{
+        console.info(`trying to load: ${path}. par: "${parent_path}"`);
+        includedXml  = await this._uiRoot.getFileAsString(path);
+      } catch(err) {
+        console.warn(`botFailed to load: ${path}. par:${parent_path}`);
       }
-      //replace children
-      mother.children.splice(0, mother.children.length, ...nonGroupDefs);
+      // const includedXml = await this._uiRoot.getFileAsString(path);
+      if (includedXml == null) {
+        console.warn(`Zip file not found: ${path} out of: `);
+        return;
+      }
+      
+      
+      
+      const current_dir = [...parent_dir,...directories].join('/')
+      
+      var self = this;
+      // const recursiveScanChildren = (mother: XmlElement) => {
+      function recursiveScanChildren(mother: XmlElement) {
+        var nonGroupDefs = [];    
+        for(const element of mother.children)
+        {
+          if(element instanceof XmlComment || element instanceof XmlText) {
+            continue;
+          }
+          else
+          if(element instanceof XmlElement) 
+          {
+            // recursiveScanChildren(element);
+            const lower = element.name.toLowerCase();
+            if(lower=='groupdef') {
+              recursiveScanChildren(element);
+              self._uiRoot.addGroupDef(element);
+              continue;
+            } else 
+            if(lower=='elements') {
+              recursiveScanChildren(element);
+              continue;
+            } else 
+            if(ResourcesTag.indexOf(lower) >=0){
+              if(lower=='script') {
+                console.log('ScriptLoadFound:',element.attributes.file);
+              }
+              console.log('removed:',lower)
+              promises.push(
+                self.traverseChild(element, parent)
+                );
+              continue;
+            }
+            // else if(lower=='script') {
+            //   console.log('ScriptLoadFound:',element.attributes.file);
+            // }
+            else if(lower=='script') {
+              console.log('not removed:',lower)
+              promises.push(
+                self.script(element, parent)
+              );
+              // not "continue", let element reparse later
+            } 
+            // else if(lower=='groupdef')
+            // {
+            //   self._uiRoot.addGroupDef(element);
+            //   continue;
+            // } 
+            else if(lower=='include')
+            {
+              element.attributes.parent_path = current_dir;
+              element.attributes['parent_path'] = current_dir;
+              includes.push(element); //recursive soon
+              
+            }
+            recursiveScanChildren(element);
+            nonGroupDefs.push(element)  
+          }
+        }
+        //replace children
+        mother.children.splice(0, mother.children.length, ...nonGroupDefs);
+      } //eof function
+      
+      // Note: Included files don't have a single root node, so we add a synthetic one.
+      // A different XML parser library might make this unnessesary.
+      savedDocument = parseXmlFragment(includedXml);
+      recursiveScanChildren(savedDocument);
+      
+      this._includedXml[file] = savedDocument;
+
+      for(const element of includes){
+        promises.push(
+          self.include(element, parent)
+        );
+      }
+      return Promise.all(promises)
+      
+      // return Promise.all([
+      //   ...promises,
+      //   this.scanIncludes(savedDocument, parent)
+      // ])
     }
-    recursiveScanChildren(parsed);
+
+    if(this._phase==RESOURCE_PHASE){
+      //some maki may included in several place.
+      //ignore for now
+      return
+    }
+    
     // for(const element of wrapper.children)
     // {
     //   if(element instanceof XmlElement)
@@ -1047,10 +1168,24 @@ export default class SkinParser {
     // }
     //replace children
     // parsed.children.splice(0, parsed.children.length, ...nonGroupDefs);
-
+    
     // await this.traverseChildren({children:}, parent);
-    await this.traverseChildren(parsed, parent);
+    // return Promise.all([
+    //   ...promises,
+    //   /* await */ this.traverseChildren(savedDocument, parent)
+    // ])
+    await this.traverseChildren(savedDocument, parent);
 
+  }
+
+  async scanIncludes(node: XmlElement, parent: any) {
+    return await Promise.all(
+      node.children.map( (child) => {
+        if (child instanceof XmlElement && child.name.toLowerCase()=='include') {
+          return this.include(child, parent);
+        }
+      })
+    )
   }
 
   skininfo(node: XmlElement, parent: any) {
