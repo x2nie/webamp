@@ -59,13 +59,13 @@ export default class SystemObject extends BaseObject {
 
     UI_ROOT.vm.addScript(this._parsedScript);
     
-    if(this._parentGroup){
-      console.log('ScriptLoadeding', this._id, this._parentGroup.getId())
-    } else if(this._parentNoOne){
-      console.log('ScriptLoadeding', this._id, 'UiRoot')
-    } else {
-      console.log('ScriptLoadeding', this._id, 'DORMAN!!!!!!!!!!!!!!!!!!!1')
-    }
+    // if(this._parentGroup){
+    //   console.log('ScriptLoadeding', this._id, this._parentGroup.getId())
+    // } else if(this._parentNoOne){
+    //   console.log('ScriptLoadeding', this._id, 'UiRoot')
+    // } else {
+    //   console.log('ScriptLoadeding', this._id, 'DORMAN!!!!!!!!!!!!!!!!!!!1')
+    // }
 
     UI_ROOT.vm.dispatch(this, "onscriptloaded");
   }

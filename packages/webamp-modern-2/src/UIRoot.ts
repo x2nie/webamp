@@ -323,7 +323,7 @@ export class UIRoot {
       return `var(${bitmap.getCSSVar()})`
     }
     function _color(id: string){
-      const color = self.getColor('studio.list.text');
+      const color = self.getColor(id);
       if(!color){
         return `inherit /* not found color: ${id} */`
       }
@@ -337,21 +337,21 @@ export class UIRoot {
 
     /* Track */
     ::-webkit-scrollbar-track {
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.background')};
+        background-image: ${_bitmapVar('wasabi.scrollbar.vertical.background')};
     }
     ::-webkit-scrollbar-button {
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.left')};
+        background-image: ${_bitmapVar('wasabi.scrollbar.vertical.left')};
       }
     ::-webkit-scrollbar-button:vertical {
         height: 18px;
     }
     ::-webkit-scrollbar-button:vertical:increment {
-      background-image: ${_bitmapVar('studio.scrollbar.vertical.right')};
+      background-image: ${_bitmapVar('wasabi.scrollbar.vertical.right')};
     }
     
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background-image: ${_bitmapVar('studio.scrollbar.vertical.button')};
+        background-image: ${_bitmapVar('wasabi.scrollbar.vertical.button')};
         /*background-repeat: repeat;*/
     }
     ::-webkit-scrollbar-thumb {
@@ -377,19 +377,19 @@ export class UIRoot {
     }
     /* Track */
     ::-webkit-scrollbar-track:horizontal {
-        background-image: ${_bitmapVar('studio.scrollbar.horizontal.background')};
+        background-image: ${_bitmapVar('wasabi.scrollbar.horizontal.background')};
     }
     /* Handle */
     ::-webkit-scrollbar-thumb:horizontal {
-        background-image: ${_bitmapVar('studio.scrollbar.horizontal.button')};
+        background-image: ${_bitmapVar('wasabi.scrollbar.horizontal.button')};
         
     }
     ::-webkit-scrollbar-button:horizontal {
-        background-image: ${_bitmapVar('studio.scrollbar.horizontal.left')};
+        background-image: ${_bitmapVar('wasabi.scrollbar.horizontal.left')};
         width: 17px;
     }
     ::-webkit-scrollbar-button:horizontal:increment {
-        background-image: ${_bitmapVar('studio.scrollbar.horizontal.right')};
+        background-image: ${_bitmapVar('wasabi.scrollbar.horizontal.right')};
     }
     ::-webkit-scrollbar-corner {
         background: transparent;
@@ -397,7 +397,7 @@ export class UIRoot {
     /* ---------- EOF SCROLLBAR ------------ */
 
     select option {
-      color: ${_color('studio.list.text')};
+      color: ${_color('wasabi.list.text')};
     }
 
     `

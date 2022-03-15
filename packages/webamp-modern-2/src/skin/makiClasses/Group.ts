@@ -69,14 +69,16 @@ export default class Group extends GuiObj {
       child.init();
     }
 
+    let hasRegions = false;
     for (const child of this._children) {
       // child.draw();
       if(child._sysregion==-1||child._sysregion==-2){
         this.putAsRegion(child);
+        hasRegions = true;
       }
-      // else {
-        // this._div.appendChild(child.getDiv());
-      // }
+    }
+    if(hasRegions){
+      this.setRegion()
     }
   }
 
@@ -225,7 +227,7 @@ export default class Group extends GuiObj {
       const bound = this._div.getBoundingClientRect();
       canvas.width  = bound.width;
       canvas.height = bound.height;
-      console.log('createRegionCanvas:', bound.width, bound.height)
+      // console.log('createRegionCanvas:', bound.width, bound.height)
       const ctx = canvas.getContext("2d");
       // const fs = ctx.fillStyle;
       ctx.fillStyle = 'white';
@@ -254,10 +256,18 @@ export default class Group extends GuiObj {
       // bitmap._width, bitmap._height
       // 500, 500
       );
-    console.log('createDraw:',  child._div.offsetLeft - bitmap._x, 
-    child._div.offsetTop - bitmap._y, 
-    r.width, r.height,
-    r)
+    // console.log('createDraw:',  child._div.offsetLeft - bitmap._x, 
+    // child._div.offsetTop - bitmap._y, 
+    // r.width, r.height,
+    // r)
+  }
+
+  setRegion(){
+    if(this._regionCanvas.width==0 || this._regionCanvas.height==0){
+      return
+    }
+
+    const ctx2 = this._regionCanvas.getContext("2d");
 
     const imageData = ctx2.getImageData(0, 0, this._regionCanvas.width, this._regionCanvas.height);
     const data = imageData.data;

@@ -739,7 +739,7 @@ export default class GuiObj extends XmlObj {
    * @param  alpha   The alpha value.
    */
   setalpha(alpha: number) {
-    console.log('setalpha', this.getId(), ':', alpha)
+    // console.log('setalpha', this.getId(), ':', alpha)
     this._alpha = alpha;
     this._renderAlpha();
   }
