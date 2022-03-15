@@ -403,6 +403,7 @@ export default class SkinParser {
     // const found = this._uiRoot.getFileIsExist(node.attributes.file);
     // if(!found){
       const bitmap = this._uiRoot.getBitmap(node.attributes.file)
+      // console.log('BitmapFont', font.getId(), font._file, bitmap?bitmap._file:'NonBmp')
       if(bitmap){
         font.setXmlAttr('file', bitmap._file);
         if(!font._gammagroup)
@@ -414,7 +415,8 @@ export default class SkinParser {
     // await font.ensureFontLoaded(this._imageManager);
     await font.ensureImageLoaded(this._imageManager);
 
-    this._uiRoot.addFont(font);
+    if(font._img)
+      this._uiRoot.addFont(font);
   }
 
   async text(node: XmlElement, parent: any): Promise<Text> {
@@ -1090,10 +1092,10 @@ export default class SkinParser {
               self._uiRoot.addGroupDef(element);
               continue;
             } else 
-            if(lower=='elements') {
-              recursiveScanChildren(element);
-              continue;
-            } else 
+            // if(lower=='elements') {
+            //   recursiveScanChildren(element);
+            //   continue;
+            // } else 
             if(ResourcesTag.indexOf(lower) >=0){
               if(lower=='script') {
                 console.log('ScriptLoadFound:',element.attributes.file);
