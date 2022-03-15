@@ -264,8 +264,13 @@ export class UIRoot {
 
   async _setCssVars() {
     const bitmapFonts: BitmapFont[] = this._fonts.filter(f => (f instanceof BitmapFont && !f._externalBitmap) ) as BitmapFont[];
-    const cssRules = await this._generateGammas([...this._bitmaps, ...bitmapFonts])
     
+    const start = performance.now();
+    const cssRules = await this._generateGammas([...this._bitmaps, ...bitmapFonts])
+    const end = performance.now();
+    console.log(`Transforming Gamma took: ${(end - start) / 1000}s`);
+
+
     cssRules.unshift(':root{')
     cssRules.push('}')
     const cssEl = document.getElementById('bitmap-css');

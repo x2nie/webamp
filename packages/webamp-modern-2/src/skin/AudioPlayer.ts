@@ -1,4 +1,12 @@
 import { clamp, Emitter } from "../utils";
+// import {jsmediatags} from "./vendor/jsmediatags.min.js";
+// import MediaTagReader from "jsmediatags/build2/MediaTagReader";
+// import * as jsmediatags from 'jsmediatags';
+// import { Tags } from "jsmediatags/types";
+// import * as ID3 from 'music-metadata-browser';
+import { parse } from 'id3-parser';
+import { convertFileToBuffer, fetchFileAsBuffer } from 'id3-parser/lib/universal/helpers';
+import universalParse from 'id3-parser/lib/universal';
 
 const BANDS = [60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000];
 
@@ -21,6 +29,8 @@ export class AudioPlayer {
   _listeners = new Map();
   _onceListeners = new Map();
   _triggerdLabels = new Map();
+  _trackInfo: {};
+  _albumArtUrl : string = null;
 
   constructor() {
     this._context = this._context = new (window.AudioContext ||
@@ -48,7 +58,8 @@ export class AudioPlayer {
       document.body.addEventListener("click", resume, false);
       document.body.addEventListener("keydown", resume, false);
     }
-    this._audio.src = "assets/Just_Plain_Ant_-_05_-_Stumble.mp3";
+    this._audio.src = "/assets/Just_Plain_Ant_-_05_-_Stumble.mp3";
+    this.readId3( this._audio.src )
     //"https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Auto-Pilot_-_03_-_Seventeen.mp3";
     this._input.type = "file";
 
@@ -100,6 +111,119 @@ export class AudioPlayer {
     //TODO: in future, when ended: play next mp3
     this._audio.addEventListener("ended", ()=> this.stop());
   }
+
+  async readId3(track:string) {
+    let url;
+
+    
+
+      if (track.startsWith('http')) {
+          url = track;
+      } else if (track.startsWith('/')) {
+          url = window.location.origin + track;
+      } else {
+          url = window.location.origin + window.location.pathname + track;
+      }
+
+      universalParse(url).then(tag => {
+        console.log('ID3:',tag);
+        const byteArray = new Uint8Array(tag.image.data);
+        const blob = new Blob([byteArray], { type: tag.image.mime });
+        this._albumArtUrl = URL.createObjectURL(blob);
+        // const url = `url(data:${tag.image.mime};base64,${base64})`;
+      });
+    /* try {
+      let url;
+
+      if (track.startsWith('http')) {
+          url = track;
+      } else if (track.startsWith('/')) {
+          url = window.location.origin + track;
+      } else {
+          url = window.location.origin + window.location.pathname + track;
+      }
+      const options = {
+        duration: true,
+        skipPostHeaders: true, // avoid unnecessary data to be read
+      };
+      const metadata = await ID3.fetchFromUrl(url, options)// await genMediaTags(file, await requireMusicMetadata());
+      // There's more data here, but we don't have a use for it yet:
+      const { artist, title, album, picture } = metadata.common;
+      const { numberOfChannels, bitrate, sampleRate } = metadata.format;
+      // let albumArtUrl = null;
+      if (picture && picture.length >= 1) {
+        const byteArray = new Uint8Array(picture[0].data);
+        const blob = new Blob([byteArray], { type: picture[0].format });
+        this._albumArtUrl = URL.createObjectURL(blob);
+      }
+      console.log('MP3ID3', metadata)
+      
+    } catch (e) {
+      //dispatch({ type: MEDIA_TAG_REQUEST_FAILED, id });
+      console.warn('Failed to read ID3:', e)
+    } */
+    /*return new Promise((resolve, reject) => {
+        let url;
+
+        if (track.startsWith('http')) {
+            url = track;
+        } else if (track.startsWith('/')) {
+            url = window.location.origin + track;
+        } else {
+            url = window.location.origin + window.location.pathname + track;
+        }
+
+        
+
+        jsmediatags.read(url, {
+            onSuccess: (tags) => {
+              console.log('ID3:',tags)
+                let trackInfo = this._trackInfo = tags.tags;
+
+                // if (trackInfo.artist && trackInfo.title) {
+                //     trackInfo.name = `${trackInfo.artist} - ${trackInfo.title}`;
+                // }
+
+                // if (trackInfo.title) {
+                //     trackInfo.titleOrFilename = trackInfo.title;
+                // }
+
+                // if (trackInfo.artist) {
+                //     trackInfo.artistOrFilename = trackInfo.artist;
+                // }
+
+                // if (trackInfo.track) {
+                //     trackInfo.trackNumber = parseInt(trackInfo.track.split('/')[0]);
+                // }
+
+                if (trackInfo.picture) {
+                    let base64 = btoa(String.fromCharCode.apply(null, trackInfo.picture.data));
+
+                    trackInfo.picture = Object.assign(trackInfo.picture, {
+                        base64: 'data:' + trackInfo.picture.format + ';base64,' + base64
+                    });
+
+                    // trackInfo.albumCover = trackInfo.picture;
+                }
+
+                // if (tags.tags.TYER || tags.tags.TDRC) {
+                //     trackInfo.year = tags.tags.TYER ? parseInt(tags.tags.TYER.data) : (
+                //         tags.tags.TDRC ? parseInt(tags.tags.TDRC.data) : null
+                //     )
+                // }
+
+                // trackInfo._loaded = true;
+
+                resolve(trackInfo);
+            },
+            onError: (error) => {
+              console.log('ID3:',error)
+                reject(error);
+            }
+        });
+    }); */
+  }
+
   // 0-1
   getVolume(): number {
     return this._audio.volume;

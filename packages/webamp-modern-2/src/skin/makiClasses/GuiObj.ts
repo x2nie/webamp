@@ -203,7 +203,7 @@ export default class GuiObj extends XmlObj {
       const targets_ids = node.attributes.target.split(';')
       for(const target_id of targets_ids){
         // individual target
-        const gui= el.findobjectF(target_id, `<${cmd}(${target_id})->failed. NOTFOUND. @${this.getId()}`); 
+        const gui= el.findobjectF(target_id, `<${cmd}(${target_id})=notfound. @${this.getId()}`); 
         if(gui==null){
           // console.warn('  --',cmd, 'failed:not-found:',target_id, '@'+this.getId());
           continue;
