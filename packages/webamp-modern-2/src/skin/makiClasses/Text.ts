@@ -73,6 +73,7 @@ export default class Text extends GuiObj {
       case "font":
         // (id) The id of a bitmapfont or truetypefont element. If no element with that id can be found, the OS will be asked for a font with that name instead.
         this._font_id = value;
+        this.ensureFontSize();
         this._prepareCss();
         // this._renderText();
         break;
@@ -84,6 +85,7 @@ export default class Text extends GuiObj {
         // (int) The size to render the chosen font.
         this._fontSize = num(value);
         //this._renderText(); // 
+        this.ensureFontSize();
         this._invalidateFullWidth()
         break;
       case "color":
@@ -122,6 +124,20 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         return false;
     }
     return true;
+  }
+
+  ensureFontSize(){
+    if (this._font_obj instanceof TrueTypeFont && this._fontSize){
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      context.font = `${this._fontSize}px ${this._font_obj.getFontFamily() || 'Arial'}`;
+      // console.log('calcTextWidth:', context.font, self.getId())
+      const metrics = context.measureText('IWH');
+      const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+
+      // this._fontSize = this._fontSize * (1 + ((fontHeight - this._fontSize ) / this._fontSize));
+      this._fontSize = this._fontSize * (1 - ((fontHeight - this._fontSize ) / this._fontSize));
+    }
   }
 
   init(){
