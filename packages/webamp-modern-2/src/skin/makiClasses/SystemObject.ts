@@ -49,7 +49,7 @@ export default class SystemObject extends BaseObject {
     });
   }
 
-  init() {
+  async init() {
     // dumpScriptDebug(this._parsedScript);
     const initialVariable = this._parsedScript.variables[0];
     if (initialVariable.type !== "OBJECT") {

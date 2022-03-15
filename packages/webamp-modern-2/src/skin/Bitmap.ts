@@ -26,11 +26,7 @@ export default class Bitmap {
     switch (key) {
       case "id":
         this._id = value;
-        this._cssVar = `--bitmap-${this.getId().replace(
-          /[^a-zA-Z0-9]/g,
-          "-"
-        )}-${getId()}`;
-        this._cssVar = `--bitmap-${this.getId().replace(/[^a-zA-Z0-9]/g,"-")}`;//x2nie
+        this._cssVar = `--bitmap-${this.getId().replace(/[^a-zA-Z0-9]/g,"-")}`;
         break;
       case "x":
         this._x = num(value) ?? 0;
@@ -90,11 +86,13 @@ export default class Bitmap {
       "Tried to ensure a Bitmap was laoded more than once."
     );
 
+    //force. also possibly set null:
     this._img = await imageManager.getImage(this._file);
-
-    if (this._width == null && this._height == null) {
-      this.setXmlAttr("w", String(this._img.width));
-      this.setXmlAttr("h", String(this._img.height));
+    if(this._img){
+      if (this._width == null && this._height == null) {
+        this.setXmlAttr("w", String(this._img.width));
+        this.setXmlAttr("h", String(this._img.height));
+      }
     }
 
     // this.setUrl(imgUrl);

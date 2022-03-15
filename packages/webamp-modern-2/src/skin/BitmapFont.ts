@@ -1,3 +1,4 @@
+import UI_ROOT from "../UIRoot";
 import { num, px } from "../utils";
 import Bitmap from "./Bitmap";
 import ImageManager from "./ImageManager";
@@ -20,7 +21,9 @@ export default class BitmapFont extends Bitmap {
   _charHeight: number;
   _horizontalSpacing: number;
   _verticalSpacing: number;
-  _url: string;
+  _externalBitmap: boolean = false; //? true == _file = another.bitmap.id
+  _bitmap: Bitmap = null;// the real external bitmap
+  // _url: string;
   // _gammagroup: string;
 
   // setXmlAttributes(attributes: { [attrName: string]: string }) {
@@ -62,6 +65,20 @@ export default class BitmapFont extends Bitmap {
     }
     return true;
   }
+
+  _setAsBackground(div: HTMLElement, prefix: string) {
+    if(this._externalBitmap){
+      if(!this._bitmap){
+        this._bitmap = UI_ROOT.getBitmap(this._file)
+      }
+      if(this._bitmap != null){
+        this._bitmap._setAsBackground(div, prefix);
+      }
+    } else {
+      super._setAsBackground(div, prefix)
+    }
+  }
+
 
   // getId() {
   //   return this._id;

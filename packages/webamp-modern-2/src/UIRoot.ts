@@ -223,9 +223,13 @@ export class UIRoot {
 
   _setCssVars() {
     const cssRules = []
-    const bitmapFonts: BitmapFont[] = this._fonts.filter(f => f instanceof BitmapFont) as BitmapFont[];
+    const bitmapFonts: BitmapFont[] = this._fonts.filter(f => (f instanceof BitmapFont && !f._externalBitmap) ) as BitmapFont[];
     for (const bitmap of [...this._bitmaps, ...bitmapFonts]) {
       const img = bitmap.getImg();
+      if(!img){
+        console.warn(`Bitmap/font ${bitmap.getId()} has no img!`);
+        continue;
+      }
       // const url = img.src;
       
       const groupId = bitmap.getGammaGroup();

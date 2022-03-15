@@ -93,17 +93,21 @@ async function loadWalBlob(skinData: Blob) {
 }
 
 async function loadSkinXML(skinXmlContent:string) {
+  let start, end;
   
   
   setStatus("Parsing XML and initializing images...");
   const parser = new SkinParser(UI_ROOT);
 
   // This is always the same as the global singleton.
+  start = performance.now();
   const uiRoot = await parser.parse(skinXmlContent);
+  end = performance.now();
+  console.log(`Parsing skin took: ${(end - start) / 1000}s`);
 
-  const start = performance.now();
+  start = performance.now();
   uiRoot.enableDefaultGammaSet();
-  const end = performance.now();
+  end = performance.now();
   console.log(`Loading initial gamma took: ${(end - start) / 1000}s`);
 
   setStatus("Rendering skin for the first time...");

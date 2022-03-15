@@ -282,7 +282,7 @@ export default class GuiObj extends XmlObj {
    * Trigger the show event.
    */
   show() {
-    console.log('show()', this?'obj':'null', this._name, this.getId())
+    // console.log('show()', this?'obj':'null', this._name, this.getId())
     this._visible = true;
     this._renderVisibility();
   }
@@ -291,7 +291,7 @@ export default class GuiObj extends XmlObj {
    * Trigger the hide event.
    */
   hide() {
-    console.log('hide()', this?'obj':'null', this._name, this.getId())
+    // console.log('hide()', this?'obj':'null', this._name, this.getId())
     this._visible = false;
     this._renderVisibility();
   }

@@ -42,7 +42,7 @@ class ParserContext {
 const RESOURCE_PHASE = 1; //full async + Promise.all()
 const ResourcesTag = [
     //'groupdef',//'wrapper',
-    'color', 'bitmap', //'bitmapfont',
+    'color', 'bitmap', 'bitmapfont',
     // 'script', //'scripts', 
     'skininfo', 
     //'elements', 
@@ -103,7 +103,9 @@ export default class SkinParser {
     console.log('RESOURCE_PHASE #################');
     this._phase = RESOURCE_PHASE;
     await this.traverseChildren(parsed) ;
-    await this._resolveRes()
+    await this._solveMissingBitmaps()
+    await this._imageManager.loadUniquePaths()
+    await this._imageManager.ensureBitmapsLoaded()
     
     console.log('GROUP_PHASE #################');
     this._phase = GROUP_PHASE;
@@ -128,7 +130,10 @@ export default class SkinParser {
     } 
   }
 
-  async _resolveRes(){
+  /**
+   * Some bitmap al called by group/layer 
+   * but has no explicit declaration in a loaded skin  */ 
+  async _solveMissingBitmaps(){
     //? checkmark the already availble
     // this._uiRoot._bitmaps.forEach(function (bitmap) {
     //   self._res.bitmaps[bitmap._id.toLowerCase()] = true;
@@ -384,7 +389,9 @@ export default class SkinParser {
     );
     const bitmap = new Bitmap();
     bitmap.setXmlAttributes(node.attributes);
-    await bitmap.ensureImageLoaded(this._imageManager);
+    // await bitmap.ensureImageLoaded(this._imageManager);
+    // this._imageManager.addBitmap(bitmap._id, bitmap._file)
+    this._imageManager.addBitmap(bitmap)
 
     this._uiRoot.addBitmap(bitmap);
     this._res.bitmaps[node.attributes.id] = true;
@@ -402,21 +409,30 @@ export default class SkinParser {
     // <bitmapfont id="player.BIGNUM" file="bitmapfont.player.BIGNUM" charwidth="13" charheight="20" hspacing="-1" vspacing="0"/>
     // const found = this._uiRoot.getFileIsExist(node.attributes.file);
     // if(!found){
-      const bitmap = this._uiRoot.getBitmap(node.attributes.file)
-      // console.log('BitmapFont', font.getId(), font._file, bitmap?bitmap._file:'NonBmp')
-      if(bitmap){
-        font.setXmlAttr('file', bitmap._file);
-        if(!font._gammagroup)
-          font.setXmlAttr('gammagroup', bitmap._gammagroup);
-      }
-      else console.warn('BitmapFont file not found:', node.attributes.file)
+      // const bitmap = this._uiRoot.getBitmap(node.attributes.file)
+      // // console.log('BitmapFont', font.getId(), font._file, bitmap?bitmap._file:'NonBmp')
+      // if(bitmap){
+      //   font.setXmlAttr('file', bitmap._file);
+      //   if(!font._gammagroup)
+      //     font.setXmlAttr('gammagroup', bitmap._gammagroup);
+      // }
+      // else console.warn('BitmapFont file not found:', node.attributes.file)
     // }
 
     // await font.ensureFontLoaded(this._imageManager);
-    await font.ensureImageLoaded(this._imageManager);
+    // await font.ensureImageLoaded(this._imageManager);
 
-    if(font._img)
-      this._uiRoot.addFont(font);
+    // this._imageManager.addBitmapFont(font._file)
+    const externalBitmap = font._file.indexOf('.') > 0 || font._file.indexOf('/') < 0;
+    if(externalBitmap){
+      font._externalBitmap = true;
+    } else {
+      // this._imageManager.addBitmap(font._id, font._file)
+      this._imageManager.addBitmap(font)
+    }
+
+    // if(font._img)
+    this._uiRoot.addFont(font);
   }
 
   async text(node: XmlElement, parent: any): Promise<Text> {
