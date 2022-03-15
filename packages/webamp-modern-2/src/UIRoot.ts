@@ -221,7 +221,7 @@ export class UIRoot {
     return this._dummyGammaGroup;
   }
 
-  _setCssVars() {
+  _setCssVars0() {
     const cssRules = []
     const bitmapFonts: BitmapFont[] = this._fonts.filter(f => (f instanceof BitmapFont && !f._externalBitmap) ) as BitmapFont[];
     for (const bitmap of [...this._bitmaps, ...bitmapFonts]) {
@@ -260,6 +260,57 @@ export class UIRoot {
     cssEl.textContent = cssRules.join("\n");
 
     this._setScrollbarsCss()
+  }
+
+  async _setCssVars() {
+    const bitmapFonts: BitmapFont[] = this._fonts.filter(f => (f instanceof BitmapFont && !f._externalBitmap) ) as BitmapFont[];
+    const cssRules = await this._generateGammas([...this._bitmaps, ...bitmapFonts])
+    
+    cssRules.unshift(':root{')
+    cssRules.push('}')
+    const cssEl = document.getElementById('bitmap-css');
+    cssEl.textContent = cssRules.join("\n");
+
+    this._setScrollbarsCss()
+  }
+
+
+  async _generateGammas(bitmaps: Bitmap[]) : Promise<string[]> {
+    return Promise.all(bitmaps.map(bitmap => {
+      return this._generateGamma(bitmap)
+    }))
+  }
+
+  async _generateGamma(bitmap: Bitmap) : Promise<string> {
+    const img = bitmap.getImg();
+      if(!img){
+        console.warn(`Bitmap/font ${bitmap.getId()} has no img!`);
+        // continue;
+        return ''
+      }
+      // const url = img.src;
+      
+      const groupId = bitmap.getGammaGroup();
+      // if (!map.has(img)) {
+      //   map.set(img, new Map());
+      // }
+      // const imgCache = map.get(img);
+      // if (!imgCache.has(groupId)) {
+        const gammaGroup = this._getGammaGroup(groupId); // fallback to dummyGamm
+        const url = gammaGroup.transformImage(
+            img,
+            bitmap._x,
+            bitmap._y,
+            bitmap._width,
+            bitmap._height
+            );
+        // imgCache.set(groupId, url);
+      // }
+      // const url = imgCache.get(groupId);
+      // TODO: Techincally we only need one per image/gammagroup.
+      // this._div.style.setProperty(bitmap.getCSSVar(), `url(${url})`);
+      return `${bitmap.getCSSVar()}: url(${url});`;
+      
   }
 
   _setScrollbarsCss() {

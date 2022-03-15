@@ -69,15 +69,15 @@ export default class Group extends GuiObj {
       child.init();
     }
 
-    // for (const child of this._children) {
-    //   // child.draw();
-    //   if(child._sysregion==-1||child._sysregion==-2){
-    //     this.putAsRegion(child);
-    //   }
-    //   // else {
-    //     // this._div.appendChild(child.getDiv());
-    //   // }
-    // }
+    for (const child of this._children) {
+      // child.draw();
+      if(child._sysregion==-1||child._sysregion==-2){
+        this.putAsRegion(child);
+      }
+      // else {
+        // this._div.appendChild(child.getDiv());
+      // }
+    }
   }
 
   getId() {
