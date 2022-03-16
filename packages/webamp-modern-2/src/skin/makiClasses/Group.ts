@@ -277,9 +277,15 @@ export default class Group extends GuiObj {
     }
     ctx2.putImageData(imageData, 0, 0);
 
-    const url = this._regionCanvas.toDataURL();
-    this._div.style.setProperty('mask-image', `url(${url})`)
-    this._div.style.setProperty('-webkit-mask-image', `url(${url})`);
+    this._regionCanvas.toBlob(blob=>{
+      const url = URL.createObjectURL(blob)
+      this._div.style.setProperty('mask-image', `url(${url})`)
+      this._div.style.setProperty('-webkit-mask-image', `url(${url})`);
+      });
+
+    // const url = this._regionCanvas.toDataURL();
+    // this._div.style.setProperty('mask-image', `url(${url})`)
+    // this._div.style.setProperty('-webkit-mask-image', `url(${url})`);
     // this._div.style.setProperty('--mask-image', `url(${url})`);
     // document.body.style.setProperty('background-image', `url(${url})`);
     // document.body.style.backgroundRepeat = 'no-repeat';
