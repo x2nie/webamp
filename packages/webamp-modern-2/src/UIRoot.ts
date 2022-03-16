@@ -302,7 +302,7 @@ export class UIRoot {
       // const imgCache = map.get(img);
       // if (!imgCache.has(groupId)) {
         const gammaGroup = this._getGammaGroup(groupId); // fallback to dummyGamm
-        const url = gammaGroup.transformImage(
+        const url =  await gammaGroup.transformImage(
             img,
             bitmap._x,
             bitmap._y,

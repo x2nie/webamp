@@ -47,11 +47,11 @@ export default class GammaGroup {
   }
 
   // TODO: Figure out how to actually implement this.
-  transformImage(img: HTMLImageElement, x:number, y:number, w:number, h:number): string {
+  async transformImage(img: HTMLImageElement, x:number, y:number, w:number, h:number): string {
     // Toggle this to play with gl transforming
-    if (false) {
-      return glTransformImage(img);
-    }
+    // if (false) {
+    //   return glTransformImage(img);
+    // }
     const [r, g, b] = this._value.split(",").map((v) => {
       return (Number(v) / 4096) + (/* this._boost==2?2: */ 1.0);
     });
@@ -100,5 +100,32 @@ export default class GammaGroup {
     }
     ctx.putImageData(imageData, 0, 0);
     return canvas.toDataURL();
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(blob=>{
+        if(blob){
+          resolve( URL.createObjectURL(blob) as string )
+        } else {
+          reject("")
+        }
+      });
+    })
+    // return this.canvas2blob(canvas);
+    // let _blob;
+    // canvas.toBlob(blob=>{
+    //   _blob = URL.createObjectURL(blob);
+    // });
+    // return _blob;
   }
+
+  //  canvas2blob(canvas:HTMLCanvasElement): string {
+  //   return  new Promise((resolve, reject) => {
+  //     canvas.toBlob(blob=>{
+  //       if(blob){
+  //         resolve( URL.createObjectURL(blob) as string )
+  //       } else {
+  //         reject("")
+  //       }
+  //     });
+  //   })
+  // }
 }
