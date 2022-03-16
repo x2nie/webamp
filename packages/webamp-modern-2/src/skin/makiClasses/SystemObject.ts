@@ -1723,6 +1723,9 @@ export default class SystemObject extends BaseObject {
   isvideofullscreen(): number {
     return 0;
   }
+  iskeydown(vk:number): number {
+    return 0;
+  }
 }
 
 function dumpScriptDebug(script: ParsedMaki) {
