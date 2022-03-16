@@ -76,6 +76,12 @@ export default class Group extends GuiObj {
         this.putAsRegion(child);
         hasRegions = true;
       }
+      else if(child._sysregion==1){
+        const bgUrl= child._div.style.getPropertyValue('--background-image');
+        child._div.style.setProperty('mask-image', bgUrl);
+        child._div.style.setProperty('-webkit-mask-image', bgUrl);
+        // child._div.style.pointerEvents = 'none'; //TODO: don't! because some sysregion=1 == resize!=0
+      }
     }
     if(hasRegions){
       this.setRegion()
@@ -239,27 +245,49 @@ export default class Group extends GuiObj {
     if(this._regionCanvas.width==0 || this._regionCanvas.height==0){
       return
     }
-    const ctx2 = this._regionCanvas.getContext("2d");
-    const r = child._div.getBoundingClientRect();
-    const bitmap = child._backgroundBitmap;
-    const img = child._backgroundBitmap.getImg()
-    ctx2.drawImage(
-      img, 
-      bitmap._x,
-      bitmap._y,
-      r.width, r.height,
+    
+    if(child._sysregion==1) {  
+      //just crop by transparency.
+      const bitmap = child._backgroundBitmap;
+      const ctxSrc = bitmap.getCanvas().getContext('2d');
+      const dataSrc = ctxSrc.getImageData(0, 0, bitmap.getWidth(), bitmap.getHeight()).data;
+      // const data = imageData.data;
+      
+      const ctx2 = this._regionCanvas.getContext("2d");
+      const r = child._div.getBoundingClientRect();
 
-      child._div.offsetLeft, 
-      child._div.offsetTop, 
-      // 0,0,
-      r.width, r.height
-      // bitmap._width, bitmap._height
-      // 500, 500
-      );
-    // console.log('createDraw:',  child._div.offsetLeft - bitmap._x, 
-    // child._div.offsetTop - bitmap._y, 
-    // r.width, r.height,
-    // r)
+      const imageData = ctx2.getImageData(r.left, r.top, bitmap.getWidth(), bitmap.getHeight());
+      const dataDst = imageData.data;
+      for (var i = 0; i < dataDst.length; i += 4) {
+        // data[i + 3] = data[i + 1] != 255 ? 0 : data[i + 1];
+        dataDst[i + 0] = dataSrc[i + 3]; //? draw transparency
+      }
+      ctx2.putImageData(imageData, r.left, r.top)
+      
+    } else {
+
+      const ctx2 = this._regionCanvas.getContext("2d");
+      const r = child._div.getBoundingClientRect();
+      const bitmap = child._backgroundBitmap;
+      const img = child._backgroundBitmap.getImg()
+      ctx2.drawImage(
+        img, 
+        bitmap._x,
+        bitmap._y,
+        r.width, r.height,
+
+        child._div.offsetLeft, 
+        child._div.offsetTop, 
+        // 0,0,
+        r.width, r.height
+        // bitmap._width, bitmap._height
+        // 500, 500
+        );
+      // console.log('createDraw:',  child._div.offsetLeft - bitmap._x, 
+      // child._div.offsetTop - bitmap._y, 
+      // r.width, r.height,
+      // r)
+    }
   }
 
   setRegion(){
@@ -273,7 +301,7 @@ export default class Group extends GuiObj {
     const data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
       // data[i + 3] = data[i + 1] != 255 ? 0 : data[i + 1];
-      data[i + 3] = data[i + 1];
+      data[i + 3] = data[i + 0];
     }
     ctx2.putImageData(imageData, 0, 0);
 
