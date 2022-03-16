@@ -1,11 +1,13 @@
 import GuiObj from "./GuiObj";
 import UI_ROOT from "../../UIRoot";
 import { num } from "../../utils";
+import Layout from "./Layout";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
 export default class Layer extends GuiObj {
   static GUID = "5ab9fa1545579a7d5765c8aba97cc6a6";
   _image: string;
+  _resize: string;
   _isMouseTrap: boolean = false;
   
   setXmlAttr(_key: string, value: string): boolean {
@@ -21,10 +23,108 @@ export default class Layer extends GuiObj {
         this._image = value;
         this._renderBackground();
         break;
+      case "resize":
+        this._resize = value=='0'?'':value;
+        this._renderCssCursor();
+        break;
       default:
         return false;
     }
     return true;
+  }
+
+  _renderCssCursor() {
+    this._div.style.cursor = 'none'; //flag. replace soon
+    switch(this._resize) {
+      case "right":
+        this._div.style.cursor = 'e-resize'
+        break;
+      case "left":
+        this._div.style.cursor = 'w-resize'
+        break;
+      case "top":
+        this._div.style.cursor = 'n-resize'
+        break;
+      case "bottom":
+        this._div.style.cursor = 's-resize'
+        break;
+      case "topleft":
+        this._div.style.cursor = 'nw-resize'
+        break;
+      case "topright":
+        this._div.style.cursor = 'ne-resize'
+        break;
+      case "bottomleft":
+        this._div.style.cursor = 'sw-resize'
+        break;
+      case "bottomright":
+        this._div.style.cursor = 'se-resize'
+        break;
+      // default:
+      //   this._div.style.removeProperty('cursor');
+    }
+    if(this._div.style.cursor == 'none'){
+        this._div.style.removeProperty('cursor');
+    } else {
+      this._div.style.pointerEvents = 'auto';
+      this._registerResizingEvents()
+    }
+  }
+
+  _resizingEventsRegisterd:boolean=false;
+
+  _registerResizingEvents(){
+    if(this._resizingEventsRegisterd) {
+      return;
+    }
+    this._resizingEventsRegisterd = true;
+    this._div.addEventListener("mousedown", (downEvent: MouseEvent) => {
+      if(downEvent.button!=0) return; // only care LeftButton
+      const layout = this.getparentlayout() as Layout;
+      layout.setResizing('start', 0, 0);
+      // const bitmap = UI_ROOT.getBitmap(this._thumb);
+      const startX = downEvent.clientX;
+      const startY = downEvent.clientY;
+      // const width = this.getRealWidth() - bitmap.getWidth();
+      // const height = this.getheight() - bitmap.getHeight();
+      // const initialPostition = this._position;
+      // this.doLeftMouseDown(downEvent.offsetX, downEvent.offsetY);
+      
+      const handleMove = (moveEvent: MouseEvent) => {
+        const newMouseX = moveEvent.clientX;
+        const newMouseY = moveEvent.clientY;
+        const deltaY = newMouseY - startY;
+        const deltaX = newMouseX - startX;
+        layout.setResizing('move', deltaX, deltaY);
+
+        // const deltaPercent = this._vertical ? deltaY / height : deltaX / width;
+        // const newPercent = this._vertical
+        //   ? initialPostition - deltaPercent
+        //   : initialPostition + deltaPercent;
+
+        // this._position = clamp(newPercent, 0, 1);
+        // this._renderThumbPosition();
+        // this.doSetPosition(this.getposition());
+      };
+
+      const handleMouseUp = (upEvent: MouseEvent) => {
+        // console.log('slider.mUp!', upEvent.button)
+        if(upEvent.button!=0) return; // only care LeftButton
+        document.removeEventListener("mousemove", handleMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+        // this.doLeftMouseUp(upEvent.offsetX, upEvent.offsetY);
+        const newMouseX = upEvent.clientX;
+        const newMouseY = upEvent.clientY;
+        const deltaY = newMouseY - startY;
+        const deltaX = newMouseX - startX;
+        layout.setResizing('final', deltaX, deltaY);
+      };
+      document.addEventListener("mousemove", handleMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    });
+  }
+  _unregisterResizingEvents(){
+
   }
 
   // This shadows `getheight()` on GuiObj
@@ -62,7 +162,8 @@ export default class Layer extends GuiObj {
     super.draw();
     // this._div.setAttribute("data-obj-name", "Layer");
     // this._div.style.pointerEvents = this._sysregion==-2 || this._ghost? 'none' : 'auto';
-    this._div.style.pointerEvents = this._isMouseTrap? 'auto': 'none';
+    // this._div.style.pointerEvents = this._isMouseTrap? 'auto': 'none';
+    // this._div.style.pointerEvents = this._isMouseTrap? 'auto': 'none';
     // this._div.style.pointerEvents = 'auto';
     // this._div.style.display = this._sysregion==-2? 'none' : 'block';
     this._sysregion!=0 && this._div.setAttribute('sysregion', this._sysregion.toString());

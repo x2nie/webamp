@@ -2,6 +2,7 @@ import Group from "./Group";
 import * as Utils from "../../utils";
 import Container from "./Container";
 import UI_ROOT from "../../UIRoot";
+import { px } from "../../utils";
 
 // > A layout is a special kind of group, which shown inside a container. Each
 // > layout represents an appearance for that window. Layouts give you the ability
@@ -114,5 +115,49 @@ export default class Layout extends Group {
       { type: "INT", value: this.getwidth() },
       { type: "INT", value: this.getheight() },
     ]);
+  }
+
+  // RESIZE THINGS =====================
+  // _resizing = {startX:0, startY:0};
+  _resizingDiv:HTMLDivElement=null;
+  _resizing:boolean=false;
+  setResizing(cmd: string, dx:number, dy:number){
+    const clampW = (w):number => {
+      w = this._maximumWidth? Math.min(w, this._maximumWidth): w;
+      w = this._minimumWidth? Math.max(w, this._minimumWidth): w;
+      return w;
+    }
+    const clampH = (h):number => {
+      h = this._maximumHeight? Math.min(h, this._maximumHeight): h;
+      h = this._minimumHeight? Math.max(h, this._minimumHeight): h;
+      return h;
+    }
+    const r = this._div.getBoundingClientRect();
+    if(cmd=='start'){
+      this._resizing = true;
+      this._resizingDiv = document.createElement('div');
+      this._resizingDiv.className = 'resizing';
+      this._resizingDiv.style.cssText = 'position:absolute; top:0; left:0;'
+      this._resizingDiv.style.width = px(r.width);
+      this._resizingDiv.style.height = px(r.height);
+      this._div.appendChild(this._resizingDiv);
+    }
+    else if(cmd=='move'){
+      if(!this._resizing) {
+        return
+      }
+      this._resizingDiv.style.width  = px(clampW(r.width+dx));
+      this._resizingDiv.style.height = px(clampH(r.height+dy));
+    }
+    else if(cmd=='final'){
+      if(!this._resizing) {
+        return
+      }
+      this._resizing = false;
+      this._div.style.width  = px(clampW(r.width+dx));
+      this._div.style.height = px(clampH(r.height+dy));
+      this._resizingDiv.remove()
+      this._resizingDiv = null;
+    }
   }
 }
