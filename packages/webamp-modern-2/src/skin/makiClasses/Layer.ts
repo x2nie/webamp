@@ -1,12 +1,13 @@
 import GuiObj from "./GuiObj";
 import UI_ROOT from "../../UIRoot";
-import { num } from "../../utils";
+import { num, toBool } from "../../utils";
 import Layout from "./Layout";
 
-export const LEFT   = 1 << 0;
-export const RIGHT  = 1 << 1;
-export const TOP    = 1 << 2;
-export const BOTTOM = 1 << 3;
+export const LEFT   = 1 << 1;
+export const RIGHT  = 1 << 2;
+export const TOP    = 1 << 3;
+export const BOTTOM = 1 << 4;
+export const MOVE   = TOP | LEFT | 1;
 export const CURSOR = 1 << 31;
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
@@ -16,6 +17,7 @@ export default class Layer extends GuiObj {
   _resize: string;
   _isMouseTrap: boolean = false;
   _resizable: number = 0;
+  _movable: boolean = false;
   
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -29,6 +31,10 @@ export default class Layer extends GuiObj {
       case "image":
         this._image = value;
         this._renderBackground();
+        break;
+      case "move":
+        this._movable = toBool(value);
+        this._renderCssCursor();
         break;
       case "resize":
         this._resize = value=='0'?'':value;
@@ -79,7 +85,12 @@ export default class Layer extends GuiObj {
         // this._div.style.removeProperty('cursor');
         this._resizable = 0;
     }
-    if(this._div.style.cursor == 'none'){
+    if(this._movable){
+      this._div.style.cursor = 'move';
+      this._resizable = MOVE;
+      this._registerMovingEvents();
+    }
+    else if(this._div.style.cursor == 'none'){
         this._div.style.removeProperty('cursor');
     } else {
       this._div.style.pointerEvents = 'auto';
@@ -142,6 +153,64 @@ export default class Layer extends GuiObj {
     });
   }
   _unregisterResizingEvents(){
+
+  }
+
+  _movingEventsRegisterd:boolean=false;
+
+  _registerMovingEvents(){
+    if(this._movingEventsRegisterd) {
+      return;
+    }
+    this._movingEventsRegisterd = true;
+    this._div.addEventListener("mousedown", (downEvent: MouseEvent) => {
+      if(downEvent.button!=0) return; // only care LeftButton
+      const layout = this.getparentlayout() as Layout;
+      // layout.setResizing('constraint', this._resizable, 0);
+      layout.setMoving('start', 0, 0);
+      // layout.setResizing(this._div.style.getPropertyValue('cursor'), CURSOR, CURSOR);
+      // const bitmap = UI_ROOT.getBitmap(this._thumb);
+      const startX = downEvent.clientX;
+      const startY = downEvent.clientY;
+      // const width = this.getRealWidth() - bitmap.getWidth();
+      // const height = this.getheight() - bitmap.getHeight();
+      // const initialPostition = this._position;
+      // this.doLeftMouseDown(downEvent.offsetX, downEvent.offsetY);
+      
+      const handleMove = (moveEvent: MouseEvent) => {
+        const newMouseX = moveEvent.clientX;
+        const newMouseY = moveEvent.clientY;
+        const deltaY = newMouseY - startY;
+        const deltaX = newMouseX - startX;
+        layout.setMoving('move', deltaX, deltaY);
+
+        // const deltaPercent = this._vertical ? deltaY / height : deltaX / width;
+        // const newPercent = this._vertical
+        //   ? initialPostition - deltaPercent
+        //   : initialPostition + deltaPercent;
+
+        // this._position = clamp(newPercent, 0, 1);
+        // this._renderThumbPosition();
+        // this.doSetPosition(this.getposition());
+      };
+
+      const handleMouseUp = (upEvent: MouseEvent) => {
+        // console.log('slider.mUp!', upEvent.button)
+        if(upEvent.button!=0) return; // only care LeftButton
+        document.removeEventListener("mousemove", handleMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+        // this.doLeftMouseUp(upEvent.offsetX, upEvent.offsetY);
+        const newMouseX = upEvent.clientX;
+        const newMouseY = upEvent.clientY;
+        const deltaY = newMouseY - startY;
+        const deltaX = newMouseX - startX;
+        layout.setMoving('final', deltaX, deltaY);
+      };
+      document.addEventListener("mousemove", handleMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    });
+  }
+  _unregisterMovingEvents(){
 
   }
 

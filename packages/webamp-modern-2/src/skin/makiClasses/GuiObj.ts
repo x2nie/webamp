@@ -5,6 +5,9 @@ import Group from "./Group";
 import XmlObj from "../XmlObj";
 import { XmlElement } from "@rgrove/parse-xml";
 
+let BRING_LEAST: number = -1;
+let BRING_MOST_TOP: number = 1;
+
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#GuiObject_.28Global_params.29
 export default class GuiObj extends XmlObj {
   static GUID = "4ee3e1994becc636bc78cd97b028869c";
@@ -771,6 +774,16 @@ export default class GuiObj extends XmlObj {
     return y;
   }
 
+  bringtofront(){
+    BRING_MOST_TOP += 1;
+    this._div.style.zIndex = String(BRING_MOST_TOP)
+  }
+
+  bringtoback(){
+    BRING_LEAST -= 1;
+    this._div.style.zIndex = String(BRING_LEAST)
+  }
+
   
   _renderAlpha() {
     if(this._alpha!=null) this._div.style.opacity = `${this._alpha / 255}`;
@@ -814,7 +827,7 @@ export default class GuiObj extends XmlObj {
     this._renderWidth();
     this._renderHeight();
   }
-  
+
   doResize() {
     UI_ROOT.vm.dispatch(this, "onresize", [
       { type: "INT", value: 0 },
