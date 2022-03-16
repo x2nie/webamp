@@ -3,6 +3,7 @@ import * as Utils from "../../utils";
 import Container from "./Container";
 import UI_ROOT from "../../UIRoot";
 import { px } from "../../utils";
+import { BOTTOM, CURSOR, LEFT, RIGHT, TOP } from "./Layer";
 
 // > A layout is a special kind of group, which shown inside a container. Each
 // > layout represents an appearance for that window. Layouts give you the ability
@@ -108,19 +109,33 @@ export default class Layout extends Group {
   }
 
   init() {
-    super.init()
-    UI_ROOT.vm.dispatch(this, "onresize", [
-      { type: "INT", value: 0 },
-      { type: "INT", value: 0 },
-      { type: "INT", value: this.getwidth() },
-      { type: "INT", value: this.getheight() },
-    ]);
+    super.init();
+    this.doResize();
   }
+
+  // doResize() {
+  //   UI_ROOT.vm.dispatch(this, "onresize", [
+  //     { type: "INT", value: 0 },
+  //     { type: "INT", value: 0 },
+  //     { type: "INT", value: this.getwidth() },
+  //     { type: "INT", value: this.getheight() },
+  //   ]);
+  //   const titleBar = this.findobject('wasabi.titlebar');
+  //   if(titleBar){
+  //     UI_ROOT.vm.dispatch(titleBar, "onresize", [
+  //       { type: "INT", value: titleBar.getleft() },
+  //       { type: "INT", value: titleBar.gettop() },
+  //       { type: "INT", value: titleBar.getwidth() },
+  //       { type: "INT", value: titleBar.getheight() },
+  //     ]);
+  //   }
+  // }
 
   // RESIZE THINGS =====================
   // _resizing = {startX:0, startY:0};
   _resizingDiv:HTMLDivElement=null;
   _resizing:boolean=false;
+  _resizable:number=0; // combination of 4 directions: N/E/w/S
   setResizing(cmd: string, dx:number, dy:number){
     const clampW = (w):number => {
       w = this._maximumWidth? Math.min(w, this._maximumWidth): w;
@@ -132,8 +147,16 @@ export default class Layout extends Group {
       h = this._minimumHeight? Math.max(h, this._minimumHeight): h;
       return h;
     }
+    // const clampL = (l):number => {
+    //   w = this._maximumWidth? Math.min(w, this._maximumWidth): w;
+    //   w = this._minimumWidth? Math.max(w, this._minimumWidth): w;
+    //   return w;
+    // }
     const r = this._div.getBoundingClientRect();
-    if(cmd=='start'){
+    if(cmd=='constraint'){
+      this._resizable = dx;
+    }
+    else if(cmd=='start'){
       this._resizing = true;
       this._resizingDiv = document.createElement('div');
       this._resizingDiv.className = 'resizing';
@@ -142,22 +165,43 @@ export default class Layout extends Group {
       this._resizingDiv.style.height = px(r.height);
       this._div.appendChild(this._resizingDiv);
     }
+    else if(dx==CURSOR && dy==CURSOR){
+      this._resizingDiv.style.cursor = cmd;
+    }
     else if(cmd=='move'){
       if(!this._resizing) {
         return
       }
-      this._resizingDiv.style.width  = px(clampW(r.width+dx));
-      this._resizingDiv.style.height = px(clampH(r.height+dy));
+      console.log(`resizing dx:${dx} dy:${dy}`)
+      if(this._resizable & RIGHT)
+        this._resizingDiv.style.width  = px(clampW(r.width+dx));
+      if(this._resizable & BOTTOM)
+        this._resizingDiv.style.height = px(clampH(r.height+dy));
+      if(this._resizable & LEFT){
+        this._resizingDiv.style.left   = px(dx);
+        this._resizingDiv.style.width  = px(clampW(r.width+ -dx));
+      }
+      if((this._resizable & TOP) && dy <= 0){
+        this._resizingDiv.style.left   = px(dx);
+        this._resizingDiv.style.width  = px(clampW(r.width+ -dx));
+      }
     }
     else if(cmd=='final'){
       if(!this._resizing) {
         return
       }
       this._resizing = false;
-      this._div.style.width  = px(clampW(r.width+dx));
-      this._div.style.height = px(clampH(r.height+dy));
+      // const style = this._resizingDiv.style;
+      this.setXmlAttr('w', this._resizingDiv.offsetWidth.toString())
+      this.setXmlAttr('h', this._resizingDiv.offsetHeight.toString())
+      const container = this.getcontainer();
+      container.setXmlAttr('x', (container._x +this._resizingDiv.offsetLeft).toString() )
+      container.setXmlAttr('y', (container._y +this._resizingDiv.offsetTop).toString() )
+      // this._div.style.width  = px(clampW(r.width+dx));
+      // this._div.style.height = px(clampH(r.height+dy));
       this._resizingDiv.remove()
       this._resizingDiv = null;
+      this.doResize();
     }
   }
 }

@@ -69,6 +69,10 @@ export default class Group extends GuiObj {
       child.init();
     }
 
+  }
+
+  applyRegions() {
+
     let hasRegions = false;
     for (const child of this._children) {
       // child.draw();
@@ -157,6 +161,15 @@ export default class Group extends GuiObj {
       this.setBackgroundImage(bitmap);
     } else {
       this.setBackgroundImage(null);
+    }
+  }
+
+  doResize() {
+    super.doResize();
+    this._regionCanvas=null;
+    this.applyRegions();
+    for (const child of this._children) {
+      child.doResize()
     }
   }
 

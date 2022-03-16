@@ -3,12 +3,19 @@ import UI_ROOT from "../../UIRoot";
 import { num } from "../../utils";
 import Layout from "./Layout";
 
+export const LEFT   = 1 << 0;
+export const RIGHT  = 1 << 1;
+export const TOP    = 1 << 2;
+export const BOTTOM = 1 << 3;
+export const CURSOR = 1 << 31;
+
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
 export default class Layer extends GuiObj {
   static GUID = "5ab9fa1545579a7d5765c8aba97cc6a6";
   _image: string;
   _resize: string;
   _isMouseTrap: boolean = false;
+  _resizable: number = 0;
   
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -37,31 +44,40 @@ export default class Layer extends GuiObj {
     this._div.style.cursor = 'none'; //flag. replace soon
     switch(this._resize) {
       case "right":
-        this._div.style.cursor = 'e-resize'
+        this._div.style.cursor = 'e-resize';
+        this._resizable = RIGHT;
         break;
       case "left":
-        this._div.style.cursor = 'w-resize'
+        this._div.style.cursor = 'w-resize';
+        this._resizable = LEFT;
         break;
       case "top":
-        this._div.style.cursor = 'n-resize'
+        this._div.style.cursor = 'n-resize';
+        this._resizable = TOP;
         break;
       case "bottom":
-        this._div.style.cursor = 's-resize'
+        this._div.style.cursor = 's-resize';
+        this._resizable = BOTTOM;
         break;
       case "topleft":
-        this._div.style.cursor = 'nw-resize'
+        this._div.style.cursor = 'nw-resize';
+        this._resizable = TOP | LEFT;
         break;
       case "topright":
-        this._div.style.cursor = 'ne-resize'
+        this._div.style.cursor = 'ne-resize';
+        this._resizable = TOP | RIGHT;
         break;
       case "bottomleft":
-        this._div.style.cursor = 'sw-resize'
+        this._div.style.cursor = 'sw-resize';
+        this._resizable = BOTTOM | LEFT;
         break;
       case "bottomright":
-        this._div.style.cursor = 'se-resize'
+        this._div.style.cursor = 'se-resize';
+        this._resizable = BOTTOM | RIGHT;
         break;
-      // default:
-      //   this._div.style.removeProperty('cursor');
+      default:
+        // this._div.style.removeProperty('cursor');
+        this._resizable = 0;
     }
     if(this._div.style.cursor == 'none'){
         this._div.style.removeProperty('cursor');
@@ -81,7 +97,9 @@ export default class Layer extends GuiObj {
     this._div.addEventListener("mousedown", (downEvent: MouseEvent) => {
       if(downEvent.button!=0) return; // only care LeftButton
       const layout = this.getparentlayout() as Layout;
+      layout.setResizing('constraint', this._resizable, 0);
       layout.setResizing('start', 0, 0);
+      layout.setResizing(this._div.style.getPropertyValue('cursor'), CURSOR, CURSOR);
       // const bitmap = UI_ROOT.getBitmap(this._thumb);
       const startX = downEvent.clientX;
       const startY = downEvent.clientY;

@@ -41,12 +41,12 @@ export default class Container extends XmlObj {
       case "x":
       case "default_x":
         this._x = num(value) ?? 0;
-        // this._renderX();
+        this._renderDimensions();
         break;
       case "y":
       case "default_y":
         this._y = num(value) ?? 0;
-        // this._renderY();
+        this._renderDimensions();
         break;
     
       default:
@@ -175,12 +175,15 @@ export default class Container extends XmlObj {
     }
   }
 
+  _renderDimensions() {
+    this._div.style.left = px(this._x ?? 0);
+    this._div.style.top = px(this._y ?? 0);
+  }
+
   _renderLayout() {
     if (this._visible && this._activeLayout) {
       this._activeLayout.draw();
       this._div.appendChild(this._activeLayout.getDiv());
-      this._div.style.left = px(this._x ?? 0);
-      this._div.style.top = px(this._y ?? 0);
 
       // this.center();
     } else {
@@ -194,6 +197,7 @@ export default class Container extends XmlObj {
     // this._div.setAttribute("data-obj-name", "Container");
     // this._div.style.position = "absolute";
     this._div.setAttribute("tabindex", "1");
+    this._renderDimensions();
     this._renderLayout();
   }
 }
