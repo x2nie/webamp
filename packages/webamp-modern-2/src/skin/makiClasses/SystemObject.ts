@@ -453,7 +453,7 @@ export default class SystemObject extends BaseObject {
    * @param  defvalue  The default value to return if no item is found.
    */
   getprivatestring(section: string, item: string, defvalue: string) {
-    // TODO
+    return PRIVATE_CONFIG.getPrivateString(section, item, defvalue);
   }
 
   setpublicstring(item: string, value: string) {

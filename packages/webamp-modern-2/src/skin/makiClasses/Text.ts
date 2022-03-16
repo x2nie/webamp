@@ -291,7 +291,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   _useColonWidth() {
-    if (this._timeColonWidth == null) {
+    if (this._timeColonWidth == null || this._display==null) {
       return false;
     }
     switch (this._display.toLowerCase()) {

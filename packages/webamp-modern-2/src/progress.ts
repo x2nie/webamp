@@ -41,7 +41,7 @@ function getClass(guid: string): typeof BaseObject | null {
 }
 
 const funnyHack = new BaseObject();
-window.normalizedObjects = normalizedObjects;
+// window.normalizedObjects = normalizedObjects;
 
 const totals = document.createElement("div");
 document.body.appendChild(totals);

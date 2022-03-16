@@ -72,6 +72,7 @@ export class UIRoot {
 
   // TODO: Maybe return a default bitmap?
   getBitmap(id: string): Bitmap {
+    if(id==null) return null
     const lowercaseId = id.toLowerCase();
     const found = findLast(
       this._bitmaps,
@@ -511,18 +512,21 @@ export class UIRoot {
 
 
   async getFileAsStringZip(filePath: string): Promise<string> {
+    if(!filePath) return null;
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
     if(!zipObj) return null;
     return await zipObj.async('string');
   }
   
   async getFileAsBytesZip(filePath: string): Promise<ArrayBuffer> {
+    if(!filePath) return null;
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
     if(!zipObj) return null;
     return await zipObj.async('arraybuffer');
   }
-
+  
   async getFileAsBlobZip(filePath: string): Promise<Blob> {
+    if(!filePath) return null;
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
     if(!zipObj) return null;
     return await zipObj.async('blob');
