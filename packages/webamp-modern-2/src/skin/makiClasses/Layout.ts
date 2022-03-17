@@ -182,9 +182,9 @@ export default class Layout extends Group {
         this._resizingDiv.style.left   = px(dx);
         this._resizingDiv.style.width  = px(clampW(r.width+ -dx));
       }
-      if((this._resizable & TOP) && dy <= 0){
-        this._resizingDiv.style.left   = px(dx);
-        this._resizingDiv.style.width  = px(clampW(r.width+ -dx));
+      if(this._resizable & TOP){
+        this._resizingDiv.style.top    = px(dy);
+        this._resizingDiv.style.height = px(clampH(r.height+ -dy));
       }
     }
     else if(cmd=='final'){
@@ -273,7 +273,7 @@ export default class Layout extends Group {
       if(!this._moving) {
         return
       }
-      this._resizing = false;
+      this._moving = false;
       // const style = this._resizingDiv.style;
       // this.setXmlAttr('w', this._resizingDiv.offsetWidth.toString())
       // this.setXmlAttr('h', this._resizingDiv.offsetHeight.toString())
@@ -284,7 +284,7 @@ export default class Layout extends Group {
       // // this._div.style.height = px(clampH(r.height+dy));
       // this._resizingDiv.remove()
       // this._resizingDiv = null;
-      this.doResize();
+      // this.doResize();
     }
   }
 }
