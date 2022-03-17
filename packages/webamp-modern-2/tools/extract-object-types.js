@@ -12,6 +12,7 @@ const files = {
   config: path.join(lib566, "config.mi"),
   std: path.join(lib566, "std.mi"),
   winampconfig: path.join(lib566, "winampconfig.mi"),
+  application: path.join(lib566, "application.mi"),
 };
 
 Object.keys(files).forEach((name) => {
