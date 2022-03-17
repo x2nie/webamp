@@ -12,13 +12,7 @@ import AUDIO_PLAYER from "../AudioPlayer";
 import { XmlElement } from "@rgrove/parse-xml";
 import { clone, cloneAttribute } from "../clone";
 
-const MOUSE_POS = { x: 0, y: 0 };
 
-// TODO: Figure out how this could be unsubscribed eventually
-document.addEventListener("mousemove", (e: MouseEvent) => {
-  MOUSE_POS.x = e.clientX;
-  MOUSE_POS.y = e.clientY;
-});
 
 export default class SystemObject extends BaseObject {
   static GUID = "d6f50f6449b793fa66baf193983eaeef";
@@ -90,7 +84,7 @@ export default class SystemObject extends BaseObject {
    * @ret The mouse's current X pos.
    */
   getmouseposx(): number {
-    return MOUSE_POS.x - this._parentGroup.getparentlayout().getleft();
+    return this._parentGroup.getmouseposx();
   }
 
   /**
@@ -100,7 +94,7 @@ export default class SystemObject extends BaseObject {
    * @ret The mouse's current Y pos.
    */
   getmouseposy(): number {
-    return MOUSE_POS.y - this._parentGroup.getparentlayout().gettop();
+    return this._parentGroup.getmouseposy();
   }
 
   /**

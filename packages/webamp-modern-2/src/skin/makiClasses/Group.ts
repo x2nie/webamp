@@ -5,6 +5,14 @@ import SystemObject from "./SystemObject";
 // import Layout from "./Layout";
 // import Layout = require('./Layout');
 
+const MOUSE_POS = { x: 0, y: 0 };
+
+// TODO: Figure out how this could be unsubscribed eventually
+document.addEventListener("mousemove", (e: MouseEvent) => {
+  MOUSE_POS.x = e.clientX;
+  MOUSE_POS.y = e.clientY;
+});
+
 let elementIncrement: number = 1;
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
@@ -229,6 +237,22 @@ export default class Group extends GuiObj {
 
   isLayout():boolean{
     return this._isLayout;
+  }
+
+  getmouseposx(): number {
+    return MOUSE_POS.x - this.getparentlayout().getleft();
+  }
+
+  getmouseposy(): number {
+    return MOUSE_POS.y - this.getparentlayout().gettop();
+  }
+
+  enumobject(index: number): GuiObj {
+    return this._children[index]
+  }
+
+  getnumobjects(): number {
+    return this._children.length;
   }
 
   // SYSREGION THINGS ==============================
