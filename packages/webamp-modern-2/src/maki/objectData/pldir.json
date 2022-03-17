@@ -1,5 +1,6 @@
 {
   "345BEEBC0229492190BE6CB6A49A79D9": {
+    "name": "PlEdit",
     "parent": "Object",
     "functions": [
       {
@@ -198,10 +199,10 @@
         "name": "onPleditModified",
         "parameters": []
       }
-    ],
-    "name": "PlEdit"
+    ]
   },
   "61A7ABAD7D7941f6B1D0E1808603A4F4": {
+    "name": "PlDir",
     "parent": "Object",
     "functions": [
       {
@@ -263,7 +264,6 @@
           ]
         ]
       }
-    ],
-    "name": "PlDir"
+    ]
   }
 }

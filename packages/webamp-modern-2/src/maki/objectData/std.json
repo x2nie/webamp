@@ -1,5 +1,6 @@
 {
   "516549710D874a5191E3A6B53235F3E7": {
+    "name": "Object",
     "parent": "@{00000000-0000-0000-0000-000000000000}@",
     "functions": [
       {
@@ -34,10 +35,10 @@
           ]
         ]
       }
-    ],
-    "name": "Object"
+    ]
   },
   "D6F50F6493FA49b793F1BA66EFAE3E98": {
+    "name": "System",
     "parent": "Object",
     "functions": [
       {
@@ -2132,10 +2133,10 @@
           ]
         ]
       }
-    ],
-    "name": "System"
+    ]
   },
   "E90DC47B840D4ae7B02C040BD275F7FC": {
+    "name": "Container",
     "parent": "Object",
     "functions": [
       {
@@ -2299,10 +2300,10 @@
           ]
         ]
       }
-    ],
-    "name": "Container"
+    ]
   },
   "00C074A0FEA249a0BE8DFABBDB161640": {
+    "name": "Wac",
     "parent": "Object",
     "functions": [
       {
@@ -2395,10 +2396,10 @@
         "name": "getStatusBar",
         "parameters": []
       }
-    ],
-    "name": "Wac"
+    ]
   },
   "B2023AB5434D4ba1BEAE59637503F3C6": {
+    "name": "List",
     "parent": "Object",
     "functions": [
       {
@@ -2465,10 +2466,10 @@
         "name": "removeAll",
         "parameters": []
       }
-    ],
-    "name": "List"
+    ]
   },
   "87C65778E74349fe85F909CC532AFD56": {
+    "name": "BitList",
     "parent": "Object",
     "functions": [
       {
@@ -2510,10 +2511,10 @@
         "name": "getSize",
         "parameters": []
       }
-    ],
-    "name": "BitList"
+    ]
   },
   "38603665461B42a7AA75D83F6667BF73": {
+    "name": "Map",
     "parent": "Object",
     "functions": [
       {
@@ -2587,10 +2588,10 @@
         "name": "getRegion",
         "parameters": []
       }
-    ],
-    "name": "Map"
+    ]
   },
   "F4787AF4B2BB4ef79CFBE74BA9BEA88D": {
+    "name": "PopupMenu",
     "parent": "Object",
     "functions": [
       {
@@ -2686,10 +2687,10 @@
           ]
         ]
       }
-    ],
-    "name": "PopupMenu"
+    ]
   },
   "3A370C023CBF439f84F186885BCF1E36": {
+    "name": "Region",
     "parent": "Object",
     "functions": [
       {
@@ -2794,10 +2795,10 @@
         "name": "getBoundingBoxH",
         "parameters": []
       }
-    ],
-    "name": "Region"
+    ]
   },
   "5D0C5BB67DE14b1fA70F8D1659941941": {
+    "name": "Timer",
     "parent": "Object",
     "functions": [
       {
@@ -2840,10 +2841,10 @@
         "name": "getSkipped",
         "parameters": []
       }
-    ],
-    "name": "Timer"
+    ]
   },
   "A5376FA14E94411a83F605EC5EEA5F0A": {
+    "name": "FeedWatcher",
     "parent": "Object",
     "functions": [
       {
@@ -2871,10 +2872,10 @@
           ]
         ]
       }
-    ],
-    "name": "FeedWatcher"
+    ]
   },
   "4EE3E199C6364bec97CD78BC9C8628B0": {
+    "name": "GuiObject",
     "parent": "Object",
     "functions": [
       {
@@ -3392,16 +3393,6 @@
       },
       {
         "result": "GuiObject",
-        "name": "findObject",
-        "parameters": [
-          [
-            "String",
-            "id"
-          ]
-        ]
-      },
-      {
-        "result": "GuiObject",
         "name": "findObjectXY",
         "parameters": [
           [
@@ -3667,10 +3658,10 @@
           ]
         ]
       }
-    ],
-    "name": "GuiObject"
+    ]
   },
   "45BE95E520724191935CBB5FF9F117FD": {
+    "name": "Group",
     "parent": "GuiObject",
     "functions": [
       {
@@ -3722,21 +3713,11 @@
         "result": "Boolean",
         "name": "isLayout",
         "parameters": []
-      },
-      {
-        "result": "GuiObject",
-        "name": "findObject",
-        "parameters": [
-          [
-            "String",
-            "id"
-          ]
-        ]
       }
-    ],
-    "name": "Group"
+    ]
   },
   "60906D4E537E482eB004CC9461885672": {
+    "name": "Layout",
     "parent": "Group",
     "functions": [
       {
@@ -3923,10 +3904,10 @@
         "name": "onSnapAdjustChanged",
         "parameters": []
       }
-    ],
-    "name": "Layout"
+    ]
   },
   "403ABCC06F224bd68BA410C829932547": {
+    "name": "WindowHolder",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4007,10 +3988,10 @@
           ]
         ]
       }
-    ],
-    "name": "WindowHolder"
+    ]
   },
   "97AA3E4DF4D04fa8817B0AF22A454983": {
+    "name": "ComponentBucket",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4053,10 +4034,10 @@
           ]
         ]
       }
-    ],
-    "name": "ComponentBucket"
+    ]
   },
   "64E4BBFA81F449d9B0C0A85B2EC3BCFD": {
+    "name": "Edit",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4134,10 +4115,10 @@
         "name": "getIdleEnabled",
         "parameters": []
       }
-    ],
-    "name": "Edit"
+    ]
   },
   "62B65E3F375E408d8DEA76814AB91B77": {
+    "name": "Slider",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4195,10 +4176,10 @@
         "name": "unlock",
         "parameters": []
       }
-    ],
-    "name": "Slider"
+    ]
   },
   "CE4F97BE77B04e199956D49833C96C27": {
+    "name": "Vis",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4241,10 +4222,10 @@
         "name": "nextMode",
         "parameters": []
       }
-    ],
-    "name": "Vis"
+    ]
   },
   "A8C2200D51EB4b2aBA7F5D4BC65D4C71": {
+    "name": "Browser",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4374,20 +4355,20 @@
           ]
         ]
       }
-    ],
-    "name": "Browser"
+    ]
   },
   "8D1EBA38489E483eB9608D1F43C5C405": {
+    "name": "EqVis",
     "parent": "GuiObject",
-    "functions": [],
-    "name": "EqVis"
+    "functions": []
   },
   "0F08C940AF394b2380F3B8C48F7EBB59": {
+    "name": "Status",
     "parent": "GuiObject",
-    "functions": [],
-    "name": "Status"
+    "functions": []
   },
   "EFAA8672310E41faB7DC85A9525BCB4B": {
+    "name": "Text",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4430,15 +4411,15 @@
           ]
         ]
       }
-    ],
-    "name": "Text"
+    ]
   },
   "7DFD324437514e7cBF4082AE5F3ADC33": {
+    "name": "Title",
     "parent": "GuiObject",
-    "functions": [],
-    "name": "Title"
+    "functions": []
   },
   "5AB9FA159A7D4557ABC86557A6C67CA9": {
+    "name": "Layer",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4812,10 +4793,10 @@
         "name": "isInvalid",
         "parameters": []
       }
-    ],
-    "name": "Layer"
+    ]
   },
   "698EDDCD8F1E4fec9B12F944F909FF45": {
+    "name": "Button",
     "parent": "GuiObject",
     "functions": [
       {
@@ -4873,10 +4854,10 @@
         "name": "rightClick",
         "parameters": []
       }
-    ],
-    "name": "Button"
+    ]
   },
   "6B64CD275A264c4b8C59E6A70CF6493A": {
+    "name": "AnimatedLayer",
     "parent": "Layer",
     "functions": [
       {
@@ -5029,10 +5010,10 @@
           ]
         ]
       }
-    ],
-    "name": "AnimatedLayer"
+    ]
   },
   "6DCB05E48AC448c2B19349F0910EF54A": {
+    "name": "AlbumArtLayer",
     "parent": "Layer",
     "functions": [
       {
@@ -5055,10 +5036,10 @@
           ]
         ]
       }
-    ],
-    "name": "AlbumArtLayer"
+    ]
   },
   "B4DCCFFF81FE4bcc961B720FD5BE0FFF": {
+    "name": "ToggleButton",
     "parent": "Button",
     "functions": [
       {
@@ -5076,10 +5057,10 @@
         "name": "getCurCfgVal",
         "parameters": []
       }
-    ],
-    "name": "ToggleButton"
+    ]
   },
   "01E28CE1B05911d5979FE4DE6F51760A": {
+    "name": "GroupList",
     "parent": "GuiObject",
     "functions": [
       {
@@ -5136,10 +5117,10 @@
           ]
         ]
       }
-    ],
-    "name": "GroupList"
+    ]
   },
   "80F0F8BD1BA542a6A0933236A00C8D4A": {
+    "name": "CfgGroup",
     "parent": "Group",
     "functions": [
       {
@@ -5202,10 +5183,10 @@
         "name": "cfgGetName",
         "parameters": []
       }
-    ],
-    "name": "CfgGroup"
+    ]
   },
   "CDCB785D81F242538F0561B872283CFA": {
+    "name": "QueryList",
     "parent": "GuiObject",
     "functions": [
       {
@@ -5213,10 +5194,10 @@
         "name": "onResetQuery",
         "parameters": []
       }
-    ],
-    "name": "QueryList"
+    ]
   },
   "9B2E341B6C9840fa8B850C1B6EE89405": {
+    "name": "MouseRedir",
     "parent": "GuiObject",
     "functions": [
       {
@@ -5262,10 +5243,10 @@
           ]
         ]
       }
-    ],
-    "name": "MouseRedir"
+    ]
   },
   "36D59B7103FD4af897950502B7DB267A": {
+    "name": "DropDownList",
     "parent": "GuiObject",
     "functions": [
       {
@@ -5406,10 +5387,10 @@
           ]
         ]
       }
-    ],
-    "name": "DropDownList"
+    ]
   },
   "7FD5F210ACC448dfA6A05451576CDC76": {
+    "name": "LayoutStatus",
     "parent": "GuiObject",
     "functions": [
       {
@@ -5422,10 +5403,10 @@
           ]
         ]
       }
-    ],
-    "name": "LayoutStatus"
+    ]
   },
   "B5BAA53505B34dcbADC1E618D28F6896": {
+    "name": "TabSheet",
     "parent": "GuiObject",
     "functions": [
       {
@@ -5443,10 +5424,10 @@
           ]
         ]
       }
-    ],
-    "name": "TabSheet"
+    ]
   },
   "6129FEC1DAB74d51916501CA0C1B70DB": {
+    "name": "GuiList",
     "parent": "GuiObject",
     "functions": [
       {
@@ -6257,10 +6238,10 @@
           ]
         ]
       }
-    ],
-    "name": "GuiList"
+    ]
   },
   "D59514F7ED3645e8980F3F4EA0522CD9": {
+    "name": "GuiTree",
     "parent": "GuiObject",
     "functions": [
       {
@@ -6772,10 +6753,10 @@
           ]
         ]
       }
-    ],
-    "name": "GuiTree"
+    ]
   },
   "9B3B4B82667A420e8FFC794115809C02": {
+    "name": "TreeItem",
     "parent": "Object",
     "functions": [
       {
@@ -7002,10 +6983,10 @@
           ]
         ]
       }
-    ],
-    "name": "TreeItem"
+    ]
   },
   "1D8631C880D047929F98BD5D36B49136": {
+    "name": "MenuButton",
     "parent": "GuiObject",
     "functions": [
       {
@@ -7038,10 +7019,10 @@
         "name": "closeMenu",
         "parameters": []
       }
-    ],
-    "name": "MenuButton"
+    ]
   },
   "C7ED319953194798986360B15A298CAA": {
+    "name": "CheckBox",
     "parent": "GuiObject",
     "functions": [
       {
@@ -7084,10 +7065,10 @@
         "name": "getText",
         "parameters": []
       }
-    ],
-    "name": "CheckBox"
+    ]
   },
   "2D2D1376BE0A4CB9BC0C57E6E4C999F5": {
+    "name": "Form",
     "parent": "GuiObject",
     "functions": [
       {
@@ -7115,10 +7096,10 @@
         "name": "deleteAll",
         "parameters": []
       }
-    ],
-    "name": "Form"
+    ]
   },
   "E2BBC14D84F64173BDB3B2EB2F665550": {
+    "name": "Frame",
     "parent": "GuiObject",
     "functions": [
       {
@@ -7146,10 +7127,10 @@
           ]
         ]
       }
-    ],
-    "name": "Frame"
+    ]
   },
   "73C00594961F401B9B1B672427AC4165": {
+    "name": "Menu",
     "parent": "GuiObject",
     "functions": [
       {
@@ -7247,7 +7228,6 @@
         "name": "previousMenu",
         "parameters": []
       }
-    ],
-    "name": "Menu"
+    ]
   }
 }

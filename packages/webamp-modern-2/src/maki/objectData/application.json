@@ -1,5 +1,6 @@
 {
   "B8E867B027154da7A5BA53DBA1FCFEAC": {
+    "name": "Application",
     "parent": "Object",
     "functions": [
       {
@@ -72,7 +73,6 @@
           ]
         ]
       }
-    ],
-    "name": "Application"
+    ]
   }
 }

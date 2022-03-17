@@ -1,5 +1,6 @@
 {
   "593DBA22D0774976B952F4713655400B": {
+    "name": "Config",
     "parent": "Object",
     "functions": [
       {
@@ -36,10 +37,10 @@
           ]
         ]
       }
-    ],
-    "name": "Config"
+    ]
   },
   "D40302823AAB4d87878D12326FADFCD5": {
+    "name": "ConfigItem",
     "parent": "Object",
     "functions": [
       {
@@ -81,10 +82,10 @@
         "name": "getName",
         "parameters": []
       }
-    ],
-    "name": "ConfigItem"
+    ]
   },
   "24DEC283B76E4a368CCC9E24C46B6C73": {
+    "name": "ConfigAttribute",
     "parent": "Object",
     "functions": [
       {
@@ -117,7 +118,6 @@
         "name": "getAttributeName",
         "parameters": []
       }
-    ],
-    "name": "ConfigAttribute"
+    ]
   }
 }
