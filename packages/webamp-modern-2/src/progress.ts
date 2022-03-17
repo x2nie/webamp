@@ -118,6 +118,7 @@ for (const cls of classes) {
     // console.log(`inspecting: ${cls.name} @ ${method.name} :> ${method.status}`)
     methodDiv.innerText = method.name;
     methodDiv.title = method.name;
+    methodDiv.setAttribute('lower', method.name.toLowerCase());
     switch (method.status) {
       case "missing":
         methodDiv.style.backgroundColor = "pink";
@@ -138,3 +139,25 @@ for (const cls of classes) {
 methodHeader.innerText += ` (${found}/${total}, ${Math.round(
   (found / total) * 100
 )}% Complete)`;
+
+
+const searchInput = document.getElementById('search') as HTMLInputElement;
+searchInput.addEventListener('input', ev=>{
+  const findText = searchInput.value.toLowerCase();
+  if(findText=='') {
+    document.body.classList.remove('searching')
+  } else {
+    document.body.classList.add('searching')
+  }
+  const methods = document.getElementsByClassName('method') as unknown as HTMLElement[];
+  for(const td of methods){
+  // methods.forEach(td => {
+    if(td.attributes.getNamedItem('lower').value.indexOf(findText)>=0){
+      td.style.removeProperty('display')
+    } else {
+      td.style.display = 'none'
+    }
+  }
+
+
+})

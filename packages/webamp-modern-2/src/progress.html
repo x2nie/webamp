@@ -30,6 +30,7 @@
        margin: 1px;
       }
 
+      .searching .method,
       .expanded .method {
         width: auto;
        height: 20px;
@@ -49,10 +50,25 @@
         text-align: right;
         margin-right: 4px;
       }
+      #search {
+        border: 1ps solid silver;
+        padding: 5px;
+        border-radius: 10px;
+        margin: 0 auto;
+        margin-bottom: 10px;
+      }
+      .center {
+        display: flex;
+        align-items: center;
+      }
     </style>
   </head>
   <body>
     <h1>Maki Implementation Progress</h1>
+    <div class="center">
+      <input name="search" id="search" tabindex="1" placeholder="Search"/>
+    </div>
+    
     <script type="module" src="./progress.js"></script>
   </body>
 </html>
