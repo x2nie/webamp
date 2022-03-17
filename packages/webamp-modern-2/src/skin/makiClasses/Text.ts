@@ -367,6 +367,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     }
     return textWidth;
   }
+  gettextwidth(): number{
+    return this.getautowidth();
+  }
   _getBitmapFontTextWidth(font: BitmapFont): number {
     const charWidth = font._charWidth;
     // this._div.setAttribute('charwidth', charWidth.toString())
