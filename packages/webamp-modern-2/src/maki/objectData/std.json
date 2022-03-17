@@ -2172,7 +2172,7 @@
             "param"
           ],
           [
-            "Any",
+            "String",
             "value"
           ]
         ]
@@ -3388,6 +3388,16 @@
           [
             "int",
             "retcode"
+          ]
+        ]
+      },
+      {
+        "result": "GuiObject",
+        "name": "findObject",
+        "parameters": [
+          [
+            "String",
+            "id"
           ]
         ]
       },
