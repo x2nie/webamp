@@ -7,8 +7,9 @@ class PrivateConfig {
     }
     return this._sections.get(section);
   }
-  getPrivateInt(section: string, item: string, defvalue: number) {
-    return this._getSection(section).get(item) ?? defvalue;
+  getPrivateInt(section: string, item: string, defvalue: number):number {
+    const value:string = this._getSection(section).get(item);
+    return value? parseInt(value) : defvalue ;
   }
 
   setPrivateInt(section: string, item: string, value: number) {
