@@ -63,8 +63,8 @@ export class Edges {
                     if(first || y!= lastY || x==0){
                         first = false;
                         post(x,y);
-                        lastY = y;
                     }
+                    lastY = y;
                     break;
                 }
             }
