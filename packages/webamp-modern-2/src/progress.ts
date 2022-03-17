@@ -87,16 +87,17 @@ for (const [key, obj] of Object.entries(normalizedObjects)) {
   methods.sort(function(a,b){return a.name > b.name ? 1 :a.name < b.name? -1 : 0})
   classes.push({ name, methods });
 }
+classes.sort(function(a,b){return a.name > b.name ? 1 :a.name < b.name? -1 : 0})
 
 let total = 0;
 let found = 0;
 
 for (const cls of classes) {
   const classRow = document.createElement("tr");
-  classRow.addEventListener("click", () => {
+  const className = document.createElement("td");
+  className.addEventListener("click", () => {
     classRow.classList.toggle("expanded");
   });
-  const className = document.createElement("td");
   className.classList.add("class-name");
   const totalCount = cls.methods.filter((m) => !m.hook).length;
   const foundCount = cls.methods.filter(
