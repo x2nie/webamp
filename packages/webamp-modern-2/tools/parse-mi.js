@@ -58,7 +58,7 @@ function parseFile(filePath) {
   const objectIds = {};
   Object.keys(objects).forEach((normalizedName) => {
     const { id, parent, functions, name } = objects[normalizedName];
-    objectIds[id] = { parent, functions, name };
+    objectIds[id] = { name, parent, functions };
   });
 
   return objectIds;
