@@ -57,9 +57,9 @@ export class Edges {
         for (x = w-1; x >= 0; x--) {       //? scan bottom, right->left
             for(y = h-1; y >=0; y--){     //? find most top of non-transparent
                 if(fine(x,y)) {
-                    if(!first && y!= lastY){
-                        post(lastX, lastY);
-                    }
+                    // if(!first && y!= lastY){
+                    //     post(lastX, lastY);
+                    // }
                     if(first || y!= lastY || x==0){
                         first = false;
                         post(x,y);

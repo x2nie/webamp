@@ -3,6 +3,10 @@ import { Edges } from "./skin/Clippath";
 document.getElementById('clickable').onclick = ev=>{
     alert('click on green!')
 }
+document.getElementById('img1').onclick = event=>{
+    alert('click on IMAGE.')
+    event.stopPropagation()
+}
 
 function main(){
     const oriImg = document.getElementById("img1");
