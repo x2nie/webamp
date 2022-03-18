@@ -88,12 +88,12 @@ export default class Group extends GuiObj {
         this.putAsRegion(child);
         hasRegions = true;
       }
-      else if(child._sysregion==1){
-        const bgUrl= child._div.style.getPropertyValue('--background-image');
-        child._div.style.setProperty('mask-image', bgUrl);
-        child._div.style.setProperty('-webkit-mask-image', bgUrl);
-        // child._div.style.pointerEvents = 'none'; //TODO: don't! because some sysregion=1 == resize!=0
-      }
+      // else if(child._sysregion==1){
+      //   const bgUrl= child._div.style.getPropertyValue('--background-image');
+      //   child._div.style.setProperty('mask-image', bgUrl);
+      //   child._div.style.setProperty('-webkit-mask-image', bgUrl);
+      //   // child._div.style.pointerEvents = 'none'; //TODO: don't! because some sysregion=1 == resize!=0
+      // }
     }
     if(hasRegions){
       this.setRegion()

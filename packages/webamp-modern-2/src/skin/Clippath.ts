@@ -1,17 +1,18 @@
 export class Edges {
-    top:string = '';
-    right:string = '';
-    bottom:string = '';
-    left:string = '';
+    _top:    string[];
+    _right:  string[];
+    _bottom: string[];
+    _left:   string[];
 
     parseCanvasTransparency(canvas: HTMLCanvasElement) {
         const w = canvas.width;
         const h = canvas.height;
         console.log(w,h)
         const ctx = canvas.getContext('2d');
-        const points = [];
         const data = ctx.getImageData(0,0,w,h).data;
-        var x,y,lastX, lastY; 
+        let points:string[] = [];
+        var x,y,lastX, lastY;
+        var lastfoundx:number, lastfoundy:number, pending:boolean;
         var first:boolean, found:boolean, lastfounded:boolean;
 
         //? return true if not transparent
@@ -26,20 +27,26 @@ export class Edges {
         }
         
         //? top -------------------------------------------------
-        lastY = 0; first=true;
-        for (x = 0; x < w; x++) {       //? scan top, left->right
+        points = []; lastY = 0; first=true; pending=false;
+        for (x = 0; x <= w; x++) {       //? scan top, left->right
             found = false;
-            for(y = 0; y < h; y++){     //? find most top of non-transparent
+            for(y = 0; y <= h; y++){     //? find most top of non-transparent
                 if(fine(x,y)) {
                     found = true;
-                    // if(!first && y!= lastY){
-                    //     post(lastX, lastY);
-                    // }
-                    if(first || y!= lastY || x==w-1){
+                    if(!first && y!= lastY && pending){
+                        post(lastfoundx+1, lastfoundy)
+                    }
+                    if(first || y!= lastY || x==w){
                         first = false;
                         post(x,y);
                         lastY = y;
+                        pending=false;
+                    } else if(x==w && pending) {
+                        post(lastfoundx, lastfoundy)
+                    } else {
+                        pending=true;
                     }
+                    lastfoundx=x; lastfoundy=y;
                     break;
                 }
             }
@@ -49,27 +56,54 @@ export class Edges {
             lastX = x;
             lastfounded = found;
         }
-        this.top = points.join(', \n')
+        this._top = points;// points.join(', \n')
 
         //? bottom -------------------------------------------------
-        points.splice(0, points.length)
-        lastY = h-1; first=true;
-        for (x = w-1; x >= 0; x--) {       //? scan bottom, right->left
+        points = []
+        lastY = h-1; first=true; pending=false;
+        for (x = w; x >= 0; x--) {       //? scan bottom, right->left
+            found = false;
             for(y = h-1; y >=0; y--){     //? find most top of non-transparent
                 if(fine(x,y)) {
-                    // if(!first && y!= lastY){
-                    //     post(lastX, lastY);
-                    // }
+                    found = true;
+                    if(!first && y!= lastY && pending){
+                        post(lastfoundx, lastfoundy+1)
+                    }
                     if(first || y!= lastY || x==0){
                         first = false;
-                        post(x,y);
+                        post(x,y+1);
+                        lastY = y;
+                        pending=false;
+                    } else if(x==0 && pending) {
+                        post(lastfoundx, lastfoundy+1)
+                    } else {
+                        pending=true;
                     }
-                    lastY = y;
+                    lastfoundx=x; lastfoundy=y;
                     break;
                 }
             }
+            if(!found && lastfounded){
+                post(lastX, lastY);
+            }
             lastX = x;
+            lastfounded = found;
         }
-        this.bottom = points.join(', \n')
+        this._bottom = points;// points.join(', \n')
+    }
+
+    get top():string {
+        return this._top.join(', ')
+    }
+    get bottom():string {
+        return this._bottom.join(', ')
+    }
+
+    isSimpleRect():boolean {
+        return this._top.length==2 && this._bottom.length==2;
+    }
+
+    getPolygon():string {
+        return `polygon(${this.top}, ${this.bottom})`;
     }
 }

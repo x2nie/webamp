@@ -2,6 +2,7 @@ import GuiObj from "./GuiObj";
 import UI_ROOT from "../../UIRoot";
 import { num, toBool } from "../../utils";
 import Layout from "./Layout";
+import { Edges } from "../Clippath";
 
 export const LEFT   = 1 << 1;
 export const RIGHT  = 1 << 2;
@@ -25,12 +26,16 @@ export default class Layer extends GuiObj {
       this._isMouseTrap = true;
     }
     if (super.setXmlAttr(_key, value)) {
+      if(key=='sysregion'){
+        this._renderRegion()
+      }
       return true;
     }
     switch (key) {
       case "image":
         this._image = value;
         this._renderBackground();
+        this._renderRegion()
         break;
       case "move":
         this._movable = toBool(value);
@@ -44,6 +49,19 @@ export default class Layer extends GuiObj {
         return false;
     }
     return true;
+  }
+
+  _renderRegion(){
+    if(this._sysregion==1 && this._image){
+      const canvas = UI_ROOT.getBitmap(this._image).getCanvas();
+      const edge = new Edges();
+      edge.parseCanvasTransparency(canvas);
+      if(edge.isSimpleRect()){
+        this.setXmlAttr('sysregion','0')
+      } else {
+        this._div.style.clipPath = edge.getPolygon()
+      }
+    }
   }
 
   _renderCssCursor() {
