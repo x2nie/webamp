@@ -58,6 +58,38 @@ export class Edges {
         }
         this._top = points;// points.join(', \n')
 
+        //? Right -------------------------------------------------
+        points = []; lastX = 0; first=true; pending=false;
+        for (y = 0; y <= h; y++) {       //? scan right, top->bottom
+            found = false;
+            for(x = w-1; x >= 0; x--){     //? find most right of non-transparent
+                if(fine(x,y)) {
+                    found = true;
+                    if(!first && x!= lastX && pending){
+                        post(lastfoundx+1, lastfoundy)
+                    }
+                    if(first || x!= lastX || y==h-1){
+                        first = false;
+                        post(x+1,y);
+                        lastX = x;
+                        pending=false;
+                    } else if(y==h && pending) {
+                        post(lastfoundx+1, lastfoundy)
+                    } else {
+                        pending=true;
+                    }
+                    lastfoundx=x; lastfoundy=y;
+                    break;
+                }
+            }
+            if(!found && lastfounded){
+                post(lastX, lastY);
+            }
+            lastY = y;
+            lastfounded = found;
+        }
+        this._right = points;// points.join(', \n')
+
         //? bottom -------------------------------------------------
         points = []
         lastY = h-1; first=true; pending=false;
@@ -95,6 +127,10 @@ export class Edges {
     get top():string {
         return this._top.join(', ')
     }
+    get right():string {
+        return this._right.join(', ')
+    }
+
     get bottom():string {
         return this._bottom.join(', ')
     }
@@ -104,6 +140,6 @@ export class Edges {
     }
 
     getPolygon():string {
-        return `polygon(${this.top}, ${this.bottom})`;
+        return `polygon(${this.top}, ${this.right}, ${this.bottom})`;
     }
 }
