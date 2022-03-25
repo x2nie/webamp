@@ -5,8 +5,8 @@ import GuiObj from "./GuiObj";
 interface ActionHandler {
   // 0-255
   onsetposition(position: number): void;
-  onLeftMouseDown(x:number, y:number): void;
-  onLeftMouseUp(x:number, y:number): void;
+  onLeftMouseDown(x: number, y: number): void;
+  onLeftMouseUp(x: number, y: number): void;
   dispose(): void;
 }
 const MAX = 255;
@@ -32,11 +32,15 @@ export default class Slider extends GuiObj {
   _mouseX: number;
   _mouseY: number;
 
-  getRealWidth(){
-    return this._div.getBoundingClientRect().width;    
+  getRealWidth() {
+    return this._div.getBoundingClientRect().width;
   }
   constructor() {
     super();
+    this._registerMouseEvents();
+  }
+
+  _registerMouseEvents(){
     this._thumbDiv.addEventListener("mousedown", (downEvent: MouseEvent) => {
       if(downEvent.button!=0) return; // only care LeftButton
       const bitmap = UI_ROOT.getBitmap(this._thumb);
@@ -189,17 +193,17 @@ export default class Slider extends GuiObj {
     this.onsetposition(newPos);
   }
 
-  doLeftMouseDown(x:number, y:number){
+  doLeftMouseDown(x: number, y: number) {
     UI_ROOT.vm.dispatch(this, "onleftbuttondown", [
       { type: "INT", value: x },
       { type: "INT", value: y },
     ]);
     if (this._actionHandler != null) {
-      this._actionHandler.onLeftMouseDown(x,y);
+      this._actionHandler.onLeftMouseDown(x, y);
     }
   }
-  doLeftMouseUp(x:number, y:number){
-    console.log('slider.doLeftMouseUp')
+  doLeftMouseUp(x: number, y: number) {
+    console.log("slider.doLeftMouseUp");
     UI_ROOT.vm.dispatch(this, "onleftbuttonup", [
       { type: "INT", value: x },
       { type: "INT", value: y },
@@ -211,8 +215,8 @@ export default class Slider extends GuiObj {
       { type: "INT", value: this.getposition() },
     ]);
     if (this._actionHandler != null) {
-      console.log('slider_ACTION.doLeftMouseUp')
-      this._actionHandler.onLeftMouseUp(x,y);
+      console.log("slider_ACTION.doLeftMouseUp");
+      this._actionHandler.onLeftMouseUp(x, y);
     }
   }
 
@@ -296,13 +300,13 @@ export default class Slider extends GuiObj {
 // eslint-disable-next-line rulesdir/proper-maki-types
 class SeekActionHandler implements ActionHandler {
   _slider: Slider;
-  _pendingChange:boolean;
+  _pendingChange: boolean;
   _subscription: () => void;
 
   constructor(slider: Slider) {
     this._slider = slider;
     const update = () => {
-      if(!this._pendingChange) {
+      if (!this._pendingChange) {
         slider._position = UI_ROOT.audio.getCurrentTimePercent();
         // TODO: We could throttle this, or only render if the change is "significant"?
         slider._renderThumbPosition();
@@ -313,21 +317,21 @@ class SeekActionHandler implements ActionHandler {
   }
 
   onsetposition(position: number): void {
-    console.log('seek:', position)
-    this._pendingChange = this._slider._onSetPositionEvenEaten!=0;
-    if(!this._pendingChange) {
+    console.log("seek:", position);
+    this._pendingChange = this._slider._onSetPositionEvenEaten != 0;
+    if (!this._pendingChange) {
       UI_ROOT.audio.seekToPercent(position / MAX);
     }
   }
 
-  onLeftMouseDown(x:number, y:number){};
-  onLeftMouseUp(x:number, y:number){
-    console.log('slider_ACTION.doLeftMouseUp')
-    if(this._pendingChange) {
+  onLeftMouseDown(x: number, y: number) {}
+  onLeftMouseUp(x: number, y: number) {
+    console.log("slider_ACTION.doLeftMouseUp");
+    if (this._pendingChange) {
       this._pendingChange = false;
       UI_ROOT.audio.seekToPercent(this._slider.getposition() / MAX);
     }
-  };
+  }
 
   dispose(): void {
     this._subscription();
@@ -351,8 +355,8 @@ class EqActionHandler implements ActionHandler {
   onsetposition(position: number): void {
     UI_ROOT.audio.setEq(this._kind, position / MAX);
   }
-  onLeftMouseDown(x:number, y:number){};
-  onLeftMouseUp(x:number, y:number){};
+  onLeftMouseDown(x: number, y: number) {}
+  onLeftMouseUp(x: number, y: number) {}
 
   dispose(): void {
     this._subscription();
@@ -369,9 +373,8 @@ class PanActionHandler implements ActionHandler {
   onsetposition(position: number): void {
     // TODO
   }
-  onLeftMouseDown(x:number, y:number){};
-  onLeftMouseUp(x:number, y:number){};
-
+  onLeftMouseDown(x: number, y: number) {}
+  onLeftMouseUp(x: number, y: number) {}
 
   dispose(): void {
     this._subscription();
@@ -380,9 +383,9 @@ class PanActionHandler implements ActionHandler {
 
 // eslint-disable-next-line rulesdir/proper-maki-types
 class VolumeActionHandler implements ActionHandler {
-  // _subscription: () => void;
-  _changing: boolean = false;
   _subscription: () => void;
+  _changing: boolean = false;
+  
 
   constructor(slider: Slider) {
     this._subscription = () => {};

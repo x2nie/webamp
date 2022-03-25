@@ -20,7 +20,7 @@ import GuiObj from "./makiClasses/GuiObj";
 import Config from "./makiClasses/Config";
 import ConfigItem from "./makiClasses/ConfigItem";
 import ConfigAttribute from "./makiClasses/ConfigAttribute";
-import WinampConfig, {WinampConfigGroup} from "./makiClasses/WinampConfig";
+import WinampConfig, { WinampConfigGroup } from "./makiClasses/WinampConfig";
 import CompnentBucket from "./makiClasses/ComponentBucket";
 import AlbumArt from "./makiClasses/AlbumArt";
 

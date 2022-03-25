@@ -21,13 +21,12 @@ export class UIRoot {
   _fonts: (TrueTypeFont | BitmapFont)[] = [];
   _colors: Color[] = [];
   _groupDefs: XmlElement[] = [];
-  _clonnableGroup = {}
   _gammaSets: Map<string, GammaGroup[]> = new Map();
   _gammaNames = {};
   _dummyGammaGroup: GammaGroup = null;
+  _activeGammaSetName: string = "";
   _xuiElements: XmlElement[] = [];
   _activeGammaSet: GammaGroup[] = [];
-  _activeGammaSetName : string = '';
   _containers: Container[] = [];
   _systemObjects: SystemObject[] = [];
 
@@ -175,7 +174,7 @@ export class UIRoot {
   }
 
   enableGammaSet(id: string) {
-    if(id){
+    if (id) {
       const found = this._gammaSets.get(id.toLowerCase());
       assume(
         found != null,

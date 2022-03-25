@@ -6,19 +6,8 @@ import Button from "./Button";
 export default class ToggleButton extends Button {
   static GUID = "b4dccfff4bcc81fe0f721b96ff0fbed5";
 
-  getElTag():string{
-    return 'button';
-  }
-  
-  setXmlAttr(key: string, value: string): boolean {
-    if (super.setXmlAttr(key, value)) {
-      return true;
-    }
-    switch (key) {
-      default:
-        return false;
-    }
-    return true;
+  getElTag(): string {
+    return "button";
   }
 
   getcurcfgval(): number{

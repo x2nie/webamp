@@ -41,10 +41,7 @@ export default class Bitmap {
         this._height = num(value);
         break;
       case "file":
-        this._file = value;
-        if(this._file.startsWith('../Winamp Modern/')){
-          this._file = this._file.replace('../Winamp Modern/','')
-        }
+        this._file = value.replace('../Winamp Modern/','');
         break;
       case "gammagroup":
         this._gammagroup = value;

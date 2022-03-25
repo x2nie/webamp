@@ -142,6 +142,7 @@ function readClasses(makiFile: MakiFile): string[] {
     }
     classes.push(identifier);
   }
+  console.log('klass:',classes)
   return classes;
 }
 
@@ -162,6 +163,7 @@ function readMethods(makiFile: MakiFile, classes: string[]): Method[] {
 
     methods.push({ name, typeOffset, returnType });
   }
+  console.log('.funs:',methods)
   return methods;
 }
 
@@ -238,6 +240,7 @@ function readVariables({ makiFile, classes }) {
       variables.push(variable);
     }
   }
+  console.log('vars:', variables)
   return variables;
 }
 
@@ -262,6 +265,7 @@ function readBindings(makiFile: MakiFile): Binding[] {
     const binaryOffset = makiFile.readUInt32LE();
     bindings.push({ variableOffset, binaryOffset, methodOffset });
   }
+  console.log('binds:', bindings)
   return bindings;
 }
 

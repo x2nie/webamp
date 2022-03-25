@@ -384,8 +384,8 @@ export default class GuiObj extends XmlObj {
     this._renderDimensions();
   }
 
-  getxmlparam(param:string): string { 
-    const _ = this['_'+param];
+  getxmlparam(param: string): string {
+    const _ = this["_" + param];
     return _ != null ? _.toString() : null;
   }
   getguiw(): number { return this._width; }
@@ -407,25 +407,25 @@ export default class GuiObj extends XmlObj {
     }
     return 1;
   }
-  getautoheight(): number { return this._div.getBoundingClientRect().height; }
-
+  getautoheight(): number {
+    return this._div.getBoundingClientRect().height;
+  }
 
   findobject(id: string): GuiObj {
-    if(id.toLowerCase()==this.getId().toLowerCase()) return this;
+    if (id.toLowerCase() == this.getId().toLowerCase()) return this;
 
     //? Phase 1: find in this children
     let ret = this._findobject(id);
-    
+
     //? Phase 2: find in this layout's children
-    if(!ret /* && this._parent  */){
-      // const group = this instanceof Group? this as Group : this._parent as Group;
-      const layout = this.getparentlayout()
-      if(layout){
+    if (!ret /* && this._parent  */) {
+      const layout = this.getparentlayout();
+      if (layout) {
         ret = layout._findobject(id);
       }
     }
-    if(!ret && id !='sysmenu'){
-      console.warn(`findObject(${id}) failed, @${this.getId()}`)
+    if (!ret && id != "sysmenu") {
+      console.warn(`findObject(${id}) failed, @${this.getId()}`);
     }
     return ret;
   }
@@ -433,8 +433,8 @@ export default class GuiObj extends XmlObj {
   /* internal findObject with custom error msg */
   findobjectF(id: string, msg: string): GuiObj {
     const ret = this._findobject(id);
-    if(!ret && id !='sysmenu'){
-      console.warn(msg)
+    if (!ret && id != "sysmenu") {
+      console.warn(msg);
     }
     return ret;
   }
