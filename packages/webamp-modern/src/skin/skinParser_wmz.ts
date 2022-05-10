@@ -19,9 +19,9 @@ export default class WmpSkinParser extends SkinParser {
     this._phase = RESOURCE_PHASE;
 
     let includedXml = await this._uiRoot.getFileAsString(".wms");
-    for(var i = 0; i<12; i++){
-      console.log(i, includedXml.charCodeAt(i))
-    }
+    // for(var i = 0; i<12; i++){
+    //   console.log(i, includedXml.charCodeAt(i))
+    // }
     // includedXml = includedXml.substring(6, includedXml.length)
 
     // Note: Included files don't have a single root node, so we add a synthetic one.
@@ -40,6 +40,11 @@ export default class WmpSkinParser extends SkinParser {
     this._phase = GROUP_PHASE;
     await this.traverseChildren(parsed);
 
+    //debug:
+    for (const bmpId of Object.keys(UI_ROOT.getBitmaps())) {
+      console.log("bitmap loaded:", bmpId);
+    }
+
     return this._uiRoot;
   }
 
@@ -48,7 +53,8 @@ export default class WmpSkinParser extends SkinParser {
     switch (tag) {
       case "theme":
         return this.theme(node, parent);
-      case "wasabixml":
+      case "view":
+        return this.view(node, parent);
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
       case "wrapper":
@@ -66,6 +72,27 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   /**
+   * <view> = <container><layout/></container>
+   * @param node
+   * @param parent
+   */
+  async view(node: XmlElement, parent: any) {
+    const attr = node.attributes;
+    const containerEl = new XmlElement("container", {
+      id: attr.id,
+    });
+    const container = await this.container(containerEl, null);
+
+    //? layout
+    node.attributes.id = "normal";
+    node.attributes.w = node.attributes.width;
+    node.attributes.h = node.attributes.height;
+    node.attributes.background = node.attributes.backgroundimage;
+
+    await this.layout(node, container);
+  }
+
+  /**
    * WMZ seem as has only one xml; that is it
    * @param node
    * @param parent
@@ -80,34 +107,75 @@ export default class WmpSkinParser extends SkinParser {
     }
   }
 
-  async parseAttributesAsImages(node: XmlElement) {
-    return;
+  /**
+   * wmp has no <bitmap/>, we load bitmaps here
+   * @param theme
+   * @returns
+   */
+  async parseAttributesAsImages(theme: XmlElement) {
+    // return;
+    const recursiveScanChildren = (mother: XmlElement) => {
+      for (const element of mother.children) {
+        if (element instanceof XmlElement) {
+          this._lowercaseAttributes(element); // set all xml attribute to lowercase.
+          for (const att of [
+            "image",
+            "backgroundimage",
+            "disabledimage",
+            "downimage",
+            "thumbimage",
+            "hoverimage",
+          ])
+            if (element.attributes[att]) {
+              const bitmapId = element.attributes[att];
+              const node = new XmlElement("bitmap", {
+                id: bitmapId,
+                file: bitmapId,
+              });
+              this.bitmap(node);
+            }
+          recursiveScanChildren(element);
+        }
+      }
+    }; //eof function
+
+    recursiveScanChildren(theme);
+  }
+
+  _lowercaseAttributes(element: XmlElement) {
+    for (const att of Object.keys(element.attributes)) {
+      if (att != att.toLowerCase()) {
+        element.attributes[att.toLowerCase()] = element.attributes[att];
+        delete element.attributes[att];
+      }
+    }
   }
 
   parseXmlFragment(xml: string): XmlElement {
-    if(!xml.startsWith('<wrapper>')){
-      xml = `<wrapper>${xml}</wrapper>`
+    if (!xml.startsWith("<wrapper>")) {
+      xml = `<wrapper>${xml}</wrapper>`;
     }
     let result;
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
     try {
-      
       // result= parseXml(xml) as unknown as XmlElement;
-      result= parseXml2(xml) as unknown as XmlElement;
+      result = parseXml2(xml) as unknown as XmlElement;
     } catch (error) {
-      console.warn(error)
-      console.log('e:',error.message)
-      console.log('column:', error.column)
-      console.log('exceprt:',error.excerpt)
-      console.log('line:', error.line)
-      console.log('pos:', error.pos)
-      console.log(error.excerpt.substring(error.column,error.column+100))
-      console.log('full:',xml.substring(error.pos,error.pos+100))
+      console.warn(error);
+      console.log("e:", error.message);
+      console.log("column:", error.column);
+      console.log("exceprt:", error.excerpt);
+      console.log("line:", error.line);
+      console.log("pos:", error.pos);
+      console.log(error.excerpt.substring(error.column, error.column + 100));
+      console.log("full:", xml.substring(error.pos, error.pos + 100));
     }
-    return result
+    return result;
   }
 }
+//
+//
 
 //Braindead decoder that assumes fully valid input
 function decodeUTF16LE(binaryStr) {
@@ -121,13 +189,13 @@ function decodeUTF16LE(binaryStr) {
   return result;
 }
 
-function decodeWideChars(binaryStr:string) {
+function decodeWideChars(binaryStr: string) {
   var cp = "";
   for (var i = 1; i < binaryStr.length; i += 2) {
     cp += binaryStr[i];
   }
   var result = cp;
-  console.log("res:", result);
+  // console.log("res:", result);
   return result;
 }
 
@@ -143,32 +211,41 @@ function decodeWideChars(binaryStr:string) {
  * @param   {string} unicodeString - Unicode string to be encoded as UTF-8.
  * @returns {string} UTF8-encoded string.
  */
- function utf8Encode(unicodeString) {
-  if (typeof unicodeString != 'string') throw new TypeError('parameter ‘unicodeString’ is not a string');
-  const utf8String = unicodeString.replace(
-      /[\u0080-\u07ff]/g,  // U+0080 - U+07FF => 2 bytes 110yyyyy, 10zzzzzz
-      function(c) {
-          var cc = c.charCodeAt(0);
-          return String.fromCharCode(0xc0 | cc>>6, 0x80 | cc&0x3f); }
-  ).replace(
-      /[\u0800-\uffff]/g,  // U+0800 - U+FFFF => 3 bytes 1110xxxx, 10yyyyyy, 10zzzzzz
-      function(c) {
-          var cc = c.charCodeAt(0);
-          return String.fromCharCode(0xe0 | cc>>12, 0x80 | cc>>6&0x3F, 0x80 | cc&0x3f); }
-  );
+function utf8Encode(unicodeString) {
+  if (typeof unicodeString != "string")
+    throw new TypeError("parameter ‘unicodeString’ is not a string");
+  const utf8String = unicodeString
+    .replace(
+      /[\u0080-\u07ff]/g, // U+0080 - U+07FF => 2 bytes 110yyyyy, 10zzzzzz
+      function (c) {
+        var cc = c.charCodeAt(0);
+        return String.fromCharCode(0xc0 | (cc >> 6), 0x80 | (cc & 0x3f));
+      }
+    )
+    .replace(
+      /[\u0800-\uffff]/g, // U+0800 - U+FFFF => 3 bytes 1110xxxx, 10yyyyyy, 10zzzzzz
+      function (c) {
+        var cc = c.charCodeAt(0);
+        return String.fromCharCode(
+          0xe0 | (cc >> 12),
+          0x80 | ((cc >> 6) & 0x3f),
+          0x80 | (cc & 0x3f)
+        );
+      }
+    );
   console.log("res:", utf8String);
   return utf8String;
 }
 
 class Parser2 extends Parser {
   error(message) {
-    if(message.startsWith('Duplicate attribute:')){
-      return;// do not stop on duplicat
+    if (message.startsWith("Duplicate attribute:")) {
+      return; // do not stop on duplicat
     }
-    super.error(message)
+    super.error(message);
   }
 }
 
-function parseXml2(xml: string, options: any=undefined): XmlDocument {
-  return (new Parser2(xml, options)).document;
+function parseXml2(xml: string, options: any = undefined): XmlDocument {
+  return new Parser2(xml, options).document;
 }

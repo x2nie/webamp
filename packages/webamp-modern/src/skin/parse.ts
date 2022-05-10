@@ -874,6 +874,7 @@ export default class SkinParser {
     container.setXmlAttributes(node.attributes);
     this._uiRoot.addContainers(container);
     await this.traverseChildren(node, container);
+    return container
   }
 
   async colorThemesList(node: XmlElement, parent: any) {
