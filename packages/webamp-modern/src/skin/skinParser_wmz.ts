@@ -55,6 +55,8 @@ export default class WmpSkinParser extends SkinParser {
         return this.theme(node, parent);
       case "view":
         return this.view(node, parent);
+      case "subview":
+        return this.subview(node, parent);
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
       case "wrapper":
@@ -79,7 +81,7 @@ export default class WmpSkinParser extends SkinParser {
   async view(node: XmlElement, parent: any) {
     const attr = node.attributes;
     const containerEl = new XmlElement("container", {
-      id: attr.id,
+      id: attr.id || 'main',
     });
     const container = await this.container(containerEl, null);
 
@@ -90,6 +92,16 @@ export default class WmpSkinParser extends SkinParser {
     node.attributes.background = node.attributes.backgroundimage;
 
     await this.layout(node, container);
+  }
+
+  async subview(node: XmlElement, parent: any) {
+    node.attributes.w = node.attributes.width;
+    node.attributes.h = node.attributes.height;
+    node.attributes.x = node.attributes.left;
+    node.attributes.y = node.attributes.top;
+    node.attributes.background = node.attributes.backgroundimage;
+
+    await this.group(node, parent);
   }
 
   /**

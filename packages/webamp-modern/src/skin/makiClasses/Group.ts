@@ -139,7 +139,7 @@ export default class Group extends Movable {
       }
     }
     const w = super.getwidth();
-    if (w == 0 && this._background != null) {
+    if (!w && this._background != null) {
       const bitmap = UI_ROOT.getBitmap(this._background);
       if (bitmap) return bitmap.getWidth();
     }
