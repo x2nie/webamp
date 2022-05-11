@@ -11,6 +11,8 @@ buttongroup > buttonelement {
   height: inherit;
   cursor: pointer;
 }
+buttongroup.webamp--img:active,
+buttongroup.webamp--img:hover:active,
 buttongroup.webamp--img:hover {
     background-image: var(--background-image);
 }
@@ -18,4 +20,8 @@ buttongroup.webamp--img:hover {
 buttongroup > buttonelement:hover {
     background-image: var(--hover-background-image, var(--background-image));
 }
+buttongroup > buttonelement:active,
+buttongroup > buttonelement:hover:active{
+    background-image: var(--down-background-image, var(--background-image));
+  }
   

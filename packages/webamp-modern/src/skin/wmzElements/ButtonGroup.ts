@@ -5,6 +5,7 @@ import Group from "../makiClasses/Group";
 export default class ButtonGroup extends Group {
   _mappingImage: string;
   _hoverImage: string;
+  _downImage: string;
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -20,6 +21,10 @@ export default class ButtonGroup extends Group {
         this._hoverImage = value;
         this._renderBackground();
         break;
+      case "downimage":
+        this._downImage = value;
+        this._renderBackground();
+        break;
       default:
         return false;
     }
@@ -33,6 +38,13 @@ export default class ButtonGroup extends Group {
     } else {
       this.setHoverBackgroundImage(null);
     }
+    if (this._downImage != null) {
+      const downBitmap = UI_ROOT.getBitmap(this._downImage);
+      this.setDownBackgroundImage(downBitmap);
+    } else {
+      this.setDownBackgroundImage(null);
+    }
+
   }
 
   // This shadows `getheight()` on GuiObj
