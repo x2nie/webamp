@@ -227,16 +227,18 @@ export default class WmpSkinParser extends SkinParser {
         delete element.attributes[att];
       }
     }
+    // console.log('--mini', Object.keys(element.attributes))
+    // console.log('--mini', element.attributes)
     //temporary patch to make slider visible:
-    if(element.name=='slider'){
-      if(element.attributes.orientation=='vertical'){
-        element.attributes.w='8'
-        element.attributes.h='64'
-      } else {
-        element.attributes.h='6'
-        element.attributes.w='64'
-      }
-    }
+    // if(element.name=='slider'){
+    //   if(element.attributes.orientation=='vertical'){
+    //     element.attributes.w='8'
+    //     element.attributes.h='64'
+    //   } else {
+    //     element.attributes.h='6'
+    //     element.attributes.w='64'
+    //   }
+    // }
   }
 
   parseXmlFragment(xml: string): XmlElement {
