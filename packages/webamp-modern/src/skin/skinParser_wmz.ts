@@ -44,9 +44,9 @@ export default class WmpSkinParser extends SkinParser {
     await this.traverseChildren(parsed);
 
     //debug:
-    for (const bmpId of Object.keys(UI_ROOT.getBitmaps())) {
-      console.log("bitmap loaded:", bmpId);
-    }
+    // for (const bmpId of Object.keys(UI_ROOT.getBitmaps())) {
+    //   console.log("bitmap loaded:", bmpId);
+    // }
 
     return this._uiRoot;
   }
@@ -69,9 +69,11 @@ export default class WmpSkinParser extends SkinParser {
       case "prevelement":
       case "nextelement":
         return this.buttonelement(node, parent);
-      // Note: Included files don't have a single root node, so we add a synthetic one.
-      // A different XML parser library might make this unnessesary.
+      case "slider":
+        return this.slider(node, parent);
       case "wrapper":
+        // Note: Included files don't have a single root node, so we add a synthetic one.
+        // A different XML parser library might make this unnessesary.
         return this.traverseChildren(node, parent);
       default:
         // TODO: This should be the default fall through
@@ -99,40 +101,23 @@ export default class WmpSkinParser extends SkinParser {
 
     //? layout
     node.attributes.id = "normal";
-    node.attributes.w = node.attributes.width;
-    node.attributes.h = node.attributes.height;
-    node.attributes.background = node.attributes.backgroundimage;
+    // node.attributes.w = node.attributes.width;
+    // node.attributes.h = node.attributes.height;
+    // node.attributes.background = node.attributes.backgroundimage;
 
     await this.newGroup(View, node, container);
   }
 
   async subview(node: XmlElement, parent: any) {
-    node.attributes.w = node.attributes.width;
-    node.attributes.h = node.attributes.height;
-    node.attributes.x = node.attributes.left;
-    node.attributes.y = node.attributes.top;
-    node.attributes.background = node.attributes.backgroundimage;
-
-    await this.group(node, parent);
+    const group = await this.group(node, parent);
+    await this.traverseChildren(node, group);
   }
 
   async buttongroup(node: XmlElement, parent: any) {
-    node.attributes.w = node.attributes.width;
-    node.attributes.h = node.attributes.height;
-    node.attributes.x = node.attributes.left;
-    node.attributes.y = node.attributes.top;
-    node.attributes.background = node.attributes.backgroundimage;
-
     return await this.newGroup(ButtonGroup, node, parent);
   }
 
   async buttonelement(node: XmlElement, parent: any) {
-    node.attributes.w = node.attributes.width;
-    node.attributes.h = node.attributes.height;
-    node.attributes.x = node.attributes.left;
-    node.attributes.y = node.attributes.top;
-    node.attributes.background = node.attributes.backgroundimage;
-
     switch (node.name.toLowerCase()) {
       case "playelement":
         node.attributes.action = "play";
@@ -182,10 +167,10 @@ export default class WmpSkinParser extends SkinParser {
           this._lowercaseAttributes(element); // set all xml attribute to lowercase.
           for (const att of [
             "image",
-            "backgroundimage",
+            "background",
             "disabledimage",
             "downimage",
-            "thumbimage",
+            "thumb",
             "hoverimage",
             "mappingimage",
           ])
@@ -206,9 +191,27 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   _lowercaseAttributes(element: XmlElement) {
+    //? lowercase all att
     for (const att of Object.keys(element.attributes)) {
       if (att != att.toLowerCase()) {
         element.attributes[att.toLowerCase()] = element.attributes[att];
+        delete element.attributes[att];
+      }
+    }
+    //? convert WMZ specific attributes to WAL
+    const replacement = {
+      thumbimage: "thumb",
+      direction: "orientation",
+      left: "x",
+      top: "y",
+      width: "w",
+      height: "h",
+      backgroundimage: "background",
+    };
+    const replacable = Object.keys(replacement);
+    for (const att of Object.keys(element.attributes)) {
+      if (replacable.includes(att)) {
+        element.attributes[replacement[att]] = element.attributes[att];
         delete element.attributes[att];
       }
     }

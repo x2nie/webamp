@@ -7,8 +7,8 @@ buttonelement {
   overflow: hidden;
 }
 buttongroup > buttonelement {
-  width: inherit;
-  height: inherit;
+  width: inherit !important;
+  height: inherit !important;
   cursor: pointer;
 }
 buttongroup.webamp--img:active,

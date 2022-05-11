@@ -123,7 +123,7 @@ export default class Group extends Movable {
   // This shadows `getheight()` on GuiObj
   getheight(): number {
     const h = super.getheight();
-    if (h == null && this._background != null) {
+    if (!h && this._background != null) {
       const bitmap = UI_ROOT.getBitmap(this._background);
       if (bitmap) return bitmap.getHeight();
     }

@@ -38,6 +38,7 @@ export default class ButtonGroup extends Group {
     } else {
       this.setHoverBackgroundImage(null);
     }
+    
     if (this._downImage != null) {
       const downBitmap = UI_ROOT.getBitmap(this._downImage);
       this.setDownBackgroundImage(downBitmap);
