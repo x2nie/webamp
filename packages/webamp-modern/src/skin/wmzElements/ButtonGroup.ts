@@ -66,4 +66,12 @@ export default class ButtonGroup extends Group {
     }
     return w || 0;
   }
+
+  draw() {
+    super.draw();
+    if(!this._background){
+      this._div.classList.remove("webamp--img");
+
+    }
+  }
 }

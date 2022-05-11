@@ -6,6 +6,7 @@ import ButtonGroup from "./ButtonGroup";
 // https://docs.microsoft.com/en-us/windows/win32/wmp/buttonelement-element
 export default class ButtonElement extends GuiObj {
   _mappingColor: string;
+  _action: string = null;
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -19,10 +20,25 @@ export default class ButtonElement extends GuiObj {
         //temporary:
         // this._div.style.backgroundColor = value;
         break;
+      case "action":
+        this.setAction(value);
+        break;
       default:
         return false;
     }
     return true;
+  }
+
+  setAction(action: string) {
+    this._action = action;
+    if (action) {
+      this._div.addEventListener("click", (e: MouseEvent) => {
+        if (e.button == 0) {
+          //   this.leftclick();
+          this.dispatchAction(this._action, null, null);
+        }
+      });
+    }
   }
 
   _renderRegion() {

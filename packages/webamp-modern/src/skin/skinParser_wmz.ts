@@ -66,6 +66,8 @@ export default class WmpSkinParser extends SkinParser {
       case "buttonelement":
       case "playelement":
       case "stopelement":
+      case "prevelement":
+      case "nextelement":
         return this.buttonelement(node, parent);
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
@@ -131,6 +133,24 @@ export default class WmpSkinParser extends SkinParser {
     node.attributes.y = node.attributes.top;
     node.attributes.background = node.attributes.backgroundimage;
 
+    switch (node.name.toLowerCase()) {
+      case "playelement":
+        node.attributes.action = "play";
+        break;
+      case "pauseelement":
+        node.attributes.action = "pause";
+        break;
+      case "stopelement":
+        node.attributes.action = "stop";
+        break;
+      case "prevelement":
+        node.attributes.action = "prev";
+        break;
+      case "nextelement":
+        node.attributes.action = "next";
+        break;
+    }
+
     return await this.newGui(ButtonElement, node, parent);
   }
 
@@ -161,7 +181,7 @@ export default class WmpSkinParser extends SkinParser {
         if (element instanceof XmlElement) {
           this._lowercaseAttributes(element); // set all xml attribute to lowercase.
           for (const att of [
-            "image",            
+            "image",
             "backgroundimage",
             "disabledimage",
             "downimage",
