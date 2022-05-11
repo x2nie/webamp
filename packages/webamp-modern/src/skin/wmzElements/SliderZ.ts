@@ -71,20 +71,39 @@ export default class SliderZ extends Slider {
     // sample: jscript:balance.left+balance.width+27;
     // const re = /jscript:(\w+)\.(\w+)([\+|\-])*(\d+)*/gm;
     for (const [key, script] of Object.entries(this._pendingProps)) {
-      const re = /jscript:(\w+.\w+)(?:([\+|\-])([a-z\d\.]+))*/gm;
-      let m: RegExpExecArray;
+      const z: string[] = []
+      // const regex = /jscript:(\w+.\w+)(?:([\+|\-])([a-z\d\.]+))*/gm;
+      const regex = /\w+\.\w+|[\+-]+|[0-9]+/gm;
+      // let m: RegExpExecArray;
+      let m=null;
+      while ((m = regex.exec(script)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+        
+        // The result can be accessed through the `m`-variable.
+        m.forEach((match, groupIndex) => {
+            console.log(`Found match, group ${groupIndex}: ${match}`);
+            if(match!=null){
+              z.push(match)
+            }
+        });
+        console.log('----------')
+      }
+      console.log('============',z)
       // this.setXmlAttr(key, value);
       let sign = "+";
       let num: number;
-      m = re.exec(script)
+      // m = re.exec(script)
       // console.log('  --for',key, script, 'M==',m)
-      if (m !== null) {
+      if (z.length) {
         let result = 0;
         let msg = ''
         // console.log('--pendingProp, y=',this._y, key, m)
         // for(var i=1; i< m.length; i++)
-        m.forEach((s, index) => {
-          if (index == 0 || s == null) {
+        z.forEach((s, index) => {
+          if (/* index == 0 || */ s == null) {
             return;
           } else if (s.indexOf(".") > 0) {
             const [id, attr] = s.split(".");
@@ -120,11 +139,16 @@ export default class SliderZ extends Slider {
         });
         // const [_,id,attribute, sign,num] = m
         // console.log('pendingProp:',id,attribute, sign,num)
-        // console.log('pendingProp:',msg, '>>',key,'@',script)
+        console.log('pendingProp:',msg, '>>',key,'@',script, '==', result)
         this.setXmlAttr(key, result.toString());
       }
     }
   }
+
+  // init() {
+  //   super.init()
+  //   this._solvePendingProps();
+  // }
 
   draw() {
     this._solvePendingProps();
@@ -134,38 +158,29 @@ export default class SliderZ extends Slider {
     this._renderBackground();
   }
 }
-
-const sliderZregex = /jscript:(\w+)\.(\w+)([\+|\-])*(\d+)*/gm;
+const regex = /\w+\.\w+|[\+-]+|[0-9]+/gm;
 
 // Alternative syntax using RegExp constructor
-// const regex = new RegExp('jscript:(\\w+)\\.(\\w+)([\\+|\\-])*(\\d+)*', 'gm')
+// const regex = new RegExp('\\w+\\.\\w+|[\\+-]+|[0-9]+', 'gm')
 
-// const str = `jscript:balance.top+12;
-// jscript:eq1.top;`;
-// const str = `jscript:balance.top+12;`
-const str = `jscript:eq1.top;`;
+const str = `    // sample: jscript:balance.top+12;
+    // sample: jscript:eq1.top;
+    // sample: jscript:balance.left+balance.width+27;`;
 let m;
 
-// while ((m = regex.exec(str)) !== null) {
-//     // This is necessary to avoid infinite loops with zero-width matches
-//     if (m.index === regex.lastIndex) {
-//         regex.lastIndex++;
-//     }
-
-//     // The result can be accessed through the `m`-variable.
-//     m.forEach((match, groupIndex) => {
-//         console.log(`Found match, group ${groupIndex}: ${match}`);
-//     });
-// }
-if ((m = sliderZregex.exec(str)) !== null) {
-  // This is necessary to avoid infinite loops with zero-width matches
-  // if (m.index === regex.lastIndex) {
-  //     regex.lastIndex++;
-  // }
-  console.log(m[1], m[2], m[3]);
-
-  // The result can be accessed through the `m`-variable.
-  m.forEach((match, groupIndex) => {
-    console.log(`Found match, group ${groupIndex}: ${match}`);
-  });
-}
+var z = []
+while ((m = regex.exec(str)) !== null) {
+    // This is necessary to avoid infinite loops with zero-width matches
+    if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+    }
+    
+    // The result can be accessed through the `m`-variable.
+    m.forEach((match, groupIndex) => {
+        console.log(`Found match, group ${groupIndex}: ${match}`);
+        z.push(match)
+    });
+    console.log('----------')
+  }
+  console.log('M')
+  console.log(z)
