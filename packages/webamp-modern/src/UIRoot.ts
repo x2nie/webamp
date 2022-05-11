@@ -362,13 +362,14 @@ export class UIRoot {
 
       const groupId = bitmap.getGammaGroup();
       const gammaGroup = this._getGammaGroup(groupId);
-      const url = gammaGroup.transformImage(
-        img,
-        bitmap._x,
-        bitmap._y,
-        bitmap._width,
-        bitmap._height
-      );
+      // const url = gammaGroup.transformImage(
+      //   img,
+      //   bitmap._x,
+      //   bitmap._y,
+      //   bitmap._width,
+      //   bitmap._height
+      //   );
+        const url = gammaGroup.transformBitmap(bitmap)
       cssRules.push(`  ${bitmap.getCSSVar()}: url(${url});`);
       //support multiple names
       maybeBitmapAliases(bitmap);

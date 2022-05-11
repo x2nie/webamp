@@ -180,6 +180,13 @@ export default class WmpSkinParser extends SkinParser {
                 id: bitmapId,
                 file: bitmapId,
               });
+              //set transparentColor if any
+              if (att == "background") {
+                if (element.attributes.transparencycolor != null) {
+                  node.attributes.transparentcolor =
+                    element.attributes.transparencycolor;
+                }
+              }
               this.bitmap(node);
             }
           recursiveScanChildren(element);
