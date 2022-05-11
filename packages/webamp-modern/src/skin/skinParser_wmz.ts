@@ -6,6 +6,9 @@ import BitmapFont from "./BitmapFont";
 import EqVis from "./makiClasses/EqVis";
 import Vis from "./makiClasses/Vis";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
+import ButtonElement from "./wmzElements/ButtonElement";
+import ButtonGroup from "./wmzElements/ButtonGroup";
+import View from "./wmzElements/View";
 
 export default class WmpSkinParser extends SkinParser {
   constructor(uiRoot: UIRoot) {
@@ -49,6 +52,7 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async traverseChild(node: XmlElement, parent: any) {
+    //? it completely replace this super method.
     const tag = node.name.toLowerCase();
     switch (tag) {
       case "theme":
@@ -57,6 +61,12 @@ export default class WmpSkinParser extends SkinParser {
         return this.view(node, parent);
       case "subview":
         return this.subview(node, parent);
+      case "buttongroup":
+        return this.buttongroup(node, parent);
+      case "buttonelement":
+      case "playelement":
+      case "stopelement":
+        return this.buttonelement(node, parent);
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
       case "wrapper":
@@ -81,7 +91,7 @@ export default class WmpSkinParser extends SkinParser {
   async view(node: XmlElement, parent: any) {
     const attr = node.attributes;
     const containerEl = new XmlElement("container", {
-      id: attr.id || 'main',
+      id: attr.id || "main",
     });
     const container = await this.container(containerEl, null);
 
@@ -91,7 +101,7 @@ export default class WmpSkinParser extends SkinParser {
     node.attributes.h = node.attributes.height;
     node.attributes.background = node.attributes.backgroundimage;
 
-    await this.layout(node, container);
+    await this.newGroup(View, node, container);
   }
 
   async subview(node: XmlElement, parent: any) {
@@ -102,6 +112,26 @@ export default class WmpSkinParser extends SkinParser {
     node.attributes.background = node.attributes.backgroundimage;
 
     await this.group(node, parent);
+  }
+
+  async buttongroup(node: XmlElement, parent: any) {
+    node.attributes.w = node.attributes.width;
+    node.attributes.h = node.attributes.height;
+    node.attributes.x = node.attributes.left;
+    node.attributes.y = node.attributes.top;
+    node.attributes.background = node.attributes.backgroundimage;
+
+    return await this.newGroup(ButtonGroup, node, parent);
+  }
+
+  async buttonelement(node: XmlElement, parent: any) {
+    node.attributes.w = node.attributes.width;
+    node.attributes.h = node.attributes.height;
+    node.attributes.x = node.attributes.left;
+    node.attributes.y = node.attributes.top;
+    node.attributes.background = node.attributes.backgroundimage;
+
+    return await this.newGui(ButtonElement, node, parent);
   }
 
   /**
@@ -202,6 +232,9 @@ function decodeUTF16LE(binaryStr) {
 }
 
 function decodeWideChars(binaryStr: string) {
+  if (binaryStr.charCodeAt(0) < 256) {
+    return binaryStr;
+  }
   var cp = "";
   for (var i = 1; i < binaryStr.length; i += 2) {
     cp += binaryStr[i];
