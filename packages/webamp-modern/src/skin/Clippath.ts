@@ -1,10 +1,44 @@
 export class Edges {
+  _data: ImageData;
   _top: string[] = [];
   _right: string[] = [];
   _bottom: string[] = [];
   _left: string[] = [];
 
+  /**
+   * Replacable function
+   */
+  opaque: (x: number, y: number) => boolean;
+
+  //? return true if not transparent
+  opaqueByTransparent(x: number, y: number): boolean {
+    return this._data.data[(x + y * this._data.width) * 4 + 3] != 0;
+  }
+
   parseCanvasTransparency(
+    canvas: HTMLCanvasElement,
+    preferedWidth: number,
+    preferedHeight: number
+  ) {
+    this.opaque = this.opaqueByTransparent; //set
+    this._parseCanvasTransparency(canvas, preferedHeight, preferedWidth)
+  }
+
+  parseCanvasTransparencyByNonColor(
+    canvas: HTMLCanvasElement,
+    color:string
+  ) {
+    const rgb = hexToRgb(color);
+    this.opaque = (x: number, y: number): boolean => { //set
+      return (
+      this._data.data[(x + y * this._data.width) * 4 + 0] == rgb.r &&
+      this._data.data[(x + y * this._data.width) * 4 + 1] == rgb.g &&
+      this._data.data[(x + y * this._data.width) * 4 + 2] == rgb.b)
+    }
+    this._parseCanvasTransparency(canvas, null, null)
+  }
+
+  _parseCanvasTransparency(
     canvas: HTMLCanvasElement,
     preferedWidth: number,
     preferedHeight: number
@@ -12,16 +46,17 @@ export class Edges {
     const w = preferedWidth || canvas.width;
     const h = preferedHeight || canvas.height;
     const ctx = canvas.getContext("2d");
-    const data = ctx.getImageData(0, 0, w, h).data;
+    // const data = ctx.getImageData(0, 0, w, h).data;
+    this._data = ctx.getImageData(0, 0, w, h);
     let points: string[] = [];
     var x, y, lastX, lastY;
     var lastfoundx: number, lastfoundy: number, pending: boolean;
     var first: boolean;
 
-    //? return true if not transparent
-    function opaque(ax: number, ay: number): boolean {
-      return data[(ax + ay * w) * 4 + 3] != 0;
-    }
+    // //? return true if not transparent
+    // function opaque(ax: number, ay: number): boolean {
+    //   return data[(ax + ay * w) * 4 + 3] != 0;
+    // }
 
     function post(ax: number, ay: number) {
       points.push(`${ax}px ${ay}px`);
@@ -36,7 +71,7 @@ export class Edges {
       //? scan top, left->right
       for (y = 0; y < h; y++) {
         //? find most top of non-transparent
-        if (opaque(x, y)) {
+        if (this.opaque(x, y)) {
           if (!first && y != lastY && pending) {
             post(lastfoundx + 1, lastfoundy);
           }
@@ -70,7 +105,7 @@ export class Edges {
       //? scan right, top->bottom
       for (x = w - 1; x >= 0; x--) {
         //? find most right of non-transparent
-        if (opaque(x, y)) {
+        if (this.opaque(x, y)) {
           if (!first && x != lastX && pending) {
             post(lastfoundx + 1, lastfoundy);
           }
@@ -106,7 +141,7 @@ export class Edges {
       //? scan bottom, right->left
       for (y = h - 1; y >= 0; y--) {
         //? find most top of non-transparent
-        if (opaque(x, y)) {
+        if (this.opaque(x, y)) {
           if (!first && y != lastY && pending) {
             post(lastfoundx, lastfoundy + 1);
           }
@@ -163,4 +198,13 @@ export class Edges {
     ].join(", ")})`;
     // TODO: detect if first points in bottom has ben detected by right.
   }
+}
+
+function hexToRgb(hex:string): {r:number,g:number,b:number} {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  };
 }

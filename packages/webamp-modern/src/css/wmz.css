@@ -1,0 +1,21 @@
+buttongroup,
+buttonelement {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  overflow: hidden;
+}
+buttongroup > buttonelement {
+  width: inherit;
+  height: inherit;
+  cursor: pointer;
+}
+buttongroup.webamp--img:hover {
+    background-image: var(--background-image);
+}
+
+buttongroup > buttonelement:hover {
+    background-image: var(--hover-background-image, var(--background-image));
+}
+  
