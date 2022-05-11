@@ -301,7 +301,7 @@ export default class GuiObj extends XmlObj {
    * @ret The top edge's position (in screen coordinates).
    */
   gettop(): number {
-    return this._y;
+    return this._y || 0;
   }
 
   /**
@@ -311,7 +311,7 @@ export default class GuiObj extends XmlObj {
    * @ret The left edge's position (in screen coordinates).
    */
   getleft(): number {
-    return this._x;
+    return this._x || 0;
   }
 
   /**
@@ -485,11 +485,13 @@ export default class GuiObj extends XmlObj {
   onLeftButtonDown(x: number, y: number) {
     assert(
       x >= this.getleft(),
-      "Expected click to be to the right of the component's left"
-    );
-    assert(
-      y >= this.gettop(),
-      "Expected click to be below the component's top"
+      "Expected click to be to the right of the component's left." +
+      ` x:${x} left:${this.getleft()}`
+      );
+      assert(
+        y >= this.gettop(),
+        "Expected click to be below the component's top." +
+        ` y:${y} top:${this.gettop()}`
     );
     this.getparentlayout().bringtofront();
     UI_ROOT.vm.dispatch(this, "onleftbuttondown", [

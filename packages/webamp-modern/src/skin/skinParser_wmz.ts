@@ -8,6 +8,7 @@ import Vis from "./makiClasses/Vis";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 import ButtonElement from "./wmzElements/ButtonElement";
 import ButtonGroup from "./wmzElements/ButtonGroup";
+import SliderZ from "./wmzElements/SliderZ";
 import View from "./wmzElements/View";
 
 export default class WmpSkinParser extends SkinParser {
@@ -139,6 +140,10 @@ export default class WmpSkinParser extends SkinParser {
     return await this.newGui(ButtonElement, node, parent);
   }
 
+  async slider(node: XmlElement, parent: any) {
+    return this.newGui(SliderZ, node, parent);
+  }
+
   /**
    * WMZ seem as has only one xml; that is it
    * @param node
@@ -220,6 +225,16 @@ export default class WmpSkinParser extends SkinParser {
       if (replacable.includes(att)) {
         element.attributes[replacement[att]] = element.attributes[att];
         delete element.attributes[att];
+      }
+    }
+    //temporary patch to make slider visible:
+    if(element.name=='slider'){
+      if(element.attributes.orientation=='vertical'){
+        element.attributes.w='8'
+        element.attributes.h='64'
+      } else {
+        element.attributes.h='6'
+        element.attributes.w='64'
       }
     }
   }
