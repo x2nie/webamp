@@ -3,5 +3,14 @@
     "esModuleInterop": true,
     "allowJs": true,
     "resolveJsonModule": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "assets",
+    "build",
+    "public",
+    "temp",
+    "typings/browser.d.ts",
+    "typings/browser/**"
+]
 }
