@@ -91,11 +91,11 @@ export default class SliderZ extends Slider {
         if(this._vertical){
           // vertical
           h = this._borderSize;
-          w = Math.min( Math.floor(h/2), Math.floor(this.getwidth()/2) )
+          w = 0;//Math.min( Math.floor(h/2), Math.floor(this.getwidth()/2) )
         } else {
           // horizontal
           w = this._borderSize;
-          h = Math.min( Math.floor(w/2), Math.floor(this.getheight()/2) )
+          h = 0;//Math.min( Math.floor(w/2), Math.floor(this.getheight()/2) )
         }
         this._div.style.setProperty('--border-width', `${w}`)
         this._div.style.setProperty('--border-height', `${h}`)

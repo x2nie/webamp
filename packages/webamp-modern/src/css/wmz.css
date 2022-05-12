@@ -47,7 +47,8 @@ subview > * {
 }
 
 /** SLIDER **/
-slider.background-stretched {
+slider.background-stretched::before {
+  content: "";
   box-sizing: border-box;
   border: 7px solid transparent;
   border-top-width: var(--border-height-px);
@@ -56,4 +57,6 @@ slider.background-stretched {
   border-right-width: var(--border-width-px);
   border-image-source: var(--background-image);
   border-image-slice: var(--border-height) var(--border-width) fill;
+  position: absolute;
+  inset: 0;
 }
