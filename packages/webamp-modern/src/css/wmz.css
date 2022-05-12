@@ -6,30 +6,37 @@ buttonelement {
   top: 0;
   display: block;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 buttongroup > buttonelement {
   width: inherit !important;
   height: inherit !important;
+  background-position: top left;
   cursor: pointer;
 }
 buttongroup.webamp--img:active,
 buttongroup.webamp--img:hover:active,
 buttongroup.webamp--img:hover {
     background-image: var(--background-image);
-}
-buttongroup > buttonelement.down {
+  }
+  buttongroup > buttonelement.down {
   background-image: var(--down-background-image, var(--background-image));
 }
 buttongroup > buttonelement:hover {
     background-image: var(--hover-background-image, var(--background-image));
 }
 buttongroup > buttonelement.down:hover {
-    background-image: var(--hover-down-background-image, var(--hover-background-image, var(--background-image)));
+  background-image: var(--hover-down-background-image, var(--hover-background-image, var(--background-image)));
 }
 buttongroup > buttonelement:active,
 buttongroup > buttonelement:hover:active{
-    background-image: var(--down-background-image, var(--background-image));
-  }
+  background-image: var(--down-background-image, var(--background-image));
+}
+buttongroup > buttonelement.disabled {
+  pointer-events: none;
+  background-image: var(--disabled-background-image, var(--background-image)) !important;
+}
   
 text.textz wrap{
   width: auto;

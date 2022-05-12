@@ -1,5 +1,6 @@
 import UI_ROOT from "../../UIRoot";
 import { toBool } from "../../utils";
+import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import { Edges } from "../Clippath";
 import GuiObj from "../makiClasses/GuiObj";
 import ButtonGroup from "./ButtonGroup";
@@ -11,7 +12,9 @@ export default class ButtonElement extends GuiObj {
   _action: string = null;
   _onClick: string = null;
   _down: boolean = false;
+  _enabled: boolean = true;
   _sticky: boolean = false;
+  _audioEvent: { [audioEvent: string]: string } = {};
 
   constructor() {
     super();
@@ -26,6 +29,9 @@ export default class ButtonElement extends GuiObj {
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
+    if (value.startsWith("wmpenabled:player.controls.")) {
+      this._audioEvent[value.split(".").pop()] = key;
+    }
     if (super.setXmlAttr(key, value)) {
       return true;
     }
@@ -43,9 +49,9 @@ export default class ButtonElement extends GuiObj {
         this._onClick = value;
         break;
       case "sticky":
-        // Specifies or retrieves a value indicating whether the BUTTONELEMENT 
-        // is sticky. 
-        // When sticky, a BUTTONELEMENT will change states after being clicked 
+        // Specifies or retrieves a value indicating whether the BUTTONELEMENT
+        // is sticky.
+        // When sticky, a BUTTONELEMENT will change states after being clicked
         // and will remain in the new state until clicked again.
         this._sticky = toBool(value);
         break;
@@ -63,6 +69,14 @@ export default class ButtonElement extends GuiObj {
     this._renderDown();
   }
 
+  get enabled(): boolean {
+    return this._enabled;
+  }
+  set enabled(value: boolean) {
+    this._enabled = value;
+    this._renderDisabled();
+  }
+
   setAction(action: string) {
     this._action = action;
     if (action) {
@@ -76,14 +90,17 @@ export default class ButtonElement extends GuiObj {
   }
 
   onClick() {
+    if (!this.enabled) {
+      return;
+    }
     // if (this._action) {
     //   this.dispatchAction(this._action, this._param, this._actionTarget);
     //   this.invalidateActionState();
     // }
     // this.onLeftClick();
     runOnClickScript(this._onClick);
-    if(this._sticky){
-      this.down = true
+    if (this._sticky) {
+      this.down = true;
     }
   }
 
@@ -92,6 +109,14 @@ export default class ButtonElement extends GuiObj {
       this._div.classList.add("down");
     } else {
       this._div.classList.remove("down");
+    }
+  }
+
+  _renderDisabled() {
+    if (this._enabled) {
+      this._div.classList.remove("disabled");
+    } else {
+      this._div.classList.add("disabled");
     }
   }
 
@@ -105,6 +130,22 @@ export default class ButtonElement extends GuiObj {
       } else {
         this._div.style.clipPath = edge.getPolygon();
       }
+    }
+  }
+
+  init() {
+    super.init();
+    UI_ROOT.audio.on("statchanged", () => this._updateStatus());
+    this._updateStatus();
+  }
+
+  _updateStatus() {
+    const state = UI_ROOT.audio.getState(); // playing
+    for (const [audioEvent, prop] of Object.entries(this._audioEvent)) {
+      this[prop] =
+        (audioEvent == "play" && state != AUDIO_PLAYING) ||
+        (audioEvent == "pause" && state != AUDIO_PAUSED) ||
+        (audioEvent == "stop" && state != AUDIO_STOPPED);
     }
   }
 

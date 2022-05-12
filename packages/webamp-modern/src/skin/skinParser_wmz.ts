@@ -86,10 +86,10 @@ export default class WmpSkinParser extends SkinParser {
         return this.slider(node, parent);
       case "text":
         return this.textz(node, parent);
-      case "playlist": 
+      case "playlist":
         return this.playlist(node, parent);
-      case "video": 
-      //* UNHANDLED 
+      case "video":
+        //* UNHANDLED
         return this.group(node, parent);
       case "wrapper":
         // Note: Included files don't have a single root node, so we add a synthetic one.
@@ -99,8 +99,7 @@ export default class WmpSkinParser extends SkinParser {
         // TODO: This should be the default fall through
         if (this._uiRoot.getXuiElement(tag)) {
           return this.dynamicXuiElement(node, parent);
-        } 
-        else if (await this._predefinedXuiNode(tag)) {
+        } else if (await this._predefinedXuiNode(tag)) {
           return this.dynamicXuiElement(node, parent);
         }
         console.warn(`Unhandled XML node type: ${node.name}`);
@@ -140,11 +139,21 @@ export default class WmpSkinParser extends SkinParser {
 
   async buttonelement(node: XmlElement, parent: any) {
     const tag = node.name;
+    let action: string;
     if (tag != "buttonelement") {
       if (tag.endsWith("element")) {
-        node.attributes.action = tag.substring(0, tag.length - 7);
+        action = tag.substring(0, tag.length - 7);
+        node.attributes.action = action;
       } else if (tag.endsWith("button")) {
-        node.attributes.action = tag.substring(0, tag.length - 6);
+        action = tag.substring(0, tag.length - 6);
+        node.attributes.action = action;
+      }
+      switch (action) {
+        case "play":
+        case "pause":
+        case "stop":
+          node.attributes.enabled = `wmpenabled:player.controls.${action}`;
+          break;
       }
     }
 
@@ -230,8 +239,8 @@ export default class WmpSkinParser extends SkinParser {
     element.name = element.name.toLowerCase();
     //? lowercase all att
     for (const att of Object.keys(element.attributes)) {
-      const lower = att.toLowerCase()
-      if (att != lower  && lower != 'id') {
+      const lower = att.toLowerCase();
+      if (att != lower && lower != "id") {
         element.attributes[lower] = element.attributes[att];
         delete element.attributes[att];
       }

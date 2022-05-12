@@ -1,5 +1,6 @@
 export class Edges {
   _data: ImageData;
+  _width: number;
   _top: string[] = [];
   _right: string[] = [];
   _bottom: string[] = [];
@@ -12,7 +13,7 @@ export class Edges {
 
   //? return true if not transparent
   opaqueByTransparent(x: number, y: number): boolean {
-    return this._data.data[(x + y * this._data.width) * 4 + 3] != 0;
+    return this._data.data[(x + y * this._width) * 4 + 3] != 0;
   }
 
   parseCanvasTransparency(
@@ -31,9 +32,9 @@ export class Edges {
     const rgb = hexToRgb(color);
     this.opaque = (x: number, y: number): boolean => { //set
       return (
-      this._data.data[(x + y * this._data.width) * 4 + 0] == rgb.r &&
-      this._data.data[(x + y * this._data.width) * 4 + 1] == rgb.g &&
-      this._data.data[(x + y * this._data.width) * 4 + 2] == rgb.b)
+      this._data.data[(x + y * this._width) * 4 + 0] == rgb.r &&
+      this._data.data[(x + y * this._width) * 4 + 1] == rgb.g &&
+      this._data.data[(x + y * this._width) * 4 + 2] == rgb.b)
     }
     this._parseCanvasTransparency(canvas, null, null)
   }
@@ -45,9 +46,9 @@ export class Edges {
     const rgb = hexToRgb(color);
     this.opaque = (x: number, y: number): boolean => { //set
       return (
-      this._data.data[(x + y * this._data.width) * 4 + 0] != rgb.r &&
-      this._data.data[(x + y * this._data.width) * 4 + 1] != rgb.g &&
-      this._data.data[(x + y * this._data.width) * 4 + 2] != rgb.b)
+      this._data.data[(x + y * this._width) * 4 + 0] != rgb.r &&
+      this._data.data[(x + y * this._width) * 4 + 1] != rgb.g &&
+      this._data.data[(x + y * this._width) * 4 + 2] != rgb.b)
     }
     this._parseCanvasTransparency(canvas, null, null)
   }
@@ -57,7 +58,7 @@ export class Edges {
     preferedWidth: number,
     preferedHeight: number
   ) {
-    const w = preferedWidth || canvas.width;
+    const w = this._width = preferedWidth || canvas.width;
     const h = preferedHeight || canvas.height;
     const ctx = canvas.getContext("2d");
     // const data = ctx.getImageData(0, 0, w, h).data;
