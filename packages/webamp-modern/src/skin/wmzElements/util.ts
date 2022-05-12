@@ -1,5 +1,18 @@
 import GuiObj from "../makiClasses/GuiObj";
 
+export function runOnClickScript(script:string){
+    // console.log('runOnClick:', script)
+    for(var expression of script.split(';')) {
+        if(expression=='') continue;
+        console.log(`/${expression}/`)
+        if(expression.endsWith('()')){
+            expression = expression.replace(/\(\)/,'')
+            window[expression]();
+        }
+        // console.log(`/${expression}/`)
+    }
+}
+
 export function solvePendingProps(component:GuiObj,pendingProps:{ [key: string]: string }) {
     // sample: jscript:balance.top+12;
     // sample: jscript:eq1.top;

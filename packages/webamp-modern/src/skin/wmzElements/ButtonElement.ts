@@ -2,11 +2,24 @@ import UI_ROOT from "../../UIRoot";
 import { Edges } from "../Clippath";
 import GuiObj from "../makiClasses/GuiObj";
 import ButtonGroup from "./ButtonGroup";
+import { runOnClickScript } from "./util";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/buttonelement-element
 export default class ButtonElement extends GuiObj {
   _mappingColor: string;
   _action: string = null;
+  _onClick: string = null;
+
+  constructor() {
+    super();
+    // TODO: Cleanup!
+    // this._div.addEventListener("mousedown", this._handleMouseDown.bind(this));
+    this._div.addEventListener("click", (e: MouseEvent) => {
+      if (this._onClick!=null) {
+        this.onClick();
+      }
+    });
+  }
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -22,6 +35,9 @@ export default class ButtonElement extends GuiObj {
         break;
       case "action":
         this.setAction(value);
+        break;
+      case "onclick":
+        this._onClick = value;
         break;
       default:
         return false;
@@ -39,6 +55,15 @@ export default class ButtonElement extends GuiObj {
         }
       });
     }
+  }
+
+  onClick() {
+    // if (this._action) {
+    //   this.dispatchAction(this._action, this._param, this._actionTarget);
+    //   this.invalidateActionState();
+    // }
+    // this.onLeftClick();
+    runOnClickScript(this._onClick)
   }
 
   _renderRegion() {
