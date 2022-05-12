@@ -1,4 +1,5 @@
 import UI_ROOT from "../../UIRoot";
+import { toBool } from "../../utils";
 import { Edges } from "../Clippath";
 import GuiObj from "../makiClasses/GuiObj";
 import ButtonGroup from "./ButtonGroup";
@@ -9,13 +10,15 @@ export default class ButtonElement extends GuiObj {
   _mappingColor: string;
   _action: string = null;
   _onClick: string = null;
+  _down: boolean = false;
+  _sticky: boolean = false;
 
   constructor() {
     super();
     // TODO: Cleanup!
     // this._div.addEventListener("mousedown", this._handleMouseDown.bind(this));
     this._div.addEventListener("click", (e: MouseEvent) => {
-      if (this._onClick!=null) {
+      if (this._onClick != null) {
         this.onClick();
       }
     });
@@ -39,10 +42,22 @@ export default class ButtonElement extends GuiObj {
       case "onclick":
         this._onClick = value;
         break;
+      case "sticky":
+        this._sticky = toBool(value);
+        break;
       default:
         return false;
     }
     return true;
+  }
+
+  get down(): boolean {
+    return this._down;
+  }
+  set down(value: boolean) {
+    console.log(this.getId(),'down=', value)
+    this._down = value;
+    this._renderDown();
   }
 
   setAction(action: string) {
@@ -63,7 +78,18 @@ export default class ButtonElement extends GuiObj {
     //   this.invalidateActionState();
     // }
     // this.onLeftClick();
-    runOnClickScript(this._onClick)
+    runOnClickScript(this._onClick);
+    if(this._sticky){
+      this.down = true
+    }
+  }
+
+  _renderDown() {
+    if (this._down) {
+      this._div.classList.add("down");
+    } else {
+      this._div.classList.remove("down");
+    }
   }
 
   _renderRegion() {

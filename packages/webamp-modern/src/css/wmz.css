@@ -17,9 +17,14 @@ buttongroup.webamp--img:hover:active,
 buttongroup.webamp--img:hover {
     background-image: var(--background-image);
 }
-
+buttongroup > buttonelement.down {
+  background-image: var(--down-background-image, var(--background-image));
+}
 buttongroup > buttonelement:hover {
     background-image: var(--hover-background-image, var(--background-image));
+}
+buttongroup > buttonelement.down:hover {
+    background-image: var(--hover-down-background-image, var(--hover-background-image, var(--background-image)));
 }
 buttongroup > buttonelement:active,
 buttongroup > buttonelement:hover:active{
