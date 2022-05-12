@@ -26,6 +26,7 @@ export default class GuiObj extends XmlObj {
   _parent: Group;
   _children: GuiObj[] = [];
   // _id: string; moved to BaseObject
+  _originalId: string; // non lowercase'd
   _name: string;
   _width: number = 0;
   _height: number = 0;
@@ -79,6 +80,7 @@ export default class GuiObj extends XmlObj {
     const key = _key.toLowerCase();
     switch (key) {
       case "id":
+        this._originalId = value;
         this._id = value.toLowerCase();
         break;
       case "name":
@@ -273,6 +275,9 @@ export default class GuiObj extends XmlObj {
 
   getId(): string {
     return this._id || "";
+  }
+  getOriginalId(): string {
+    return this._originalId;
   }
 
   /**
