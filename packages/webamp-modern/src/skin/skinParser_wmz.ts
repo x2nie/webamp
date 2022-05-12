@@ -2,6 +2,7 @@ import parseXml, { XmlDocument, XmlElement } from "@rgrove/parse-xml";
 import Parser from "@rgrove/parse-xml/src/lib/Parser";
 import JSZip from "jszip";
 import UI_ROOT, { UIRoot } from "../UIRoot";
+import { decodeWideChars } from "../utils";
 import BitmapFont from "./BitmapFont";
 import EqVis from "./makiClasses/EqVis";
 import PlayListGui from "./makiClasses/PlayListGui";
@@ -314,18 +315,6 @@ function decodeUTF16LE(binaryStr) {
   return result;
 }
 
-function decodeWideChars(binaryStr: string) {
-  if (binaryStr.charCodeAt(0) < 256) {
-    return binaryStr;
-  }
-  var cp = "";
-  for (var i = 1; i < binaryStr.length; i += 2) {
-    cp += binaryStr[i];
-  }
-  var result = cp;
-  // console.log("res:", result);
-  return result;
-}
 
 /**
  * Encodes multi-byte Unicode string into utf-8 multiple single-byte characters

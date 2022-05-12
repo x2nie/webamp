@@ -2,11 +2,13 @@ import UI_ROOT from "../../UIRoot";
 import Group from "../makiClasses/Group";
 import GuiObj from "../makiClasses/GuiObj";
 import Layout from "../makiClasses/Layout";
+import { runOnClickScript } from "./util";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/view-element
 export default class View extends Layout {
   _clippingColor: string;
   _scriptFile: string;
+  _onLoad: string;
 
   getElTag(): string {
     return "layout";
@@ -26,6 +28,9 @@ export default class View extends Layout {
         this._scriptFile = value;
         UI_ROOT.addJsScript(value);
         break;
+      case "onload":
+        this._onLoad = value;
+        break;
       default:
         return false;
     }
@@ -36,6 +41,9 @@ export default class View extends Layout {
     super.init();
     if (this._scriptFile) {
       this.prepareScriptGlobalObjects();
+      if(this._onLoad){
+        runOnClickScript(this._onLoad)
+      }
     }
   }
 

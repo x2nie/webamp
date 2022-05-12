@@ -64,6 +64,25 @@ export function getId(): number {
   return id++;
 }
 
+/**
+ * WindowsMediaPlayer may have UTF16LE file content
+ * @param binaryStr filecontent
+ * @returns utf8 content
+ */
+export function decodeWideChars(binaryStr: string) {
+  if (binaryStr.charCodeAt(0) < 256) {
+    return binaryStr;
+  }
+  var cp = "";
+  for (var i = 1; i < binaryStr.length; i += 2) {
+    cp += binaryStr[i];
+  }
+  var result = cp;
+  // console.log("res:", result);
+  return result;
+}
+
+
 // TODO: Delete this once we have proper type coersion in the VM.
 export function ensureVmInt(num: number): number {
   return Math.floor(num);

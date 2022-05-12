@@ -5,6 +5,7 @@ import TrueTypeFont from "./skin/TrueTypeFont";
 import {
   assert,
   assume,
+  decodeWideChars,
   Emitter,
   findLast,
   getCaseInsensitiveFile,
@@ -655,7 +656,8 @@ export class UIRoot {
   }
   async loadJsScripts(){
     for (const scriptPath of Object.keys(this._jsScript)) {
-      const scriptText = await this.getFileAsString(scriptPath);
+      const scriptContent = await this.getFileAsString(scriptPath);
+      const scriptText = decodeWideChars(scriptContent);
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.textContent = scriptText   
