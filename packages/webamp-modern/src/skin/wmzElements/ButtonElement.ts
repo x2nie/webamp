@@ -43,6 +43,10 @@ export default class ButtonElement extends GuiObj {
         this._onClick = value;
         break;
       case "sticky":
+        // Specifies or retrieves a value indicating whether the BUTTONELEMENT 
+        // is sticky. 
+        // When sticky, a BUTTONELEMENT will change states after being clicked 
+        // and will remain in the new state until clicked again.
         this._sticky = toBool(value);
         break;
       default:
@@ -55,7 +59,6 @@ export default class ButtonElement extends GuiObj {
     return this._down;
   }
   set down(value: boolean) {
-    console.log(this.getId(),'down=', value)
     this._down = value;
     this._renderDown();
   }
