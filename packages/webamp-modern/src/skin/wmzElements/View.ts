@@ -42,12 +42,13 @@ export default class View extends Layout {
     super.init();
     if (this._scriptFile) {
       this.prepareScriptGlobalObjects();
-      if(this._onLoad){
-        setTimeout(() => {
-          runInlineScript(this._onLoad)
+      //? temporary disabling due incomplete methods
+      // if(this._onLoad){
+      //   setTimeout(() => {
+      //     runInlineScript(this._onLoad)
           
-        }, 1000);
-      }
+      //   }, 1000);
+      // }
     }
   }
 
