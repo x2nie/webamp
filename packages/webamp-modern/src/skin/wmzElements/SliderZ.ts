@@ -172,29 +172,29 @@ export default class SliderZ extends Slider {
     this._renderBackground();
   }
 }
-const regex = /\w+\.\w+|[\+-]+|[0-9]+/gm;
+// const regex = /\w+\.\w+|[\+-]+|[0-9]+/gm;
 
-// Alternative syntax using RegExp constructor
-// const regex = new RegExp('\\w+\\.\\w+|[\\+-]+|[0-9]+', 'gm')
+// // Alternative syntax using RegExp constructor
+// // const regex = new RegExp('\\w+\\.\\w+|[\\+-]+|[0-9]+', 'gm')
 
-const str = `    // sample: jscript:balance.top+12;
-    // sample: jscript:eq1.top;
-    // sample: jscript:balance.left+balance.width+27;`;
-let m;
+// const str = `    // sample: jscript:balance.top+12;
+//     // sample: jscript:eq1.top;
+//     // sample: jscript:balance.left+balance.width+27;`;
+// let m;
 
-var z = [];
-while ((m = regex.exec(str)) !== null) {
-  // This is necessary to avoid infinite loops with zero-width matches
-  if (m.index === regex.lastIndex) {
-    regex.lastIndex++;
-  }
+// var z = [];
+// while ((m = regex.exec(str)) !== null) {
+//   // This is necessary to avoid infinite loops with zero-width matches
+//   if (m.index === regex.lastIndex) {
+//     regex.lastIndex++;
+//   }
 
-  // The result can be accessed through the `m`-variable.
-  m.forEach((match, groupIndex) => {
-    console.log(`Found match, group ${groupIndex}: ${match}`);
-    z.push(match);
-  });
-  console.log("----------");
-}
-console.log("M");
-console.log(z);
+//   // The result can be accessed through the `m`-variable.
+//   m.forEach((match, groupIndex) => {
+//     console.log(`Found match, group ${groupIndex}: ${match}`);
+//     z.push(match);
+//   });
+//   console.log("----------");
+// }
+// console.log("M");
+// console.log(z);

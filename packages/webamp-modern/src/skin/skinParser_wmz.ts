@@ -9,6 +9,8 @@ import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 import ButtonElement from "./wmzElements/ButtonElement";
 import ButtonGroup from "./wmzElements/ButtonGroup";
 import SliderZ from "./wmzElements/SliderZ";
+import SubView from "./wmzElements/SubView";
+import TextZ from "./wmzElements/TextZ";
 import View from "./wmzElements/View";
 
 export default class WmpSkinParser extends SkinParser {
@@ -65,13 +67,21 @@ export default class WmpSkinParser extends SkinParser {
       case "buttongroup":
         return this.buttongroup(node, parent);
       case "buttonelement":
+      case "playbutton":
+      case "stopbutton":
+      case "pausebutton":
+      case "prevbutton":
+      case "nextbutton":
       case "playelement":
       case "stopelement":
+      case "pauselement":
       case "prevelement":
       case "nextelement":
         return this.buttonelement(node, parent);
       case "slider":
         return this.slider(node, parent);
+      case "text":
+        return this.textz(node, parent);
       case "wrapper":
         // Note: Included files don't have a single root node, so we add a synthetic one.
         // A different XML parser library might make this unnessesary.
@@ -110,8 +120,8 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async subview(node: XmlElement, parent: any) {
-    const group = await this.group(node, parent);
-    await this.traverseChildren(node, group);
+    await this.newGroup(SubView, node, parent);
+    // await this.traverseChildren(node, group);
   }
 
   async buttongroup(node: XmlElement, parent: any) {
@@ -119,29 +129,43 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async buttonelement(node: XmlElement, parent: any) {
-    switch (node.name.toLowerCase()) {
-      case "playelement":
-        node.attributes.action = "play";
-        break;
-      case "pauseelement":
-        node.attributes.action = "pause";
-        break;
-      case "stopelement":
-        node.attributes.action = "stop";
-        break;
-      case "prevelement":
-        node.attributes.action = "prev";
-        break;
-      case "nextelement":
-        node.attributes.action = "next";
-        break;
+    const tag = node.name;
+    if (tag != "buttonelement") {
+      if (tag.endsWith("element")) {
+        node.attributes.action = tag.substring(0, tag.length - 7);
+        console.log("btnElement:", node.attributes.action, "@", tag);
+      } else if (tag.endsWith("button")) {
+        node.attributes.action = tag.substring(0, tag.length - 6);
+        console.log("btnElement:", node.attributes.action, "@", tag);
+      }
     }
+    // switch (node.name.toLowerCase()) {
+    //   case "playelement":
+    //     node.attributes.action = "play";
+    //     break;
+    //   case "pauseelement":
+    //     node.attributes.action = "pause";
+    //     break;
+    //   case "stopelement":
+    //     node.attributes.action = "stop";
+    //     break;
+    //   case "prevelement":
+    //     node.attributes.action = "prev";
+    //     break;
+    //   case "nextelement":
+    //     node.attributes.action = "next";
+    //     break;
+    // }
 
     return await this.newGui(ButtonElement, node, parent);
   }
 
   async slider(node: XmlElement, parent: any) {
     return this.newGui(SliderZ, node, parent);
+  }
+
+  async textz(node: XmlElement, parent: any) {
+    return this.newGui(TextZ, node, parent);
   }
 
   /**
@@ -203,6 +227,8 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   _lowercaseAttributes(element: XmlElement) {
+    //? lowercase tag
+    element.name = element.name.toLowerCase();
     //? lowercase all att
     for (const att of Object.keys(element.attributes)) {
       if (att != att.toLowerCase()) {
