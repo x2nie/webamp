@@ -344,6 +344,13 @@ export default class GuiObj extends XmlObj {
     }
     return this._height;
   }
+  get height():number {
+    return this.getheight()
+  }
+  set height(value:number){
+    this._height = value;
+    this._renderDimensions()
+  }
 
   /**
    * Get the width of the object, in pixels.
@@ -359,6 +366,13 @@ export default class GuiObj extends XmlObj {
       return w;
     }
     return this._width;
+  }
+  get width():number {
+    return this.getwidth()
+  }
+  set width(value:number){
+    this._width = value;
+    this._renderDimensions()
   }
 
   /**

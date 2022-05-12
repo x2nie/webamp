@@ -10,6 +10,7 @@ import Vis from "./makiClasses/Vis";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 import ButtonElement from "./wmzElements/ButtonElement";
 import ButtonGroup from "./wmzElements/ButtonGroup";
+import ButtonZ from "./wmzElements/ButtonZ";
 import SliderZ from "./wmzElements/SliderZ";
 import SubView from "./wmzElements/SubView";
 import TextZ from "./wmzElements/TextZ";
@@ -69,6 +70,8 @@ export default class WmpSkinParser extends SkinParser {
         return this.subview(node, parent);
       case "effects":
         return this.visz(node, parent);
+      case "button":
+        return this.button(node, parent);
       case "buttongroup":
         return this.buttongroup(node, parent);
       case "buttonelement":
@@ -134,6 +137,9 @@ export default class WmpSkinParser extends SkinParser {
     // await this.traverseChildren(node, group);
   }
 
+  async button(node: XmlElement, parent: any) {
+    return await this.newGroup(ButtonZ, node, parent);
+  }
   async buttongroup(node: XmlElement, parent: any) {
     return await this.newGroup(ButtonGroup, node, parent);
   }
@@ -314,7 +320,6 @@ function decodeUTF16LE(binaryStr) {
   console.log("res:", result);
   return result;
 }
-
 
 /**
  * Encodes multi-byte Unicode string into utf-8 multiple single-byte characters

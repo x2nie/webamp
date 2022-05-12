@@ -120,6 +120,8 @@ export default class ButtonElement extends GuiObj {
     }
   }
 
+  
+
   _renderRegion() {
     if (this._mappingColor && this._parent instanceof ButtonGroup) {
       const canvas = UI_ROOT.getBitmap(this._parent._mappingImage).getCanvas();

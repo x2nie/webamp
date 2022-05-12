@@ -45,3 +45,15 @@ text.textz wrap{
 subview > * {
   background-color: var(--background-color);
 }
+
+/** SLIDER **/
+slider.background-stretched {
+  box-sizing: border-box;
+  border: 7px solid transparent;
+  border-top-width: var(--border-height-px);
+  border-bottom-width: var(--border-height-px);
+  border-left-width: var(--border-width-px);
+  border-right-width: var(--border-width-px);
+  border-image-source: var(--background-image);
+  border-image-slice: var(--border-height) var(--border-width) fill;
+}

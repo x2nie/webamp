@@ -31,6 +31,13 @@ export default class SubView extends Group {
     return true;
   }
 
+  moveto(x: number, y: number, speed: number) {
+    this.settargetx(x);
+    this.settargety(y);
+    this.settargetspeed(speed/1000);
+    this.gototarget();
+  }
+
   _renderBackground() {
     super._renderBackground();
     if (this._backgroundColor)

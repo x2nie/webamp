@@ -43,18 +43,21 @@ export default class View extends Layout {
     if (this._scriptFile) {
       this.prepareScriptGlobalObjects();
       //? temporary disabling due incomplete methods
-      // if(this._onLoad){
-      //   setTimeout(() => {
-      //     runInlineScript(this._onLoad)
+      if(this._onLoad){
+        setTimeout(() => {
+          runInlineScript(this._onLoad)
           
-      //   }, 1000);
-      // }
+        }, 1000);
+      }
     }
   }
+
+
 
   prepareScriptGlobalObjects() {
     const container: Container = this.getcontainer();
     window['theme'] = container;
+    window['view'] = this;
 
 
     const recursiveSetGlobal = (element: GuiObj) => {

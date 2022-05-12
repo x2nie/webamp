@@ -1,4 +1,5 @@
 import UI_ROOT from "../../UIRoot";
+import { num, toBool } from "../../utils";
 import Slider from "../makiClasses/Slider";
 import { solvePendingProps } from "./util";
 
@@ -6,6 +7,8 @@ import { solvePendingProps } from "./util";
 export default class SliderZ extends Slider {
   _pendingProps: { [key: string]: string } = {};
   _background: string;
+  _tiled: boolean;
+  _borderSize: number;
 
   getElTag(): string {
     return "slider";
@@ -37,7 +40,12 @@ export default class SliderZ extends Slider {
     switch (key) {
       case "background":
         this._background = value;
-        this._renderBackground();
+        break;
+      case "tiled":
+        this._tiled = toBool(value);
+        break;
+      case "bordersize":
+        this._borderSize = num(value);
         break;
       default:
         return false;
@@ -75,6 +83,25 @@ export default class SliderZ extends Slider {
       this.setBackgroundImage(bitmap);
     } else {
       this.setBackgroundImage(null);
+    }
+    if(this._tiled){
+      this._div.classList.add('background-stretched')
+      if(this._borderSize){
+        let h:number,w:number;
+        if(this._vertical){
+          // vertical
+          h = this._borderSize;
+          w = Math.min( Math.floor(h/2), Math.floor(this.getwidth()/2) )
+        } else {
+          // horizontal
+          w = this._borderSize;
+          h = Math.min( Math.floor(w/2), Math.floor(this.getheight()/2) )
+        }
+        this._div.style.setProperty('--border-width', `${w}`)
+        this._div.style.setProperty('--border-height', `${h}`)
+        this._div.style.setProperty('--border-width-px', `${w}px`)
+        this._div.style.setProperty('--border-height-px', `${h}px`)
+      }
     }
   }
 
