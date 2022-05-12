@@ -22,35 +22,33 @@ export class Edges {
     preferedHeight: number
   ) {
     this.opaque = this.opaqueByTransparent; //set
-    this._parseCanvasTransparency(canvas, preferedHeight, preferedWidth)
+    this._parseCanvasTransparency(canvas, preferedHeight, preferedWidth);
   }
 
-  parseCanvasTransparencyByNonColor(
-    canvas: HTMLCanvasElement,
-    color:string
-  ) {
+  parseCanvasTransparencyByNonColor(canvas: HTMLCanvasElement, color: string) {
     const rgb = hexToRgb(color);
-    this.opaque = (x: number, y: number): boolean => { //set
+    this.opaque = (x: number, y: number): boolean => {
+      //set
       return (
-      this._data.data[(x + y * this._width) * 4 + 0] == rgb.r &&
-      this._data.data[(x + y * this._width) * 4 + 1] == rgb.g &&
-      this._data.data[(x + y * this._width) * 4 + 2] == rgb.b)
-    }
-    this._parseCanvasTransparency(canvas, null, null)
+        this._data.data[(x + y * this._width) * 4 + 0] == rgb.r &&
+        this._data.data[(x + y * this._width) * 4 + 1] == rgb.g &&
+        this._data.data[(x + y * this._width) * 4 + 2] == rgb.b
+      );
+    };
+    this._parseCanvasTransparency(canvas, null, null);
   }
 
-  parseCanvasTransparencyByColor(
-    canvas: HTMLCanvasElement,
-    color:string
-  ) {
+  parseCanvasTransparencyByColor(canvas: HTMLCanvasElement, color: string) {
     const rgb = hexToRgb(color);
-    this.opaque = (x: number, y: number): boolean => { //set
+    this.opaque = (x: number, y: number): boolean => {
+      //set
       return (
-      this._data.data[(x + y * this._width) * 4 + 0] != rgb.r &&
-      this._data.data[(x + y * this._width) * 4 + 1] != rgb.g &&
-      this._data.data[(x + y * this._width) * 4 + 2] != rgb.b)
-    }
-    this._parseCanvasTransparency(canvas, null, null)
+        this._data.data[(x + y * this._width) * 4 + 0] != rgb.r &&
+        this._data.data[(x + y * this._width) * 4 + 1] != rgb.g &&
+        this._data.data[(x + y * this._width) * 4 + 2] != rgb.b
+      );
+    };
+    this._parseCanvasTransparency(canvas, null, null);
   }
 
   _parseCanvasTransparency(
@@ -58,8 +56,9 @@ export class Edges {
     preferedWidth: number,
     preferedHeight: number
   ) {
-    const w = this._width = preferedWidth || canvas.width;
+    const w = preferedWidth || canvas.width;
     const h = preferedHeight || canvas.height;
+    this._width = w;
     const ctx = canvas.getContext("2d");
     // const data = ctx.getImageData(0, 0, w, h).data;
     this._data = ctx.getImageData(0, 0, w, h);
@@ -110,13 +109,17 @@ export class Edges {
       }
     }
     this._top = points; // points.join(', \n')
+    const lastTop: number =
+      points.length == 0
+        ? 0
+        : parseInt(points[points.length - 1].split(" ")[1]); // get y
 
     //? Right -------------------------------------------------
     points = [];
     lastX = 0;
     first = true;
     pending = false;
-    for (y = 0; y <= h; y++) {
+    for (y = lastTop; y <= h; y++) {
       //? scan right, top->bottom
       for (x = w - 1; x >= 0; x--) {
         //? find most right of non-transparent
@@ -146,13 +149,17 @@ export class Edges {
       }
     }
     this._right = points; // points.join(', \n')
+    const lastRight: number =
+      points.length == 0
+        ? 0
+        : parseInt(points[points.length - 1].split(" ")[0]); // get x
 
     //? bottom -------------------------------------------------
     points = [];
     lastY = h - 1;
     first = true;
     pending = false;
-    for (x = w; x >= 0; x--) {
+    for (x = lastRight; x >= 0; x--) {
       //? scan bottom, right->left
       for (y = h - 1; y >= 0; y--) {
         //? find most top of non-transparent
@@ -215,11 +222,11 @@ export class Edges {
   }
 }
 
-function hexToRgb(hex:string): {r:number,g:number,b:number} {
+function hexToRgb(hex: string): { r: number; g: number; b: number } {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
+    b: parseInt(result[3], 16),
   };
 }
