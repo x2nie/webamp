@@ -1,6 +1,6 @@
 import GuiObj from "../makiClasses/GuiObj";
 
-export function runOnClickScript(script: string) {
+export function runInlineScript(script: string) {
   // console.log('runOnClick:', script)
   for (var expression of script.split(";")) {
     if (expression == "") continue;
@@ -10,7 +10,7 @@ export function runOnClickScript(script: string) {
       try{
         window[expression]();
       } catch(error) {
-        console.log('failed to run expression:', script)
+        console.log('failed to run expression:',`|${expression}|`,'@', script)
         
         // console.warn(error)
         throw error

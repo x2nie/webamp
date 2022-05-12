@@ -1,8 +1,9 @@
 import UI_ROOT from "../../UIRoot";
+import Container from "../makiClasses/Container";
 import Group from "../makiClasses/Group";
 import GuiObj from "../makiClasses/GuiObj";
 import Layout from "../makiClasses/Layout";
-import { runOnClickScript } from "./util";
+import { runInlineScript } from "./util";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/view-element
 export default class View extends Layout {
@@ -42,12 +43,19 @@ export default class View extends Layout {
     if (this._scriptFile) {
       this.prepareScriptGlobalObjects();
       if(this._onLoad){
-        runOnClickScript(this._onLoad)
+        setTimeout(() => {
+          runInlineScript(this._onLoad)
+          
+        }, 1000);
       }
     }
   }
 
   prepareScriptGlobalObjects() {
+    const container: Container = this.getcontainer();
+    window['theme'] = container;
+
+
     const recursiveSetGlobal = (element: GuiObj) => {
       if (element.getOriginalId() != null) {
         window[element.getOriginalId()] = element;

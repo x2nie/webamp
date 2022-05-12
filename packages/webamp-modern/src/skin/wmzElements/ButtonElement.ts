@@ -4,7 +4,7 @@ import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import { Edges } from "../Clippath";
 import GuiObj from "../makiClasses/GuiObj";
 import ButtonGroup from "./ButtonGroup";
-import { runOnClickScript } from "./util";
+import { runInlineScript } from "./util";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/buttonelement-element
 export default class ButtonElement extends GuiObj {
@@ -98,7 +98,7 @@ export default class ButtonElement extends GuiObj {
     //   this.invalidateActionState();
     // }
     // this.onLeftClick();
-    runOnClickScript(this._onClick);
+    runInlineScript(this._onClick);
     if (this._sticky) {
       this.down = true;
     }
