@@ -1,3 +1,4 @@
+subview,
 buttongroup,
 buttonelement {
   position: absolute;
@@ -27,4 +28,8 @@ buttongroup > buttonelement:hover:active{
   
 text.textz wrap{
   width: auto;
+}
+
+subview > * {
+  background-color: var(--background-color);
 }

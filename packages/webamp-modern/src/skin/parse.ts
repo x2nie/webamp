@@ -330,7 +330,6 @@ export default class SkinParser {
    * @returns
    */
   async _predefinedXuiNode(tag: string): Promise<boolean> {
-    console.log("handling _predefinedXuiNode", tag);
     let xmlRootPath: string = "assets/freeform/xml/";
     let xmlFilePath: string = null;
     switch (tag) {
@@ -348,6 +347,7 @@ export default class SkinParser {
       default:
         return false;
     }
+    console.log("handling _predefinedXuiNode", tag);
     // push
     const oldZip = UI_ROOT.getZip();
     const oldSkinDir = UI_ROOT.getSkinDir();
@@ -874,7 +874,7 @@ export default class SkinParser {
     container.setXmlAttributes(node.attributes);
     this._uiRoot.addContainers(container);
     await this.traverseChildren(node, container);
-    return container
+    return container;
   }
 
   async colorThemesList(node: XmlElement, parent: any) {

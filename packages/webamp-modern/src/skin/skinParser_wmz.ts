@@ -12,6 +12,7 @@ import SliderZ from "./wmzElements/SliderZ";
 import SubView from "./wmzElements/SubView";
 import TextZ from "./wmzElements/TextZ";
 import View from "./wmzElements/View";
+import VisZ from "./wmzElements/VisZ";
 
 export default class WmpSkinParser extends SkinParser {
   constructor(uiRoot: UIRoot) {
@@ -64,6 +65,8 @@ export default class WmpSkinParser extends SkinParser {
         return this.view(node, parent);
       case "subview":
         return this.subview(node, parent);
+      case "effects":
+        return this.visz(node, parent);
       case "buttongroup":
         return this.buttongroup(node, parent);
       case "buttonelement":
@@ -90,7 +93,8 @@ export default class WmpSkinParser extends SkinParser {
         // TODO: This should be the default fall through
         if (this._uiRoot.getXuiElement(tag)) {
           return this.dynamicXuiElement(node, parent);
-        } else if (this._predefinedXuiNode(tag)) {
+        } 
+        else if (await this._predefinedXuiNode(tag)) {
           return this.dynamicXuiElement(node, parent);
         }
         console.warn(`Unhandled XML node type: ${node.name}`);
@@ -133,35 +137,19 @@ export default class WmpSkinParser extends SkinParser {
     if (tag != "buttonelement") {
       if (tag.endsWith("element")) {
         node.attributes.action = tag.substring(0, tag.length - 7);
-        console.log("btnElement:", node.attributes.action, "@", tag);
       } else if (tag.endsWith("button")) {
         node.attributes.action = tag.substring(0, tag.length - 6);
-        console.log("btnElement:", node.attributes.action, "@", tag);
       }
     }
-    // switch (node.name.toLowerCase()) {
-    //   case "playelement":
-    //     node.attributes.action = "play";
-    //     break;
-    //   case "pauseelement":
-    //     node.attributes.action = "pause";
-    //     break;
-    //   case "stopelement":
-    //     node.attributes.action = "stop";
-    //     break;
-    //   case "prevelement":
-    //     node.attributes.action = "prev";
-    //     break;
-    //   case "nextelement":
-    //     node.attributes.action = "next";
-    //     break;
-    // }
 
     return await this.newGui(ButtonElement, node, parent);
   }
 
   async slider(node: XmlElement, parent: any) {
     return this.newGui(SliderZ, node, parent);
+  }
+  async visz(node: XmlElement, parent: any) {
+    return this.newGui(VisZ, node, parent);
   }
 
   async textz(node: XmlElement, parent: any) {
@@ -176,7 +164,6 @@ export default class WmpSkinParser extends SkinParser {
   async theme(node: XmlElement, parent: any) {
     if (this._phase == RESOURCE_PHASE) {
       this._uiRoot.setSkinInfo(node.attributes);
-      console.log(node.attributes);
       return await this.parseAttributesAsImages(node);
     } else {
       await this.traverseChildren(node, parent);
@@ -203,6 +190,7 @@ export default class WmpSkinParser extends SkinParser {
             "disabledimage",
             "thumb",
             "mappingimage",
+            "clippingimage",
           ])
             if (element.attributes[att]) {
               const bitmapId = element.attributes[att];

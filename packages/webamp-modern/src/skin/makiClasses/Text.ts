@@ -469,8 +469,6 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       (font && font.getFontFamily()) || "Arial"
     }`;
     const metrics = context.measureText(this.gettext());
-    console.log("getWidt:", this.gettext(), metrics);
-    console.log("getWidt.font:", context.font);
     return metrics.width + self._paddingX * 2;
   }
 

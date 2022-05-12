@@ -56,7 +56,6 @@ export default class ButtonElement extends GuiObj {
 
   draw() {
     super.draw();
-    // this._div.classList.add("webamp--img");
     this._renderRegion();
   }
 }

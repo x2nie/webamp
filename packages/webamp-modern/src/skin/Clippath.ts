@@ -38,6 +38,20 @@ export class Edges {
     this._parseCanvasTransparency(canvas, null, null)
   }
 
+  parseCanvasTransparencyByColor(
+    canvas: HTMLCanvasElement,
+    color:string
+  ) {
+    const rgb = hexToRgb(color);
+    this.opaque = (x: number, y: number): boolean => { //set
+      return (
+      this._data.data[(x + y * this._data.width) * 4 + 0] != rgb.r &&
+      this._data.data[(x + y * this._data.width) * 4 + 1] != rgb.g &&
+      this._data.data[(x + y * this._data.width) * 4 + 2] != rgb.b)
+    }
+    this._parseCanvasTransparency(canvas, null, null)
+  }
+
   _parseCanvasTransparency(
     canvas: HTMLCanvasElement,
     preferedWidth: number,
