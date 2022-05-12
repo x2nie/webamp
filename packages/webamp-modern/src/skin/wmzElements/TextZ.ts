@@ -31,7 +31,7 @@ export default class TextZ extends Text {
         return;
       }
     }
-    if (super.setXmlAttr(key, value)) {
+    if (super.setXmlAttr(_key, _value)) {
       //   //? wmz has no action/param
       //   if (key == "id") {
       //     if (value.startsWith("eq")) {

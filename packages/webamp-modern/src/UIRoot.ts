@@ -46,6 +46,7 @@ export class UIRoot {
   _input: HTMLInputElement = document.createElement("input");
   _skinInfo: { [key: string]: string } = {};
   _eventListener: Emitter = new Emitter();
+  _jsScript: { [key: string]: string } = {}; //wmp
 
   // A list of all objects created for this skin.
   _objects: BaseObject[] = [];
@@ -91,6 +92,7 @@ export class UIRoot {
     this._activeGammaSet = [];
     this._containers = [];
     this._systemObjects = [];
+    this._jsScript = {};
     this._gammaNames = {};
     this._buckets = {};
     this._bucketEntries = {};
@@ -639,6 +641,26 @@ export class UIRoot {
   }
   getSkinName(): string {
     return this.getSkinInfo()["name"];
+  }
+
+  //? WindowsMediaPlayer ========================
+  addJsScript(js:string){
+    //* sample: scriptFile="personal.js;res://wmploc/RT_TEXT/#132"
+
+    if(js.includes(';')){
+      js = js.substring(0, js.indexOf(';'))
+      console.log(js)
+    }
+    this._jsScript[js] = js; //key'd because to avoid duplicate
+  }
+  async loadJsScripts(){
+    for (const scriptPath of Object.keys(this._jsScript)) {
+      const scriptText = await this.getFileAsString(scriptPath);
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.textContent = scriptText   
+      document.head.appendChild(script);
+    }
   }
 
   //? Logging things ========================

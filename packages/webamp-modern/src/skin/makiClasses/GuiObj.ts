@@ -299,6 +299,18 @@ export default class GuiObj extends XmlObj {
     return this._visible;
   }
 
+  /** getter setter */
+  get visible(): boolean {
+    return this._visible;
+  }
+  set visible(showing: boolean) {
+    if (showing) {
+      this.show();
+    } else {
+      this.hide();
+    }
+  }
+
   /**
    * Get the Y position, in the screen, of the
    * top edge of the object.
@@ -491,11 +503,11 @@ export default class GuiObj extends XmlObj {
     assert(
       x >= this.getleft(),
       "Expected click to be to the right of the component's left." +
-      ` x:${x} left:${this.getleft()}`
-      );
-      assert(
-        y >= this.gettop(),
-        "Expected click to be below the component's top." +
+        ` x:${x} left:${this.getleft()}`
+    );
+    assert(
+      y >= this.gettop(),
+      "Expected click to be below the component's top." +
         ` y:${y} top:${this.gettop()}`
     );
     this.getparentlayout().bringtofront();

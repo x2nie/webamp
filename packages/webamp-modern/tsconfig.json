@@ -2,7 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "allowJs": true,
-    "resolveJsonModule": true
+    // "resolveJsonModule": true,
+    "target": "es2018"
   },
   "exclude": [
     "node_modules",

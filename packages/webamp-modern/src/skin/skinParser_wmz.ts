@@ -4,6 +4,7 @@ import JSZip from "jszip";
 import UI_ROOT, { UIRoot } from "../UIRoot";
 import BitmapFont from "./BitmapFont";
 import EqVis from "./makiClasses/EqVis";
+import PlayListGui from "./makiClasses/PlayListGui";
 import Vis from "./makiClasses/Vis";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 import ButtonElement from "./wmzElements/ButtonElement";
@@ -85,6 +86,11 @@ export default class WmpSkinParser extends SkinParser {
         return this.slider(node, parent);
       case "text":
         return this.textz(node, parent);
+      case "playlist": 
+        return this.playlist(node, parent);
+      case "video": 
+      //* UNHANDLED 
+        return this.group(node, parent);
       case "wrapper":
         // Note: Included files don't have a single root node, so we add a synthetic one.
         // A different XML parser library might make this unnessesary.
@@ -156,6 +162,10 @@ export default class WmpSkinParser extends SkinParser {
     return this.newGui(TextZ, node, parent);
   }
 
+  async playlist(node: XmlElement, parent: any) {
+    return this.newGui(PlayListGui, node, parent);
+  }
+
   /**
    * WMZ seem as has only one xml; that is it
    * @param node
@@ -220,8 +230,9 @@ export default class WmpSkinParser extends SkinParser {
     element.name = element.name.toLowerCase();
     //? lowercase all att
     for (const att of Object.keys(element.attributes)) {
-      if (att != att.toLowerCase()) {
-        element.attributes[att.toLowerCase()] = element.attributes[att];
+      const lower = att.toLowerCase()
+      if (att != lower  && lower != 'id') {
+        element.attributes[lower] = element.attributes[att];
         delete element.attributes[att];
       }
     }

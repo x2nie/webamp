@@ -12,7 +12,7 @@ export default class SubView extends Group {
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
-    if (super.setXmlAttr(key, value)) {
+    if (super.setXmlAttr(_key, value)) {
       return true;
     }
 
@@ -34,6 +34,6 @@ export default class SubView extends Group {
   _renderBackground() {
     super._renderBackground();
     if (this._backgroundColor)
-      this._div.style.setProperty('--background-color',this._backgroundColor);
+      this._div.style.setProperty("--background-color", this._backgroundColor);
   }
 }
