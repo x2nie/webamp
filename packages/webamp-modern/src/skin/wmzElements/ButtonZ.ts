@@ -117,6 +117,7 @@ export default class ButtonZ extends ButtonElement {
 
   draw() {
     super.draw();
+    // renderRegion was done in super.
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }

@@ -104,6 +104,7 @@ async function initializeSkinListMenu() {
     { filename: "[Classic]", download_url: "assets/base-2.91.wsz" },
     { filename: "[wmp] Quicksilver WindowsMediaPlayer!", download_url: "assets/Quicksilver.wmz" },
     { filename: "[wmp] Windows XP", download_url: "assets/Windows-XP.wmz" },
+    { filename: "[wmp] Famous Headspace", download_url: "assets/Headspace.wmz" },
     { filename: "CornerAmp_Redux", download_url: "assets/CornerAmp_Redux.wal" },
   ];
 
