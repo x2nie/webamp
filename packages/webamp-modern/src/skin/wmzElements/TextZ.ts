@@ -11,9 +11,9 @@ export default class TextZ extends Text {
     return "text";
   }
 
-  constructor(){
-      super()
-      this.setXmlAttr('font','arial')
+  constructor() {
+    super();
+    this.setXmlAttr("font", "arial");
   }
 
   setXmlAttr(_key: string, _value: string): boolean {
@@ -23,25 +23,24 @@ export default class TextZ extends Text {
       this._pendingProps[key] = value;
       return true;
     }
-    if(key=='value'){
-        key='text'
+    if (key == "value") {
+      key = "text";
     }
     if (super.setXmlAttr(key, value)) {
-    //   //? wmz has no action/param
-    //   if (key == "id") {
-    //     if (value.startsWith("eq")) {
-    //       const index = value.substring(2);
-    //       this.setxmlparam("action", "eq_band");
-    //       this.setxmlparam("param", index);
-    //     } else if(value =='balance'){
-    //       this.setxmlparam("action", "pan");
-          
-          
-    //     } else if(value =='volume'){
-    //       this.setxmlparam("action", "volume");
-          
-    //     }
-    //   }
+      //   //? wmz has no action/param
+      //   if (key == "id") {
+      //     if (value.startsWith("eq")) {
+      //       const index = value.substring(2);
+      //       this.setxmlparam("action", "eq_band");
+      //       this.setxmlparam("param", index);
+      //     } else if(value =='balance'){
+      //       this.setxmlparam("action", "pan");
+
+      //     } else if(value =='volume'){
+      //       this.setxmlparam("action", "volume");
+
+      //     }
+      //   }
       return true;
     }
 
@@ -59,14 +58,14 @@ export default class TextZ extends Text {
   draw() {
     solvePendingProps(this, this._pendingProps);
     super.draw();
-    if(!this._width){
-        this._div.style.setProperty('--full-width', 'auto')
+    if (!this._width) {
+      this._div.style.setProperty("--full-width", "auto");
     }
-    if(this.getwidth()==0){
-        this._div.style.removeProperty('width')
+    if (this.getwidth() == 0) {
+      this._div.style.removeProperty("width");
     }
-    if(this.getheight()==0){
-        this._div.style.removeProperty('height')
+    if (this.getheight() == 0) {
+      this._div.style.removeProperty("height");
     }
   }
 }
