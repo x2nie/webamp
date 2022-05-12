@@ -6,6 +6,8 @@ export default class ButtonGroup extends Group {
   _mappingImage: string;
   _hoverImage: string;
   _downImage: string;
+  _hoverDownImage: string;
+  _disabledImage: string;
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -19,11 +21,15 @@ export default class ButtonGroup extends Group {
         break;
       case "hoverimage":
         this._hoverImage = value;
-        this._renderBackground();
         break;
       case "downimage":
         this._downImage = value;
-        this._renderBackground();
+        break;
+      case "hoverdownimage":
+        this._hoverDownImage = value;
+        break;
+      case "disabledimage":
+        this._disabledImage = value;
         break;
       default:
         return false;
@@ -32,20 +38,19 @@ export default class ButtonGroup extends Group {
   }
 
   _renderBackground() {
-    if (this._hoverImage != null) {
-      const hoverimage = UI_ROOT.getBitmap(this._hoverImage);
-      this.setHoverBackgroundImage(hoverimage);
-    } else {
-      this.setHoverBackgroundImage(null);
-    }
-    
-    if (this._downImage != null) {
-      const downBitmap = UI_ROOT.getBitmap(this._downImage);
-      this.setDownBackgroundImage(downBitmap);
-    } else {
-      this.setDownBackgroundImage(null);
-    }
+    const setCssVar = (bitmapId: string, bitmapMethod: string) => {
+      if (bitmapId != null) {
+        const bitmap = UI_ROOT.getBitmap(bitmapId);
+        if (bitmap != null) {
+          bitmap[bitmapMethod](this._div);
+        }
+      }
+    };
 
+    setCssVar(this._hoverImage, "setAsHoverBackground");
+    setCssVar(this._downImage, "setAsDownBackground");
+    setCssVar(this._hoverDownImage, "setAsHoverDownBackground");
+    setCssVar(this._disabledImage, "setAsDisabledBackground");
   }
 
   // This shadows `getheight()` on GuiObj
@@ -70,9 +75,8 @@ export default class ButtonGroup extends Group {
 
   draw() {
     super.draw();
-    if(!this._background){
+    if (!this._background) {
       this._div.classList.remove("webamp--img");
-
     }
   }
 }

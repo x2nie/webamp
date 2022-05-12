@@ -195,12 +195,13 @@ export default class WmpSkinParser extends SkinParser {
         if (element instanceof XmlElement) {
           this._lowercaseAttributes(element); // set all xml attribute to lowercase.
           for (const att of [
-            "image",
             "background",
-            "disabledimage",
-            "downimage",
-            "thumb",
+            "image",
             "hoverimage",
+            "downimage",
+            "hoverdownimage",
+            "disabledimage",
+            "thumb",
             "mappingimage",
           ])
             if (element.attributes[att]) {
