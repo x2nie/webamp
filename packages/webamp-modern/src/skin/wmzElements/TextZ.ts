@@ -25,6 +25,11 @@ export default class TextZ extends Text {
     }
     if (key == "value") {
       key = "text";
+      if (value == "wmpprop:player.currentmedia.name") {
+        this.setXmlAttr("display", "songname");
+        this.setXmlAttr("ticker", "1");
+        return;
+      }
     }
     if (super.setXmlAttr(key, value)) {
       //   //? wmz has no action/param
@@ -58,14 +63,19 @@ export default class TextZ extends Text {
   draw() {
     solvePendingProps(this, this._pendingProps);
     super.draw();
+    this._div.classList.add('textz')
     if (!this._width) {
       this._div.style.setProperty("--full-width", "auto");
     }
     if (this.getwidth() == 0) {
-      this._div.style.removeProperty("width");
+      //   this._div.style.removeProperty("width");
+      this._div.style.width = "auto";
     }
     if (this.getheight() == 0) {
       this._div.style.removeProperty("height");
+    }
+    if (!this._background) {
+      this._div.classList.remove("webamp--img");
     }
   }
 }

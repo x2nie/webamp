@@ -100,6 +100,7 @@ export default class Text extends GuiObj {
         this._fontSize = num(value);
         this.ensureFontSize();
         this._invalidateFullWidth();
+        this._prepareCss();
         break;
       case "color":
         // (int[sic?]) The comma delimited RGB color of the text.
@@ -199,6 +200,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   init() {
     super.init();
+    this._invalidateFullWidth();
     if (this._ticker && this._ticker != "off") {
       this._prepareScrolling();
     }
@@ -467,6 +469,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       (font && font.getFontFamily()) || "Arial"
     }`;
     const metrics = context.measureText(this.gettext());
+    console.log("getWidt:", this.gettext(), metrics);
+    console.log("getWidt.font:", context.font);
     return metrics.width + self._paddingX * 2;
   }
 

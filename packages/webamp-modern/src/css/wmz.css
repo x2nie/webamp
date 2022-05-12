@@ -25,3 +25,6 @@ buttongroup > buttonelement:hover:active{
     background-image: var(--down-background-image, var(--background-image));
   }
   
+text.textz wrap{
+  width: auto;
+}
