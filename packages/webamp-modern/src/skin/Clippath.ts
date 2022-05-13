@@ -39,14 +39,16 @@ export class Edges {
   }
 
   parseCanvasTransparencyByColor(canvas: HTMLCanvasElement, color: string) {
+    const sum = (r: number, g: number, b: number) => r | (g << 8) | (b << 16);
     const rgb = hexToRgb(color);
+    const transparent = sum(rgb.r, rgb.g, rgb.b);
     this.opaque = (x: number, y: number): boolean => {
-      //set
-      return (
-        this._data.data[(x + y * this._width) * 4 + 0] != rgb.r &&
-        this._data.data[(x + y * this._width) * 4 + 1] != rgb.g &&
-        this._data.data[(x + y * this._width) * 4 + 2] != rgb.b
-      );
+      const start = (x + y * this._width) * 4;
+      const data = this._data.data.slice(start, start + 4);
+      const result =
+        //? opaque = pixel != color
+        sum(data[0], data[1], data[2]) != transparent;
+      return result;
     };
     this._parseCanvasTransparency(canvas, null, null);
   }
@@ -119,7 +121,7 @@ export class Edges {
     lastX = 0;
     first = true;
     pending = false;
-    for (y = lastTop; y <= h; y++) {
+    for (y = 0; y <= h; y++) {
       //? scan right, top->bottom
       for (x = w - 1; x >= 0; x--) {
         //? find most right of non-transparent
@@ -159,7 +161,7 @@ export class Edges {
     lastY = h - 1;
     first = true;
     pending = false;
-    for (x = lastRight; x >= 0; x--) {
+    for (x = w; x >= 0; x--) {
       //? scan bottom, right->left
       for (y = h - 1; y >= 0; y--) {
         //? find most top of non-transparent

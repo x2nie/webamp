@@ -8,54 +8,112 @@ document.getElementById("img1").onclick = (event) => {
   event.stopPropagation();
 };
 
+const GRIDSIZE = 4;
+// const CELLSIZE = 15;
+const SCALE = 30; //px
+
 function prepareGrid() {
   const grid = document.getElementById("grid");
+  grid.style.width = `${GRIDSIZE * SCALE}px`;
+  grid.style.height = `${GRIDSIZE * SCALE}px`;
+  grid.style.setProperty('--cell-size', `${SCALE+1}px`);
   const img = document.getElementById("result") as HTMLImageElement;
+  const zoom = document.getElementById("zoom") as HTMLDivElement;
+  zoom.style.transform = `scale(${SCALE})`;
+
+  const border = document.getElementById("border") as HTMLDivElement;
+  border.style.width = `${GRIDSIZE * SCALE}px`;
+  border.style.height = `${GRIDSIZE * SCALE}px`;
+
   const canvas: HTMLCanvasElement = document.getElementById(
     "working"
   ) as HTMLCanvasElement;
-  canvas.width = 10;
-  canvas.height = 10;
+  canvas.width = GRIDSIZE;
+  canvas.height = GRIDSIZE;
+  canvas.setAttribute("width", String(GRIDSIZE));
+  canvas.setAttribute("height", String(GRIDSIZE));
   const ctx = canvas.getContext("2d");
+
+  //? default paint
   ctx.fillStyle = "#ff00ff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#000000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
 
-  for (var i = 0; i < 100; i++) {
+  //? onClick
+  const toggleCell = (e: MouseEvent) => {
+    const el = e.target as HTMLDivElement;
+    var color: number[];
+    if (el.classList.contains("black")) {
+      el.classList.remove("black");
+      color = [255, 0, 255];
+    } else {
+      el.classList.add("black");
+      color = [0, 0, 0];
+    }
+    const id = parseInt(el.getAttribute("id"));
+    const x: number = id % GRIDSIZE;
+    const y: number = Math.floor(id / GRIDSIZE);
+    const idata = ctx.createImageData(1, 1);
+    const data = idata.data;
+    data[0] = color[0];
+    data[1] = color[1];
+    data[2] = color[2];
+    data[3] = 255;
+    ctx.putImageData(idata, x, y);
+
+    //? IMG
+    img.setAttribute("src", canvas.toDataURL());
+
+    const edge = new Edges();
+    edge.parseCanvasTransparencyByColor(canvas, "#ff00ff");
+    document.getElementById("top").textContent = edge
+      .gettop()
+      .replace(/px/gi, "")
+      .replace(/\,\s/gi, "\n");
+    document.getElementById("right").textContent = edge
+      .getright()
+      .replace(/px/gi, "")
+      .replace(/\,\s/gi, "\n");
+    document.getElementById("bottom").textContent = edge
+      .getbottom()
+      .replace(/px/gi, "")
+      .replace(/\,\s/gi, "\n");
+    document.getElementById("left").textContent = edge
+      .getleft()
+      .replace(/px/gi, "")
+      .replace(/\,\s/gi, "\n");
+
+    //? ZOOM
+    zoom.style.clipPath = edge.getPolygon();
+  }; // eof onClick
+
+  for (var i = 0; i < GRIDSIZE * GRIDSIZE; i++) {
     const div = document.createElement("div");
     div.setAttribute("id", `${i}`);
+    if (i < (GRIDSIZE * GRIDSIZE) / 2) {
+      //HALF
+      div.classList.add("black");
+    }
+    div.addEventListener("click", toggleCell);
 
-    div.addEventListener("click", (e: MouseEvent) => {
-      const el = e.target as HTMLDivElement;
-      var color: number;
-      if (el.classList.contains("black")) {
-        el.classList.remove("black");
-        color = 0;
-      } else {
-        el.classList.add("black");
-        color = 255;
-      }
-      const id = parseInt(el.getAttribute("id"));
-      const x: number = id % 10;
-      const y: number = Math.floor(id / 10);
-      const idata = ctx.createImageData(1, 1);
-      const data = idata.data;
-      data[0] = color;
-      data[1] = color;
-      data[2] = color;
-      data[3] = 255;
-      ctx.putImageData(idata, x, y);
-      
-      // const urlData = ctx.getImageData(0,0,canvas.width, canvas.height)
-      img.setAttribute("src", canvas.toDataURL());
-    });
     grid.appendChild(div);
   }
-  
-  img.setAttribute("src", canvas.toDataURL());
+
+  toggleCell({target:document.getElementById('0')} as unknown as MouseEvent)
+  // img.setAttribute("src", canvas.toDataURL());
+
+  //debug
+  zoom.style.clipPath = `polygon(
+    0px 0px, 
+    3px 0px, 
+    3px 3px, 
+    0px 3px)`
 }
 
 function main() {
   prepareGrid();
+  return;
 
   const oriImg = document.getElementById("img1");
   const preferedWidth = parseInt(oriImg.getAttribute("data-width"));

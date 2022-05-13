@@ -34,35 +34,81 @@
       .col {
         min-width: 25%;
       }
+      #drawing {
+        padding: 10px;
+        border: 1px solid lime;
+        background-color: antiquewhite;
+      }
+      #drawing > * {
+        display: inline-block;
+      }
       #grid {
+        background-color: white;
+        background-image: linear-gradient(45deg, #d8d8d8 25%, transparent 25%),
+          linear-gradient(-45deg, #d8d8d8 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #d8d8d8 75%),
+          linear-gradient(-45deg, transparent 75%, #d8d8d8 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         width: 150px;
+        height: 150px;
+        --cell-size: 16px;
       }
       #grid > div {
-        width: 16px;
-        height: 16px;
+        width: var(--cell-size);
+        height: var(--cell-size);
         display: inline-block;
         float: left;
-        border: 1px solid silver;
+        border: 1px solid #4c4c4c;
         box-sizing: border-box;
         margin-top: -1px;
         margin-left: -1px;
         cursor: pointer;
         z-index: 0;
+        /* background: white; */
       }
-      #grid > div:hover{
+      #grid > div:hover {
         border-color: black;
         z-index: 1;
       }
-      #grid > div.black{
-        background-color: green;
+      #grid > div.black {
+        background-color: darkolivegreen;
+        border-color:silver;
       }
-      #result {width: 150px; height: 150px; margin-left: 40px;}
+      #separator {
+        width: 40px;
+      }
+      #border {
+        border: 1px solid blue;
+        background: aqua;
+        box-sizing: content-box;
+        cursor: not-allowed;
+      }
+      #zoom {
+        transform-origin: top left;
+        /* margin-left: 40px; */
+        /* transform: scale(15); */
+        /* transform-origin: bottom left; */
+        --foo: "bar";
+      }
+      #result {
+        /* width: 150px; height: 150px; */
+        display: block;
+      }
+      #working {
+        float: right;
+      }
     </style>
   </head>
   <body>
     <div id="drawing">
       <div id="grid"></div>
-      <img id="result" />
+      <div id="separator"></div>
+      <div id="border">
+        <div id="zoom">
+          <img id="result" />
+        </div>
+      </div>
       <canvas id="working" width="10" height="10"></canvas>
     </div>
     <div class="table">
