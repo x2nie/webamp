@@ -17,7 +17,7 @@ export default class SliderZ extends Slider {
   setXmlAttr(_key: string, _value: string): boolean {
     const key = _key.toLowerCase();
     const value = _value.toLowerCase();
-    if (value.startsWith("jscript:")) {
+    if (['visible','enabled','height','width','x','y','w','h'].includes(key) &&value.startsWith("jscript:")) {
       this._pendingProps[key] = value;
       return true;
     }

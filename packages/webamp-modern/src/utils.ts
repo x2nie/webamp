@@ -69,7 +69,7 @@ export function getId(): number {
  * @returns utf8 content
  */
 export function decodeWideChars(binaryStr: string) {
-  if (binaryStr.charCodeAt(0) < 256) {
+  if (binaryStr.charCodeAt(0) < 255) {
     return binaryStr;
   }
   var cp = "";

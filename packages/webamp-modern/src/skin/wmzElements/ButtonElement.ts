@@ -38,6 +38,11 @@ export default class ButtonElement extends GuiObj {
     }
 
     switch (key) {
+      // case "image":
+      //   //quick and dirty patch
+      //   //TODO: implement all hover,down,disable. sample: quicksilver.wmz: playbutton
+      //   this.setXmlAttr('background', value);
+      //   return true
       case "mappingcolor":
         this._mappingColor = value;
         //temporary:

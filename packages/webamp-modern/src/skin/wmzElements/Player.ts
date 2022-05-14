@@ -1,9 +1,11 @@
 import UI_ROOT from "../../UIRoot";
 import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import GuiObj from "../makiClasses/GuiObj";
+import { runInlineScript } from "./util";
 
 export default class Player extends GuiObj {
   _controls: PlayerControls;
+  _playState_onchange: string;
 
   constructor() {
     super();
@@ -12,7 +14,7 @@ export default class Player extends GuiObj {
     // through a name specified by an id attribute, which is not supported by the PLAYER element.
     this.setXmlAttr("id", "player");
 
-    this._controls = new PlayerControls()
+    this._controls = new PlayerControls();
   }
 
   setXmlAttr(_key: string, value: string): boolean {
@@ -24,10 +26,26 @@ export default class Player extends GuiObj {
     switch (key) {
       case "backgroundcolor":
         break;
+      case "playState_onchange":
+        this._playState_onchange = value;
+        break;
       default:
         return false;
     }
     return true;
+  }
+
+  init(): void {
+    super.init();
+
+    if (this._playState_onchange != null) {
+      //audio state change
+      UI_ROOT.audio.on("statchanged", () => this._updateAudioStatus());
+      this._updateAudioStatus();
+    }
+  }
+  _updateAudioStatus() {
+    runInlineScript(this._playState_onchange);
   }
 
   //? WMP things ============================
@@ -60,8 +78,8 @@ export default class Player extends GuiObj {
   }
 
   draw() {
-    super.draw()
-    window['player'] = this;
+    super.draw();
+    window["player"] = this;
   }
 }
 

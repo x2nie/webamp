@@ -23,10 +23,11 @@ import ComponentBucket from "./skin/makiClasses/ComponentBucket";
 import GroupXFade from "./skin/makiClasses/GroupXFade";
 import { PlEdit, Track } from "./skin/makiClasses/PlayList";
 import PRIVATE_CONFIG from "./skin/PrivateConfig";
+import ImageManager from "./skin/ImageManager";
 
 export class UIRoot {
   _div: HTMLDivElement = document.createElement("div");
-  // _imageManager:ImageManager;
+  _imageManager:ImageManager;
   // Just a temporary place to stash things
   _bitmaps: { [id: string]: Bitmap } = {};
   _fonts: (TrueTypeFont | BitmapFont)[] = [];
@@ -65,6 +66,8 @@ export class UIRoot {
     // document.body.appendChild(this._input);
     // TODO: dispose
     this._input.onchange = this._inputChanged;
+
+    this._imageManager = new ImageManager();
   }
 
   // shortcut of this.Emitter
@@ -86,6 +89,7 @@ export class UIRoot {
     this.deinitSkin();
     this.dispose();
     this._bitmaps = {};
+    this._imageManager = new ImageManager();
     this._fonts = [];
     this._colors = [];
     this._groupDefs = {};
@@ -117,6 +121,10 @@ export class UIRoot {
 
   getRootDiv() {
     return this._div;
+  }
+
+  getImageManager(): ImageManager {
+    return this._imageManager;
   }
 
   addObject(obj: BaseObject) {
@@ -338,7 +346,7 @@ export class UIRoot {
     return aliases;
   }
 
-  _setCssVars() {
+  async _setCssVars() {
     const cssRules = [];
 
     // bitmap aliases; support multiple names (<elementalias/>)
@@ -373,7 +381,7 @@ export class UIRoot {
       //   bitmap._width,
       //   bitmap._height
       //   );
-      const url = gammaGroup.transformBitmap(bitmap);
+      const url = await gammaGroup.transformBitmap(bitmap);
       cssRules.push(`  ${bitmap.getCSSVar()}: url(${url});`);
       //support multiple names
       maybeBitmapAliases(bitmap);
@@ -660,8 +668,8 @@ export class UIRoot {
       const scriptContent = await this.getFileAsString(scriptPath);
       const scriptText = decodeWideChars(scriptContent);
       const script = document.createElement("script");
-      script.type = "text/javascript";
       script.textContent = scriptText + ";debugger;";
+      script.type = "text/javascript";
       document.head.appendChild(script);
     }
   }

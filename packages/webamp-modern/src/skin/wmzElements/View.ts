@@ -51,7 +51,7 @@ export default class View extends Container {
   init() {
     super.init();
 
-    
+    // pending onLoad
     if(this._onTimer && this._timerInterval){
       setTimeout(() => {
         console.log('Blendshutter!?',this._onTimer)

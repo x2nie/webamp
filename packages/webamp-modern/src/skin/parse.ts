@@ -91,8 +91,8 @@ export default class SkinParser {
 
   constructor(uiRoot: UIRoot) {
     /* Once UI_ROOT is not a singleton, we can create that objet in the constructor */
-    this._imageManager = new ImageManager();
     this._uiRoot = uiRoot;
+    this._imageManager = uiRoot.getImageManager();
   }
 
   // bad name, okay I know

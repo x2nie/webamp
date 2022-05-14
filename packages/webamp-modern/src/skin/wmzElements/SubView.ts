@@ -54,6 +54,12 @@ export default class SubView extends Group {
     this.moveTo(x, y, speed);
   }
 
+  alphaBlendTo(alpha:number, speed:number){
+    this.settargeta(alpha);
+    this.settargetspeed(speed / 1000);
+    this.gototarget();
+  }
+
   get alphaBlend(): number {
     return this._alpha;
   }

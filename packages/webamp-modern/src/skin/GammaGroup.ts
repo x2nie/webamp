@@ -91,10 +91,11 @@ export default class GammaGroup {
     ctx.putImageData(imageData, 0, 0);
     return canvas.toDataURL();
   }
-  transformBitmap(bitmap: Bitmap): string {
+  async transformBitmap(bitmap: Bitmap): Promise<string> {
     if(this._value=='0,0,0'){
       // triple zero meaning no gamma should be applied.
-      return bitmap.getCanvas().toDataURL();
+      // return bitmap.getCanvas().toDataURL();
+      return await bitmap.toDataURL();
     }
     const [r, g, b] = this._value.split(",").map((v) => {
       return Number(v) / 4096 + 1.0;

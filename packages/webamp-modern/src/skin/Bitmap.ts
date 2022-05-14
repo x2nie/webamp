@@ -1,3 +1,4 @@
+import UI_ROOT from "../UIRoot";
 import { assert, getId, hexToRgb, normalizeDomId, num, px } from "../utils";
 import ImageManager from "./ImageManager";
 
@@ -161,6 +162,15 @@ export default class Bitmap {
 
   setAsDisabledBackground(div: HTMLElement) {
     this._setAsBackground(div, "disabled-");
+  }
+
+  async toDataURL():Promise<string> {
+    if(this._file.endsWith('.gif')){
+
+      return await UI_ROOT.getImageManager().getUrl(this._file)
+    } else {
+      return this.getCanvas().toDataURL()
+    }
   }
 
   /**

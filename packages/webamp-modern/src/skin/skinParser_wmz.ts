@@ -77,15 +77,15 @@ export default class WmpSkinParser extends SkinParser {
       case "mutebutton":
       case "shufflebutton":
       case "repeatbutton":
+        case "playbutton":
+        case "stopbutton":
+        case "pausebutton":
+        case "prevbutton":
+        case "nextbutton":
         return this.button(node, parent);
       case "buttongroup":
         return this.buttongroup(node, parent);
       case "buttonelement":
-      case "playbutton":
-      case "stopbutton":
-      case "pausebutton":
-      case "prevbutton":
-      case "nextbutton":
       case "playelement":
       case "stopelement":
       case "pauselement":
@@ -174,6 +174,7 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async button(node: XmlElement, parent: any) {
+    this._parseActionByTag(node)
     return await this.newGroup(ButtonZ, node, parent);
   }
   async buttongroup(node: XmlElement, parent: any) {
@@ -181,6 +182,10 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async buttonelement(node: XmlElement, parent: any) {
+    this._parseActionByTag(node)
+    return await this.newGui(ButtonElement, node, parent);
+  }
+  _parseActionByTag(node: XmlElement) {
     const tag = node.name;
     let action: string;
     if (tag != "buttonelement") {
@@ -199,8 +204,6 @@ export default class WmpSkinParser extends SkinParser {
           break;
       }
     }
-
-    return await this.newGui(ButtonElement, node, parent);
   }
 
   async slider(node: XmlElement, parent: any) {
