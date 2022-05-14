@@ -1,5 +1,6 @@
 import UI_ROOT from "../../UIRoot";
 import { num } from "../../utils";
+import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import { Edges } from "../Clippath";
 import Group from "../makiClasses/Group";
 
@@ -7,6 +8,7 @@ import Group from "../makiClasses/Group";
 export default class SubView extends Group {
   _clippingColor: string;
   _backgroundColor: string;
+  _audioEvent: { [audioEvent: string]: string } = {};
 
   getElTag(): string {
     return "subview";
@@ -14,6 +16,11 @@ export default class SubView extends Group {
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
+    if (value.startsWith("wmpenabled:player.controls.")) {
+      this._audioEvent[value.split(".").pop()] = key;
+      return;
+    }
+
     if (super.setXmlAttr(_key, value)) {
       return true;
     }
@@ -41,6 +48,22 @@ export default class SubView extends Group {
     this.settargety(y);
     this.settargetspeed(speed/1000);
     this.gototarget();
+  }
+
+  init() {
+    super.init();
+    UI_ROOT.audio.on("statchanged", () => this._updateStatus());
+    this._updateStatus();
+  }
+
+  _updateStatus() {
+    const state = UI_ROOT.audio.getState(); // playing
+    for (const [audioEvent, prop] of Object.entries(this._audioEvent)) {
+      this[prop] =
+        (audioEvent == "play" && state != AUDIO_PLAYING) ||
+        (audioEvent == "pause" && state != AUDIO_PAUSED) ||
+        (audioEvent == "stop" && state != AUDIO_STOPPED);
+    }
   }
 
   _renderRegion() {

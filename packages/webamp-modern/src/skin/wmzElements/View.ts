@@ -1,4 +1,4 @@
-import UI_ROOT from "../../UIRoot";
+import UI_ROOT, { UIRoot } from "../../UIRoot";
 import Container from "../makiClasses/Container";
 import Group from "../makiClasses/Group";
 import GuiObj from "../makiClasses/GuiObj";
@@ -55,8 +55,7 @@ export default class View extends Layout {
 
 
   prepareScriptGlobalObjects() {
-    const container: Container = this.getcontainer();
-    window['theme'] = container;
+    window['theme'] = UI_ROOT.findContainer('theme')
     window['view'] = this;
 
 

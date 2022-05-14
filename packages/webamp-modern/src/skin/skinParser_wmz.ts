@@ -11,9 +11,11 @@ import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 import ButtonElement from "./wmzElements/ButtonElement";
 import ButtonGroup from "./wmzElements/ButtonGroup";
 import ButtonZ from "./wmzElements/ButtonZ";
+import Player from "./wmzElements/Player";
 import SliderZ from "./wmzElements/SliderZ";
 import SubView from "./wmzElements/SubView";
 import TextZ from "./wmzElements/TextZ";
+import Theme from "./wmzElements/Theme";
 import View from "./wmzElements/View";
 import VisZ from "./wmzElements/VisZ";
 
@@ -71,6 +73,9 @@ export default class WmpSkinParser extends SkinParser {
       case "effects":
         return this.visz(node, parent);
       case "button":
+      case "mutebutton":
+      case "shufflebutton":
+      case "repeatbutton":
         return this.button(node, parent);
       case "buttongroup":
         return this.buttongroup(node, parent);
@@ -87,11 +92,15 @@ export default class WmpSkinParser extends SkinParser {
       case "nextelement":
         return this.buttonelement(node, parent);
       case "slider":
+      case "volumeslider":
+      case "balanceslider":
         return this.slider(node, parent);
       case "text":
         return this.textz(node, parent);
       case "playlist":
         return this.playlist(node, parent);
+      case "player":
+        return this.player(node, parent);
       case "video":
         //* UNHANDLED
         return this.group(node, parent);
@@ -168,7 +177,15 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async slider(node: XmlElement, parent: any) {
-    return this.newGui(SliderZ, node, parent);
+    const slider = await this.newGui(SliderZ, node, parent) as SliderZ;
+    switch(node.name.toLowerCase()){
+      case "volumeslider":
+        slider.setXmlAttr('action', 'volume')
+        break
+      case "balanceslider":
+        slider.setXmlAttr('action', 'pan')
+        break
+    }
   }
   async visz(node: XmlElement, parent: any) {
     return this.newGui(VisZ, node, parent);
@@ -182,6 +199,10 @@ export default class WmpSkinParser extends SkinParser {
     return this.newGui(PlayListGui, node, parent);
   }
 
+  async player(node: XmlElement, parent: any) {
+    return this.newGui(Player, node, parent);
+  }
+
   /**
    * WMZ seem as has only one xml; that is it
    * @param node
@@ -193,6 +214,9 @@ export default class WmpSkinParser extends SkinParser {
       return await this.parseAttributesAsImages(node);
     } else {
       await this.traverseChildren(node, parent);
+      const theme = new Theme();
+      theme.setXmlAttr('id','theme');
+      this._uiRoot.addContainers(theme);
     }
   }
 
