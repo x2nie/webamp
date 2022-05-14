@@ -54,7 +54,7 @@ export default class SubView extends Group {
     this.moveTo(x, y, speed);
   }
 
-  alphaBlendTo(alpha:number, speed:number){
+  alphaBlendTo(alpha: number, speed: number) {
     this.settargeta(alpha);
     this.settargetspeed(speed / 1000);
     this.gototarget();
@@ -66,6 +66,11 @@ export default class SubView extends Group {
   set alphaBlend(value: number) {
     this._alpha = value;
     this._renderAlpha();
+  }
+
+  set passThrough(value: string) {
+    this._ghost = value == "True";
+    this._div.style.pointerEvents = this._ghost ? "none" : "auto";
   }
 
   init() {

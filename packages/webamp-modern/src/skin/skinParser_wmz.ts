@@ -315,7 +315,8 @@ export default class WmpSkinParser extends SkinParser {
       width: "w",
       height: "h",
       backgroundimage: "background",
-      alphablend: 'alpha'
+      alphablend: 'alpha',
+      passthrough: 'ghost',
     };
     const replacable = Object.keys(replacement);
     for (const att of Object.keys(element.attributes)) {
