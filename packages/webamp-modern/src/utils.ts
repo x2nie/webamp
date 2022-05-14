@@ -52,8 +52,7 @@ export function relative(size: number): string {
 
 export function toBool(str: string) {
   assume(
-    str === "0" || str === "1" ||
-    str === "false" || str === "true",
+    str === "0" || str === "1" || str === "false" || str === "true",
     `Expected bool value to be "0" or "1", but it was "${str}".`
   );
   return str === "1" || str === "true";
@@ -81,7 +80,6 @@ export function decodeWideChars(binaryStr: string) {
   // console.log("res:", result);
   return result;
 }
-
 
 // TODO: Delete this once we have proper type coersion in the VM.
 export function ensureVmInt(num: number): number {
@@ -159,6 +157,20 @@ export const throttle = (fn: Function, wait: number = 300) => {
     }
   };
 };
+
+/**
+ * parse color string into byte values.
+ * @param hex only a valid html : '#XXXXXX'
+ * @returns an object with respected keys of: r,g,b.
+ */
+export function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  };
+}
 
 /**
  * Purpuse: to hold eventListeners

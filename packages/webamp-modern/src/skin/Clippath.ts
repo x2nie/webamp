@@ -1,10 +1,13 @@
+import { hexToRgb } from "../utils";
+
 export class Edges {
   _data: ImageData;
   _width: number;
-  _top: string[] = [];
-  _right: string[] = [];
-  _bottom: string[] = [];
-  _left: string[] = [];
+  // [x:refPoint, y:refPoint, ax: clip.x, ay:clip.y]
+  _top: number[][] = [];
+  _right: number[][] = [];
+  _bottom: number[][] = [];
+  _left: number[][] = [];
 
   /**
    * Replacable function
@@ -21,14 +24,15 @@ export class Edges {
     preferedWidth: number,
     preferedHeight: number
   ) {
-    this.opaque = this.opaqueByTransparent; //set
+    //set:
+    this.opaque = this.opaqueByTransparent;
     this._parseCanvasTransparency(canvas, preferedHeight, preferedWidth);
   }
 
   parseCanvasTransparencyByNonColor(canvas: HTMLCanvasElement, color: string) {
     const rgb = hexToRgb(color);
+    //set
     this.opaque = (x: number, y: number): boolean => {
-      //set
       return (
         this._data.data[(x + y * this._width) * 4 + 0] == rgb.r &&
         this._data.data[(x + y * this._width) * 4 + 1] == rgb.g &&
@@ -42,6 +46,7 @@ export class Edges {
     const sum = (r: number, g: number, b: number) => r | (g << 8) | (b << 16);
     const rgb = hexToRgb(color);
     const transparent = sum(rgb.r, rgb.g, rgb.b);
+    //set:
     this.opaque = (x: number, y: number): boolean => {
       const start = (x + y * this._width) * 4;
       const data = this._data.data.slice(start, start + 4);
@@ -62,142 +67,80 @@ export class Edges {
     const h = preferedHeight || canvas.height;
     this._width = w;
     const ctx = canvas.getContext("2d");
-    // const data = ctx.getImageData(0, 0, w, h).data;
     this._data = ctx.getImageData(0, 0, w, h);
-    let points: string[] = [];
-    var x, y, lastX, lastY;
-    var lastfoundx: number, lastfoundy: number, pending: boolean;
-    var first: boolean;
+    let points: number[][] = [];
+    var x: number, y: number;
 
-    // //? return true if not transparent
-    // function opaque(ax: number, ay: number): boolean {
-    //   return data[(ax + ay * w) * 4 + 3] != 0;
-    // }
-
-    function post(ax: number, ay: number) {
-      points.push(`${ax}px ${ay}px`);
+    function post(x: number, y: number, ax: number, ay: number) {
+      points.push([x, y, ax, ay]);
     }
 
     //? top -------------------------------------------------
     points = [];
-    lastY = 0;
-    first = true;
-    pending = false;
     for (x = 0; x < w; x++) {
       //? scan top, left->right
       for (y = 0; y < h; y++) {
         //? find most top of non-transparent
         if (this.opaque(x, y)) {
-          post(x, y );
-          post(x + 1, y );
-          // if (!first && y != lastY && pending) {
-          //   post(lastfoundx + 1, lastfoundy);
-          // }
-          // if (first || y != lastY || x == w) {
-          //   first = false;
-          //   post(x, y);
-          //   lastY = y;
-          //   pending = false;
-          // } else if (x == w && pending) {
-          //   post(lastfoundx, lastfoundy);
-          // } else {
-          //   pending = true;
-          // }
-          // lastfoundx = x;
-          // lastfoundy = y;
+          post(x, y, x, y);
+          post(x, y, x + 1, y);
           break;
         }
       }
-      // if (x == w - 1 && pending) {
-      //   post(lastfoundx + 1, lastfoundy);
-      // }
     }
-    this._top = points; // points.join(', \n')
+    this._top = points;
     const lastTop: number =
-      points.length == 0
-        ? 0
-        : parseInt(points[points.length - 1].split(" ")[1]); // get y
+      points.length == 0 ? 0 : points[points.length - 1][1]; // get y
 
     //? Right -------------------------------------------------
     points = [];
-    lastX = 0;
-    first = true;
-    pending = false;
     for (y = lastTop; y < h; y++) {
       //? scan right, top->bottom
       for (x = w - 1; x >= 0; x--) {
         //? find most right of non-transparent
         if (this.opaque(x, y)) {
-          post(x + 1, y);
-          post(x + 1, y+1);
-          // if (!first && x != lastX && pending) {
-          //   post(lastfoundx + 1, lastfoundy);
-          // }
-          // if (first || x != lastX || y == h - 1) {
-          //   first = false;
-          //   post(x + 1, y);
-          //   lastX = x;
-          //   pending = false;
-          // } else if (y == h && pending) {
-          //   post(lastfoundx + 1, lastfoundy);
-          //   pending = false;
-          // } else {
-          //   pending = true;
-          // }
-          // lastfoundx = x;
-          // lastfoundy = y;
+          post(x, y, x + 1, y);
+          post(x, y, x + 1, y + 1);
           break;
         }
       }
-      // if (y == h - 1 && pending) {
-      //   // last
-      //   post(lastfoundx + 1, lastfoundy);
-      // }
     }
-    this._right = points; // points.join(', \n')
+    this._right = points;
     const lastRight: number =
-      points.length == 0
-        ? w-1
-        : parseInt(points[points.length - 1].split(" ")[0]); // get x
+      points.length == 0 ? w - 1 : points[points.length - 1][0]; // get x
 
     //? bottom -------------------------------------------------
     points = [];
-    lastY = h - 1;
-    first = true;
-    pending = false;
     for (x = lastRight; x >= 0; x--) {
       //? scan bottom, right->left
       for (y = h - 1; y >= 0; y--) {
         //? find most top of non-transparent
         if (this.opaque(x, y)) {
-          post(x + 1, y + 1);
-          post(x, y + 1);
+          post(x, y, x + 1, y + 1);
+          post(x, y, x, y + 1);
 
-          // if (!first && y != lastY && pending) {
-          //   post(lastfoundx, lastfoundy + 1);
-          // }
-          // if (first || y != lastY || x == 0) {
-          //   first = false;
-          //   post(x, y + 1);
-          //   lastY = y;
-          //   pending = false;
-          // } else if (x == 0 && pending) {
-          //   post(lastfoundx, lastfoundy + 1);
-          //   pending = false;
-          // } else {
-          //   pending = true;
-          // }
-          // lastfoundx = x;
-          // lastfoundy = y;
           break;
         }
       }
-      if (x == 0 && pending) {
-        // last
-        post(lastfoundx, lastfoundy + 1);
+    }
+    this._bottom = points;
+    const lastBottom: number =
+      points.length == 0 ? h - 1 : points[points.length - 1][1]; // get y
+
+    //? Left -------------------------------------------------
+    points = [];
+    for (y = lastBottom; y >= 0; y--) {
+      //? scan left, bottom->top
+      for (x = 0; x < w; x++) {
+        //? find most right of non-transparent
+        if (this.opaque(x, y)) {
+          post(x, y, x, y + 1);
+          post(x, y, x, y);
+          break;
+        }
       }
     }
-    this._bottom = points; // points.join(', \n')
+    this._left = points;
   }
 
   gettop(): string {
@@ -221,21 +164,22 @@ export class Edges {
 
   getPolygon(): string {
     // to avoid empty between two comma separator, we explode values befor join().
-    return `polygon(${[
+    const points = [
       ...this._top,
       ...this._right,
       ...this._bottom,
       ...this._left,
-    ].join(", ")})`;
+    ];
+    const result: string[] = [];
+    let lastPoint = null;
+    for (var point of points) {
+      if (point != lastPoint) {
+        const [x, y, ax, ay] = point;
+        result.push(`${ax}px ${ay}px`);
+      }
+      lastPoint = point;
+    }
+    return `polygon(${result.join(", ")})`;
     // TODO: detect if first points in bottom has ben detected by right.
   }
-}
-
-function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
-  };
 }

@@ -1,4 +1,4 @@
-import { assert, getId, normalizeDomId, num, px } from "../utils";
+import { assert, getId, hexToRgb, normalizeDomId, num, px } from "../utils";
 import ImageManager from "./ImageManager";
 
 export function genCssVar(bitmapId: string): string {
@@ -219,14 +219,4 @@ export default class Bitmap {
     }
     return workingCanvas;
   }
-}
-
-//TODO: Move it to utils?
-function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
-  };
 }
