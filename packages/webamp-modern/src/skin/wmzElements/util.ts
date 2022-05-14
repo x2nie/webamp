@@ -12,8 +12,8 @@ export function runInlineScript(script: string) {
       } catch(error) {
         console.log('failed to run expression:',`|${expression}|`,'@', script)
         
-        // console.warn(error)
-        throw error
+        console.warn(error)
+        // throw error
       }
     }
     // console.log(`/${expression}/`)
