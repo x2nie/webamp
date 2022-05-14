@@ -23,17 +23,17 @@ export default class SliderZ extends Slider {
     }
     if (super.setXmlAttr(key, value)) {
       //? wmz has no action/param
-      if (key == "id") {
-        if (value.startsWith("eq")) {
-          const index = value.substring(2);
-          this.setxmlparam("action", "eq_band");
-          this.setxmlparam("param", index);
-        } else if (value == "balance") {
-          this.setxmlparam("action", "pan");
-        } else if (value == "volume") {
-          this.setxmlparam("action", "volume");
-        }
-      }
+      // if (key == "id") {
+      //   if (value.startsWith("eq")) {
+      //     const index = value.substring(2);
+      //     this.setxmlparam("action", "eq_band");
+      //     this.setxmlparam("param", index);
+      //   } else if (value == "balance") {
+      //     this.setxmlparam("action", "pan");
+      //   } else if (value == "volume") {
+      //     this.setxmlparam("action", "volume");
+      //   }
+      // }
       return true;
     }
 
@@ -47,10 +47,34 @@ export default class SliderZ extends Slider {
       case "bordersize":
         this._borderSize = num(value);
         break;
+      case "value":
+        this.setValueToaction(value.toLowerCase());
+        break;
       default:
         return false;
     }
     return true;
+  }
+
+  setValueToaction(value:string){
+    switch(value) {
+      case "wmpprop:player.controls.currentposition":
+        this.setxmlparam("action", "seek");
+        break
+      case "wmpprop:player.settings.balance":
+        this.setxmlparam("action", "pan");
+        break
+      case "wmpprop:player.settings.volume":
+        this.setxmlparam("action", "volume");
+        break
+      default:
+        if(value.startsWith('wmpprop:eq.gainlevel')){
+          const eqIndex = value.substring(20)
+          this.setxmlparam("action", "eq_band");
+          this.setxmlparam("param", eqIndex);
+        }
+        return
+    }
   }
 
   // This shadows `getheight()` on GuiObj
