@@ -171,9 +171,10 @@ export class Edges {
       ...this._left,
     ];
     const result: string[] = [];
-    let lastPoint = null;
+    let lastPoint = [-1,-1,-1,-1];
     for (var point of points) {
-      if (point != lastPoint) {
+      //skip same value as previous
+      if (point[2] != lastPoint[2] || point[3] != lastPoint[3]) {
         const [x, y, ax, ay] = point;
         result.push(`${ax}px ${ay}px`);
       }
