@@ -12,6 +12,7 @@ import ButtonElement from "./wmzElements/ButtonElement";
 import ButtonGroup from "./wmzElements/ButtonGroup";
 import ButtonZ from "./wmzElements/ButtonZ";
 import Player from "./wmzElements/Player";
+import PlayListGuiZ from "./wmzElements/PlayListGuiZ";
 import SliderZ from "./wmzElements/SliderZ";
 import SubView from "./wmzElements/SubView";
 import TextZ from "./wmzElements/TextZ";
@@ -126,20 +127,46 @@ export default class WmpSkinParser extends SkinParser {
    * @param parent
    */
   async view(node: XmlElement, parent: any) {
-    const attr = node.attributes;
-    const containerEl = new XmlElement("container", {
-      id: attr.id || "main",
+    //? view as container
+    const container = new View();
+    container.setXmlAttributes(node.attributes);
+    this._uiRoot.addContainers(container);
+
+    // //? layout
+    const layoutNode = new XmlElement("layout", {
+      id: "normal",
     });
-    const container = await this.container(containerEl, null);
+    layoutNode.children = node.children;
+    // const container = await this.container(containerEl, null);
 
-    //? layout
-    node.attributes.id = "normal";
-    // node.attributes.w = node.attributes.width;
-    // node.attributes.h = node.attributes.height;
-    // node.attributes.background = node.attributes.backgroundimage;
+    // node.attributes.id = "normal";
 
-    await this.newGroup(View, node, container);
+
+    await this.layout(node, container);
+    return container;
+
+    //?old
+    // const attr = node.attributes;
+    // const containerEl = new XmlElement("container", {
+    //   id: attr.id || "main",
+    // });
+    // const container = await this.container(containerEl, null);
+
+    // //? layout
+    // node.attributes.id = "normal";
+    // // node.attributes.w = node.attributes.width;
+    // // node.attributes.h = node.attributes.height;
+    // // node.attributes.background = node.attributes.backgroundimage;
+
+    // await this.newGroup(View, node, container);
   }
+  // async container(node: XmlElement, parent: any) {
+  //   const container = new Container();
+  //   container.setXmlAttributes(node.attributes);
+  //   this._uiRoot.addContainers(container);
+  //   await this.traverseChildren(node, container);
+  //   return container;
+  // }
 
   async subview(node: XmlElement, parent: any) {
     await this.newGroup(SubView, node, parent);
@@ -196,7 +223,7 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async playlist(node: XmlElement, parent: any) {
-    return this.newGui(PlayListGui, node, parent);
+    return this.newGui(PlayListGuiZ, node, parent);
   }
 
   async player(node: XmlElement, parent: any) {
@@ -285,6 +312,7 @@ export default class WmpSkinParser extends SkinParser {
       width: "w",
       height: "h",
       backgroundimage: "background",
+      alphablend: 'alpha'
     };
     const replacable = Object.keys(replacement);
     for (const att of Object.keys(element.attributes)) {

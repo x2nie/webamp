@@ -43,11 +43,23 @@ export default class SubView extends Group {
     return true;
   }
 
-  moveto(x: number, y: number, speed: number) {
+  moveTo(x: number, y: number, speed: number) {
     this.settargetx(x);
     this.settargety(y);
-    this.settargetspeed(speed/1000);
+    this.settargetspeed(speed / 1000);
     this.gototarget();
+  }
+  moveto(x: number, y: number, speed: number) {
+    //TODO: duplicate remove it
+    this.moveTo(x, y, speed);
+  }
+
+  get alphaBlend(): number {
+    return this._alpha;
+  }
+  set alphaBlend(value: number) {
+    this._alpha = value;
+    this._renderAlpha();
   }
 
   init() {
@@ -78,11 +90,14 @@ export default class SubView extends Group {
       }
     }
   }
-  
+
   _renderBackground() {
     super._renderBackground();
     //alway has this css var
-    this._div.style.setProperty("--background-color", this._backgroundColor|| 'transparent');
+    this._div.style.setProperty(
+      "--background-color",
+      this._backgroundColor || "transparent"
+    );
   }
 
   draw() {

@@ -26,6 +26,7 @@ import PRIVATE_CONFIG from "./skin/PrivateConfig";
 
 export class UIRoot {
   _div: HTMLDivElement = document.createElement("div");
+  // _imageManager:ImageManager;
   // Just a temporary place to stash things
   _bitmaps: { [id: string]: Bitmap } = {};
   _fonts: (TrueTypeFont | BitmapFont)[] = [];
@@ -372,7 +373,7 @@ export class UIRoot {
       //   bitmap._width,
       //   bitmap._height
       //   );
-        const url = gammaGroup.transformBitmap(bitmap)
+      const url = gammaGroup.transformBitmap(bitmap);
       cssRules.push(`  ${bitmap.getCSSVar()}: url(${url});`);
       //support multiple names
       maybeBitmapAliases(bitmap);
@@ -645,22 +646,22 @@ export class UIRoot {
   }
 
   //? WindowsMediaPlayer ========================
-  addJsScript(js:string){
+  addJsScript(js: string) {
     //* sample: scriptFile="personal.js;res://wmploc/RT_TEXT/#132"
 
-    if(js.includes(';')){
-      js = js.substring(0, js.indexOf(';'))
-      console.log(js)
+    if (js.includes(";")) {
+      js = js.substring(0, js.indexOf(";"));
+      console.log(js);
     }
     this._jsScript[js] = js; //key'd because to avoid duplicate
   }
-  async loadJsScripts(){
+  async loadJsScripts() {
     for (const scriptPath of Object.keys(this._jsScript)) {
       const scriptContent = await this.getFileAsString(scriptPath);
       const scriptText = decodeWideChars(scriptContent);
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.textContent = scriptText   
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.textContent = scriptText + ";debugger;";
       document.head.appendChild(script);
     }
   }

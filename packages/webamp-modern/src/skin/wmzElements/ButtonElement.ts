@@ -31,6 +31,7 @@ export default class ButtonElement extends GuiObj {
     const key = _key.toLowerCase();
     if (value.startsWith("wmpenabled:player.controls.")) {
       this._audioEvent[value.split(".").pop()] = key;
+      return;
     }
     if (super.setXmlAttr(key, value)) {
       return true;

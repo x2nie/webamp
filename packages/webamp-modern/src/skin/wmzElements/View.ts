@@ -1,18 +1,22 @@
 import UI_ROOT, { UIRoot } from "../../UIRoot";
+import { num } from "../../utils";
 import Container from "../makiClasses/Container";
 import Group from "../makiClasses/Group";
 import GuiObj from "../makiClasses/GuiObj";
 import Layout from "../makiClasses/Layout";
+import Theme from "./Theme";
 import { runInlineScript } from "./util";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/view-element
-export default class View extends Layout {
+export default class View extends Container {
   _clippingColor: string;
   _scriptFile: string;
   _onLoad: string;
+  _timerInterval: number;
+  _onTimer:string;
 
   getElTag(): string {
-    return "layout";
+    return "container";
   }
 
   setXmlAttr(_key: string, value: string): boolean {
@@ -32,6 +36,12 @@ export default class View extends Layout {
       case "onload":
         this._onLoad = value;
         break;
+      case "timerinterval":
+        this._timerInterval = num(value);
+        break;
+      case "ontimer":
+        this._onTimer = value;
+        break;
       default:
         return false;
     }
@@ -40,24 +50,22 @@ export default class View extends Layout {
 
   init() {
     super.init();
-    if (this._scriptFile) {
-      this.prepareScriptGlobalObjects();
-      //? temporary disabling due incomplete methods
-      if(this._onLoad){
-        setTimeout(() => {
-          runInlineScript(this._onLoad)
-          
-        }, 1000);
-      }
+
+    
+    if(this._onTimer && this._timerInterval){
+      setTimeout(() => {
+        console.log('Blendshutter!?',this._onTimer)
+        runInlineScript(this._onTimer)
+      }, this._timerInterval);
     }
+
   }
 
-
-
   prepareScriptGlobalObjects() {
-    window['theme'] = UI_ROOT.findContainer('theme')
-    window['view'] = this;
-
+    const theme = UI_ROOT.findContainer("theme") as Theme;
+    window["theme"] = theme;
+    window["mediacenter"] = theme.mediaCenter;
+    window["view"] = this;
 
     const recursiveSetGlobal = (element: GuiObj) => {
       if (element.getOriginalId() != null) {
@@ -71,6 +79,28 @@ export default class View extends Layout {
       }
     };
 
-    recursiveSetGlobal(this);
+    const layout = this.getCurLayout()
+    recursiveSetGlobal(layout);
+  }
+
+  draw() {
+    super.draw();
+
+    //register self
+    if (this.getOriginalId() != null) {
+      window[this.getOriginalId()] = this;
+      // console.log('set global:', element.getOriginalId())
+    }
+
+    if (this._scriptFile) {
+      this.prepareScriptGlobalObjects();
+      //? temporary disabling due incomplete methods
+      if (this._onLoad) {
+        setTimeout(() => {
+          runInlineScript(this._onLoad);
+        }, 1000);
+      }
+    }
+
   }
 }
