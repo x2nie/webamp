@@ -88,27 +88,29 @@ export class Edges {
       for (y = 0; y < h; y++) {
         //? find most top of non-transparent
         if (this.opaque(x, y)) {
-          if (!first && y != lastY && pending) {
-            post(lastfoundx + 1, lastfoundy);
-          }
-          if (first || y != lastY || x == w) {
-            first = false;
-            post(x, y);
-            lastY = y;
-            pending = false;
-          } else if (x == w && pending) {
-            post(lastfoundx, lastfoundy);
-          } else {
-            pending = true;
-          }
-          lastfoundx = x;
-          lastfoundy = y;
+          post(x, y );
+          post(x + 1, y );
+          // if (!first && y != lastY && pending) {
+          //   post(lastfoundx + 1, lastfoundy);
+          // }
+          // if (first || y != lastY || x == w) {
+          //   first = false;
+          //   post(x, y);
+          //   lastY = y;
+          //   pending = false;
+          // } else if (x == w && pending) {
+          //   post(lastfoundx, lastfoundy);
+          // } else {
+          //   pending = true;
+          // }
+          // lastfoundx = x;
+          // lastfoundy = y;
           break;
         }
       }
-      if (x == w - 1 && pending) {
-        post(lastfoundx + 1, lastfoundy);
-      }
+      // if (x == w - 1 && pending) {
+      //   post(lastfoundx + 1, lastfoundy);
+      // }
     }
     this._top = points; // points.join(', \n')
     const lastTop: number =
@@ -121,39 +123,41 @@ export class Edges {
     lastX = 0;
     first = true;
     pending = false;
-    for (y = 0; y <= h; y++) {
+    for (y = lastTop; y < h; y++) {
       //? scan right, top->bottom
       for (x = w - 1; x >= 0; x--) {
         //? find most right of non-transparent
         if (this.opaque(x, y)) {
-          if (!first && x != lastX && pending) {
-            post(lastfoundx + 1, lastfoundy);
-          }
-          if (first || x != lastX || y == h - 1) {
-            first = false;
-            post(x + 1, y);
-            lastX = x;
-            pending = false;
-          } else if (y == h && pending) {
-            post(lastfoundx + 1, lastfoundy);
-            pending = false;
-          } else {
-            pending = true;
-          }
-          lastfoundx = x;
-          lastfoundy = y;
+          post(x + 1, y);
+          post(x + 1, y+1);
+          // if (!first && x != lastX && pending) {
+          //   post(lastfoundx + 1, lastfoundy);
+          // }
+          // if (first || x != lastX || y == h - 1) {
+          //   first = false;
+          //   post(x + 1, y);
+          //   lastX = x;
+          //   pending = false;
+          // } else if (y == h && pending) {
+          //   post(lastfoundx + 1, lastfoundy);
+          //   pending = false;
+          // } else {
+          //   pending = true;
+          // }
+          // lastfoundx = x;
+          // lastfoundy = y;
           break;
         }
       }
-      if (y == h - 1 && pending) {
-        // last
-        post(lastfoundx + 1, lastfoundy);
-      }
+      // if (y == h - 1 && pending) {
+      //   // last
+      //   post(lastfoundx + 1, lastfoundy);
+      // }
     }
     this._right = points; // points.join(', \n')
     const lastRight: number =
       points.length == 0
-        ? 0
+        ? w-1
         : parseInt(points[points.length - 1].split(" ")[0]); // get x
 
     //? bottom -------------------------------------------------
@@ -161,27 +165,30 @@ export class Edges {
     lastY = h - 1;
     first = true;
     pending = false;
-    for (x = w; x >= 0; x--) {
+    for (x = lastRight; x >= 0; x--) {
       //? scan bottom, right->left
       for (y = h - 1; y >= 0; y--) {
         //? find most top of non-transparent
         if (this.opaque(x, y)) {
-          if (!first && y != lastY && pending) {
-            post(lastfoundx, lastfoundy + 1);
-          }
-          if (first || y != lastY || x == 0) {
-            first = false;
-            post(x, y + 1);
-            lastY = y;
-            pending = false;
-          } else if (x == 0 && pending) {
-            post(lastfoundx, lastfoundy + 1);
-            pending = false;
-          } else {
-            pending = true;
-          }
-          lastfoundx = x;
-          lastfoundy = y;
+          post(x + 1, y + 1);
+          post(x, y + 1);
+
+          // if (!first && y != lastY && pending) {
+          //   post(lastfoundx, lastfoundy + 1);
+          // }
+          // if (first || y != lastY || x == 0) {
+          //   first = false;
+          //   post(x, y + 1);
+          //   lastY = y;
+          //   pending = false;
+          // } else if (x == 0 && pending) {
+          //   post(lastfoundx, lastfoundy + 1);
+          //   pending = false;
+          // } else {
+          //   pending = true;
+          // }
+          // lastfoundx = x;
+          // lastfoundy = y;
           break;
         }
       }

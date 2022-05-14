@@ -16,7 +16,7 @@ function prepareGrid() {
   const grid = document.getElementById("grid");
   grid.style.width = `${GRIDSIZE * SCALE}px`;
   grid.style.height = `${GRIDSIZE * SCALE}px`;
-  grid.style.setProperty('--cell-size', `${SCALE+1}px`);
+  grid.style.setProperty("--cell-size", `${SCALE + 1}px`);
   const img = document.getElementById("result") as HTMLImageElement;
   const zoom = document.getElementById("zoom") as HTMLDivElement;
   zoom.style.transform = `scale(${SCALE})`;
@@ -39,6 +39,15 @@ function prepareGrid() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+
+  //? red dot
+  const dot = document.getElementById('dot') as HTMLElement;
+  const coordinateHover = (e: MouseEvent) => {
+    const el = e.target as HTMLDivElement;
+    const [x,y] = el.textContent.split(', ').map((v)=> parseInt(v));
+    dot.style.left = `${x*SCALE}px`
+    dot.style.top = `${y*SCALE}px`
+  }
 
   //? onClick
   const toggleCell = (e: MouseEvent) => {
@@ -65,24 +74,44 @@ function prepareGrid() {
     //? IMG
     img.setAttribute("src", canvas.toDataURL());
 
+    //? Coordinates
+    const showCoordinates = (el: string, data: string) => {
+      const El = document.getElementById(el);
+      El.textContent = "";
+      const rows = data.replace(/px/gi, "").replace(/\,\s/gi, "\n").replace(/\ /g,', ').split("\n");
+      for (const row of rows) {
+        const div = document.createElement("div");
+        div.textContent = row;
+        div.addEventListener('mousemove', coordinateHover)
+
+        El.appendChild(div);
+      }
+    };
+
     const edge = new Edges();
     edge.parseCanvasTransparencyByColor(canvas, "#ff00ff");
-    document.getElementById("top").textContent = edge
-      .gettop()
-      .replace(/px/gi, "")
-      .replace(/\,\s/gi, "\n");
-    document.getElementById("right").textContent = edge
-      .getright()
-      .replace(/px/gi, "")
-      .replace(/\,\s/gi, "\n");
-    document.getElementById("bottom").textContent = edge
-      .getbottom()
-      .replace(/px/gi, "")
-      .replace(/\,\s/gi, "\n");
-    document.getElementById("left").textContent = edge
-      .getleft()
-      .replace(/px/gi, "")
-      .replace(/\,\s/gi, "\n");
+
+    showCoordinates('top', edge.gettop());
+    showCoordinates('right', edge.getright());
+    showCoordinates('bottom', edge.getbottom());
+    showCoordinates('left', edge.getleft());
+
+    // document.getElementById("top").textContent = edge
+    //   .gettop()
+    //   .replace(/px/gi, "")
+    //   .replace(/\,\s/gi, "\n");
+    // document.getElementById("right").textContent = edge
+    //   .getright()
+    //   .replace(/px/gi, "")
+    //   .replace(/\,\s/gi, "\n");
+    // document.getElementById("bottom").textContent = edge
+    //   .getbottom()
+    //   .replace(/px/gi, "")
+    //   .replace(/\,\s/gi, "\n");
+    // document.getElementById("left").textContent = edge
+    //   .getleft()
+    //   .replace(/px/gi, "")
+    //   .replace(/\,\s/gi, "\n");
 
     //? ZOOM
     zoom.style.clipPath = edge.getPolygon();
@@ -91,16 +120,39 @@ function prepareGrid() {
   for (var i = 0; i < GRIDSIZE * GRIDSIZE; i++) {
     const div = document.createElement("div");
     div.setAttribute("id", `${i}`);
+    div.addEventListener("click", toggleCell);
+
+    grid.appendChild(div);
+
+    const x: number = i % GRIDSIZE;
+    const y: number = Math.floor(i / GRIDSIZE);
+    if (x == 0 && y == 0) {
+      div.classList.add("x-0-axis");
+      div.style.setProperty("--0-axis", `'0'`);
+    }
+    if (y == 0) {
+      div.textContent = String(x);
+      div.classList.add("x-axis");
+      div.style.setProperty("--x-axis", `'${x + 1}'`);
+    }
+    if (x == 0) {
+      div.textContent = String(y);
+      div.classList.add("y-axis");
+      div.style.setProperty("--y-axis", `'${y}'`);
+      if (y == GRIDSIZE - 1) {
+        div.classList.add("y-axis-z");
+        div.style.setProperty("--y-axis-z", `'${y + 1}'`);
+      }
+    }
+
+    //debug/default
     if (i < (GRIDSIZE * GRIDSIZE) / 2) {
       //HALF
       div.classList.add("black");
     }
-    div.addEventListener("click", toggleCell);
-
-    grid.appendChild(div);
   }
 
-  toggleCell({target:document.getElementById('0')} as unknown as MouseEvent)
+  toggleCell({ target: document.getElementById("1") } as unknown as MouseEvent);
   // img.setAttribute("src", canvas.toDataURL());
 
   //debug
@@ -108,7 +160,7 @@ function prepareGrid() {
     0px 0px, 
     3px 0px, 
     3px 3px, 
-    0px 3px)`
+    0px 3px)`;
 }
 
 function main() {
