@@ -18,27 +18,44 @@ buttongroup > buttonelement {
 buttongroup.webamp--img:active,
 buttongroup.webamp--img:hover:active,
 buttongroup.webamp--img:hover {
-    background-image: var(--background-image);
-  }
-  buttongroup > buttonelement.down {
+  background-image: var(--background-image);
+}
+subview.webamp--img::before,
+buttongroup.has-image::before{
+  content: '';
+  position: absolute;
+  background-image: var(--background-image);
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  z-index: 0;
+}
+buttongroup > buttonelement.down {
   background-image: var(--down-background-image, var(--background-image));
 }
 buttongroup > buttonelement:hover {
-    background-image: var(--hover-background-image, var(--background-image));
+  background-image: var(--hover-background-image, var(--background-image));
 }
 buttongroup > buttonelement.down:hover {
-  background-image: var(--hover-down-background-image, var(--hover-background-image, var(--background-image)));
+  background-image: var(
+    --hover-down-background-image,
+    var(--hover-background-image, var(--background-image))
+  );
 }
 buttongroup > buttonelement:active,
-buttongroup > buttonelement:hover:active{
+buttongroup > buttonelement:hover:active {
   background-image: var(--down-background-image, var(--background-image));
 }
 buttongroup > buttonelement.disabled {
   pointer-events: none;
-  background-image: var(--disabled-background-image, var(--background-image)) !important;
+  background-image: var(
+    --disabled-background-image,
+    var(--background-image)
+  ) !important;
 }
-  
-text.textz wrap{
+
+text.textz wrap {
   width: auto;
 }
 

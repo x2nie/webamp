@@ -4,6 +4,7 @@ import Group from "../makiClasses/Group";
 // https://docs.microsoft.com/en-us/windows/win32/wmp/buttongroup-element
 export default class ButtonGroup extends Group {
   _mappingImage: string;
+  _image: string;
   _hoverImage: string;
   _downImage: string;
   _hoverDownImage: string;
@@ -18,6 +19,9 @@ export default class ButtonGroup extends Group {
     switch (key) {
       case "mappingimage":
         this._mappingImage = value;
+        break;
+      case "image":
+        this._image = value;
         break;
       case "hoverimage":
         this._hoverImage = value;
@@ -47,6 +51,7 @@ export default class ButtonGroup extends Group {
       }
     };
 
+    setCssVar(this._image, "setAsBackground");
     setCssVar(this._hoverImage, "setAsHoverBackground");
     setCssVar(this._downImage, "setAsDownBackground");
     setCssVar(this._hoverDownImage, "setAsHoverDownBackground");
@@ -75,8 +80,11 @@ export default class ButtonGroup extends Group {
 
   draw() {
     super.draw();
-    if (!this._background) {
+    if (!this._background&&!this._image) {
       this._div.classList.remove("webamp--img");
     }
+    /*if (this._image!=null) {
+      this._div.classList.add('has-image')
+    }*/
   }
 }

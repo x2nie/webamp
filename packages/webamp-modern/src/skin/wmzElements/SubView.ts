@@ -58,8 +58,8 @@ export default class SubView extends Group {
   
   _renderBackground() {
     super._renderBackground();
-    if (this._backgroundColor)
-      this._div.style.setProperty("--background-color", this._backgroundColor);
+    //alway has this css var
+    this._div.style.setProperty("--background-color", this._backgroundColor|| 'transparent');
   }
 
   draw() {
