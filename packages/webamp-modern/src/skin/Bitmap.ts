@@ -1,6 +1,6 @@
 import UI_ROOT from "../UIRoot";
 import { assert, getId, hexToRgb, normalizeDomId, num, px } from "../utils";
-import ImageManager from "./ImageManager";
+import ImageManager, { loadImage } from "./ImageManager";
 
 export function genCssVar(bitmapId: string): string {
   return `--bitmap-${bitmapId.replace(/[^a-zA-Z0-9]/g, "-")}`;
@@ -11,8 +11,9 @@ export default class Bitmap {
   _id: string;
   _cssVar: string;
   _url: string;
-  _img: HTMLImageElement;
+  _img: CanvasImageSource;
   _canvas: HTMLCanvasElement;
+  _ownCache: boolean = false; //signal that the _img is not stored in ImageManager
   _x: number = 0;
   _y: number = 0;
   _width: number;
@@ -31,8 +32,8 @@ export default class Bitmap {
     const key = _key.toLowerCase();
     switch (key) {
       case "id":
-        this._id = value;
-        this._cssVar = `--bitmap-${this.getId().replace(/[^a-zA-Z0-9]/g, "-")}`;
+        this._id = value; //TODO: should be lowerCase here.
+        this._cssVar = genCssVar(this.getId());
         break;
       case "x":
         this._x = num(value) ?? 0;
@@ -53,6 +54,7 @@ export default class Bitmap {
         this._gammagroup = value;
         break;
       case "transparentcolor":
+        //seem as only windows media player uses it.
         this._transparentColor = value;
         break;
       default:
@@ -93,12 +95,14 @@ export default class Bitmap {
     return this._gammagroup;
   }
 
-  getImg(): HTMLImageElement {
+  getImg(): CanvasImageSource {
     return this._img;
   }
-  async setImage(url: string, imageManager: ImageManager) {
-    await imageManager.setImage(this._file, url);
-    await this.ensureImageLoaded(imageManager);
+  setImage(img: CanvasImageSource) {
+    // await imageManager.setImage(this._file, url);
+    // await this.ensureImageLoaded(imageManager);
+    this._img = img;
+    this._ownCache = true;
   }
 
   // Ensure we've loaded the image into our image loader.
@@ -108,8 +112,10 @@ export default class Bitmap {
       "Tried to ensure a Bitmap was laoded more than once."
     );
 
-    //force. also possibly set null:
-    this._img = await imageManager.getImage(this._file);
+    if (!this._ownCache) {
+      //force. also possibly set null:
+      this._img = await imageManager.getImage(this._file);
+    }
     if (this._img) {
       if (this._width == null && this._height == null) {
         this.setXmlAttr("w", String(this._img.width));
@@ -168,8 +174,14 @@ export default class Bitmap {
     this._setAsBackground(div, "disabled-");
   }
 
+  /**
+   * Final function that uses Bitmap;
+   * Afther call this, bitmap maybe destroyed.
+   * @returns url string used as embedded in <head><style>
+   */
   async toDataURL(): Promise<string> {
     if (this._file.endsWith(".gif") && !this._transparentColor) {
+      // don't draw _img into canvas, if it is animated gif
       return await UI_ROOT.getImageManager().getUrl(this._file);
     } else {
       return this.getCanvas().toDataURL();
@@ -177,7 +189,7 @@ export default class Bitmap {
   }
 
   /**
-   *
+   * Useful for calculating clip-path
    * @param store whether the generated canvas should be
    *              kept by this bitmap instance
    * @returns <canvas/>
@@ -190,8 +202,8 @@ export default class Bitmap {
     if (this._canvas == null || !store) {
       assert(this._img != null, "Expected bitmap image to be loaded");
       workingCanvas = document.createElement("canvas");
-      workingCanvas.width = this.getWidth() || this._img.width;
-      workingCanvas.height = this.getHeight() || this._img.height;
+      workingCanvas.width = this.getWidth() /* || this._img.width */;
+      workingCanvas.height = this.getHeight() /* || this._img.height */;
       const ctx = workingCanvas.getContext("2d");
       // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
       ctx.drawImage(this._img, -this._x, -this._y);

@@ -137,7 +137,7 @@ export default class SkinParser {
    */
   async _loadBitmaps() {
     await this._solveMissingBitmaps();
-    await this._imageManager.loadUniquePaths();
+    // await this._imageManager.loadUniquePaths();
     await this._imageManager.ensureBitmapsLoaded();
   }
 
@@ -464,19 +464,16 @@ export default class SkinParser {
   }
 
   async bitmap(attributes: Attributes):Promise<Bitmap> {
-    // assume(
-    //   node.children.length === 0,
-    //   "Unexpected children in <bitmap> XML node."
-    // );
     const bitmap = new Bitmap();
     bitmap.setXmlAttributes(attributes);
-    this._imageManager.addBitmap(bitmap);
+    // this._imageManager.addBitmap(bitmap);
 
     this._uiRoot.addBitmap(bitmap);
     this._res.bitmaps[attributes.id] = true;
 
     if (this._phase == GROUP_PHASE) {
-      this._imageManager.setBimapImg(bitmap);
+      // this._imageManager.setBimapImg(bitmap);
+      bitmap.ensureImageLoaded(this._imageManager)
     }
     return bitmap
   }

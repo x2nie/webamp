@@ -9,9 +9,8 @@ const DEFAULT_IMAGE_URL =
 export default class ImageManager {
   _urlCache: Map<string, string> = new Map();
   _imgCache: Map<string, HTMLImageElement> = new Map();
-  _pathofBitmap = {}; //? file : true|false|null
-  _bitmaps: { [key: string]: Bitmap } = {}; //? Bitmap:file
-  _bitmapAlias = {}; //? file|id : true|false|null //for BitmapFont
+  // _pathofBitmap = {}; //? file : true|false|null
+  // _bitmaps: { [key: string]: Bitmap } = {}; //? Bitmap:file
 
   async getUrl(filePath: string): Promise<string | null> {
     if (!this._urlCache.has(filePath)) {
@@ -29,7 +28,7 @@ export default class ImageManager {
     return this._urlCache.get(filePath);
   }
 
-  addBitmap(bitmap: Bitmap) {
+  addBitmap0(bitmap: Bitmap) {
     const id = bitmap.getId().toLowerCase();
     const filePath = bitmap.getFile().toLowerCase();
     this._pathofBitmap[filePath] = false;
@@ -42,14 +41,34 @@ export default class ImageManager {
 
   // Ensure we've loaded the image into our image loader.
   async loadUniquePaths() {
-    for (const filePath of Object.keys(this._pathofBitmap)) {
-      await this.getImage(filePath);
+    const bitmaps: Bitmap[] = [];
+
+    //? Collect unique filepath
+    const filesPath: string[] = [];
+    for (const bitmap of Object.values(UI_ROOT.getBitmaps())) {
+      //? ignore bitmap that already has _img
+      if (!bitmap.getImg()) {
+        if (!filesPath.includes(bitmap.getFile())) {
+          filesPath.push(bitmap.getFile());
+          bitmaps.push(bitmap);
+        }
+      }
     }
+    await Promise.all(
+      filesPath.map(async (filePath) => {
+        await this.getImage(filePath);
+      })
+    );
+    return bitmaps;
   }
+
   async ensureBitmapsLoaded() {
+    const bitmaps = await this.loadUniquePaths();
+
     return Promise.all(
-      Object.values(this._bitmaps).map(async (bitmap) => {
-        await this.setBimapImg(bitmap);
+      bitmaps.map(async (bitmap) => {
+        // await this.setBimapImg(bitmap);
+        bitmap._img = await this.getImage(bitmap.getFile());
         if (bitmap._img && bitmap._width == null && bitmap._height == null) {
           bitmap.setXmlAttr("w", String(bitmap._img.width));
           bitmap.setXmlAttr("h", String(bitmap._img.height));
@@ -58,9 +77,11 @@ export default class ImageManager {
     );
   }
 
-  async setBimapImg(bitmap: Bitmap) {
-    bitmap._img = await this.getImage(bitmap.getFile());
-  }
+  // async setBimapImg(bitmap: Bitmap) {
+  //   if (!bitmap._ownCache) {
+  //     bitmap._img = await this.getImage(bitmap.getFile());
+  //   }
+  // }
 
   async getImage(filePath: string): Promise<HTMLImageElement | null> {
     if (!this._imgCache.has(filePath)) {
@@ -72,11 +93,16 @@ export default class ImageManager {
     return this._imgCache.get(filePath);
   }
 
-  async setImage(filePath: string, url:string) {
-      const img = await loadImage(url);
-      this._imgCache.set(filePath, img);
-    // return this._imgCache.get(filePath);
-  }
+  // /**
+  //  * Useful if an img is modified/drawn
+  //  * @param filePath 
+  //  * @param url 
+  //  */
+  // async setImage(filePath: string, url: string) {
+  //   const img = await loadImage(url);
+  //   this._imgCache.set(filePath, img);
+  //   // return this._imgCache.get(filePath);
+  // }
 }
 
 // This is intentionally async since we may want to sub it out for an async
@@ -96,7 +122,7 @@ async function getUrlFromBlob(blob: Blob): Promise<string> {
   });
 }
 
-async function loadImage(imgUrl: string): Promise<HTMLImageElement> {
+export async function loadImage(imgUrl: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.addEventListener("load", () => {

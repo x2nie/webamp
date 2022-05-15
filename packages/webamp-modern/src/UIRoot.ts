@@ -27,7 +27,7 @@ import ImageManager from "./skin/ImageManager";
 
 export class UIRoot {
   _div: HTMLDivElement = document.createElement("div");
-  _imageManager:ImageManager;
+  _imageManager: ImageManager;
   // Just a temporary place to stash things
   _bitmaps: { [id: string]: Bitmap } = {};
   _fonts: (TrueTypeFont | BitmapFont)[] = [];
@@ -138,6 +138,9 @@ export class UIRoot {
 
   // TODO: Maybe return a default bitmap?
   getBitmap(id: string): Bitmap {
+    if (!id) {
+      return null;
+    }
     let lowercaseId = id.toLowerCase();
     if (!this.hasBitmap(lowercaseId)) {
       lowercaseId = this._elementAlias[lowercaseId];
@@ -668,7 +671,7 @@ export class UIRoot {
       const scriptContent = await this.getFileAsString(scriptPath);
       const scriptText = decodeWideChars(scriptContent);
       const script = document.createElement("script");
-      script.textContent = scriptText ;
+      script.textContent = scriptText;
       script.textContent += ";debugger;";
       script.type = "text/javascript";
       document.head.appendChild(script);
