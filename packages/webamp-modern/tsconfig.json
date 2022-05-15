@@ -3,7 +3,7 @@
     "esModuleInterop": true,
     "allowJs": true,
     // "resolveJsonModule": true,
-    "target": "es2018"
+    "target": "es5"
   },
   "exclude": [
     "node_modules",
