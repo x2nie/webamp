@@ -7,7 +7,7 @@ import BitmapFont from "./BitmapFont";
 import EqVis from "./makiClasses/EqVis";
 import PlayListGui from "./makiClasses/PlayListGui";
 import Vis from "./makiClasses/Vis";
-import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
+import SkinParser, { Attributes, GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 import ButtonElement from "./wmzElements/ButtonElement";
 import ButtonGroup from "./wmzElements/ButtonGroup";
 import ButtonZ from "./wmzElements/ButtonZ";
@@ -294,14 +294,14 @@ export default class WmpSkinParser extends SkinParser {
           ])
             if (element.attributes[att]) {
               const bitmapId = element.attributes[att];
-              const node = new XmlElement("bitmap", {
+              const bitmap: Attributes =  {
                 id: bitmapId,
                 file: bitmapId,
-              });
+              };
               //set transparentColor if any
               if (element.attributes.transparencycolor != null) {
                 if(transparentImages.includes(att)){
-                  node.attributes.transparentcolor =
+                  bitmap.transparentcolor =
                   element.attributes.transparencycolor;
                 }
               }
@@ -311,7 +311,7 @@ export default class WmpSkinParser extends SkinParser {
               //       element.attributes.transparencycolor;
               //   }
               // }
-              this.bitmap(node);
+              this.bitmap(bitmap);
             }
           recursiveScanChildren(element);
         }

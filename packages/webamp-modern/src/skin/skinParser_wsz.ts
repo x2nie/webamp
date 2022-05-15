@@ -4,7 +4,7 @@ import UI_ROOT, { UIRoot } from "../UIRoot";
 import BitmapFont from "./BitmapFont";
 import EqVis from "./makiClasses/EqVis";
 import Vis from "./makiClasses/Vis";
-import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
+import SkinParser, { Attributes, GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 
 type StreamSource = {
   zip: JSZip;
@@ -88,27 +88,27 @@ export default class ClassicSkinParser extends SkinParser {
     if (this._imageManager.isFilePathAdded("eqmain.bmp")) {
       const sources = this._popStreamSource();
       //gradient lines
-      let node: XmlElement = new XmlElement("bitmap", {
+      let bitmap: Attributes = {
         id: "eq_gradient_line_",
         file: "eqmain.bmp",
         x: "115",
         y: "294",
         w: "1",
         h: "19",
-      });
-      await this.bitmap(node);
+      };
+      await this.bitmap(bitmap);
       eqv.setXmlAttr("colors", "eq_gradient_line_");
 
       //preamp
-      node = new XmlElement("bitmap", {
+      bitmap = {
         id: "eq_preamp_line_",
         file: "eqmain.bmp",
         x: "0",
         y: "314",
         w: "113",
         h: "1",
-      });
-      await this.bitmap(node);
+      };
+      await this.bitmap(bitmap);
       eqv.setXmlAttr("preamp", "eq_preamp_line_");
 
       this._pushAStreamSource(sources);
