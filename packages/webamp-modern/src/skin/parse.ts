@@ -233,7 +233,7 @@ export default class SkinParser {
       case "layer":
         return this.layer(node, parent);
       case "container":
-        return this.container(node, parent);
+        return this.container(node);
       case "layoutstatus":
         return this.layoutStatus(node, parent);
       case "grid":
@@ -463,7 +463,7 @@ export default class SkinParser {
     }
   }
 
-  async bitmap(attributes: Attributes) {
+  async bitmap(attributes: Attributes):Promise<Bitmap> {
     // assume(
     //   node.children.length === 0,
     //   "Unexpected children in <bitmap> XML node."
@@ -478,6 +478,7 @@ export default class SkinParser {
     if (this._phase == GROUP_PHASE) {
       this._imageManager.setBimapImg(bitmap);
     }
+    return bitmap
   }
 
   async bitmapFont(node: XmlElement) {
@@ -863,7 +864,7 @@ export default class SkinParser {
     await this.traverseChildren(node, parent);
   }
 
-  async container(node: XmlElement, parent: any) {
+  async container(node: XmlElement):Promise<Container> {
     const container = new Container();
     container.setXmlAttributes(node.attributes);
     this._uiRoot.addContainers(container);

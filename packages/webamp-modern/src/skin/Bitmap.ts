@@ -96,6 +96,10 @@ export default class Bitmap {
   getImg(): HTMLImageElement {
     return this._img;
   }
+  async setImage(url: string, imageManager: ImageManager) {
+    await imageManager.setImage(this._file, url);
+    await this.ensureImageLoaded(imageManager);
+  }
 
   // Ensure we've loaded the image into our image loader.
   async ensureImageLoaded(imageManager: ImageManager) {
@@ -164,12 +168,11 @@ export default class Bitmap {
     this._setAsBackground(div, "disabled-");
   }
 
-  async toDataURL():Promise<string> {
-    if(this._file.endsWith('.gif') && !this._transparentColor){
-
-      return await UI_ROOT.getImageManager().getUrl(this._file)
+  async toDataURL(): Promise<string> {
+    if (this._file.endsWith(".gif") && !this._transparentColor) {
+      return await UI_ROOT.getImageManager().getUrl(this._file);
     } else {
-      return this.getCanvas().toDataURL()
+      return this.getCanvas().toDataURL();
     }
   }
 
@@ -179,7 +182,10 @@ export default class Bitmap {
    *              kept by this bitmap instance
    * @returns <canvas/>
    */
-  getCanvas(applyTransparency:boolean=true, store: boolean = false): HTMLCanvasElement {
+  getCanvas(
+    applyTransparency: boolean = true,
+    store: boolean = false
+  ): HTMLCanvasElement {
     let workingCanvas: HTMLCanvasElement;
     if (this._canvas == null || !store) {
       assert(this._img != null, "Expected bitmap image to be loaded");

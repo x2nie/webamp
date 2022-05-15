@@ -71,6 +71,12 @@ export default class ImageManager {
     }
     return this._imgCache.get(filePath);
   }
+
+  async setImage(filePath: string, url:string) {
+      const img = await loadImage(url);
+      this._imgCache.set(filePath, img);
+    // return this._imgCache.get(filePath);
+  }
 }
 
 // This is intentionally async since we may want to sub it out for an async
