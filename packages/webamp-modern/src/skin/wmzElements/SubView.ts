@@ -3,12 +3,14 @@ import { num } from "../../utils";
 import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import { Edges } from "../Clippath";
 import Group from "../makiClasses/Group";
+import { runInlineScript } from "./util";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/subview-element
 export default class SubView extends Group {
   _clippingColor: string;
   _transparencyColor: string;
   _backgroundColor: string;
+  _onEndMove: string; // TODO: Put all onXXX into single object named AmbientEvents
   _audioEvent: { [audioEvent: string]: string } = {};
 
   getElTag(): string {
@@ -37,6 +39,9 @@ export default class SubView extends Group {
       case "transparencycolor":
         this._transparencyColor = value;
         break;
+      case "onendmove":
+        this._onEndMove = value;
+        break;
       case "zindex":
         const zindex = value;
         this._div.style.zIndex = /* zindex == "-1" ? "6556" : */ zindex;
@@ -52,6 +57,11 @@ export default class SubView extends Group {
     this.settargety(y);
     this.settargetspeed(speed / 1000);
     this.gototarget();
+    if (this._onEndMove != null) {
+      setTimeout(() => {
+        runInlineScript(this._onEndMove);
+      }, speed / 1000 + 500);
+    }
   }
   moveto(x: number, y: number, speed: number) {
     //TODO: duplicate remove it
@@ -94,7 +104,7 @@ export default class SubView extends Group {
   }
 
   _renderRegion() {
-    //* maybe, in win32/gdi the transparency has different. 
+    //* maybe, in win32/gdi the transparency has different.
     //* we thread both as same here, confirmed by visual see by eye is okay.
     if ((this._clippingColor || this._transparencyColor) && this._background) {
       const canvas = UI_ROOT.getBitmap(this._background).getCanvas(false);

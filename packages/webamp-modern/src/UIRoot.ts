@@ -669,7 +669,7 @@ export class UIRoot {
       const scriptText = decodeWideChars(scriptContent);
       const script = document.createElement("script");
       script.textContent = scriptText ;
-      // script.textContent += ";debugger;";
+      script.textContent += ";debugger;";
       script.type = "text/javascript";
       document.head.appendChild(script);
     }
