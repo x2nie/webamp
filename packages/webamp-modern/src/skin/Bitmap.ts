@@ -165,7 +165,7 @@ export default class Bitmap {
   }
 
   async toDataURL():Promise<string> {
-    if(this._file.endsWith('.gif')){
+    if(this._file.endsWith('.gif') && !this._transparentColor){
 
       return await UI_ROOT.getImageManager().getUrl(this._file)
     } else {
@@ -179,7 +179,7 @@ export default class Bitmap {
    *              kept by this bitmap instance
    * @returns <canvas/>
    */
-  getCanvas(store: boolean = false): HTMLCanvasElement {
+  getCanvas(applyTransparency:boolean=true, store: boolean = false): HTMLCanvasElement {
     let workingCanvas: HTMLCanvasElement;
     if (this._canvas == null || !store) {
       assert(this._img != null, "Expected bitmap image to be loaded");
@@ -191,7 +191,7 @@ export default class Bitmap {
       ctx.drawImage(this._img, -this._x, -this._y);
 
       //set transparentColor if any
-      if (this._transparentColor != null) {
+      if (applyTransparency && this._transparentColor != null) {
         const rgb = hexToRgb(this._transparentColor);
         // // get the image data object
         // var data = ctx.getImageData(0, 0, this._canvas.width, this._canvas.height).data;

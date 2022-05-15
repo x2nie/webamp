@@ -77,11 +77,11 @@ export default class WmpSkinParser extends SkinParser {
       case "mutebutton":
       case "shufflebutton":
       case "repeatbutton":
-        case "playbutton":
-        case "stopbutton":
-        case "pausebutton":
-        case "prevbutton":
-        case "nextbutton":
+      case "playbutton":
+      case "stopbutton":
+      case "pausebutton":
+      case "prevbutton":
+      case "nextbutton":
         return this.button(node, parent);
       case "buttongroup":
         return this.buttongroup(node, parent);
@@ -133,14 +133,14 @@ export default class WmpSkinParser extends SkinParser {
     this._uiRoot.addContainers(container);
 
     // //? layout
-    const layoutNode = new XmlElement("layout", {
-      id: "normal",
-    });
-    layoutNode.children = node.children;
+    // const layoutNode = new XmlElement("layout", {
+    //   id: node.attribute.id+ "_normal",
+    // });
+    // layoutNode.children = node.children;
+    node.attributes.id = node.attributes.id+ "_normal",
     // const container = await this.container(containerEl, null);
 
     // node.attributes.id = "normal";
-
 
     await this.layout(node, container);
     return container;
@@ -174,7 +174,7 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async button(node: XmlElement, parent: any) {
-    this._parseActionByTag(node)
+    this._parseActionByTag(node);
     return await this.newGroup(ButtonZ, node, parent);
   }
   async buttongroup(node: XmlElement, parent: any) {
@@ -182,7 +182,7 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async buttonelement(node: XmlElement, parent: any) {
-    this._parseActionByTag(node)
+    this._parseActionByTag(node);
     return await this.newGui(ButtonElement, node, parent);
   }
   _parseActionByTag(node: XmlElement) {
@@ -207,14 +207,14 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async slider(node: XmlElement, parent: any) {
-    const slider = await this.newGui(SliderZ, node, parent) as SliderZ;
-    switch(node.name.toLowerCase()){
+    const slider = (await this.newGui(SliderZ, node, parent)) as SliderZ;
+    switch (node.name.toLowerCase()) {
       case "volumeslider":
-        slider.setXmlAttr('action', 'volume')
-        break
+        slider.setXmlAttr("action", "volume");
+        break;
       case "balanceslider":
-        slider.setXmlAttr('action', 'pan')
-        break
+        slider.setXmlAttr("action", "pan");
+        break;
     }
   }
   async visz(node: XmlElement, parent: any) {
@@ -245,7 +245,7 @@ export default class WmpSkinParser extends SkinParser {
     } else {
       await this.traverseChildren(node, parent);
       const theme = new Theme();
-      theme.setXmlAttr('id','theme');
+      theme.setXmlAttr("id", "theme");
       this._uiRoot.addContainers(theme);
     }
   }
@@ -306,6 +306,15 @@ export default class WmpSkinParser extends SkinParser {
         delete element.attributes[att];
       }
     }
+    // // Quicksilver.wmz second view has translated(-18,-26)
+    // if(element.name=='subview'){
+    //   if(element.attributes.top !=null){
+    //     element.attributes.top = `${parseInt(element.attributes.top)-26}`
+    //   }
+    //   if(element.attributes.left !=null){
+    //     element.attributes.left = `${parseInt(element.attributes.left)-18}`
+    //   }
+    // }
     //? convert WMZ specific attributes to WAL
     const replacement = {
       thumbimage: "thumb",
@@ -315,8 +324,8 @@ export default class WmpSkinParser extends SkinParser {
       width: "w",
       height: "h",
       backgroundimage: "background",
-      alphablend: 'alpha',
-      passthrough: 'ghost',
+      alphablend: "alpha",
+      passthrough: "ghost",
     };
     const replacable = Object.keys(replacement);
     for (const att of Object.keys(element.attributes)) {
@@ -325,6 +334,7 @@ export default class WmpSkinParser extends SkinParser {
         delete element.attributes[att];
       }
     }
+
     // console.log('--mini', Object.keys(element.attributes))
     // console.log('--mini', element.attributes)
     //temporary patch to make slider visible:

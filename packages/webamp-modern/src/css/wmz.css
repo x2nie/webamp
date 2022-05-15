@@ -9,6 +9,9 @@ buttonelement {
   padding: 0;
   margin: 0;
 }
+buttongroup {
+  background: none;
+}
 buttongroup > buttonelement {
   width: inherit !important;
   height: inherit !important;
@@ -59,9 +62,9 @@ text.textz wrap {
   width: auto;
 }
 
-subview > * {
+/* subview > * {
   background-color: var(--background-color);
-}
+} */
 
 /** SLIDER **/
 slider.background-stretched::before {

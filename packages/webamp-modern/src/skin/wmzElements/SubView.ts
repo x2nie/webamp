@@ -7,6 +7,7 @@ import Group from "../makiClasses/Group";
 // https://docs.microsoft.com/en-us/windows/win32/wmp/subview-element
 export default class SubView extends Group {
   _clippingColor: string;
+  _transparencyColor: string;
   _backgroundColor: string;
   _audioEvent: { [audioEvent: string]: string } = {};
 
@@ -32,6 +33,9 @@ export default class SubView extends Group {
         break;
       case "clippingcolor":
         this._clippingColor = value;
+        break;
+      case "transparencycolor":
+        this._transparencyColor = value;
         break;
       case "zindex":
         const zindex = value;
@@ -90,10 +94,15 @@ export default class SubView extends Group {
   }
 
   _renderRegion() {
-    if (this._clippingColor && this._background) {
-      const canvas = UI_ROOT.getBitmap(this._background).getCanvas();
+    //* maybe, in win32/gdi the transparency has different. 
+    //* we thread both as same here, confirmed by visual see by eye is okay.
+    if ((this._clippingColor || this._transparencyColor) && this._background) {
+      const canvas = UI_ROOT.getBitmap(this._background).getCanvas(false);
       const edge = new Edges();
-      edge.parseCanvasTransparencyByColor(canvas, this._clippingColor);
+      edge.parseCanvasTransparencyByColor(
+        canvas,
+        this._clippingColor || this._transparencyColor
+      );
       if (edge.isSimpleRect()) {
         // this.setXmlAttr("sysregion", "0");
       } else {
