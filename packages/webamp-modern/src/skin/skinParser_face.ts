@@ -1,6 +1,6 @@
 import { XmlElement } from "@rgrove/parse-xml";
-import JSZip from "jszip";
-import UI_ROOT, { UIRoot } from "../UIRoot";
+import { UIRoot } from "../UIRoot";
+import Bitmap from "./Bitmap";
 import Group from "./makiClasses/Group";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 
@@ -43,35 +43,60 @@ export default class AudionFaceSkinParser extends SkinParser {
    * Container / Layout.
    */
   async loadBase() {
-    await this.loadBitmap("base-alpha.png");
+    await this.loadPlainBitmap("base-alpha.png");
     await this.loadBitmap("base.png");
-    // const alfa = await this.loadBitmap("base-alpha.png");
-
-    this.applyTransparency("base.png");
   }
 
   async loadButtons(parent: Group) {
-
+    await this.loadButton("play", parent);
+    // await this.loadButton("pause", parent, {rectName: "play",});
+    await this.loadButton("stop", parent);
+    await this.loadButton("rewind", parent, { fileName: "rw" });
+    await this.loadButton("fastForward", parent, { fileName: "ff" });
+    await this.loadButton("eject", parent, { fileName: "eject" });
+    await this.loadButton("playlist", parent, { fileName: "menu" });
+    await this.loadButton("info", parent, { fileName: "info" });
+    await this.loadButton("volume", parent, { fileName: "volume" });
+    await this.loadButton("mode", parent, { fileName: "music" });
+    // await this.loadButton("close", "music", parent);
   }
 
-  applyTransparency(bitmapId: string) {
-    let modified: boolean = false;
-    const bitmap = this._uiRoot.getBitmap(bitmapId);
-    const canvasb = bitmap.getCanvas();
-    const ctxb = canvasb.getContext("2d");
-    const imgb = ctxb.getImageData(0, 0, canvasb.width, canvasb.height);
-    const datab = imgb.data;
-    const dataa = this.alphaData;
-    for (var i = 3; i < dataa.length; i += 4) {
-      //? ignore transparent
-      if (datab[i] != 0) {
-        datab[i] = dataa[i];
-      }
-    }
-    ctxb.putImageData(imgb, 0, 0);
+  async loadButton(
+    name: string,
+    parent: Group,
+    options: { fileName?: string, rectName?:string, actionName?:string } = {}
+  ) {
+    const fileName = options.fileName || name;
+    const rectName = options.rectName || name;
+    const actionName = options.actionName || name;
+    const rect = this._config[`${rectName}ButtonRect`];
 
-    // update img
-    bitmap.setImage(canvasb);
+    await this.loadBitmap(`${fileName}.png`, `${name}`, rect.left, rect.top);
+    await this.loadBitmap(
+      `${fileName}-active.png`,
+      `${name}-active`,
+      rect.left,
+      rect.top
+    );
+    await this.loadBitmap(
+      `${fileName}-disabled.png`,
+      `${name}-disabled`,
+      rect.left,
+      rect.top
+    );
+
+    const node = new XmlElement("button", {
+      id: name,
+      image: `${name}`,
+      downImage: `${name}-active`,
+      // downImage: `${name}-active.png`,
+      action: actionName,
+      x: `${rect.left}`,
+      y: `${rect.top}`,
+      w: `${rect.right - rect.left}`,
+      h: `${rect.bottom - rect.top}`,
+    });
+    const button = this.button(node, parent);
   }
 
   get alphaData(): Uint8ClampedArray {
@@ -84,14 +109,66 @@ export default class AudionFaceSkinParser extends SkinParser {
     }
     return this._alphaData;
   }
-  async loadBitmap(name: string) {
+
+  /**
+   * Load a bitmap from file, unmodified
+   * @param name
+   * @returns
+   */
+  async loadPlainBitmap(
+    fileName: string,
+    name: string = null
+  ): Promise<Bitmap> {
+    if (name == null) {
+      name = fileName;
+    }
     //* const rect = this._config[`${name}Rect`];
-    const bitmap = await this.bitmap({ id: name, file: name });
+    const bitmap = await this.bitmap({ id: name, file: fileName });
     await bitmap.ensureImageLoaded(this._imageManager);
     return bitmap;
   }
 
-  async getRootGroup():Promise<Group> {
+  /**
+   * Load bitmap and applyTransparency
+   * @param name filename eg play-button.png
+   */
+  async loadBitmap(
+    fileName: string,
+    name: string = null,
+    dx: number = 0,
+    dy: number = 0
+  ) {
+    const bitmap = await this.loadPlainBitmap(fileName, name);
+    this.applyTransparency(bitmap, dx, dy);
+  }
+  applyTransparency(bitmap: Bitmap, dx: number, dy: number) {
+    const canvasb = bitmap.getCanvas();
+    const ctxb = canvasb.getContext("2d");
+    const imgb = ctxb.getImageData(0, 0, canvasb.width, canvasb.height);
+    const datab = imgb.data;
+    const dataa = this.alphaData;
+    const bw = bitmap.getWidth();
+    const bh = bitmap.getHeight();
+    const aw = this._uiRoot.getBitmap("base-alpha.png").getWidth();
+
+    for (var y = 0; y < bh; y++) {
+      for (var x = 0; x < bw; x++) {
+        // // for (var i = 3; i < dataa.length; i += 4) {
+        const b = y * bw + x;
+        //? ignore transparent
+        if (datab[b * 4 + 3] != 0) {
+          const a = (y + dy) * aw + dx + x;
+          datab[b * 4 + 3] = dataa[a * 4 + 3];
+        }
+      }
+    }
+    ctxb.putImageData(imgb, 0, 0);
+
+    // update img
+    bitmap.setImage(canvasb);
+  }
+
+  async getRootGroup(): Promise<Group> {
     let node: XmlElement = new XmlElement("container", { id: "root" });
     const container = await this.container(node);
     //get layout size
@@ -103,8 +180,28 @@ export default class AudionFaceSkinParser extends SkinParser {
       background: "base.png",
     });
     const layout = await this.layout(node, container);
-    // const group = await this.group(node, container);
-    return layout as Group;
+    // return layout as Group;
+    node = new XmlElement("group", {
+      id: "wrapper",
+      w: `0`,
+      h: `0`,
+      relatw: `1`,
+      relath: `1`,
+      // background: "base.png",
+      // move:"1"
+    });
+    const group = await this.group(node, layout);
+    node = new XmlElement("layer", {
+      id: "mover",
+      w: `0`,
+      h: `0`,
+      relatw: `1`,
+      relath: `1`,
+      // background: "base.png",
+      move:"1"
+    });
+    const mover = await this.layer(node, group);
+    return group
   }
 }
 
