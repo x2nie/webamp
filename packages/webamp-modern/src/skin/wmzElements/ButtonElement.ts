@@ -32,9 +32,12 @@ export default class ButtonElement extends GuiObj {
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
     if (value.startsWith("wmpenabled:player.controls.")) {
-      console.log('wmpenabled:!',key, '=', value)
-      this._audioEvent[value.split(".").pop()] = key;
-      return;
+      // console.log("--before_register wmpenabled:", this.getId(), this._audioEvent);
+      // console.log("wmpenabled:!", key, "=", value);
+      // this._audioEvent[value.split(".").pop()] = key;
+      this._audioEvent[key] = value.split(".").pop();
+      // console.log("--after_register wmpenabled:", this.getId(), this._audioEvent);
+      return true;
     }
     if (super.setXmlAttr(key, value)) {
       return true;
@@ -122,11 +125,21 @@ export default class ButtonElement extends GuiObj {
   _renderDown() {
     if (this._down) {
       this._div.classList.add("down");
-      this._div.setAttribute('title', this._downTooltip);
     } else {
       this._div.classList.remove("down");
-      this._div.setAttribute('title', this._upTooltip);
     }
+    this._renderTooltip()
+  }
+  
+  _renderTooltip() {
+    if (this._down && (this._downTooltip || this._upTooltip)) {
+      this._div.setAttribute("title", this._downTooltip || this._upTooltip);
+    } else if(!this._down && this._upTooltip) {
+      this._div.setAttribute("title", this._upTooltip);
+    } else {
+      this._div.removeAttribute("title");      
+    }
+
   }
 
   _renderDisabled() {
@@ -136,8 +149,6 @@ export default class ButtonElement extends GuiObj {
       this._div.classList.add("disabled");
     }
   }
-
-  
 
   _renderRegion() {
     if (this._mappingColor && this._parent instanceof ButtonGroup) {
@@ -154,33 +165,40 @@ export default class ButtonElement extends GuiObj {
 
   init() {
     super.init();
-    UI_ROOT.audio.on("statchanged", () => this._updateStatus());
-    this._updateStatus();
+    if (Object.keys(this._audioEvent).length > 0) {
+      UI_ROOT.audio.on("statchanged", () => this._updateStatus());
+      this._updateStatus();
+    }
   }
 
   _updateStatus() {
+    // console.log("audio-state-changed:", this.getId(), this._audioEvent);
     const buttonStates = {
-      [AUDIO_PLAYING]: {play: false, pause:true, stop:true},
-      [AUDIO_PAUSED]: {play: true, pause:false, stop:true},
-      [AUDIO_STOPPED]: {play: true, pause:false, stop:false},
-    }
+      [AUDIO_PLAYING]: { play: false, pause: true, stop: true },
+      [AUDIO_PAUSED]: { play: true, pause: false, stop: true },
+      [AUDIO_STOPPED]: { play: true, pause: false, stop: false },
+    };
     const state = UI_ROOT.audio.getState(); // playing
-    if(!buttonStates[state]){
-      console.warn('unknown audio state:', state)
-      return 
+    if (!buttonStates[state]) {
+      console.warn("unknown audio state:", state);
+      return;
     }
-    for (const [audioEvent, prop] of Object.entries(this._audioEvent)) {
-      this[prop] = buttonStates[state][audioEvent]
-      console.log(`${this.getId()}|${this._action}| audioState="${state} prop[${prop}]=${this[prop]}` )
-        // (audioEvent == "play" && state != AUDIO_PLAYING) ||
-        // (audioEvent == "pause" && state != AUDIO_PAUSED) ||
-        // (audioEvent == "stop" && state != AUDIO_STOPPED);
+    for (const [prop, audioEvent] of Object.entries(this._audioEvent)) {
+      this[prop] = buttonStates[state][audioEvent];
+      // console.log(
+      //   `${this.getId()}|${
+      //     this._action
+      //   }| audioState="${state}"  >> this.[${prop}]=${this[prop]}`
+      // );
+      // (audioEvent == "play" && state != AUDIO_PLAYING) ||
+      // (audioEvent == "pause" && state != AUDIO_PAUSED) ||
+      // (audioEvent == "stop" && state != AUDIO_STOPPED);
     }
   }
 
   draw() {
     super.draw();
     this._renderRegion();
-    this._renderDown()
+    this._renderDown();
   }
 }

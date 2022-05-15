@@ -269,6 +269,14 @@ export default class WmpSkinParser extends SkinParser {
    */
   async parseAttributesAsImages(theme: XmlElement) {
     // return;
+    const transparentImages = [
+      "background",
+      "image",
+      "hoverimage",
+      "downimage",
+      "hoverdownimage",
+      "disabledimage",
+    ]
     const recursiveScanChildren = (mother: XmlElement) => {
       for (const element of mother.children) {
         if (element instanceof XmlElement) {
@@ -291,12 +299,18 @@ export default class WmpSkinParser extends SkinParser {
                 file: bitmapId,
               });
               //set transparentColor if any
-              if (att == "background") {
-                if (element.attributes.transparencycolor != null) {
+              if (element.attributes.transparencycolor != null) {
+                if(transparentImages.includes(att)){
                   node.attributes.transparentcolor =
-                    element.attributes.transparencycolor;
+                  element.attributes.transparencycolor;
                 }
               }
+              // if (att == "background") {
+              //   if (element.attributes.transparencycolor != null) {
+              //     node.attributes.transparentcolor =
+              //       element.attributes.transparencycolor;
+              //   }
+              // }
               this.bitmap(node);
             }
           recursiveScanChildren(element);

@@ -83,8 +83,8 @@ export default class ButtonGroup extends Group {
     if (!this._background/* &&!this._image */) {
       this._div.classList.remove("webamp--img");
     }
-    /*if (this._image!=null) {
+    if (this._image!=null) {
       this._div.classList.add('has-image')
-    }*/
+    }
   }
 }

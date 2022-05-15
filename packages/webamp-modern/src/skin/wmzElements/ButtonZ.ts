@@ -7,6 +7,7 @@ import ButtonElement from "./ButtonElement";
 export default class ButtonZ extends ButtonElement {
   _backgroundColor: string;
   _transparencyColor: string;
+  _clippingColor: string;
   _image: string;
   _hoverImage: string;
   _downImage: string;
@@ -49,6 +50,9 @@ export default class ButtonZ extends ButtonElement {
         break;
       case "transparencycolor":
         this._transparencyColor = value;
+        break;
+      case "clippingcolor":
+        this._clippingColor = value;
         break;
       default:
         return false;
@@ -103,16 +107,27 @@ export default class ButtonZ extends ButtonElement {
   }
 
   _renderRegion() {
-    if (this._transparencyColor) {
+    if (this._clippingColor) {
       const canvas = UI_ROOT.getBitmap(this._image).getCanvas();
       const edge = new Edges();
-      edge.parseCanvasTransparencyByColor(canvas, this._transparencyColor);
+      edge.parseCanvasTransparencyByColor(canvas, this._clippingColor);
       if (edge.isSimpleRect()) {
         // this.setXmlAttr("sysregion", "0");
       } else {
         this._div.style.clipPath = edge.getPolygon();
       }
     }
+    //? transparency should be done in Bitmap because some image has hole transparency
+    // if (this._transparencyColor) {
+    //   const canvas = UI_ROOT.getBitmap(this._image).getCanvas();
+    //   const edge = new Edges();
+    //   edge.parseCanvasTransparencyByColor(canvas, this._transparencyColor);
+    //   if (edge.isSimpleRect()) {
+    //     // this.setXmlAttr("sysregion", "0");
+    //   } else {
+    //     this._div.style.clipPath = edge.getPolygon();
+    //   }
+    // }
   }
 
   draw() {

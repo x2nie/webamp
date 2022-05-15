@@ -63,9 +63,9 @@ text.textz wrap {
   width: auto;
 }
 
-/* subview > * {
+subview > * {
   background-color: var(--background-color);
-} */
+} 
 
 /** SLIDER **/
 slider.background-stretched::before {
