@@ -9,7 +9,7 @@ export default class Player extends GuiObj {
 
   constructor() {
     super();
-    this.setXmlAttr("visible", "0");
+    // this.setXmlAttr("visible", "0");
     // Within script code, the Player object is accessed through the player global attribute rather than
     // through a name specified by an id attribute, which is not supported by the PLAYER element.
     this.setXmlAttr("id", "player");
@@ -57,7 +57,6 @@ export default class Player extends GuiObj {
     // taken from QuickSilver.wmz
 
     switch (UI_ROOT.audio.getState()) {
-      // case 0:		//undefined
       case AUDIO_STOPPED:
         return 1;
       case AUDIO_PAUSED:
@@ -74,11 +73,15 @@ export default class Player extends GuiObj {
       //   break;
       // case 10: //Ready
       //   break;
+      default:
+        // case 0:		//undefined
+        return 0;
     }
   }
 
   draw() {
-    super.draw();
+    // super.draw(); //? nothing to draw. this element is dormant
+    console.log("setting window.player ");
     window["player"] = this;
   }
 }

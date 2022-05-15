@@ -668,7 +668,8 @@ export class UIRoot {
       const scriptContent = await this.getFileAsString(scriptPath);
       const scriptText = decodeWideChars(scriptContent);
       const script = document.createElement("script");
-      script.textContent = scriptText + ";debugger;";
+      script.textContent = scriptText ;
+      // script.textContent += ";debugger;";
       script.type = "text/javascript";
       document.head.appendChild(script);
     }

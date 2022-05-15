@@ -32,6 +32,7 @@ async function _parseSkin_WAL(ASkinParser: typeof SkinParser) {
 
   UI_ROOT.logMessage("Rendering skin for the first time...");
   uiRoot.draw();
+  await UI_ROOT.loadJsScripts();
   uiRoot.init();
 
   UI_ROOT.logMessage("Initializing Maki...");
@@ -69,7 +70,7 @@ async function _loadSkin_WMZ(skinPath: string) {
   const zip = await JSZip.loadAsync(skinZipBlob);
   UI_ROOT.setZip(zip);
   await _parseSkin_WAL(WmpSkinParser);
-  UI_ROOT.loadJsScripts()
+  // UI_ROOT.loadJsScripts()
 }
 
 function prepareXuiTags() {

@@ -53,6 +53,8 @@ export default class WmpSkinParser extends SkinParser {
     this._phase = GROUP_PHASE;
     await this.traverseChildren(parsed);
 
+    this._setGlobalVar();
+
     //debug:
     // for (const bmpId of Object.keys(UI_ROOT.getBitmaps())) {
     //   console.log("bitmap loaded:", bmpId);
@@ -137,12 +139,12 @@ export default class WmpSkinParser extends SkinParser {
     //   id: node.attribute.id+ "_normal",
     // });
     // layoutNode.children = node.children;
-    node.attributes.id = node.attributes.id+ "_normal",
-    // const container = await this.container(containerEl, null);
+    (node.attributes.id = node.attributes.id + "_normal"),
+      // const container = await this.container(containerEl, null);
 
-    // node.attributes.id = "normal";
+      // node.attributes.id = "normal";
 
-    await this.layout(node, container);
+      await this.layout(node, container);
     return container;
 
     //?old
@@ -175,7 +177,7 @@ export default class WmpSkinParser extends SkinParser {
 
   async button(node: XmlElement, parent: any) {
     this._parseActionByTag(node);
-    return await this.newGroup(ButtonZ, node, parent);
+    return await this.newGui(ButtonZ, node, parent);
   }
   async buttongroup(node: XmlElement, parent: any) {
     return await this.newGroup(ButtonGroup, node, parent);
@@ -198,8 +200,15 @@ export default class WmpSkinParser extends SkinParser {
       }
       switch (action) {
         case "play":
+          node.attributes.upToolTip = "Play";
+          node.attributes.enabled = `wmpenabled:player.controls.${action}`;
+          break;
         case "pause":
+          node.attributes.upToolTip = "Pause";
+          node.attributes.enabled = `wmpenabled:player.controls.${action}`;
+          break;
         case "stop":
+          node.attributes.upToolTip = "Stop";
           node.attributes.enabled = `wmpenabled:player.controls.${action}`;
           break;
       }
@@ -230,7 +239,9 @@ export default class WmpSkinParser extends SkinParser {
   }
 
   async player(node: XmlElement, parent: any) {
-    return this.newGui(Player, node, parent);
+    // return this.newGui(Player, node, parent);
+    const theme = this._uiRoot.findContainer("theme") as Theme;
+    theme.getPlayer().setXmlAttributes(node.attributes);
   }
 
   /**
@@ -243,10 +254,11 @@ export default class WmpSkinParser extends SkinParser {
       this._uiRoot.setSkinInfo(node.attributes);
       return await this.parseAttributesAsImages(node);
     } else {
-      await this.traverseChildren(node, parent);
       const theme = new Theme();
       theme.setXmlAttr("id", "theme");
       this._uiRoot.addContainers(theme);
+
+      await this.traverseChildren(node, parent);
     }
   }
 
@@ -370,6 +382,31 @@ export default class WmpSkinParser extends SkinParser {
       console.log("full:", xml.substring(error.pos, error.pos + 100));
     }
     return result;
+  }
+
+  _setGlobalVar() {
+    //OpenState: https://docs.microsoft.com/en-us/windows/win32/wmp/player-openstate
+    window["osPlaylistChanging"] = 1; //* New playlist is about to be loaded.
+    window["osPlaylistLocating"] = 2; //* Windows Media Player is attempting to locate the playlist. The playlist can be local (library or metafile with an .asx file name extension) or remote.
+    window["osPlaylistConnecting"] = 3; //* Connecting to the playlist.
+    window["osPlaylistLoading"] = 4; //* Playlist has been found and is now being retrieved.
+    window["osPlaylistOpening"] = 5; //* Playlist has been retrieved and is now being parsed and loaded.
+    window["osPlaylistOpenNoMedia"] = 6; //* Playlist is open.
+    window["osPlaylistChanged"] = 7; //* A new playlist has been assigned to currentPlaylist.
+    window["osMediaChanging"] = 8; //* A new media item is about to be loaded.
+    window["osMediaLocating"] = 9; //* Windows Media Player is locating the media item. The file can be local or remote.
+    window["osMediaConnecting"] = 10; //* Connecting to the server that holds the media item.
+    window["osMediaLoading"] = 11; //* Media item has been located and is now being retrieved.
+    window["osMediaOpening"] = 12; //* Media item has been retrieved and is now being opened.
+    window["osMediaOpen"] = 13; //* Media item is now open.
+    window["osBeginCodecAcquisition"] = 14; //* Starting codec acquisition.
+    window["osEndCodecAcquisition"] = 15; //* Codec acquisition is complete.
+    window["osBeginLicenseAcquisition"] = 16; //* Acquiring a license to play DRM protected content.
+    window["osEndLicenseAcquisition"] = 17; //* License to play DRM protected content has been acquired.
+    window["osBeginIndividualization"] = 18; //* Begin DRM Individualization.
+    window["osEndIndividualization"] = 19; //* DRM individualization has been completed.
+    window["osMediaWaiting"] = 20; //* Waiting for media item.
+    window["osOpeningUnknownURL"] = 21; //* Opening a URL with an unknown type.
   }
 }
 //

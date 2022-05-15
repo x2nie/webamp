@@ -50,8 +50,9 @@ buttongroup > buttonelement:active,
 buttongroup > buttonelement:hover:active {
   background-image: var(--down-background-image, var(--background-image));
 }
+button.disabled,
 buttongroup > buttonelement.disabled {
-  pointer-events: none;
+  pointer-events: none !important;
   background-image: var(
     --disabled-background-image,
     var(--background-image)

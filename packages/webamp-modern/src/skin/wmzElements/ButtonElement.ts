@@ -12,6 +12,8 @@ export default class ButtonElement extends GuiObj {
   _action: string = null;
   _onClick: string = null;
   _down: boolean = false;
+  _upTooltip: string = null;
+  _downTooltip: string = null;
   _enabled: boolean = true;
   _sticky: boolean = false;
   _audioEvent: { [audioEvent: string]: string } = {};
@@ -30,6 +32,7 @@ export default class ButtonElement extends GuiObj {
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
     if (value.startsWith("wmpenabled:player.controls.")) {
+      console.log('wmpenabled:!',key, '=', value)
       this._audioEvent[value.split(".").pop()] = key;
       return;
     }
@@ -53,6 +56,12 @@ export default class ButtonElement extends GuiObj {
         break;
       case "onclick":
         this._onClick = value;
+        break;
+      case "uptooltip":
+        this._upTooltip = value;
+        break;
+      case "downtooltip":
+        this._downTooltip = value;
         break;
       case "sticky":
         // Specifies or retrieves a value indicating whether the BUTTONELEMENT
@@ -113,8 +122,10 @@ export default class ButtonElement extends GuiObj {
   _renderDown() {
     if (this._down) {
       this._div.classList.add("down");
+      this._div.setAttribute('title', this._downTooltip);
     } else {
       this._div.classList.remove("down");
+      this._div.setAttribute('title', this._upTooltip);
     }
   }
 
@@ -148,17 +159,28 @@ export default class ButtonElement extends GuiObj {
   }
 
   _updateStatus() {
+    const buttonStates = {
+      [AUDIO_PLAYING]: {play: false, pause:true, stop:true},
+      [AUDIO_PAUSED]: {play: true, pause:false, stop:true},
+      [AUDIO_STOPPED]: {play: true, pause:false, stop:false},
+    }
     const state = UI_ROOT.audio.getState(); // playing
+    if(!buttonStates[state]){
+      console.warn('unknown audio state:', state)
+      return 
+    }
     for (const [audioEvent, prop] of Object.entries(this._audioEvent)) {
-      this[prop] =
-        (audioEvent == "play" && state != AUDIO_PLAYING) ||
-        (audioEvent == "pause" && state != AUDIO_PAUSED) ||
-        (audioEvent == "stop" && state != AUDIO_STOPPED);
+      this[prop] = buttonStates[state][audioEvent]
+      console.log(`${this.getId()}|${this._action}| audioState="${state} prop[${prop}]=${this[prop]}` )
+        // (audioEvent == "play" && state != AUDIO_PLAYING) ||
+        // (audioEvent == "pause" && state != AUDIO_PAUSED) ||
+        // (audioEvent == "stop" && state != AUDIO_STOPPED);
     }
   }
 
   draw() {
     super.draw();
     this._renderRegion();
+    this._renderDown()
   }
 }

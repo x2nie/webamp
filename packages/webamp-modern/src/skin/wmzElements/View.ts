@@ -51,8 +51,17 @@ export default class View extends Container {
   init() {
     super.init();
 
+    // if (this._scriptFile) {
+    //   this.prepareScriptGlobalObjects();
+      //? temporary disabling due incomplete methods
+      if (this._onLoad!=null) {
+      //   setTimeout(() => {
+          runInlineScript(this._onLoad);
+      //   }, 1000);
+      }
+    // }
     // pending onLoad
-    if(this._onTimer && this._timerInterval){
+    if(this._onTimer && this._timerInterval!=null){
       setTimeout(() => {
         console.log('Blendshutter!?',this._onTimer)
         runInlineScript(this._onTimer)
@@ -63,8 +72,8 @@ export default class View extends Container {
 
   prepareScriptGlobalObjects() {
     const theme = UI_ROOT.findContainer("theme") as Theme;
-    window["theme"] = theme;
-    window["mediacenter"] = theme.mediaCenter;
+    // window["theme"] = theme;
+    // window["mediacenter"] = theme.mediaCenter;
     window["view"] = this;
 
     const recursiveSetGlobal = (element: GuiObj) => {
@@ -94,12 +103,12 @@ export default class View extends Container {
 
     if (this._scriptFile) {
       this.prepareScriptGlobalObjects();
-      //? temporary disabling due incomplete methods
-      if (this._onLoad) {
-        setTimeout(() => {
-          runInlineScript(this._onLoad);
-        }, 1000);
-      }
+    //   //? temporary disabling due incomplete methods
+    //   if (this._onLoad) {
+    //     setTimeout(() => {
+    //       runInlineScript(this._onLoad);
+    //     }, 1000);
+    //   }
     }
 
   }

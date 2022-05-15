@@ -2,6 +2,7 @@ import UI_ROOT from "../../UIRoot";
 import Container from "../makiClasses/Container";
 import PRIVATE_CONFIG from "../PrivateConfig";
 import MediaCenter from "./MediaCenter";
+import Player from "./Player";
 
 const WINDOWS_MEDIA_PLAYER = "WindowsMediaPlayer";
 
@@ -13,14 +14,20 @@ export default class Theme extends Container {
   // I don't know where to put this element
   // For now I put as Container to be easy load/unload during skin switching
   _mediaCenter: MediaCenter;
+  _player: Player;
 
   constructor(){
       super()
       this._mediaCenter = new MediaCenter()
+      this._player = new Player()
   }
 
   get mediaCenter(): MediaCenter {
       return this._mediaCenter;
+  }
+
+  getPlayer():Player {
+    return this._player;
   }
 
   savePreference(name: string, value: string) {
@@ -41,5 +48,16 @@ export default class Theme extends Container {
   closeView(containerId: string){
       const container= UI_ROOT.findContainer(containerId);
       container.hide()
+  }
+
+
+  _setGlobalVar(){
+    window["theme"] = this;
+    window["mediacenter"] = this._mediaCenter;
+    window["player"] = this._player;
+  }
+  draw(): void {
+    super.draw()
+    this._setGlobalVar()
   }
 }
