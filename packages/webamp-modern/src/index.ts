@@ -98,13 +98,15 @@ async function initializeSkinListMenu() {
   const current = getUrlQuery(window.location, "skin");
 
   const internalSkins = [
-    { filename: "default", download_url: "" },
-    { filename: "MMD3", download_url: "assets/MMD3.wal" },
-    { filename: "[Folder] MMD3", download_url: "assets/extracted/MMD3/" },
-    { filename: "[Classic]", download_url: "assets/base-2.91.wsz" },
+    { filename: "[Winamp] default", download_url: "" },
+    { filename: "[Winamp] MMD3", download_url: "assets/MMD3.wal" },
+    // { filename: "[Folder] MMD3", download_url: "assets/extracted/MMD3/" },
+    { filename: "[Winamp Classic]", download_url: "assets/base-2.91.wsz" },
     { filename: "[wmp] Quicksilver WindowsMediaPlayer!", download_url: "assets/Quicksilver.wmz" },
     { filename: "[wmp] Windows XP", download_url: "assets/Windows-XP.wmz" },
     { filename: "[wmp] Famous Headspace", download_url: "assets/Headspace.wmz" },
+    { filename: "[Audion Face] Gizmo 2.0", download_url: "assets/Gizmo2.0.face" },
+    { filename: "[Audion Face] Tokyo Bay", download_url: "assets/TokyoBay.face" },
     { filename: "CornerAmp_Redux", download_url: "assets/CornerAmp_Redux.wal" },
   ];
 
