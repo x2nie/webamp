@@ -58,7 +58,7 @@ export default class AudionFaceSkinParser extends SkinParser {
     await this.loadButton("info", parent, { fileName: "info" });
     await this.loadButton("volume", parent, { fileName: "volume" });
     await this.loadButton("mode", parent, { fileName: "music" });
-    // await this.loadButton("close", "music", parent);
+    await this.loadButton("close", parent);
   }
 
   async loadButton(
@@ -71,7 +71,14 @@ export default class AudionFaceSkinParser extends SkinParser {
     const actionName = options.actionName || name;
     const rect = this._config[`${rectName}ButtonRect`];
 
+    //? bitmaps for the button
     await this.loadBitmap(`${fileName}.png`, `${name}`, rect.left, rect.top);
+    await this.loadBitmap(
+      `${fileName}-hover.png`,
+      `${name}-hover`,
+      rect.left,
+      rect.top
+    );
     await this.loadBitmap(
       `${fileName}-active.png`,
       `${name}-active`,
@@ -85,10 +92,12 @@ export default class AudionFaceSkinParser extends SkinParser {
       rect.top
     );
 
+    //? button
     const node = new XmlElement("button", {
       id: name,
       image: `${name}`,
       downImage: `${name}-active`,
+      hoverImage: `${name}-hover`,
       // downImage: `${name}-active.png`,
       action: actionName,
       x: `${rect.left}`,
@@ -206,5 +215,20 @@ export default class AudionFaceSkinParser extends SkinParser {
 }
 
 /*
-timeDigit4FirstPICTID
+Gizmo2.0
+timeDigit1FirstPICTID 140 timeDigit1Rect
+timeDigit2FirstPICTID 160 timeDigit2Rect
+timeDigit3FirstPICTID 180 timeDigit3Rect
+timeDigit4FirstPICTID 191 timeDigit4Rect
+trackDigit1FirstPICTID 202
+trackDigit2FirstPICTID 213
+
+TokyoBay
+trackDigit1FirstPICTID 140
+trackDigit2FirstPICTID 160
+timeDigit1FirstPICTID 180 timeDigit1Rect
+timeDigit2FirstPICTID 200 timeDigit2Rect
+timeDigit3FirstPICTID 220 timeDigit3Rect
+timeDigit4FirstPICTID 240 timeDigit4Rect
+
 */
