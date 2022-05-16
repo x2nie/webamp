@@ -241,7 +241,7 @@ export default class AudionFaceSkinParser extends SkinParser {
   */
 
   async loadTime(parent: Group) {
-    const rect = this._config["timeDigit1Rect"];
+    const rect = this._config["timeDigit4Rect"];
     const node = new XmlElement("text", {
       id: "song-timer",
       x: `${rect.left}`,
@@ -251,6 +251,7 @@ export default class AudionFaceSkinParser extends SkinParser {
     });
     const time = this.newGui(TimeFace, node, parent);
 
+    //real text
     const start = this._config["timeDigit1FirstPICTID"];
     await this.mergeBitmaps(start, 10);
   }
@@ -272,18 +273,21 @@ export default class AudionFaceSkinParser extends SkinParser {
     const bitmap = this._uiRoot.getBitmap(filesPath[0]);
     const w = bitmap.getWidth();
     const h = bitmap.getHeight();
+    //? do not reorder lines below
     const canvas = bitmap.getCanvas();
-    bitmap.setXmlAttr("w", `${w * count}`);
     canvas.width = w * count;
+    canvas.height = h * 2;
     const ctx = canvas.getContext("2d");
-
+    
     //? merging process
     let l = 0;
     for (const abitmap of bitmaps) {
-      ctx.drawImage(abitmap.getImg(), l, 0);
+      ctx.drawImage(abitmap.getImg(), l, h);
       l += w;
     }
     //?update
+    bitmap.setXmlAttr("w", `${w * count}`);
+    bitmap.setXmlAttr("h", `${h * 2}`);
     bitmap.setImage(canvas);
 
     //? delete unused
