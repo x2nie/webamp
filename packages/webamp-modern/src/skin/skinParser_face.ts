@@ -26,8 +26,8 @@ export default class AudionFaceSkinParser extends SkinParser {
     await this.loadKnowBitmaps();
     await this._loadBitmaps();
 
-    console.log("GROUP_PHASE #################");
-    this._phase = GROUP_PHASE;
+    // console.log("GROUP_PHASE #################");
+    // this._phase = GROUP_PHASE;
     const root = await this.getRootGroup();
     await this.loadButtons(root);
 
@@ -156,7 +156,7 @@ export default class AudionFaceSkinParser extends SkinParser {
     }
     //* const rect = this._config[`${name}Rect`];
     const bitmap = await this.bitmap({ id: name, file: fileName });
-    await bitmap.ensureImageLoaded(this._imageManager);
+    await bitmap.ensureImageLoaded(this._imageManager, true);
     return bitmap;
   }
 
@@ -171,9 +171,13 @@ export default class AudionFaceSkinParser extends SkinParser {
     dy: number = 0
   ) {
     const bitmap = await this.loadPlainBitmap(fileName, name);
-    this.applyTransparency(bitmap, dx, dy);
+    // sometime the Audion Face has no hover.png
+    if (bitmap.getImg() != null) {
+      this.applyTransparency(bitmap, dx, dy);
+    }
   }
   applyTransparency(bitmap: Bitmap, dx: number, dy: number) {
+    let anyPixelChanged: boolean = false;
     const canvasb = bitmap.getCanvas();
     const ctxb = canvasb.getContext("2d");
     const imgb = ctxb.getImageData(0, 0, canvasb.width, canvasb.height);
@@ -191,13 +195,19 @@ export default class AudionFaceSkinParser extends SkinParser {
         if (datab[b * 4 + 3] != 0) {
           const a = (y + dy) * aw + dx + x;
           datab[b * 4 + 3] = dataa[a * 4 + 3];
+          anyPixelChanged = true;
         }
       }
     }
-    ctxb.putImageData(imgb, 0, 0);
 
-    // update img
-    bitmap.setImage(canvasb);
+    // to reduce resource in RAM and avoid polution,
+    // we do not add new resource if the bitmap is completely opaque
+    if (anyPixelChanged) {
+      ctxb.putImageData(imgb, 0, 0);
+
+      // update img
+      bitmap.setImage(canvasb);
+    }
   }
 
   async getRootGroup(): Promise<Group> {

@@ -490,7 +490,7 @@ export default class SkinParser {
     if (externalBitmap) {
       font.setExternalBitmap(true);
     } else {
-      this._imageManager.addBitmap(font);
+      // this._imageManager.addBitmap(font);
     }
 
     this._uiRoot.addFont(font);
@@ -677,7 +677,7 @@ export default class SkinParser {
         await this.bitmap(btnPressedFace);
       } else {
         // we can't find ingredient, lets search the raw material
-        if (!this._imageManager.isFilePathAdded("window/window-elements.png"))
+        if (!this._uiRoot.hasBitmapFilepath("window/window-elements.png"))
           return;
 
         //? default

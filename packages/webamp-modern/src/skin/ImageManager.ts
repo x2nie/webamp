@@ -1,6 +1,7 @@
 import UI_ROOT from "../UIRoot";
 import { getCaseInsensitiveFile } from "../utils";
 import Bitmap from "./Bitmap";
+import BitmapFont from "./BitmapFont";
 
 // https://png-pixel.com/
 const DEFAULT_IMAGE_URL =
@@ -16,6 +17,7 @@ export default class ImageManager {
     if (!this._urlCache.has(filePath)) {
       const imgBlob = await UI_ROOT.getFileAsBlob(filePath);
       if (imgBlob == null) {
+        this._urlCache.set(filePath, null);
         return null;
       }
       const imgUrl = await getUrlFromBlob(imgBlob);
@@ -28,16 +30,16 @@ export default class ImageManager {
     return this._urlCache.get(filePath);
   }
 
-  addBitmap0(bitmap: Bitmap) {
-    const id = bitmap.getId().toLowerCase();
-    const filePath = bitmap.getFile().toLowerCase();
-    this._pathofBitmap[filePath] = false;
-    this._bitmaps[id] = bitmap;
-  }
+  // addBitmap0(bitmap: Bitmap) {
+  //   const id = bitmap.getId().toLowerCase();
+  //   const filePath = bitmap.getFile().toLowerCase();
+  //   this._pathofBitmap[filePath] = false;
+  //   this._bitmaps[id] = bitmap;
+  // }
 
-  isFilePathAdded(filePath: string) {
-    return Object.keys(this._pathofBitmap).includes(filePath);
-  }
+  // isFilePathAdded(filePath: string) {
+  //   return Object.keys(this._pathofBitmap).includes(filePath);
+  // }
 
   // Ensure we've loaded the image into our image loader.
   async loadUniquePaths() {
@@ -47,13 +49,30 @@ export default class ImageManager {
     const filesPath: string[] = [];
     for (const bitmap of Object.values(UI_ROOT.getBitmaps())) {
       //? ignore bitmap that already has _img
-      if (!bitmap.getImg()) {
+      if (!bitmap.loaded()) {
         if (!filesPath.includes(bitmap.getFile())) {
           filesPath.push(bitmap.getFile());
           bitmaps.push(bitmap);
         }
       }
     }
+    //? union with font
+    const fonts = UI_ROOT.getFonts();
+    for (let i = fonts.length - 1; i >= 0; i--) {
+      const font = fonts[i];
+      //? ignore bitmap that already has _img
+      if (
+        font instanceof BitmapFont &&
+        !font.useExternalBitmap() &&
+        !font.getImg()
+      ) {
+        if (!filesPath.includes(font.getFile())) {
+          filesPath.push(font.getFile());
+          bitmaps.push(font);
+        }
+      }
+    }
+
     await Promise.all(
       filesPath.map(async (filePath) => {
         await this.getImage(filePath);
@@ -65,7 +84,7 @@ export default class ImageManager {
   async ensureBitmapsLoaded() {
     const bitmaps = await this.loadUniquePaths();
 
-    return Promise.all(
+    return await Promise.all(
       bitmaps.map(async (bitmap) => {
         // await this.setBimapImg(bitmap);
         bitmap._img = await this.getImage(bitmap.getFile());
@@ -83,11 +102,28 @@ export default class ImageManager {
   //   }
   // }
 
-  async getImage(filePath: string): Promise<HTMLImageElement | null> {
+  /**
+   *
+   * @param filePath URI or caseInsensitive file name in zip
+   * @param allowReturnNull if set to false and filePath is not
+   * accessible then return defaultImage which is 1x1 transparent pixel
+   * @returns <img> HtmlImageElement
+   */
+  async getImage(
+    filePath: string,
+    allowReturnNull: boolean = false
+  ): Promise<HTMLImageElement | null> {
     if (!this._imgCache.has(filePath)) {
+      let validUrl: boolean = true;
+
       // TODO: We could cache this
-      const url = (await this.getUrl(filePath)) ?? DEFAULT_IMAGE_URL;
-      const img = await loadImage(url);
+      let url = await this.getUrl(filePath);
+      if (url == null) {
+        url = DEFAULT_IMAGE_URL;
+        validUrl = false;
+      }
+
+      const img = !validUrl && allowReturnNull ? null : await loadImage(url);
       this._imgCache.set(filePath, img);
     }
     return this._imgCache.get(filePath);
@@ -95,8 +131,8 @@ export default class ImageManager {
 
   // /**
   //  * Useful if an img is modified/drawn
-  //  * @param filePath 
-  //  * @param url 
+  //  * @param filePath
+  //  * @param url
   //  */
   // async setImage(filePath: string, url: string) {
   //   const img = await loadImage(url);

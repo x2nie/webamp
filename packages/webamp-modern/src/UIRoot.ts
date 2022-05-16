@@ -153,6 +153,14 @@ export class UIRoot {
   getBitmaps(): { [id: string]: Bitmap } {
     return this._bitmaps;
   }
+  hasBitmapFilepath(filePath:string): boolean {
+    for(const bitmap of Object.values(this._bitmaps)) {
+      if(bitmap.getFile()==filePath) {
+        return true
+      }
+    }
+    return false
+  }
 
   /**
    * Purely search in _bitmaps, no alias
@@ -168,6 +176,21 @@ export class UIRoot {
   addFont(font: TrueTypeFont | BitmapFont) {
     this._fonts.push(font);
   }
+  getFont(id: string): TrueTypeFont | BitmapFont | null {
+    const found = findLast(
+      this._fonts,
+      (font) => font.getId().toLowerCase() === id.toLowerCase()
+    );
+
+    if (found == null) {
+      console.warn(`Could not find true type font with id ${id}.`);
+    }
+    return found ?? null;
+  }
+  getFonts(): (TrueTypeFont | BitmapFont)[] {
+    return this._fonts
+  }
+
 
   addColor(color: Color) {
     this._colors.push(color);
@@ -208,17 +231,6 @@ export class UIRoot {
     return found;
   }
 
-  getFont(id: string): TrueTypeFont | BitmapFont | null {
-    const found = findLast(
-      this._fonts,
-      (font) => font.getId().toLowerCase() === id.toLowerCase()
-    );
-
-    if (found == null) {
-      console.warn(`Could not find true type font with id ${id}.`);
-    }
-    return found ?? null;
-  }
 
   addComponentBucket(windowType: string, bucket: ComponentBucket) {
     this._buckets[windowType] = bucket;

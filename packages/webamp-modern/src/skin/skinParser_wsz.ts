@@ -85,7 +85,7 @@ export default class ClassicSkinParser extends SkinParser {
   async eqvis(node: XmlElement, parent: any): Promise<EqVis> {
     const eqv = await super.eqvis(node, parent);
 
-    if (this._imageManager.isFilePathAdded("eqmain.bmp")) {
+    if (this._uiRoot.hasBitmapFilepath("eqmain.bmp")) {
       const sources = this._popStreamSource();
       //gradient lines
       let bitmap: Attributes = {
