@@ -52,10 +52,33 @@ export default class AudioEventedGui extends GuiObj {
 
   _updatePropsByAudioState() {
     // console.log("audio-state-changed:", this.getId(), this._audioEvent);
+    const pl = UI_ROOT.playlist;
+    const plCount = pl.getnumtracks();
+    const plIndex = pl.getcurrentindex();
+    const canNext = plIndex < plCount - 1;
+    const canPrev = plIndex > 0;
     const buttonStates = {
-      [AUDIO_PLAYING]: { play: false, pause: true, stop: true },
-      [AUDIO_PAUSED]: { play: true, pause: false, stop: true },
-      [AUDIO_STOPPED]: { play: true, pause: false, stop: false },
+      [AUDIO_PLAYING]: {
+        play: false,
+        pause: true,
+        stop: true,
+        next: canNext,
+        prev: canPrev,
+      },
+      [AUDIO_PAUSED]: {
+        play: true,
+        pause: false,
+        stop: true,
+        next: canNext,
+        prev: canPrev,
+      },
+      [AUDIO_STOPPED]: {
+        play: true,
+        pause: false,
+        stop: false,
+        next: canNext,
+        prev: canPrev,
+      },
     };
     const nickState = {
       [AUDIO_PLAYING]: "play",

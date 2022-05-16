@@ -1,6 +1,7 @@
 import { XmlElement } from "@rgrove/parse-xml";
 import { UIRoot } from "../UIRoot";
 import Bitmap from "./Bitmap";
+import ButtonFace from "./faceClasses/ButtonFace";
 import Button from "./makiClasses/Button";
 import Group from "./makiClasses/Group";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
@@ -49,11 +50,21 @@ export default class AudionFaceSkinParser extends SkinParser {
   }
 
   async loadButtons(parent: Group) {
-    await this.loadButton("pause", parent, {rectName: "play",});
-    await this.loadButton("play", parent,{attributes:{visible:'allowed-to:play'}});
+    await this.loadButton("pause", parent, { rectName: "play" });
+    await this.loadButton("play", parent, {
+      attributes: { visible: "allowed-to:play" },
+    });
     await this.loadButton("stop", parent);
-    await this.loadButton("rewind", parent, { fileName: "rw" });
-    await this.loadButton("fastForward", parent, { fileName: "ff" });
+    await this.loadButton("rewind", parent, {
+      fileName: "rw",
+      action: "prev",
+      attributes: { enabled: "allowed-to:prev" },
+    });
+    await this.loadButton("fastForward", parent, {
+      fileName: "ff",
+      action: "next",
+      attributes: { enabled: "allowed-to:next" },
+    });
     await this.loadButton("eject", parent, { fileName: "eject" });
     await this.loadButton("playlist", parent, { fileName: "menu" });
     await this.loadButton("info", parent, { fileName: "info" });
@@ -68,13 +79,13 @@ export default class AudionFaceSkinParser extends SkinParser {
     options: {
       fileName?: string;
       rectName?: string;
-      actionName?: string;
+      action?: string;
       attributes?: { [key: string]: string };
     } = {}
-  ): Promise<Button> {
+  ) {
     const fileName = options.fileName || name;
     const rectName = options.rectName || name;
-    const actionName = options.actionName || name;
+    const actionName = options.action || name;
     const rect = this._config[`${rectName}ButtonRect`];
 
     //? bitmaps for the button
@@ -105,20 +116,20 @@ export default class AudionFaceSkinParser extends SkinParser {
       image: `${name}`,
       downImage: `${name}-active`,
       hoverImage: `${name}-hover`,
-      // downImage: `${name}-active.png`,
+      disabledImage: `${name}-disabled`,
       action: actionName,
       x: `${rect.left}`,
       y: `${rect.top}`,
       w: `${rect.right - rect.left}`,
       h: `${rect.bottom - rect.top}`,
-      ...attributes
+      ...attributes,
     });
-    const button = await this.button(node, parent);
-    return button;
+    const button = await this.buttonFace(node, parent);
+    // return button;
   }
-  // async button(node:XmlElement, parent:any){
-  //   return this.newGui(ButtonFace, node, parent);
-  // }
+  async buttonFace(node: XmlElement, parent: any) {
+    return this.newGui(ButtonFace, node, parent);
+  }
 
   get alphaData(): Uint8ClampedArray {
     if (!this._alphaData) {
