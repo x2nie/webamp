@@ -2,6 +2,7 @@ import { XmlElement } from "@rgrove/parse-xml";
 import { UIRoot } from "../UIRoot";
 import Bitmap from "./Bitmap";
 import ButtonFace from "./faceClasses/ButtonFace";
+import TimeFace from "./faceClasses/TimeFace";
 import Button from "./makiClasses/Button";
 import Group from "./makiClasses/Group";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
@@ -30,9 +31,12 @@ export default class AudionFaceSkinParser extends SkinParser {
     // this._phase = GROUP_PHASE;
     const root = await this.getRootGroup();
     await this.loadButtons(root);
+    await this.loadTime(root);
 
     return this._uiRoot;
   }
+
+  //#region (collapsed) load-bitmap
 
   async loadKnowBitmaps() {
     await this.loadBase();
@@ -49,6 +53,9 @@ export default class AudionFaceSkinParser extends SkinParser {
     await this.loadBitmap("base.png");
   }
 
+  //#endregion
+
+  //#region (collapsed) load-button ==============================
   async loadButtons(parent: Group) {
     await this.loadButton("pause", parent, { rectName: "play" });
     await this.loadButton("play", parent, {
@@ -131,6 +138,9 @@ export default class AudionFaceSkinParser extends SkinParser {
     return this.newGui(ButtonFace, node, parent);
   }
 
+  //#endregion
+
+  // #region (collapsed) Bitmap manipulation
   get alphaData(): Uint8ClampedArray {
     if (!this._alphaData) {
       const alphaBitmap = this._uiRoot.getBitmap("base-alpha.png");
@@ -209,6 +219,82 @@ export default class AudionFaceSkinParser extends SkinParser {
       bitmap.setImage(canvasb);
     }
   }
+  //#endregion
+
+  // #region (collapsed) SongTime & it's Bitmaps
+  /*
+  Gizmo2.0
+  timeDigit1FirstPICTID 140 timeDigit1Rect
+  timeDigit2FirstPICTID 160 timeDigit2Rect
+  timeDigit3FirstPICTID 180 timeDigit3Rect
+  timeDigit4FirstPICTID 191 timeDigit4Rect
+  trackDigit1FirstPICTID 202
+  trackDigit2FirstPICTID 213
+
+  TokyoBay
+  trackDigit1FirstPICTID 140
+  trackDigit2FirstPICTID 160
+  timeDigit1FirstPICTID 180 timeDigit1Rect
+  timeDigit2FirstPICTID 200 timeDigit2Rect
+  timeDigit3FirstPICTID 220 timeDigit3Rect
+  timeDigit4FirstPICTID 240 timeDigit4Rect
+  */
+
+  async loadTime(parent: Group) {
+    const rect = this._config["timeDigit1Rect"];
+    const node = new XmlElement("text", {
+      id: "song-timer",
+      x: `${rect.left}`,
+      y: `${rect.top}`,
+      w: `${rect.right - rect.left}`,
+      h: `${rect.bottom - rect.top}`,
+    });
+    const time = this.newGui(TimeFace, node, parent);
+
+    const start = this._config["timeDigit1FirstPICTID"];
+    await this.mergeBitmaps(start, 10);
+  }
+
+  async mergeBitmaps(start: number, count: number) {
+    const filesPath = [];
+    for (var i = start; i < start + count; i++) {
+      filesPath.push(`${i}.png`);
+      console.log('loading merging bitmap:',i)
+    }
+    //? load bitmaps
+    const bitmaps = await Promise.all(
+      filesPath.map(async (filePath) => {
+        return await this.loadPlainBitmap(filePath, filePath);
+      })
+    );
+
+    //? get dimension
+    const bitmap = this._uiRoot.getBitmap(filesPath[0]);
+    const w = bitmap.getWidth();
+    const h = bitmap.getHeight();
+    const canvas = bitmap.getCanvas();
+    bitmap.setXmlAttr("w", `${w * count}`);
+    canvas.width = w * count;
+    const ctx = canvas.getContext("2d");
+
+    //? merging process
+    let l = 0;
+    for (const abitmap of bitmaps) {
+      ctx.drawImage(abitmap.getImg(), l, 0);
+      l += w;
+    }
+    //?update
+    bitmap.setImage(canvas);
+
+    //? delete unused
+    for (const abitmap of bitmaps) {
+      if (abitmap !== bitmap) {
+        abitmap.setImage(null);
+        abitmap.setXmlAttr("file", null);
+      }
+    }
+  }
+  //#endregion
 
   async getRootGroup(): Promise<Group> {
     let node: XmlElement = new XmlElement("container", { id: "root" });
@@ -246,22 +332,3 @@ export default class AudionFaceSkinParser extends SkinParser {
     return group;
   }
 }
-
-/*
-Gizmo2.0
-timeDigit1FirstPICTID 140 timeDigit1Rect
-timeDigit2FirstPICTID 160 timeDigit2Rect
-timeDigit3FirstPICTID 180 timeDigit3Rect
-timeDigit4FirstPICTID 191 timeDigit4Rect
-trackDigit1FirstPICTID 202
-trackDigit2FirstPICTID 213
-
-TokyoBay
-trackDigit1FirstPICTID 140
-trackDigit2FirstPICTID 160
-timeDigit1FirstPICTID 180 timeDigit1Rect
-timeDigit2FirstPICTID 200 timeDigit2Rect
-timeDigit3FirstPICTID 220 timeDigit3Rect
-timeDigit4FirstPICTID 240 timeDigit4Rect
-
-*/
