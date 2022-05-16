@@ -478,7 +478,7 @@ export default class SkinParser {
     return bitmap
   }
 
-  async bitmapFont(node: XmlElement) {
+  async bitmapFont(node: XmlElement): Promise<BitmapFont> {
     assume(
       node.children.length === 0,
       "Unexpected children in <bitmapFont> XML node."
@@ -494,6 +494,7 @@ export default class SkinParser {
     }
 
     this._uiRoot.addFont(font);
+    return font
   }
 
   _isExternalBitmapFont(font: BitmapFont) {

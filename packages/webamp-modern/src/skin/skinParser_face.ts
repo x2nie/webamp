@@ -242,25 +242,35 @@ export default class AudionFaceSkinParser extends SkinParser {
 
   async loadTime(parent: Group) {
     const rect = this._config["timeDigit4Rect"];
-    const node = new XmlElement("text", {
-      id: "song-timer",
-      x: `${rect.left}`,
-      y: `${rect.top}`,
-      w: `${rect.right - rect.left}`,
-      h: `${rect.bottom - rect.top}`,
-    });
-    const time = this.newGui(TimeFace, node, parent);
+    // let node = new XmlElement("text", {
+    //   id: "song-timer",
+    //   x: `${rect.left}`,
+    //   y: `${rect.top}`,
+    //   w: `${rect.right - rect.left}`,
+    //   h: `${rect.bottom - rect.top}`,
+    // });
+    // const time = this.newGui(TimeFace, node, parent);
 
     //real text
-    const start = this._config["timeDigit1FirstPICTID"];
-    await this.mergeBitmaps(start, 10);
+    // const start1 = this._config["timeDigit1FirstPICTID"];
+    // const start2 = this._config["timeDigit2FirstPICTID"];
+    // const start3 = this._config["timeDigit3FirstPICTID"];
+    // const start4 = this._config["timeDigit4FirstPICTID"];
+    // const bitmap = await this.mergeBitmaps(start4, 10);
+    // await this.loadText(4, parent);
+    for(var i = 1; i <=4; i++){
+      const start = this._config[`timeDigit${i}FirstPICTID`];
+      const bitmap = await this.mergeBitmaps(start, 10);
+      await this.loadText(i, parent);
+  
+    }
   }
 
   async mergeBitmaps(start: number, count: number) {
     const filesPath = [];
     for (var i = start; i < start + count; i++) {
       filesPath.push(`${i}.png`);
-      console.log('loading merging bitmap:',i)
+      console.log("loading merging bitmap:", i);
     }
     //? load bitmaps
     const bitmaps = await Promise.all(
@@ -278,7 +288,7 @@ export default class AudionFaceSkinParser extends SkinParser {
     canvas.width = w * count;
     canvas.height = h * 2;
     const ctx = canvas.getContext("2d");
-    
+
     //? merging process
     let l = 0;
     for (const abitmap of bitmaps) {
@@ -297,6 +307,47 @@ export default class AudionFaceSkinParser extends SkinParser {
         abitmap.setXmlAttr("file", null);
       }
     }
+
+    return bitmap;
+  }
+
+  async loadText(digit: number, parent: Group) {
+    const start = this._config[`timeDigit${digit}FirstPICTID`];
+    const rect = this._config[`timeDigit${digit}Rect`];
+    const bitmap = this._uiRoot.getBitmap(`${start}.png`);
+    const w = bitmap.getWidth() / 10;
+    const h = bitmap.getHeight() / 2;
+
+    //? bitmapfont
+    let node = new XmlElement("bitmapfont", {
+      id: `font-${bitmap.getId()}`,
+      file: `${bitmap.getId()}`,
+      charwidth: `${w}`,
+      charheight: `${h}`,
+    });
+    const font = await this.bitmapFont(node);
+
+    //? text
+    node = new XmlElement("text", {
+      id: `time-${digit}`,
+      font: `${font.getId()}`,
+      x: `${rect.left}`,
+      y: `${rect.top}`,
+      w: `${rect.right - rect.left}`,
+      h: `${rect.bottom - rect.top}`,
+      charwidth: `${w}`,
+      charheight: `${h}`,
+      // fontsize: `${h}`,
+      display: "time", // should be the last
+      digit: `${digit}`,
+    });
+    const text = await this.textFace(node, parent) as TimeFace;
+    // text.setXmlAttr('display', 'time')
+    text.setXmlAttr('fontsize', `${h}`)
+  }
+
+  async textFace(node: XmlElement, parent: any): Promise<TimeFace> {
+    return this.newGui(TimeFace, node, parent);
   }
   //#endregion
 
