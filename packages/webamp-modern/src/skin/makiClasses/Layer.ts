@@ -67,7 +67,12 @@ export default class Layer extends Movable {
 
   _renderRegion() {
     if (this._sysregion == 1 && this._image) {
-      const canvas = UI_ROOT.getBitmap(this._image).getCanvas();
+      const bitmap = UI_ROOT.getBitmap(this._image);
+      if (!bitmap.getImg()) {
+        console.warn("can't process region on no img:" + this._image);
+        return;
+      }
+      const canvas = bitmap.getCanvas();
       const edge = new Edges();
       edge.parseCanvasTransparency(canvas, this.getwidth(), this.getheight());
       if (edge.isSimpleRect()) {
