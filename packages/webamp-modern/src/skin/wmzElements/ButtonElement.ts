@@ -166,12 +166,12 @@ export default class ButtonElement extends GuiObj {
   init() {
     super.init();
     if (Object.keys(this._audioEvent).length > 0) {
-      UI_ROOT.audio.on("statchanged", () => this._updateStatus());
-      this._updateStatus();
+      UI_ROOT.audio.on("statchanged", () => this._updatePropsByAudioState());
+      this._updatePropsByAudioState();
     }
   }
 
-  _updateStatus() {
+  _updatePropsByAudioState() {
     // console.log("audio-state-changed:", this.getId(), this._audioEvent);
     const buttonStates = {
       [AUDIO_PLAYING]: { play: false, pause: true, stop: true },

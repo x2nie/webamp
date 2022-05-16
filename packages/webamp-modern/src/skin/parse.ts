@@ -602,8 +602,8 @@ export default class SkinParser {
     }
   }
 
-  async button(node: XmlElement, parent: any) {
-    return this.newGui(Button, node, parent);
+  async button(node: XmlElement, parent: any):Promise<Button> {
+    return await this.newGui(Button, node, parent);
   }
 
   async wasabiButton(node: XmlElement, parent: any) {

@@ -1,6 +1,7 @@
 import { XmlElement } from "@rgrove/parse-xml";
 import { UIRoot } from "../UIRoot";
 import Bitmap from "./Bitmap";
+import Button from "./makiClasses/Button";
 import Group from "./makiClasses/Group";
 import SkinParser, { GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 
@@ -48,8 +49,8 @@ export default class AudionFaceSkinParser extends SkinParser {
   }
 
   async loadButtons(parent: Group) {
-    await this.loadButton("play", parent);
-    // await this.loadButton("pause", parent, {rectName: "play",});
+    await this.loadButton("pause", parent, {rectName: "play",});
+    await this.loadButton("play", parent,{attributes:{visible:'allowed-to:play'}});
     await this.loadButton("stop", parent);
     await this.loadButton("rewind", parent, { fileName: "rw" });
     await this.loadButton("fastForward", parent, { fileName: "ff" });
@@ -64,8 +65,13 @@ export default class AudionFaceSkinParser extends SkinParser {
   async loadButton(
     name: string,
     parent: Group,
-    options: { fileName?: string, rectName?:string, actionName?:string } = {}
-  ) {
+    options: {
+      fileName?: string;
+      rectName?: string;
+      actionName?: string;
+      attributes?: { [key: string]: string };
+    } = {}
+  ): Promise<Button> {
     const fileName = options.fileName || name;
     const rectName = options.rectName || name;
     const actionName = options.actionName || name;
@@ -93,6 +99,7 @@ export default class AudionFaceSkinParser extends SkinParser {
     );
 
     //? button
+    const attributes = options.attributes || {};
     const node = new XmlElement("button", {
       id: name,
       image: `${name}`,
@@ -104,9 +111,14 @@ export default class AudionFaceSkinParser extends SkinParser {
       y: `${rect.top}`,
       w: `${rect.right - rect.left}`,
       h: `${rect.bottom - rect.top}`,
+      ...attributes
     });
-    const button = this.button(node, parent);
+    const button = await this.button(node, parent);
+    return button;
   }
+  // async button(node:XmlElement, parent:any){
+  //   return this.newGui(ButtonFace, node, parent);
+  // }
 
   get alphaData(): Uint8ClampedArray {
     if (!this._alphaData) {
@@ -207,10 +219,10 @@ export default class AudionFaceSkinParser extends SkinParser {
       relatw: `1`,
       relath: `1`,
       // background: "base.png",
-      move:"1"
+      move: "1",
     });
     const mover = await this.layer(node, group);
-    return group
+    return group;
   }
 }
 
