@@ -8,7 +8,10 @@ export class ImageManagerKjofol extends ImageManager {
   async getBlob(filePath: string): Promise<Blob> {
     // kjofol need special thread to remove gAMA,CHRM
     // (Gamma chunk & Chroma chunk of PNG file)
-    // const blob = await super.getBlob(filePath);
+
+    if(!filePath.toLowerCase().endsWith('.png')) {
+      return await super.getBlob(filePath);
+    }
 
     const blobPart = [];
     const rawData: ArrayBuffer = await UI_ROOT.getFileAsBytes(filePath);
