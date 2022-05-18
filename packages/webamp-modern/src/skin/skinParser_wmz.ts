@@ -8,17 +8,17 @@ import EqVis from "./makiClasses/EqVis";
 import PlayListGui from "./makiClasses/PlayListGui";
 import Vis from "./makiClasses/Vis";
 import SkinParser, { Attributes, GROUP_PHASE, RESOURCE_PHASE } from "./parse";
-import ButtonElement from "./wmzElements/ButtonElement";
-import ButtonGroup from "./wmzElements/ButtonGroup";
-import ButtonZ from "./wmzElements/ButtonZ";
-import Player from "./wmzElements/Player";
-import PlayListGuiZ from "./wmzElements/PlayListGuiZ";
-import SliderZ from "./wmzElements/SliderZ";
-import SubView from "./wmzElements/SubView";
-import TextZ from "./wmzElements/TextZ";
-import Theme from "./wmzElements/Theme";
-import View from "./wmzElements/View";
-import VisZ from "./wmzElements/VisZ";
+import ButtonElement from "./wmpClasses/ButtonElement";
+import ButtonGroup from "./wmpClasses/ButtonGroup";
+import ButtonZ from "./wmpClasses/ButtonZ";
+import Player from "./wmpClasses/Player";
+import PlayListGuiZ from "./wmpClasses/PlayListGuiZ";
+import SliderZ from "./wmpClasses/SliderZ";
+import SubView from "./wmpClasses/SubView";
+import TextZ from "./wmpClasses/TextZ";
+import Theme from "./wmpClasses/Theme";
+import View from "./wmpClasses/View";
+import VisZ from "./wmpClasses/VisZ";
 
 export default class WmpSkinParser extends SkinParser {
   constructor(uiRoot: UIRoot) {
