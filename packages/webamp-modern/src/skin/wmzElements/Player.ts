@@ -3,6 +3,8 @@ import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import GuiObj from "../makiClasses/GuiObj";
 import { runInlineScript } from "./util";
 
+// https://docs.microsoft.com/en-us/windows/win32/wmp/player-element
+// https://docs.microsoft.com/en-us/windows/win32/wmp/player-object
 export default class Player extends GuiObj {
   _controls: PlayerControls;
   _playState_onchange: string;

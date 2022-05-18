@@ -1,7 +1,7 @@
 import Text from "../makiClasses/Text";
 import { solvePendingProps } from "./util";
 
-// https://docs.microsoft.com/en-us/windows/win32/wmp/view-element
+// https://docs.microsoft.com/en-us/windows/win32/wmp/text-element
 export default class TextZ extends Text {
   _pendingProps: { [key: string]: string } = {};
   _background: string;

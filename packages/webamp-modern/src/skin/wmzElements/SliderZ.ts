@@ -3,7 +3,7 @@ import { num, toBool } from "../../utils";
 import Slider from "../makiClasses/Slider";
 import { solvePendingProps } from "./util";
 
-// https://docs.microsoft.com/en-us/windows/win32/wmp/view-element
+// https://docs.microsoft.com/en-us/windows/win32/wmp/slider-element
 export default class SliderZ extends Slider {
   _pendingProps: { [key: string]: string } = {};
   _background: string;
