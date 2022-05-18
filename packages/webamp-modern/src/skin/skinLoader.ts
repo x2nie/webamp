@@ -2,6 +2,7 @@ import JSZip from "jszip";
 import UI_ROOT from "../UIRoot";
 import SkinParser from "./parse";
 import AudionFaceSkinParser from "./skinParser_face";
+import KJofolSkinParser from "./skinParser_kjofol";
 import WmpSkinParser from "./skinParser_wmz";
 import ClassicSkinParser from "./skinParser_wsz";
 
@@ -74,6 +75,17 @@ async function _loadSkin_WMZ(skinPath: string) {
   // UI_ROOT.loadJsScripts()
 }
 
+async function _loadSkin_KJofol(skinPath: string) {
+  const response = await fetch(skinPath);
+  const skinZipBlob = await response.blob();
+
+  UI_ROOT.logMessage("Loading .kjofol archive...");
+  const zip = await JSZip.loadAsync(skinZipBlob);
+  UI_ROOT.setZip(zip);
+  await _parseSkin_WAL(KJofolSkinParser);
+  // UI_ROOT.loadJsScripts()
+}
+
 async function _loadSkin_AudionFace(skinPath: string) {
   const response = await fetch(skinPath);
   const skinZipBlob = await response.blob();
@@ -140,6 +152,9 @@ export async function loadSkin(container: HTMLElement, skinPath: string) {
     //
   } else if (skinPath.endsWith(".face")) {
     await _loadSkin_AudionFace(skinPath);
+    //
+  } else if (skinPath.endsWith(".kjofol")) {
+    await _loadSkin_KJofol(skinPath);
     //
   } else {
     //TODO: support .swz and localhost path/to/skin-name/
