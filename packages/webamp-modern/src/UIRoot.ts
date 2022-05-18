@@ -126,6 +126,9 @@ export class UIRoot {
   getImageManager(): ImageManager {
     return this._imageManager;
   }
+  setImageManager(imageManager:ImageManager) {
+    this._imageManager = imageManager;
+  }
 
   addObject(obj: BaseObject) {
     this._objects.push(obj);

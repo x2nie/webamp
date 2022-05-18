@@ -3,12 +3,19 @@ import JSZip from "jszip";
 import { UIRoot } from "../UIRoot";
 import Bitmap from "./Bitmap";
 import BitmapFont from "./BitmapFont";
+import { ImageManagerKjofol } from "./kjofolClasses/ImageManagerKjofol";
 import EqVis from "./makiClasses/EqVis";
 import Vis from "./makiClasses/Vis";
 import SkinParser, { Attributes, GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 
 export default class KJofolSkinParser extends SkinParser {
   _config: {}; // whole kjofol.rc
+
+  constructor(uiRoot: UIRoot) {
+    /* Once UI_ROOT is not a singleton, we can create that objet in the constructor */
+    uiRoot.setImageManager(new ImageManagerKjofol());
+    super(uiRoot)
+  }
 
   async parse(): Promise<UIRoot> {
     console.log("RESOURCE_PHASE #################");
@@ -64,9 +71,9 @@ export default class KJofolSkinParser extends SkinParser {
    * because it's dimension (width & height) are required immediately by
    * Container / Layout.
    */
-  async loadBase() {
-    // await this.loadPlainBitmap("base-alpha.png");
-  }
+  // async loadBase() {
+  //   // await this.loadPlainBitmap("base-alpha.png");
+  // }
 
   //#endregion
 

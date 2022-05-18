@@ -15,7 +15,8 @@ export default class ImageManager {
 
   async getUrl(filePath: string): Promise<string | null> {
     if (!this._urlCache.has(filePath)) {
-      const imgBlob = await UI_ROOT.getFileAsBlob(filePath);
+      // const imgBlob = await UI_ROOT.getFileAsBlob(filePath);
+      const imgBlob = await this.getBlob(filePath);
       if (imgBlob == null) {
         this._urlCache.set(filePath, null);
         return null;
@@ -28,6 +29,12 @@ export default class ImageManager {
 
   getCachedUrl(filePath: string): string {
     return this._urlCache.get(filePath);
+  }
+
+  async getBlob(filePath: string): Promise<Blob> {
+    // kjofol need special thread to remove gAMA,CHRM
+    // (Gamma & Chroma png chunk)
+    return await UI_ROOT.getFileAsBlob(filePath);
   }
 
   // addBitmap0(bitmap: Bitmap) {
