@@ -1,6 +1,6 @@
 import parseXml, { XmlElement } from "@rgrove/parse-xml";
 import JSZip from "jszip";
-import UI_ROOT, { UIRoot } from "../UIRoot";
+import { UIRoot } from "../UIRoot";
 import BitmapFont from "./BitmapFont";
 import EqVis from "./makiClasses/EqVis";
 import Vis from "./makiClasses/Vis";
