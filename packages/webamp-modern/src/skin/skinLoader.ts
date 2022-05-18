@@ -3,7 +3,7 @@ import UI_ROOT from "../UIRoot";
 import SkinParser from "./parse";
 import AudionFaceSkinParser from "./skinParser_face";
 import KJofolSkinParser from "./skinParser_kjofol";
-import WmpSkinParser from "./skinParser_wmz";
+import WmpSkinParser from "./skinParser_wmp";
 import ClassicSkinParser from "./skinParser_wsz";
 
 async function _loadSkin_WAL(skinPath: string) {
