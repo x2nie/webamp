@@ -1,11 +1,13 @@
 import parseXml, { XmlElement } from "@rgrove/parse-xml";
 import JSZip from "jszip";
-import { UIRoot } from "../UIRoot";
+import UI_ROOT, { UIRoot } from "../UIRoot";
 import Bitmap from "./Bitmap";
 import BitmapFont from "./BitmapFont";
 import { ImageManagerKjofol } from "./kjofolClasses/ImageManagerKjofol";
+import Button from "./makiClasses/Button";
 import Container from "./makiClasses/Container";
 import EqVis from "./makiClasses/EqVis";
+import Group from "./makiClasses/Group";
 import Vis from "./makiClasses/Vis";
 import SkinParser, { Attributes, GROUP_PHASE, RESOURCE_PHASE } from "./parse";
 
@@ -27,8 +29,9 @@ export default class KJofolSkinParser extends SkinParser {
     this._config = parserRC(configContent);
 
     // await this.traverseChildren(parsed);
+    await this.loadKnowBitmaps();
     const main = await this.loadMain();
-    await this.loadMainNormal(main)
+    await this.loadMainNormal(main);
     // await this._loadBitmaps();
 
     // console.log("GROUP_PHASE #################");
@@ -41,9 +44,21 @@ export default class KJofolSkinParser extends SkinParser {
   }
 
   //#region (collapsed) load-bitmap
+  async loadKnowBitmaps() {
+    //? BG
+    await this.loadBitmap(this._config["BackgroundImage"], "base");
+    await this.loadBitmap(this._config["BackgroundImage"], "base-inactive");
+    //? Pressed
+    for (var i = 1; i <= 3; i++) {
+      const pressed = this._config[`BackgroundImagePressed${i}`];
+      if (pressed != null) {
+        await this.loadBitmap(pressed, `BMP${i}`);
+      }
+    }
+    // await this._loadBitmap("playButton");
+  }
 
   async loadMain(): Promise<Container> {
-    
     let node = new XmlElement("container", {
       id: "main",
       x: "0",
@@ -54,7 +69,8 @@ export default class KJofolSkinParser extends SkinParser {
   }
 
   async loadMainNormal(parent: Container) {
-    const bg = await this.loadBitmap(this._config["BackgroundImage"]);
+    // const bg = await this.loadBitmap(this._config["BackgroundImage"]);
+    const bg = UI_ROOT.getBitmap("base");
     let node = new XmlElement("container", {
       id: "normal",
       w: `${bg.getWidth()}`,
@@ -69,6 +85,58 @@ export default class KJofolSkinParser extends SkinParser {
       h: `${bg.getHeight()}`,
     });
     const group = await this.group(node, normal);
+
+    node = new XmlElement("layer", {
+      id: "mover",
+      w: `0`,
+      h: `0`,
+      relatw: `1`,
+      relath: `1`,
+      // background: "base.png",
+      move: "1",
+    });
+    const mover = await this.layer(node, group);
+    
+    await this.loadButton("Play", group);
+    await this.loadButton("Pause", group);
+    await this.loadButton("Stop", group);
+    await this.loadButton("PreviousSong", group);
+    await this.loadButton("NextSong", group);
+    await this.loadButton("OpenFile", group);
+  }
+
+  /**
+   *
+   * @param nick "Play" for "PlayButton"
+   * @param parent
+   */
+  async loadButton(nick: string, parent: Group): Promise<Button> {
+    const rect = this._config[`${nick}Button`];
+    const [left, top, right, bottom, _action, downimage] = rect;
+    let action: string;
+    switch (_action.toLowerCase()) {
+      case "stop!":
+        action = "stop";
+      case "previoussong":
+        action = "prev";
+      case "nextsong":
+        action = "next";
+      case "open":
+        action = "eject";
+      default:
+        action = _action;
+    }
+    const node = new XmlElement("button", {
+      id: nick,
+      action,
+      x: `${left}`,
+      y: `${top}`,
+      w: `${right - left}`,
+      h: `${bottom - top}`,
+      downimage,
+    });
+    const button = await this.button(node, parent);
+    return button;
   }
 
   /**
@@ -89,8 +157,14 @@ export default class KJofolSkinParser extends SkinParser {
    * @param name
    * @returns
    */
-  async loadPlainBitmap(fileName: string): Promise<Bitmap> {
-    const bitmap = await this.bitmap({ id: fileName, file: fileName });
+  async loadPlainBitmap(
+    fileName: string,
+    name: string = null
+  ): Promise<Bitmap> {
+    if (name == null) {
+      name = fileName;
+    }
+    const bitmap = await this.bitmap({ id: name, file: fileName });
     await bitmap.ensureImageLoaded(this._imageManager, true);
     return bitmap;
   }
@@ -99,8 +173,8 @@ export default class KJofolSkinParser extends SkinParser {
    * Load bitmap and applyTransparency
    * @param name filename eg play-button.png
    */
-  async loadBitmap(fileName: string): Promise<Bitmap> {
-    const bitmap = await this.loadPlainBitmap(fileName);
+  async loadBitmap(fileName: string, name: string = null): Promise<Bitmap> {
+    const bitmap = await this.loadPlainBitmap(fileName, name);
     // sometime the Audion Face has no hover.png
     if (bitmap.getImg() != null) {
       this.applyTransparency(bitmap);
@@ -158,7 +232,19 @@ function parserRC(content: string): { [key: string]: string | string[] } {
     if (line.startsWith("About ")) {
       cfg["About"] = [...(cfg["About"] || [])].concat([words.join(" ")]);
     } else {
-      cfg[first] = words.length == 1 ? words[0] : words;
+      // cfg[first] = words.length == 1 ? words[0] : words;
+
+      let value: any;
+      //? single string? don't bother with array, just return that string
+      if (words.length == 1) {
+        value = words[0];
+      } else {
+        value = words.map((v: string): any => {
+          const num = parseInt(v);
+          return isNaN(num) ? v : num;
+        });
+      }
+      cfg[first] = value;
     }
   }
 
