@@ -41,13 +41,13 @@ function prepareGrid() {
   ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
 
   //? red dot
-  const dot = document.getElementById('dot') as HTMLElement;
+  const dot = document.getElementById("dot") as HTMLElement;
   const coordinateHover = (e: MouseEvent) => {
     const el = e.target as HTMLDivElement;
-    const [x,y] = el.textContent.split(', ').map((v)=> parseInt(v));
-    dot.style.left = `${x*SCALE}px`
-    dot.style.top = `${y*SCALE}px`
-  }
+    const [x, y, ax, ay] = el.textContent.split(",").map((v) => parseInt(v));
+    dot.style.left = `${ax * SCALE}px`;
+    dot.style.top = `${ay * SCALE}px`;
+  };
 
   //? onClick
   const toggleCell = (e: MouseEvent) => {
@@ -78,11 +78,15 @@ function prepareGrid() {
     const showCoordinates = (el: string, data: string) => {
       const El = document.getElementById(el);
       El.textContent = "";
-      const rows = data.replace(/px/gi, "").replace(/\,\s/gi, "\n").replace(/\ /g,', ').split("\n");
+      const rows = data
+        .replace(/px/gi, "")
+        .replace(/\,\s/gi, "\n")
+        .replace(/\ /g, ", ")
+        .split("\n");
       for (const row of rows) {
         const div = document.createElement("div");
         div.textContent = row;
-        div.addEventListener('mousemove', coordinateHover)
+        div.addEventListener("mousemove", coordinateHover);
 
         El.appendChild(div);
       }
@@ -91,10 +95,10 @@ function prepareGrid() {
     const edge = new Edges();
     edge.parseCanvasTransparencyByColor(canvas, "#ff00ff");
 
-    showCoordinates('top', edge.gettop());
-    showCoordinates('right', edge.getright());
-    showCoordinates('bottom', edge.getbottom());
-    showCoordinates('left', edge.getleft());
+    showCoordinates("top", edge.gettop());
+    showCoordinates("right", edge.getright());
+    showCoordinates("bottom", edge.getbottom());
+    showCoordinates("left", edge.getleft());
 
     // document.getElementById("top").textContent = edge
     //   .gettop()
@@ -157,14 +161,99 @@ function prepareGrid() {
 
   //debug
   // zoom.style.clipPath = `polygon(
-  //   0px 0px, 
-  //   3px 0px, 
-  //   3px 3px, 
+  //   0px 0px,
+  //   3px 0px,
+  //   3px 3px,
   //   0px 3px)`;
+}
+
+function prepareDrop() {
+  const dropBox = document.getElementById("drop-box");
+  const cropped = document.getElementById("cropped");
+  const canvas: HTMLCanvasElement = document.getElementById(
+    "tracing"
+  ) as HTMLCanvasElement;
+  var image = document.getElementById("drop-preview") as HTMLImageElement;
+
+  function highlight(e) {
+    e.preventDefault();
+    dropBox.classList.add("highlight");
+  }
+  function unhighlight(e) {
+    dropBox.classList.remove("highlight");
+  }
+  // dropBox.addEventListener("dragenter", highlight, false);
+  dropBox.addEventListener("dragover", highlight, false);
+  dropBox.addEventListener("dragleave", unhighlight, false);
+
+  function handleDrop(e: DragEvent) {
+    e.preventDefault();
+    let dt = e.dataTransfer;
+    let files = dt.files;
+
+    // handleFiles(files)
+    handleFile(files[0]);
+  }
+  dropBox.addEventListener("drop", handleDrop);
+  function handleFile(file: File) {
+    if (file.type === "image" || file.type.startsWith("image")) {
+      image.onload = imgLoaded;
+      const url = URL.createObjectURL(file);
+      image.setAttribute("src", url);
+    }
+  }
+
+  function imgLoaded() {
+    // document.body.appendChild(this);
+    console.log("img Loaded!");
+    canvas.width = image.width;
+    canvas.height = image.width;
+    canvas.setAttribute("width", image.width.toString());
+    canvas.setAttribute("height", image.height.toString());
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0)
+
+    //? Coordinates
+    const showCoordinates = (el: string, data: string) => {
+      const El = document.getElementById(el);
+      El.textContent = "";
+      const rows = data
+        .replace(/px/gi, "")
+        .replace(/\,\s/gi, "\n")
+        .replace(/\ /g, ", ")
+        .split("\n");
+      for (const row of rows) {
+        const div = document.createElement("div");
+        div.textContent = row;
+        div.addEventListener("mousemove", coordinateHover);
+
+        El.appendChild(div);
+      }
+    };
+
+    const edge = new Edges();
+    edge.parseCanvasTransparency(canvas, image.width, image.height);
+    cropped.style.clipPath = edge.getPolygon();
+
+    showCoordinates("top", edge.gettop());
+    showCoordinates("right", edge.getright());
+    showCoordinates("bottom", edge.getbottom());
+    showCoordinates("left", edge.getleft());
+  }
+
+  //? blue dot
+  const dot = document.getElementById("dot2") as HTMLElement;
+  const coordinateHover = (e: MouseEvent) => {
+    const el = e.target as HTMLDivElement;
+    const [x, y, ax, ay] = el.textContent.split(",").map((v) => parseInt(v));
+    dot.style.left = `${ax }px`;
+    dot.style.top = `${ay }px`;
+  };
 }
 
 function main() {
   prepareGrid();
+  prepareDrop();
   return;
 
   const oriImg = document.getElementById("img1");
