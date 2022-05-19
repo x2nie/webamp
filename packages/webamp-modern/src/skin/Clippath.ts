@@ -26,7 +26,7 @@ export class Edges {
   ) {
     //set:
     this.opaque = this.opaqueByTransparent;
-    this._parseCanvasTransparency(canvas, preferedHeight, preferedWidth);
+    this._parseCanvasTransparency(canvas, preferedWidth, preferedHeight);
   }
 
   parseCanvasTransparencyByNonColor(canvas: HTMLCanvasElement, color: string) {
@@ -141,6 +141,10 @@ export class Edges {
       }
     }
     this._left = points;
+  }
+
+  _buildPoint(points: number[][]):string {
+    return points.map((point):string=>`${point[2]}px ${point[3]}px`).join(', ')
   }
 
   gettop(): string {
