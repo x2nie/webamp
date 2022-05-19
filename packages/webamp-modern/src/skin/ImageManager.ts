@@ -93,12 +93,14 @@ export default class ImageManager {
 
     return await Promise.all(
       bitmaps.map(async (bitmap) => {
+        console.log('IM.ensure:',bitmap.getId())
         // await this.setBimapImg(bitmap);
-        bitmap._img = await this.getImage(bitmap.getFile());
-        if (bitmap._img && bitmap._width == null && bitmap._height == null) {
-          bitmap.setXmlAttr("w", String(bitmap._img.width));
-          bitmap.setXmlAttr("h", String(bitmap._img.height));
-        }
+        // bitmap._img = await this.getImage(bitmap.getFile());
+        // if (bitmap._img && bitmap._width == null && bitmap._height == null) {
+        //   bitmap.setXmlAttr("w", String(bitmap._img.width));
+        //   bitmap.setXmlAttr("h", String(bitmap._img.height));
+        // }
+        return await bitmap.ensureImageLoaded(this)
       })
     );
   }

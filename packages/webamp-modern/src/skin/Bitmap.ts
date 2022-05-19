@@ -107,7 +107,8 @@ export default class Bitmap {
   }
 
   loaded(): boolean {
-    return this._loaded;
+    return this._img !=null;
+    return this._loaded == true;
   }
   // Ensure we've loaded the image into our image loader.
   async ensureImageLoaded(
@@ -120,10 +121,10 @@ export default class Bitmap {
       "Tried to ensure a Bitmap was laoded more than once."
     );
 
-    if (!this._ownCache) {
+    // if (!this._ownCache) {
       //force. also possibly set null:
       this._img = await imageManager.getImage(this._file, allowReturnNull);
-    }
+    // }
     this._loaded = true;
     if (this._img) {
       if (this._width == null && this._height == null) {
