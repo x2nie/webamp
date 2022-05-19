@@ -4,6 +4,7 @@ import { UIRoot } from "../UIRoot";
 import Bitmap from "./Bitmap";
 import BitmapFont from "./BitmapFont";
 import { ImageManagerKjofol } from "./kjofolClasses/ImageManagerKjofol";
+import Container from "./makiClasses/Container";
 import EqVis from "./makiClasses/EqVis";
 import Vis from "./makiClasses/Vis";
 import SkinParser, { Attributes, GROUP_PHASE, RESOURCE_PHASE } from "./parse";
@@ -14,7 +15,7 @@ export default class KJofolSkinParser extends SkinParser {
   constructor(uiRoot: UIRoot) {
     /* Once UI_ROOT is not a singleton, we can create that objet in the constructor */
     uiRoot.setImageManager(new ImageManagerKjofol());
-    super(uiRoot)
+    super(uiRoot);
   }
 
   async parse(): Promise<UIRoot> {
@@ -26,7 +27,8 @@ export default class KJofolSkinParser extends SkinParser {
     this._config = parserRC(configContent);
 
     // await this.traverseChildren(parsed);
-    await this.loadMain();
+    const main = await this.loadMain();
+    await this.loadMainNormal(main)
     // await this._loadBitmaps();
 
     // console.log("GROUP_PHASE #################");
@@ -40,30 +42,33 @@ export default class KJofolSkinParser extends SkinParser {
 
   //#region (collapsed) load-bitmap
 
-  async loadMain() {
+  async loadMain(): Promise<Container> {
+    
+    let node = new XmlElement("container", {
+      id: "main",
+      x: "0",
+      y: "0",
+    });
+    const main = await this.container(node);
+    return main;
+  }
+
+  async loadMainNormal(parent: Container) {
     const bg = await this.loadBitmap(this._config["BackgroundImage"]);
-    // await this._loadBitmap("playButton");
-    let node = new XmlElement('container', {
-      id:'main',
-      x: '0',
-      y: '0',
-    })
-    const main = await this.container(node)
-
-    node = new XmlElement('container', {
-      id:'normal',
+    let node = new XmlElement("container", {
+      id: "normal",
       w: `${bg.getWidth()}`,
-      h: `${bg.getHeight()}`
-    })
-    const normal = await this.layout(node, main)
+      h: `${bg.getHeight()}`,
+    });
+    const normal = await this.layout(node, parent);
 
-    node = new XmlElement('group', {
-      id:'main-root',
+    node = new XmlElement("group", {
+      id: "main-root",
       background: bg.getId(),
       w: `${bg.getWidth()}`,
-      h: `${bg.getHeight()}`
-    })
-    const group = await this.group(node, normal)
+      h: `${bg.getHeight()}`,
+    });
+    const group = await this.group(node, normal);
   }
 
   /**
@@ -84,14 +89,8 @@ export default class KJofolSkinParser extends SkinParser {
    * @param name
    * @returns
    */
-  async loadPlainBitmap(
-    fileName: string,
-    name: string = null
-  ): Promise<Bitmap> {
-    if (name == null) {
-      name = fileName;
-    }
-    const bitmap = await this.bitmap({ id: name, file: fileName });
+  async loadPlainBitmap(fileName: string): Promise<Bitmap> {
+    const bitmap = await this.bitmap({ id: fileName, file: fileName });
     await bitmap.ensureImageLoaded(this._imageManager, true);
     return bitmap;
   }
@@ -100,27 +99,24 @@ export default class KJofolSkinParser extends SkinParser {
    * Load bitmap and applyTransparency
    * @param name filename eg play-button.png
    */
-  async loadBitmap(
-    fileName: string,
-    name: string = null
-  ): Promise<Bitmap>  {
-    const bitmap = await this.loadPlainBitmap(fileName, name);
+  async loadBitmap(fileName: string): Promise<Bitmap> {
+    const bitmap = await this.loadPlainBitmap(fileName);
     // sometime the Audion Face has no hover.png
     if (bitmap.getImg() != null) {
       this.applyTransparency(bitmap);
     }
     return bitmap;
   }
+  /**
+   * Set all fuchsia color (#ff00ff) as transparent pixel
+   * @param bitmap
+   */
   applyTransparency(bitmap: Bitmap) {
     const rgb = { r: 255, g: 0, b: 255 }; //fuchsia
     let anyPixelChanged: boolean = false;
     const canvas = bitmap.getCanvas();
     const ctx = canvas.getContext("2d");
     const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    // const dataa = this.alphaData;
-    const w = bitmap.getWidth();
-    const h = bitmap.getHeight();
-    // const aw = this._uiRoot.getBitmap("base-alpha.png").getWidth();
 
     // get the image data values
     const data = img.data;
@@ -149,7 +145,7 @@ export default class KJofolSkinParser extends SkinParser {
   //#endregion
 }
 
-function parserRC(content: string): { [key: string]: string|string[] } {
+function parserRC(content: string): { [key: string]: string | string[] } {
   const cfg: { [key: string]: any } = {};
   content = content.replace(/\r/g, "");
   const lines = content.split("\n");
@@ -162,7 +158,7 @@ function parserRC(content: string): { [key: string]: string|string[] } {
     if (line.startsWith("About ")) {
       cfg["About"] = [...(cfg["About"] || [])].concat([words.join(" ")]);
     } else {
-      cfg[first] = words.length==1? words[0] : words;
+      cfg[first] = words.length == 1 ? words[0] : words;
     }
   }
 
