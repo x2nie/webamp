@@ -105,6 +105,7 @@ async function initializeSkinListMenu() {
     { filename: "[wmp] Quicksilver WindowsMediaPlayer!", download_url: "assets/Quicksilver.wmz" },
     { filename: "[wmp] Windows XP", download_url: "assets/Windows-XP.wmz" },
     { filename: "[wmp] Famous Headspace", download_url: "assets/Headspace.wmz" },
+    { filename: "[Audion Face] Smoothface 2", download_url: "assets/Smoothface2.face" },
     { filename: "[Audion Face] Gizmo 2.0", download_url: "assets/Gizmo2.0.face" },
     { filename: "[Audion Face] Tokyo Bay", download_url: "assets/TokyoBay.face" },
     { filename: "CornerAmp_Redux", download_url: "assets/CornerAmp_Redux.wal" },
