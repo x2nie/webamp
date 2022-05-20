@@ -13,7 +13,6 @@ export default class Bitmap {
   _url: string;
   _img: CanvasImageSource;
   _canvas: HTMLCanvasElement;
-  _ownCache: boolean = false; //signal that the _img is not stored in ImageManager
   _x: number = 0;
   _y: number = 0;
   _width: number;
@@ -21,7 +20,6 @@ export default class Bitmap {
   _file: string;
   _transparentColor: string;
   _gammagroup: string;
-  _loaded: boolean = false; // avoid load image twice
 
   setXmlAttributes(attributes: { [attrName: string]: string }) {
     for (const [key, value] of Object.entries(attributes)) {
@@ -103,29 +101,28 @@ export default class Bitmap {
     // await imageManager.setImage(this._file, url);
     // await this.ensureImageLoaded(imageManager);
     this._img = img;
-    this._ownCache = true;
   }
 
   loaded(): boolean {
     return this._img !=null;
-    return this._loaded == true;
   }
+
   // Ensure we've loaded the image into our image loader.
   async ensureImageLoaded(
     imageManager: ImageManager,
     allowReturnNull: boolean = false
   ) {
     assert(
-      // this._url == null,
-      this._loaded == false,
+      this._url == null,
+      // this._loaded == false,
       "Tried to ensure a Bitmap was laoded more than once."
     );
 
     // if (!this._ownCache) {
       //force. also possibly set null:
-      this._img = await imageManager.getImage(this._file, allowReturnNull);
+      this._img = await imageManager.getImage(this._file);
     // }
-    this._loaded = true;
+    //this._loaded = true;
     if (this._img) {
       if (this._width == null && this._height == null) {
         this.setXmlAttr("w", String(this._img.width));

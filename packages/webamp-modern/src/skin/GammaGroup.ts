@@ -91,6 +91,7 @@ export default class GammaGroup {
     ctx.putImageData(imageData, 0, 0);
     return canvas.toDataURL();
   }
+
   async transformBitmap(bitmap: Bitmap): Promise<string> {
     if(this._value=='0,0,0'){
       // triple zero meaning no gamma should be applied.

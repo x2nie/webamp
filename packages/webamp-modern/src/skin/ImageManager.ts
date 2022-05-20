@@ -8,27 +8,37 @@ const DEFAULT_IMAGE_URL =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg==";
 
 export default class ImageManager {
-  _urlCache: Map<string, string> = new Map();
-  _imgCache: Map<string, HTMLImageElement> = new Map();
-  // _pathofBitmap = {}; //? file : true|false|null
-  // _bitmaps: { [key: string]: Bitmap } = {}; //? Bitmap:file
+  // _imagePlaceholder: boolean = false; // fallback to DEFAULT_IMAGE if file inaccessible?
+  _imagePlaceholder: boolean = false; // fallback to DEFAULT_IMAGE if file inaccessible?
+  // _urlCache: Map<string, string> = new Map();
+  _urlCache: {[key:string]: string} = {};
+  // _imgCache: Map<string, HTMLImageElement> = new Map();
+  _imgCache: {[key:string] : HTMLImageElement} = {};
+  //_pathofBitmap = {}; //? file : true|false|null
+  //_bitmaps: { [key: string]: Bitmap } = {}; //? Bitmap:file
+  // _bitmapAlias = {}; //? file|id : true|false|null //for BitmapFont
+
+  /**
+   * cleanup resources
+   */
+  dispose() {}
 
   async getUrl(filePath: string): Promise<string | null> {
-    if (!this._urlCache.has(filePath)) {
+    if (!this._urlCache.hasOwnProperty(filePath)) {
       // const imgBlob = await UI_ROOT.getFileAsBlob(filePath);
       const imgBlob = await this.getBlob(filePath);
       if (imgBlob == null) {
-        this._urlCache.set(filePath, null);
+      this._urlCache[filePath] = imgUrl;
         return null;
       }
       const imgUrl = await getUrlFromBlob(imgBlob);
-      this._urlCache.set(filePath, imgUrl);
+      this._urlCache[filePath] = imgUrl;
     }
-    return this._urlCache.get(filePath);
+    return this._urlCache[filePath];
   }
 
   getCachedUrl(filePath: string): string {
-    return this._urlCache.get(filePath);
+    return this._urlCache[filePath];
   }
 
   async getBlob(filePath: string): Promise<Blob> {
@@ -49,7 +59,7 @@ export default class ImageManager {
   // }
 
   // Ensure we've loaded the image into our image loader.
-  async loadUniquePaths() {
+  async loadUniquePaths():Promise<Bitmap[]> {
     const bitmaps: Bitmap[] = [];
 
     //? Collect unique filepath
@@ -81,8 +91,8 @@ export default class ImageManager {
     }
 
     await Promise.all(
-      filesPath.map(async (filePath) => {
-        await this.getImage(filePath);
+      filesPath.map( (filePath) => {
+        return this.getImage(filePath);
       })
     );
     return bitmaps;
@@ -100,16 +110,10 @@ export default class ImageManager {
         //   bitmap.setXmlAttr("w", String(bitmap._img.width));
         //   bitmap.setXmlAttr("h", String(bitmap._img.height));
         // }
-        return await bitmap.ensureImageLoaded(this)
+        return  bitmap.ensureImageLoaded(this)
       })
     );
   }
-
-  // async setBimapImg(bitmap: Bitmap) {
-  //   if (!bitmap._ownCache) {
-  //     bitmap._img = await this.getImage(bitmap.getFile());
-  //   }
-  // }
 
   /**
    *
@@ -118,36 +122,20 @@ export default class ImageManager {
    * accessible then return defaultImage which is 1x1 transparent pixel
    * @returns <img> HtmlImageElement
    */
-  async getImage(
-    filePath: string,
-    allowReturnNull: boolean = false
-  ): Promise<HTMLImageElement | null> {
-    if (!this._imgCache.has(filePath)) {
-      let validUrl: boolean = true;
-
+  async getImage(filePath: string): Promise<HTMLImageElement | null> {
+    if (!this._imgCache.hasOwnProperty(filePath)) {
       // TODO: We could cache this
-      let url = await this.getUrl(filePath);
-      if (url == null) {
-        url = DEFAULT_IMAGE_URL;
-        validUrl = false;
+      const url = await this.getUrl(filePath);
+      if (url == null && this._imagePlaceholder) {
+        const img = await loadImage(DEFAULT_IMAGE_URL);
+        this._imgCache[filePath] = img;
+      } else {
+        const img = await loadImage(url);
+        this._imgCache[filePath] = img;
       }
-
-      const img = !validUrl && allowReturnNull ? null : await loadImage(url);
-      this._imgCache.set(filePath, img);
     }
-    return this._imgCache.get(filePath);
+    return this._imgCache[filePath];
   }
-
-  // /**
-  //  * Useful if an img is modified/drawn
-  //  * @param filePath
-  //  * @param url
-  //  */
-  // async setImage(filePath: string, url: string) {
-  //   const img = await loadImage(url);
-  //   this._imgCache.set(filePath, img);
-  //   // return this._imgCache.get(filePath);
-  // }
 }
 
 // This is intentionally async since we may want to sub it out for an async

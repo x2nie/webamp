@@ -705,7 +705,7 @@ export default class SkinParser {
       }
 
       //TODO: why this new created bitmap doesn't loaded?
-      await this._imageManager.loadUniquePaths();
+      // await this._imageManager.loadUniquePaths();
       await this._imageManager.ensureBitmapsLoaded();
     }
   }

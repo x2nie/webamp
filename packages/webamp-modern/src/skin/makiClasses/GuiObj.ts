@@ -952,13 +952,8 @@ export default class GuiObj extends XmlObj {
   }
 
   setHoverBackgroundImage(bitmap: Bitmap | null) {
-    if (bitmap != null /* && bitmap.getImg() */) {
+    if (bitmap != null) {
       bitmap.setAsHoverBackground(this._div);
-    } else {
-      // this._div.style.setProperty(
-      //   `--hover-background-image`,
-      //   'var(--none)'
-      // );
     }
   }
 
