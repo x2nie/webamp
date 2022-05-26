@@ -1,7 +1,7 @@
 /*---------------------------------------------------
 -----------------------------------------------------
-Filename:	wa2visualizer.m
-Version:	2.1
+Filename:	visualizer.m
+Version:	2.0
 
 Type:		maki
 Date:		07. Okt. 2007 - 19:56 , May 24th 2021 - 2:13am UTC+1
@@ -10,9 +10,9 @@ E-Mail:		martin@skinconsortium.com
 Internet:	www.skinconsortium.com
 			www.martin.deimos.de.vu
 
-Note:		Ripped from Winamp Modern, removed the VU Meter section
-			as it's not relevant just yet, this also includes
-			the option to set the Spectrum Analyzer coloring.
+Note:		This script revamped the vis menu and cycling
+			with the mouse, as well as adding a VU Meter
+			to be on parity with WACUP Classic
 -----------------------------------------------------
 ---------------------------------------------------*/
 
@@ -31,15 +31,10 @@ Global PopUpMenu pksmenu;
 Global PopUpMenu anamenu;
 Global PopUpMenu anasettings;
 Global PopUpMenu oscsettings;
-Global PopUpMenu stylemenu;
-Global PopUpMenu fpsmenu;
 
-Global Int currentMode, a_falloffspeed, p_falloffspeed, osc_render, ana_render, a_coloring, v_fps;
+Global Int currentMode, a_falloffspeed, p_falloffspeed, osc_render, ana_render;
 Global Boolean show_peaks, isShade;
 Global layer trigger;
-
-Global Layout thislayout;
-Global Container main;
 
 System.onScriptLoaded()
 { 
@@ -49,7 +44,7 @@ System.onScriptLoaded()
 
 	trigger = scriptGroup.findObject("main.vis.trigger");
 
-	visualizer.setXmlParam("Peaks", integerToString(show_peaks));
+	visualizer.setXmlParam("peaks", integerToString(show_peaks));
 	visualizer.setXmlParam("peakfalloff", integerToString(p_falloffspeed));
 	visualizer.setXmlParam("falloff", integerToString(a_falloffspeed));
 	visualizer.setXmlParam("oscstyle", integerToString(osc_render));
@@ -62,35 +57,15 @@ refreshVisSettings ()
 	currentMode = getPrivateInt(getSkinName(), "Visualizer Mode", 1);
 	show_peaks = getPrivateInt(getSkinName(), "Visualizer show Peaks", 1);
 	a_falloffspeed = getPrivateInt(getSkinName(), "Visualizer analyzer falloff", 3);
-	p_falloffspeed = getPrivateInt(getSkinName(), "Visualizer Peaks falloff", 2);
+	p_falloffspeed = getPrivateInt(getSkinName(), "Visualizer peaks falloff", 2);
 	osc_render = getPrivateInt(getSkinName(), "Oscilloscope Settings", 1);
 	ana_render = getPrivateInt(getSkinName(), "Spectrum Analyzer Settings", 2);
-	a_coloring = getPrivateInt(getSkinName(), "Visualizer analyzer coloring", 0);
-	v_fps = getPrivateInt(getSkinName(), "Visualizer Refresh rate", 3);
 
-	visualizer.setXmlParam("Peaks", integerToString(show_peaks));
+	visualizer.setXmlParam("peaks", integerToString(show_peaks));
 	visualizer.setXmlParam("peakfalloff", integerToString(p_falloffspeed));
 	visualizer.setXmlParam("falloff", integerToString(a_falloffspeed));
 	visualizer.setXmlParam("oscstyle", integerToString(osc_render));
 	visualizer.setXmlParam("bandwidth", integerToString(ana_render));
-
-	if (a_coloring == 0)
-	{
-		visualizer.setXmlParam("coloring", "Normal");
-	}
-	else if (a_coloring == 1)
-	{
-		visualizer.setXmlParam("coloring", "Normal");
-	}
-	else if (a_coloring == 2)
-	{
-		visualizer.setXmlParam("coloring", "Fire");
-	}
-	else if (a_coloring == 3)
-	{
-		visualizer.setXmlParam("coloring", "Line");
-	}
-
 
 	if (osc_render == 0)
 		{
@@ -123,26 +98,6 @@ refreshVisSettings ()
 			visualizer.setXmlParam("bandwidth", "wide");
 		}
 	setPrivateInt(getSkinName(), "Spectrum Analyzer Settings", ana_render);
-	if (v_fps == 0)
-		{
-			visualizer.setXmlParam("fps", "9");
-		}
-		else if (v_fps == 1)
-		{
-			visualizer.setXmlParam("fps", "9");
-		}
-		else if (v_fps == 2)
-		{
-			visualizer.setXmlParam("fps", "18");
-		}
-		else if (v_fps == 3)
-		{
-			visualizer.setXmlParam("fps", "35");
-		}
-		else if (v_fps == 4)
-		{
-			visualizer.setXmlParam("fps", "70");
-		}
 
 	setVis (currentMode);
 }
@@ -192,74 +147,56 @@ trigger.onRightButtonUp (int x, int y)
 	visMenu = new PopUpMenu;
 	pksmenu = new PopUpMenu;
 	anamenu = new PopUpMenu;
-	stylemenu = new PopUpMenu;
 	anasettings = new PopUpMenu;
 	oscsettings = new PopUpMenu;
-	fpsmenu = new PopUpMenu;
 
-	visMenu.addCommand("Visualization mode:", 999, 0, 1);
+	visMenu.addCommand("Modes:", 999, 0, 1);
 	visMenu.addSeparator();
-	visMenu.addCommand("Off", 100, currentMode == 0, 0);
-	visMenu.addCommand("Spectrum analyzer", 1, currentMode == 1, 0);
-	visMenu.addCommand("Oscilliscope", 2, currentMode == 2, 0);
+	visMenu.addCommand("Disabled", 100, currentMode == 0, 0);
+	visMenu.addCommand("Spectrum Analyzer", 1, currentMode == 1, 0);
+	visMenu.addCommand("Oscilloscope", 2, currentMode == 2, 0);
 	
 	visMenu.addSeparator();
 	visMenu.addCommand("Modern Visualizer Settings", 998, 0, 1);
 	visMenu.addSeparator();
-	visMenu.addSubmenu(fpsmenu, "Refresh rate");
-	fpsmenu.addCommand("9fps", 800, v_fps == 0, 0);
-	fpsmenu.addCommand("18fps", 802, v_fps == 2, 0);
-	fpsmenu.addCommand("35fps", 803, v_fps == 3, 0);
-	fpsmenu.addCommand("70fps", 804, v_fps == 4, 0);
-	visMenu.addSubmenu(anasettings, "Spectrum analyzer options");
-	//anasettings.addCommand("Band line width:", 997, 0, 1);
-	//anasettings.addSeparator();
-
-	anasettings.addCommand("Normal style", 400, a_coloring == 0, 0);
-	anasettings.addCommand("Fire style", 402, a_coloring == 2, 0);
-	anasettings.addCommand("Line style", 403, a_coloring == 3, 0);
+	visMenu.addSubmenu(anasettings, "Spectrum Analyzer Options");
+	anasettings.addCommand("Band line width:", 997, 0, 1);
 	anasettings.addSeparator();
-	anasettings.addCommand("Peaks", 101, show_peaks == 1, 0);
-	anasettings.addSeparator();
-	anasettings.addCommand("Thin bands", 701, ana_render == 1, 0);
+	anasettings.addCommand("Thin", 701, ana_render == 1, 0);
 	if(getDateDay(getDate()) == 1 && getDateMonth(getDate()) == 3){
 		anasettings.addCommand("乇乂丅尺卂 丅卄工匚匚", 702, ana_render == 2, 0);
 	}else{
-		anasettings.addCommand("Thick bands", 702, ana_render == 2, 0);
+		anasettings.addCommand("Thick", 702, ana_render == 2, 0);
 	}
 	anasettings.addSeparator();
-
-	anasettings.addSubMenu(anamenu, "Analyzer falloff");
-	anamenu.addCommand("Slower", 300, a_falloffspeed == 0, 0);
-	anamenu.addCommand("Slow", 301, a_falloffspeed == 1, 0);
-	anamenu.addCommand("Moderate", 302, a_falloffspeed == 2, 0);
-	anamenu.addCommand("Fast", 303, a_falloffspeed == 3, 0);
-	anamenu.addCommand("Faster", 304, a_falloffspeed == 4, 0);
-	anasettings.addSubMenu(pksmenu, "Peaks falloff");
+	anasettings.addCommand("Show Peaks", 101, show_peaks == 1, 0);
+	anasettings.addSeparator();
 	pksmenu.addCommand("Slower", 200, p_falloffspeed == 0, 0);
 	pksmenu.addCommand("Slow", 201, p_falloffspeed == 1, 0);
 	pksmenu.addCommand("Moderate", 202, p_falloffspeed == 2, 0);
 	pksmenu.addCommand("Fast", 203, p_falloffspeed == 3, 0);
 	pksmenu.addCommand("Faster", 204, p_falloffspeed == 4, 0);
-
-	//anasettings.addSubMenu(stylemenu, "Analyzer Coloring");
-
-	visMenu.addSubmenu(oscsettings, "Oscilliscope Options");
-	//oscsettings.addCommand("Oscilloscope drawing style:", 996, 0, 1);
-	//oscsettings.addSeparator();
-	oscsettings.addCommand("Dot scope", 603, osc_render == 3, 0);
-	oscsettings.addCommand("Line scope", 601, osc_render == 1, 0);
-	oscsettings.addCommand("Solid scope", 602, osc_render == 2, 0);
+	anasettings.addSubMenu(pksmenu, "Peak falloff Speed");
+	anamenu.addCommand("Slower", 300, a_falloffspeed == 0, 0);
+	anamenu.addCommand("Slow", 301, a_falloffspeed == 1, 0);
+	anamenu.addCommand("Moderate", 302, a_falloffspeed == 2, 0);
+	anamenu.addCommand("Fast", 303, a_falloffspeed == 3, 0);
+	anamenu.addCommand("Faster", 304, a_falloffspeed == 4, 0);
+	anasettings.addSubMenu(anamenu, "Analyzer falloff Speed");
+	visMenu.addSubmenu(oscsettings, "Oscilloscope Options");
+	oscsettings.addCommand("Oscilloscope drawing style:", 996, 0, 1);
+	oscsettings.addSeparator();
+	oscsettings.addCommand("Dots", 603, osc_render == 3, 0);
+	oscsettings.addCommand("Lines", 601, osc_render == 1, 0);
+	oscsettings.addCommand("Solid", 602, osc_render == 2, 0);
 
 	ProcessMenuResult (visMenu.popAtMouse());
 
 	delete visMenu;
 	delete pksmenu;
 	delete anamenu;
-	delete stylemenu;
 	delete anasettings;
 	delete oscsettings;
-	delete fpsmenu;
 
 	complete;	
 }
@@ -277,7 +214,7 @@ ProcessMenuResult (int a)
 	else if (a == 101)
 	{
 		show_peaks = (show_peaks - 1) * (-1);
-		visualizer.setXmlParam("Peaks", integerToString(show_peaks));
+		visualizer.setXmlParam("peaks", integerToString(show_peaks));
 		setPrivateInt(getSkinName(), "Visualizer show Peaks", show_peaks);
 	}
 
@@ -285,7 +222,7 @@ ProcessMenuResult (int a)
 	{
 		p_falloffspeed = a - 200;
 		visualizer.setXmlParam("peakfalloff", integerToString(p_falloffspeed));
-		setPrivateInt(getSkinName(), "Visualizer Peaks falloff", p_falloffspeed);
+		setPrivateInt(getSkinName(), "Visualizer peaks falloff", p_falloffspeed);
 	}
 
 	else if (a >= 300 && a <= 304)
@@ -293,28 +230,6 @@ ProcessMenuResult (int a)
 		a_falloffspeed = a - 300;
 		visualizer.setXmlParam("falloff", integerToString(a_falloffspeed));
 		setPrivateInt(getSkinName(), "Visualizer analyzer falloff", a_falloffspeed);
-	}
-
-else if (a >= 400 && a <= 403)
-	{
-		a_coloring = a - 400;
-		if (a_coloring == 0)
-		{
-			visualizer.setXmlParam("coloring", "Normal");
-		}
-		else if (a_coloring == 1)
-		{
-			visualizer.setXmlParam("coloring", "Normal");
-		}
-		else if (a_coloring == 2)
-		{
-			visualizer.setXmlParam("coloring", "Fire");
-		}
-		else if (a_coloring == 3)
-		{
-			visualizer.setXmlParam("coloring", "Line");
-		}
-		setPrivateInt(getSkinName(), "Visualizer analyzer coloring", a_coloring);
 	}
 
 	else if (a >= 600 && a <= 603)
@@ -356,32 +271,6 @@ else if (a >= 400 && a <= 403)
 		}
 		setPrivateInt(getSkinName(), "Spectrum Analyzer Settings", ana_render);
 	}
-
-	else if (a >= 800 && a <= 804)
-	{
-		v_fps = a - 800;
-		if (v_fps == 0)
-		{
-			visualizer.setXmlParam("fps", "9");
-		}
-		else if (v_fps == 1)
-		{
-			visualizer.setXmlParam("fps", "9");
-		}
-		else if (v_fps == 2)
-		{
-			visualizer.setXmlParam("fps", "18");
-		}
-		else if (v_fps == 3)
-		{
-			visualizer.setXmlParam("fps", "35");
-		}
-		else if (v_fps == 4)
-		{
-			visualizer.setXmlParam("fps", "70");
-		}
-		setPrivateInt(getSkinName(), "Visualizer Refresh rate", v_fps);
-	}
 }
 
 setVis (int mode)
@@ -404,7 +293,7 @@ setVis (int mode)
 
 // Sync Normal and Shade Layout
 
-main.onBeforeSwitchToLayout(Layout oldlayout, Layout newlayout)
+/*main.onBeforeSwitchToLayout(Layout oldlayout, Layout newlayout)
 {
 	if (newlayout != thislayout)
 	{
@@ -412,4 +301,4 @@ main.onBeforeSwitchToLayout(Layout oldlayout, Layout newlayout)
 	}
 	
 	refreshVisSettings();
-}
+}*/

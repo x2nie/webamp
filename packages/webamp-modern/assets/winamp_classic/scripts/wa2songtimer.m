@@ -26,7 +26,7 @@ Global int remainder;
 Global int milliseconds_rev;
 Global int i;
 
-Global PopUpMenu clockMenu;
+//Global PopUpMenu clockMenu;
 
 Function AreWePlaying();
 Function InReverse();
@@ -91,7 +91,7 @@ TimeElapsedOrRemaining()
     setTimer(timermode);
 
     if(timermode == 1){ //Time elapsed
-    TimerTrigger.setXmlParam("tooltip", "Time Display (click to toggle elapsed/remaining)");
+    //DisplayTime.setXmlParam("tooltip", "Time Elapsed (click to toggle remaining)");
     //DisplayTimeShade.setXmlParam("tooltip", "Time Elapsed (click to toggle remaining)");
         if(songlength <= 0){ //If below 0, then run StaticTime()
             StaticTime();
@@ -131,7 +131,7 @@ PauseBlinkPaused.onTimer(){ //Remainder
         StaticTimeRemainder();
     }else{
         timerSongTimer.stop();
-        DisplayTime.setXmlParam("text", "   :  ");
+        DisplayTime.setXmlParam("text", "...:..");
         //DisplayTimeShade.setXmlParam("text", "   :  ");
     }
 }
@@ -141,12 +141,12 @@ PauseBlink.onTimer(){ //Elapsed
         StaticTime();
     }else{
         timerSongTimer.stop();
-        DisplayTime.setXmlParam("text", "  :  ");
+        DisplayTime.setXmlParam("text", "..:..");
         //DisplayTimeShade.setXmlParam("text", "  :  ");
     }
 }
-
-TimerTrigger.onRightButtonUp (int x, int y){
+/*
+DisplayTime.onRightButtonUp (int x, int y){
     int timermode = getPrivateInt(getSkinName(), "TimerElapsedRemaining", 1);
 
     clockMenu = new PopUpMenu;
@@ -160,7 +160,7 @@ TimerTrigger.onRightButtonUp (int x, int y){
 	setTimer(timermode);
 	complete;
 }
-/*
+
 DisplayTimeShade.onRightButtonUp (int x, int y){
     int timermode = getPrivateInt(getSkinName(), "TimerElapsedRemaining", 1);
 
@@ -318,7 +318,7 @@ timerSongTimerReverse.onTimer(){
 
 AreWePlaying(){
 //Just some sanity checks to ensure we're in the right modes
-    TimerTrigger.setXmlParam("tooltip", "Time Display (click to toggle elapsed/remaining)");
+    //DisplayTime.setXmlParam("tooltip", "Time Elapsed (click to toggle remaining)");
     //DisplayTimeShade.setXmlParam("tooltip", "Time Elapsed (click to toggle remaining)");
 
     if (getStatus() == -1){ //Paused
@@ -340,7 +340,7 @@ InReverse(){
 //between time remaining or elapsed, so we force
 //the elapsed mode to run
 //This has now been actually fixed
-    TimerTrigger.setXmlParam("tooltip", "Time Display (click to toggle elapsed/remaining)");
+    //DisplayTime.setXmlParam("tooltip", "Time Remaining (click to toggle elapsed)");
     //DisplayTimeShade.setXmlParam("tooltip", "Time Remaining (click to toggle elapsed)");
 
     if(songlength <= 0){
@@ -421,7 +421,7 @@ stopped(){
     timerSongTimerReverse.stop();
     PauseBlink.stop();
     PauseBlinkPaused.stop();
-    DisplayTime.setXmlParam("text", "  :  ");
+    DisplayTime.setXmlParam("text", "..:..");
     //DisplayTimeShade.setXmlParam("text", "00:00");
 }
 

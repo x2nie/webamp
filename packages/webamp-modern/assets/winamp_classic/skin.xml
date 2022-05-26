@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 <WinampAbstractionLayer version="1.35">
-	<skininfo>
-		<version>-</version>
-		<name>-</name>
-		<comment>-</comment>
-		<author>-</author>
-		<email>-</email>
-		<screenshot>screenshot.png</screenshot>
-	</skininfo>
-
-	<!-- wasabi replacement stuff, loads first -->
-	<include file="xml/wasabi.classic/xui/slider/slider.xml"/>
-	<include file="xml/wasabi.classic/xui/standardframe/standardframe.xml"/>
-	<include file="xml/wasabi.classic/xui/titlebar/titlebar.xml"/>
-	<include file="xml/wasabi.classic/system-elements.xml"/>
-	<include file="xml/wasabi.classic/groups/objectframe.xml"/>
-	<include file="xml/wasabi.classic/titlebox/titlebox.xml"/>
-	<include file="xml/wasabi.classic/statusbar/statusbar.xml"/>
-	<include file="xml/wasabi.classic/tooltips/tooltips.xml"/>
-
-	<!-- the usual suspects -->
-	<include file="xml/main.xml"/>
-	<include file="xml/eqmain.xml"/>
-	<include file="xml/pledit.xml"/>
-	<include file="xml/video.xml"/>
-
-	<!-- needs to exist for testing -->
-	<include file="xml/themes.xml"/>
-
-	<!-- needs to exist here to hook into the main window and equalizer -->
-	<script file="scripts/actioninfo.maki"/>
-
+  <skininfo>
+    <version>0.1</version>
+    <name>Winamp Classic Modernized</name>
+    <comment>Based on DeClassified by Eris Lund (0x5066)</comment>
+    <author>Fathony L, Eris Lund</author>
+    <screenshot>screenshot.png</screenshot>
+  </skininfo>
+  <!-- <include file="xml/system-colors.xml"/> -->
+  <!-- <include file="xml/color-presets.xml"/> -->
+  <!-- <include file="xml/standardframe-elements.xml"/>
+  <include file="xml/standardframe.xml"/> -->
+  <include file="xml/player-elements.xml"/>
+  <include file="xml/main.xml"/>
+  <!-- <include file="xml/eq-elements.xml"/> -->
+  <!-- <include file="xml/eq.xml"/> -->
+  <!-- <include file="xml/pledit.xml"/> -->
 </WinampAbstractionLayer>

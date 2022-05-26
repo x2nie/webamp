@@ -1,6 +1,3 @@
-//Taken from Victhor's Winamp Classic Modern, which was
-//deeply nested inside it's mainplayer.m script.
-
 #include "..\..\..\lib/std.mi"
 
 Global AnimatedLayer anlBalance;
@@ -9,8 +6,8 @@ Global Slider Balance;
 System.onScriptLoaded() {
 	Group player = getScriptGroup();
 
-	anlBalance = player.getObject("balancewa2");
-	Balance = player.getObject("balance");
+	anlBalance = player.getObject("balance");
+	Balance = player.getObject("balancewa2");
 
   int v = Balance.GetPosition();
   
