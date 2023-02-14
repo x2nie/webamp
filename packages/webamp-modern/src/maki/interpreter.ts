@@ -33,7 +33,7 @@ function validateMaki(program: ParsedMaki) {
   */
 }
 
-export function interpret(
+export async function interpret(
   start: number,
   program: ParsedMaki,
   stack: Variable[],
@@ -43,7 +43,7 @@ export function interpret(
   validateMaki(program);
   const interpreter = new Interpreter(program, classResolver, uiRoot);
   interpreter.stack = stack;
-  return interpreter.interpret(start);
+  return await interpreter.interpret(start);
 }
 
 function validateVariable(v: Variable) {
@@ -89,7 +89,7 @@ class Interpreter {
     this.stack.push(variable);
   }
 
-  interpret(start: number) {
+  async interpret(start: number) {
     for (const v of this.variables) {
       validateVariable(v);
     }
@@ -347,13 +347,13 @@ class Interpreter {
           // let value = obj.value[methodName](...methodArgs);
           let result = null;
           try {
-            result = obj.value[methodName](...methodArgs);
-            // const afunction = obj.value[methodName];
-            // if(afunction.constructor.name === 'AsyncFunction'){
-            //   result = await afunction(...methodArgs);
-            // } else {
-            //   result = afunction(...methodArgs);
-            // }
+            // result = obj.value[methodName](...methodArgs);
+            const afunction = obj.value[methodName];
+            if(afunction.constructor.name === 'AsyncFunction'){
+              result = await afunction(...methodArgs);
+            } else {
+              result = afunction(...methodArgs);
+            }
             
           } catch (err) {
             const args = JSON.stringify(methodArgs)
@@ -376,7 +376,7 @@ class Interpreter {
             // variables[1] holds global NULL value
             result = this.variables[1];
           }
-          if (returnType === "BOOLEAN") {
+          if (returnType === "BOOLEAN" && result != null &&  !(result.global ==1 && result.type == 'INT' && result.value == 0)) {
             assert(
               typeof result === "boolean",
               `${

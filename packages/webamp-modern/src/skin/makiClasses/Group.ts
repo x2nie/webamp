@@ -42,14 +42,14 @@ export default class Group extends Movable {
     return true;
   }
 
-  init() {
+  async init() {
     if (this._inited) return;
     this._inited = true;
 
     super.init();
 
     for (const systemObject of this._systemObjects) {
-      systemObject.init();
+      await systemObject.init();
     }
     for (const child of this._children) {
       child.init();

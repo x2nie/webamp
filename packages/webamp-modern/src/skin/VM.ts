@@ -16,20 +16,26 @@ export default class Vm {
 
   // This could easily become performance sensitive. We could make this more
   // performant by normalizing some of these things when scripts are added.
-  dispatch(object: BaseObject, event: string, args: Variable[] = []): number {
-    const reversedArgs = [...args].reverse();
+  // dispatch(object: BaseObject, event: string, args: Variable[] = []): number {
+  async dispatch(object: BaseObject, event: string, args: Variable[] = [], wait: boolean = true): Promise<number> {
+    const reversedArgs = [...args].reverse();    
     let executed = 0;
+    const promises = []
     for (const script of this._scripts) {
       for (const binding of script.bindings) {
         if (
           script.methods[binding.methodOffset].name === event &&
           script.variables[binding.variableOffset].value === object
         ) {
-          this.interpret(script, binding.commandOffset, reversedArgs);
+          const ret = this.interpret(script, binding.commandOffset, reversedArgs);
+          promises.push(ret)
           // return 1;
           executed ++;
         }
       }
+    }
+    if(wait){
+      await Promise.all(promises)
     }
     return executed;
     // return 0;
@@ -41,7 +47,7 @@ export default class Vm {
     return index;
   }
 
-  interpret(script: ParsedMaki, commandOffset: number, args: Variable[]) {
-    interpret(commandOffset, script, args, classResolver, this._uiRoot);
+  async interpret(script: ParsedMaki, commandOffset: number, args: Variable[]) {
+    await interpret(commandOffset, script, args, classResolver, this._uiRoot);
   }
 }
