@@ -39,15 +39,32 @@ type MenuItem =
       popup: PopupMenu; 
     };
 
-function waitPopup(popup: PopupMenu): number {
-  let result: number = -1;
-  const itemClick = (id:number) => {
-    result = id
+// function waitPopup(popup: PopupMenu): number {
+async function waitPopup(popup: PopupMenu): Promise<number> {
+  let successCallback;
+
+  // function getNumber() {
+  async function getNumber(): Promise<number> {
+      return new Promise(resolve => successCallback = resolve);
   }
+
+  // let result: number = -1;
+  const itemClick = (id:number) => {
+    // result = id
+    if (successCallback) successCallback(id);
+  }
+
+
   const div = generatePopupDiv(popup, itemClick)
   document.getElementById('web-amp').appendChild(div);
 
 
+  const ret = await getNumber();
+  console.log('result=', ret);
+
+  div.remove()
+
+  return ret;
   // const sleep = asyncFunctionBuilder(true)
   // while (result < 0){
   //   sleep(100);
@@ -67,13 +84,15 @@ function waitPopup(popup: PopupMenu): number {
 
 function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElement {
   const root = document.createElement('ul');
+  root.style.background = 'white';
   root.style.zIndex = '1000';
   for( const menu of popup._items){
     const item = document.createElement('li')
     root.appendChild(item)
     if(menu.type=='item'){
-      item.textContent = menu.text;
-      item.onclick = (e) => callback(item.id)
+      // item.textContent = menu.text;
+      item.textContent = `(${menu.id}) ${menu.text}`;
+      item.onclick = (e) => callback(menu.id)
     }
     else if(menu.type=='submenu'){
       item.textContent = menu.text
@@ -135,29 +154,33 @@ export default class PopupMenu extends BaseObject {
   //   return waitPopup(this)
 
   // }
-  popatmouse(): number {
-    const message = this._items.map((item) => {
-      switch (item.type) {
-        case "separator":
-          return "------";
-        case "item":
-          return `(${item.id}) ${item.text}${item.checked ? " ✔" : ""}`;
-      }
-    });
-    message.unshift("Pick the number matching your choice:\n");
-    let choice: number | null = null;
-    while (
-      !this._items.some((item) => item.type === "item" && item.id === choice)
-    ) {
-      choice = Number(window.prompt(message.join("\n")));
-      if(choice==0) break;
-    }
+  // popatmouse(): number {
+  async popatmouse(): Promise<number> {
+    const choice = await waitPopup(this);
+    console.log('RET=',choice)
+    // const message = this._items.map((item) => {
+    //   switch (item.type) {
+    //     case "separator":
+    //       return "------";
+    //     case "item":
+    //       return `(${item.id}) ${item.text}${item.checked ? " ✔" : ""}`;
+    //   }
+    // });
+    // message.unshift("Pick the number matching your choice:\n");
+    // let choice: number | null = null;
+    // while (
+    //   !this._items.some((item) => item.type === "item" && item.id === choice)
+    // ) {
+    //   choice = Number(window.prompt(message.join("\n")));
+    //   if(choice==0) break;
+    // }
     // TODO: Validate
 
     return choice;
   }
-  popatxy(x:number, y:number):number{
-    return this.popatmouse()
+  // popatxy(x:number, y:number):number{
+  async popatxy(x:number, y:number): Promise<number>{
+    return await this.popatmouse()
   }
   getnumcommands(){
     return this._items.length;
