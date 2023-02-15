@@ -27,7 +27,7 @@ export default class Vm {
           script.methods[binding.methodOffset].name === event &&
           script.variables[binding.variableOffset].value === object
         ) {
-          const ret = this.interpret(script, binding.commandOffset, reversedArgs);
+          const ret = await this.interpret(script, binding.commandOffset, reversedArgs);
           promises.push(ret)
           // return 1;
           executed ++;
