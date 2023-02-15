@@ -6,6 +6,7 @@ print(os.path.abspath(os.path.curdir))
 target = '../assets/extracted-MMD3'
 target = '../assets/extracted-'
 target = '../assets/extracted-/Winamp Modern'
+target = '../assets/extracted-/WinampXP'
 
 
 for root, subdirs, files in os.walk(target):
