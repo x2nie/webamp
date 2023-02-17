@@ -5,12 +5,13 @@ import Container from "./Container";
 import { clamp, integerToTime } from "../../utils";
 import Group from "./Group";
 import PRIVATE_CONFIG from "../PrivateConfig";
-import UI_ROOT from "../../UIRoot";
+import { UIRoot } from "../../UIRoot";
 import GuiObj from "./GuiObj";
-import Config, { CONFIG } from "./Config";
-import WinampConfig, { WINAMP_CONFIG } from "./WinampConfig";
+import Config from "./Config";
+import WinampConfig from "./WinampConfig";
 
-import { AUDIO_PAUSED, AUDIO_STOPPED, AUDIO_PLAYING } from "../AudioPlayer";
+import { AUDIO_PAUSED, AUDIO_STOPPED, AUDIO_PLAYING, Track } from "../AudioPlayer";
+import Application from "./Application";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -23,51 +24,76 @@ document.addEventListener("mousemove", (e: MouseEvent) => {
 
 export default class SystemObject extends BaseObject {
   static GUID = "d6f50f6449b793fa66baf193983eaeef";
+  _uiRoot: UIRoot;
   _parentGroup: Group;
   _parsedScript: ParsedMaki;
   _param: string;
   _id: string;
 
-  constructor(parsedScript: ParsedMaki, param: string, id: string) {
+  constructor(
+    uiRoot: UIRoot,
+    parsedScript: ParsedMaki,
+    param: string,
+    id: string
+  ) {
     super();
+    this._uiRoot = uiRoot;
     this._parsedScript = parsedScript;
     this._param = param;
     this._id = id; // useful while debuggin
-    UI_ROOT.audio.onSeek(() => {
-      UI_ROOT.vm.dispatch(this, "onseek", [
-        { type: "INT", value: UI_ROOT.audio.getCurrentTimePercent() * 255 },
+    this._uiRoot.audio.onSeek(() => {
+      this._uiRoot.vm.dispatch(this, "onseek", [
+        {
+          type: "INT",
+          value: this._uiRoot.audio.getCurrentTimePercent() * 255,
+        },
       ]);
     });
-    UI_ROOT.audio.on("play", () => UI_ROOT.vm.dispatch(this, "onplay", []));
-    UI_ROOT.audio.on("pause", () => UI_ROOT.vm.dispatch(this, "onpause", []));
-    UI_ROOT.audio.on("stop", () => UI_ROOT.vm.dispatch(this, "onstop", []));
-    // UI_ROOT.audio.onPlay(() => UI_ROOT.vm.dispatch(this, "onplay", []));
-    UI_ROOT.audio.onVolumeChanged(() => {
-      UI_ROOT.vm.dispatch(this, "onvolumechanged", [
-        { type: "INT", value: UI_ROOT.audio.getVolume() * 255 },
+    this._uiRoot.audio.on("play", () =>
+      this._uiRoot.vm.dispatch(this, "onplay", [])
+    );
+    this._uiRoot.audio.on("pause", () =>
+      this._uiRoot.vm.dispatch(this, "onpause", [])
+    );
+    this._uiRoot.audio.on("stop", () =>
+      this._uiRoot.vm.dispatch(this, "onstop", [])
+    );
+    // this._uiRoot.audio.onPlay(() => this._uiRoot.vm.dispatch(this, "onplay", []));
+    this._uiRoot.audio.onVolumeChanged(() => {
+      this._uiRoot.vm.dispatch(this, "onvolumechanged", [
+        { type: "INT", value: this._uiRoot.audio.getVolume() * 255 },
       ]);
     });
     const EqBandHandle = (band: number) => {
-      // console.log('eq.changed:',band, UI_ROOT.audio.getEq(String(band)))
-      UI_ROOT.vm.dispatch(this, "oneqbandchanged", [
-        { type: "INT", value: band },
-        { type: "INT", value: UI_ROOT.audio.getEq(String(band)) * 255 - 127 },
+      // console.log('eq.changed:',band, this._uiRoot.audio.getEq(String(band)))
+      this._uiRoot.vm.dispatch(this, "oneqbandchanged", [
+        { type: "INT", value: band - 1 },
+        {
+          type: "INT",
+          value: this._uiRoot.audio.getEq(String(band)) * 255 - 127,
+        },
       ]);
     };
-    UI_ROOT.audio.onEqChange("1", () => EqBandHandle(1));
-    UI_ROOT.audio.onEqChange("2", () => EqBandHandle(2));
-    UI_ROOT.audio.onEqChange("3", () => EqBandHandle(3));
-    UI_ROOT.audio.onEqChange("4", () => EqBandHandle(4));
-    UI_ROOT.audio.onEqChange("5", () => EqBandHandle(5));
-    UI_ROOT.audio.onEqChange("6", () => EqBandHandle(6));
-    UI_ROOT.audio.onEqChange("7", () => EqBandHandle(7));
-    UI_ROOT.audio.onEqChange("8", () => EqBandHandle(8));
-    UI_ROOT.audio.onEqChange("9", () => EqBandHandle(9));
-    UI_ROOT.audio.onEqChange("10", () => EqBandHandle(10));
+    this._uiRoot.audio.onEqChange("1", () => EqBandHandle(1));
+    this._uiRoot.audio.onEqChange("2", () => EqBandHandle(2));
+    this._uiRoot.audio.onEqChange("3", () => EqBandHandle(3));
+    this._uiRoot.audio.onEqChange("4", () => EqBandHandle(4));
+    this._uiRoot.audio.onEqChange("5", () => EqBandHandle(5));
+    this._uiRoot.audio.onEqChange("6", () => EqBandHandle(6));
+    this._uiRoot.audio.onEqChange("7", () => EqBandHandle(7));
+    this._uiRoot.audio.onEqChange("8", () => EqBandHandle(8));
+    this._uiRoot.audio.onEqChange("9", () => EqBandHandle(9));
+    this._uiRoot.audio.onEqChange("10", () => EqBandHandle(10));
+    this._uiRoot.audio.onEqChange("preamp", () => {
+      this._uiRoot.vm.dispatch(this, "oneqpreampchanged", [
+        { type: "INT", value: this._uiRoot.audio.getEq("preamp") * 255 - 127 },
+      ]);
+    });
   }
 
   init() {
     // dumpScriptDebug(this._parsedScript);
+    // console.log('initing script:', this._id)
     const initialVariable = this._parsedScript.variables[0];
     if (initialVariable.type !== "OBJECT") {
       throw new Error("First variable was not SystemObject.");
@@ -77,28 +103,41 @@ export default class SystemObject extends BaseObject {
     for (const vari of this._parsedScript.variables) {
       if (vari.type == "OBJECT") {
         if (vari.guid == Config.GUID) {
-          vari.value = CONFIG;
+          vari.value = this._uiRoot.CONFIG;
         } else if (vari.guid == WinampConfig.GUID) {
-          vari.value = WINAMP_CONFIG;
+          vari.value = this._uiRoot.WINAMP_CONFIG;
+        } else if (vari.guid == Application.GUID) {
+          vari.value = this._uiRoot.APPLICATION;
         }
       }
     }
 
-    UI_ROOT.vm.addScript(this._parsedScript);
-    UI_ROOT.vm.dispatch(this, "onscriptloaded");
+    this._uiRoot.vm.addScript(this._parsedScript);
+    this._uiRoot.vm.dispatch(this, "onscriptloaded");
+  }
+
+  dispose() {
+    this._uiRoot.vm.dispatch(this, "onscriptunloading");
   }
 
   setParentGroup(group: Group) {
     this._parentGroup = group;
   }
 
+  hasvideosupport(): number {
+    return 0; //TODO:
+  }
   /* Required for Maki */
   getruntimeversion(): number {
     return 5.666;
   }
 
   getskinname(): string {
-    return "TODO: Get the Real skin name";
+    return this._uiRoot.getSkinName();
+  }
+  getwinampversion(): string {
+    return this._uiRoot.APPLICATION.getversionstring();
+
   }
 
   /**
@@ -561,7 +600,7 @@ export default class SystemObject extends BaseObject {
    **/
   getcontainer(containerId: string): Container {
     const lower = containerId.toLowerCase();
-    for (const container of UI_ROOT.getContainers()) {
+    for (const container of this._uiRoot.getContainers()) {
       if (container.getId() === lower) {
         return container;
       }
@@ -607,7 +646,7 @@ export default class SystemObject extends BaseObject {
    * @ret The number of containers.
    */
   getnumcontainers(): number {
-    return UI_ROOT.getContainers().length;
+    return this._uiRoot.getContainers().length;
   }
 
   /**
@@ -653,7 +692,7 @@ export default class SystemObject extends BaseObject {
    * @ret The value of the left vu meter.
    */
   getleftvumeter(): number {
-    return UI_ROOT.audio._vuMeter;
+    return this._uiRoot.audio._vuMeter * 255;
   }
 
   /**
@@ -663,7 +702,7 @@ export default class SystemObject extends BaseObject {
    * @ret The value of the right vu meter.
    */
   getrightvumeter(): number {
-    return UI_ROOT.audio._vuMeter;
+    return this._uiRoot.audio._vuMeter * 255;
   }
 
   /**
@@ -672,7 +711,7 @@ export default class SystemObject extends BaseObject {
    * @ret The current volume.
    **/
   getvolume(): number {
-    return UI_ROOT.audio.getVolume() * 255;
+    return this._uiRoot.audio.getVolume() * 255;
   }
 
   /**
@@ -684,7 +723,7 @@ export default class SystemObject extends BaseObject {
   setvolume(_vol: number) {
     const vol = clamp(_vol, 0, 255);
 
-    UI_ROOT.audio.setVolume(vol / 255);
+    this._uiRoot.audio.setVolume(vol / 255);
   }
 
   /**
@@ -773,6 +812,10 @@ export default class SystemObject extends BaseObject {
     // TODO
   }
 
+  // #region //? Track method =========================================
+  _currentTrack():Track {
+    return this._uiRoot.playlist.currentTrack()
+  }
   /**
    * getPlayItemString()
    *
@@ -783,11 +826,11 @@ export default class SystemObject extends BaseObject {
   }
 
   getplaylistlength(): number {
-    return UI_ROOT.playlist.getnumtracks();
+    return this._uiRoot.playlist.getnumtracks();
   }
 
   getplaylistindex(): number {
-    return UI_ROOT.playlist.getcurrentindex();
+    return this._uiRoot.playlist.getcurrentindex();
   }
 
   /**
@@ -862,6 +905,7 @@ export default class SystemObject extends BaseObject {
    */
   getcurrenttrackrating(): number {
     // TODO
+    return 1;
   }
   /**
    * Requires 5.5
@@ -1015,7 +1059,7 @@ export default class SystemObject extends BaseObject {
    * @ret Length of the track, in seconds.
    */
   getplayitemlength(): number {
-    return UI_ROOT.audio.getLength();
+    return this._uiRoot.audio.getLength();
     //
   }
 
@@ -1025,18 +1069,22 @@ export default class SystemObject extends BaseObject {
    */
   seekto(pos: number) {
     // Note: For some reason I seem to be getting passed seconds here not MS
-    UI_ROOT.audio.seekTo(pos);
+    this._uiRoot.audio.seekTo(pos);
+  }
+
+  integer(d: number): number {
+    return Math.round(Number(d));
   }
 
   /**
-   * Get the string representation of an integer.
+   * Get the string representation of an integer. 
    *
    * @ret         The string equivalent of the integer.
    * @param  value   The integer to change into a string.
    */
   integertostring(value: number): string {
     return String(Math.round(value));
-  }
+  }  
 
   /**
    * Convert a time in seconds to a M:SS value, does not
@@ -1064,6 +1112,7 @@ export default class SystemObject extends BaseObject {
    */
   getviewportwidthfromguiobject(g: GuiObj) {
     // TODO
+    return 100;
   }
 
   /**
@@ -1130,7 +1179,7 @@ export default class SystemObject extends BaseObject {
    * @param  separator   The separator to use.
    * @param  tokennum    The token to retreive.
    */
-  gettoken(str: string, separator: string, tokennum: number) {
+  gettoken(str: string, separator: string, tokennum: number): string {
     // getToken("28,39,-56,-84,0,0,1,1", ",", 3) will return "-84"
     const commas = str.split(separator);
     return commas[tokennum] || "";
@@ -1172,7 +1221,8 @@ export default class SystemObject extends BaseObject {
    *
    * @ret The current position in the track.
    */
-  getposition() {
+  getposition(): string {
+    return String(this._uiRoot.audio.getCurrentTime() * 1000)
     return "25000";
   }
 
@@ -1184,7 +1234,7 @@ export default class SystemObject extends BaseObject {
    * @ret STATUS_PAUSED (-1) if paused, STATUS_STOPPED (0) if stopped, STATUS_PLAYING (1) if playing.
    */
   getstatus(): number {
-    const audioState = UI_ROOT.audio.getState();
+    const audioState = this._uiRoot.audio.getState();
     switch (audioState) {
       case AUDIO_PLAYING:
         return 1;
@@ -1212,6 +1262,7 @@ export default class SystemObject extends BaseObject {
    */
   getviewportheightfromguiobject(g: GuiObj): number {
     // TODO
+    return 100;
   }
 
   /**
@@ -1318,6 +1369,7 @@ export default class SystemObject extends BaseObject {
    */
   getviewportleftfromguiobject(g: GuiObj): number {
     // TODO
+    return 0;
   }
 
   /**
@@ -1336,6 +1388,7 @@ export default class SystemObject extends BaseObject {
    */
   getviewporttopfromguiobject(g: GuiObj): number {
     // TODO
+    return 0;
   }
 
   /**
@@ -1421,18 +1474,6 @@ export default class SystemObject extends BaseObject {
   }
 
   /**
-   * Get the value of an equalizer band. The bands
-   * are numbered from 0 (60Hz) to 9 (16kHz). The return
-   * value range is from -127 to +127.
-   *
-   * @ret       The value of the band.
-   * @param  band  The eq band number you want to get.
-   */
-  geteqband(band: number): number {
-    return 100;
-  }
-
-  /**
    * Get the equalizer state. 0 for off, 1 for on.
    * Remember to compare return value to true and false.
    *
@@ -1473,7 +1514,7 @@ export default class SystemObject extends BaseObject {
    * @param  value The desired value for the pre-amp.
    */
   seteqpreamp(value: number) {
-    // TODO
+    this._uiRoot.audio.setEq("preamp", (value + 127) / 255);
   }
 
   /**
@@ -1485,7 +1526,30 @@ export default class SystemObject extends BaseObject {
    * @param  value The desired value for the specified band.
    */
   seteqband(band: number, value: number) {
-    // TODO
+    this._uiRoot.audio.setEq(String(band + 1), (value + 127) / 255);
+  }
+
+  /**
+   getEqBand()
+
+  Get the value of an equalizer band. The bands
+  are numbered from 0 (60Hz) to 9 (16kHz). The return
+  value range is from -127 to +127.
+
+  @ret       The value of the band.
+  @param  band  The eq band number you want to get.
+  */
+  geteqband(band: number): number {
+    // console.log('getEqBand',band, this._uiRoot.audio.getEq(String(band + 1)) * 255 - 127);
+    return this._uiRoot.audio.getEq(String(band + 1)) * 255 - 127;
+  }
+
+  //maki need it
+  oneqbandchanged(band: number, value: number) {
+    this._uiRoot.vm.dispatch(this, "oneqbandchanged", [
+      { type: "INT", value: band },
+      { type: "INT", value: value },
+    ]);
   }
 
   /**
@@ -1626,6 +1690,11 @@ export default class SystemObject extends BaseObject {
   oneqfreqchanged(isiso: number) {}
 
   getsonginfotext(): string {
+    const track = this._currentTrack();
+    if(track){
+      const m = track.metadata;
+      return `${m.bitrate}kbps ${m.channelMode} ${Math.floor(m.sampleRate / 1000)}khz`
+    }
     return "123kbps stereo 79khz";
   }
 
@@ -1664,6 +1733,7 @@ export default class SystemObject extends BaseObject {
 }
 
 function dumpScriptDebug(script: ParsedMaki) {
+  // @ts-ignore
   for (const [i, binding] of script.bindings.entries()) {
     const method = script.methods[binding.methodOffset];
     const guid = script.classes[method.typeOffset];

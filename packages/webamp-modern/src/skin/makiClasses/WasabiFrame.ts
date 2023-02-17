@@ -1,5 +1,5 @@
 import Group from "./Group";
-import UI_ROOT from "../../UIRoot";
+import {UIRoot} from "../../UIRoot";
 import { num } from "../../utils";
 
 export default class WasabiFrame extends Group {
