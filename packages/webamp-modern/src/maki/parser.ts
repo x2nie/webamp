@@ -1,5 +1,5 @@
 import { COMMANDS } from "./constants";
-import { DataType, Variable } from "./v";
+import { DataType, Variable, VariableObject } from "./v";
 import MakiFile from "./MakiFile";
 import { getReturnType } from "./objects";
 import { assert } from "../utils";
@@ -22,6 +22,7 @@ export type ParsedMaki = {
   classes: string[];
   bindings: Binding[];
   version: number;
+  maki_id: string;
 };
 
 export type Binding = {
@@ -41,7 +42,7 @@ const PRIMITIVE_TYPES = {
   6: "STRING",
 };
 
-export function parse(data: ArrayBuffer): ParsedMaki {
+export function parse(data: ArrayBuffer, maki_id: string): ParsedMaki {
   const makiFile = new MakiFile(data);
 
   const magic = readMagic(makiFile);
@@ -59,6 +60,9 @@ export function parse(data: ArrayBuffer): ParsedMaki {
   const commands = decodeCode({ makiFile });
 
   // TODO: Assert that we are at the end of the maki file
+  if (!makiFile.isEof()) {
+    console.warn("EOF not reached!");
+  }
 
   // Map binary offsets to command indexes.
   // Some bindings/functions ask us to jump to a place in the binary data and
@@ -93,6 +97,7 @@ export function parse(data: ArrayBuffer): ParsedMaki {
     bindings: resolvedBindings,
     commands: resolvedCommands,
     version,
+    maki_id,
   };
 }
 
@@ -167,7 +172,7 @@ function readMethods(makiFile: MakiFile, classes: string[]): Method[] {
 
 function readVariables({ makiFile, classes }) {
   let count = makiFile.readUInt32LE();
-  const variables = [];
+  const variables: Variable[] = [];
   while (count--) {
     const typeOffset = makiFile.readUInt8();
     const object = makiFile.readUInt8();
@@ -180,11 +185,17 @@ function readVariables({ makiFile, classes }) {
     makiFile.readUInt8(); // system
 
     if (subClass) {
-      const variable = variables[typeOffset];
+      const variable = variables[typeOffset] as VariableObject;
       if (variable == null) {
         throw new Error("Invalid type");
+      } else {
+        // it is a subclassing, so let's mark inheritor as CLASS (base class)
+        if(!variable.members) {
+          variable.type = 'CLASS';
+          variable.members = []
+        }
       }
-
+      
       // assume(false, "Unimplemented subclass variable type");
       variables.push({
         type: "OBJECT",
@@ -192,6 +203,11 @@ function readVariables({ makiFile, classes }) {
         global,
         guid: variable.guid,
       });
+      const index = variables.length - 1;
+
+      if(!variable.members.includes(index)) {
+        variable.members.push(index)
+      }
     } else if (object) {
       const klass = classes[typeOffset];
       if (klass == null) {
