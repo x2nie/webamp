@@ -154,6 +154,8 @@ function makiTypeToTsType(makiType: string): string {
       return "number";
     case "string":
       return "string";
+    case "any":
+      return "any";
     case "map":
       return "MakiMap";
     case "boolean":
@@ -174,8 +176,13 @@ function makiTypeToTsType(makiType: string): string {
       return "ConfigAttribute";
     case "winampconfiggroup":
       return "WinampConfigGroup";
+    case "popupmenu":
+    case "application":
+      return makiType;
     default:
       throw new Error(`Missing maki type: ${makiType}`);
+      // console.log('not-found:', makiType);
+      // return makiType
   }
 }
 
