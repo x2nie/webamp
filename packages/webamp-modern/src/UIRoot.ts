@@ -5,7 +5,6 @@ import TrueTypeFont from "./skin/TrueTypeFont";
 import {
   assert,
   assume,
-  decodeWideChars,
   Emitter,
   findLast,
   getCaseInsensitiveFile,
@@ -138,7 +137,6 @@ export class UIRoot {
     this._activeGammaSet = [];
     this._containers = [];
     this._systemObjects = [];
-    this._jsScript = {};
     this._gammaNames = {};
     this._buckets = [];
     this._bucketEntries = {};
@@ -181,9 +179,6 @@ export class UIRoot {
   }
 
   getBitmap(id: string): Bitmap {
-    if (!id) {
-      return null;
-    }
     let lowercaseId = id.toLowerCase();
     if (!this.hasBitmap(lowercaseId)) {
       lowercaseId = this._elementAlias[lowercaseId];

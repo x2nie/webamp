@@ -201,24 +201,6 @@ export class AudioPlayer {
     return this._analyser;
   }
 
-  setEqEnabled(enable: boolean) {
-    this._eqEnabled = enable;
-    this._source.disconnect();
-    if (enable) {
-      this._source.connect(this.__preamp);
-    } else {
-      // bypassed.
-      this._source.connect(this._balanceNode);
-    }
-  }
-  getEqEnabled(): boolean {
-    return this._eqEnabled;
-  }
-
-  getAnalyser(): AnalyserNode {
-    return this._analyser;
-  }
-
   // shortcut of this.Emitter
   on(event: string, callback: Function): Function {
     return this._eventListener.on(event, callback);

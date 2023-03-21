@@ -67,24 +67,6 @@ export function getId(): number {
   return id++;
 }
 
-/**
- * WindowsMediaPlayer may have UTF16LE file content
- * @param binaryStr filecontent
- * @returns utf8 content
- */
-export function decodeWideChars(binaryStr: string) {
-  if (binaryStr.charCodeAt(0) < 255) {
-    return binaryStr;
-  }
-  var cp = "";
-  for (var i = 1; i < binaryStr.length; i += 2) {
-    cp += binaryStr[i];
-  }
-  var result = cp;
-  // console.log("res:", result);
-  return result;
-}
-
 // TODO: Delete this once we have proper type coersion in the VM.
 export function ensureVmInt(num: number): number {
   return Math.floor(num);
@@ -179,20 +161,6 @@ export const throttle = (fn: Function, wait: number = 300) => {
 
 export function unimplemented(value: any): any {
   return value;
-}
-
-/**
- * parse color string into byte values.
- * @param hex only a valid html : '#XXXXXX'
- * @returns an object with respected keys of: r,g,b.
- */
-export function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
-  };
 }
 
 /**

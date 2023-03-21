@@ -117,13 +117,9 @@ export default class Bitmap {
   }
 
   // Ensure we've loaded the image into our image loader.
-  async ensureImageLoaded(
-    imageManager: ImageManager,
-    allowReturnNull: boolean = false
-  ) {
+  async ensureImageLoaded(imageManager: ImageManager) {
     assert(
       this._url == null,
-      // this._loaded == false,
       "Tried to ensure a Bitmap was laoded more than once."
     );
 

@@ -64,45 +64,6 @@ export class Edges {
     preferedWidth: number = null,
     preferedHeight: number = null
   ) {
-    //set:
-    this.opaque = this.opaqueByTransparent;
-    this._parseCanvasTransparency(canvas, preferedWidth, preferedHeight);
-  }
-
-  parseCanvasTransparencyByNonColor(canvas: HTMLCanvasElement, color: string) {
-    const rgb = hexToRgb(color);
-    //set
-    this.opaque = (x: number, y: number): boolean => {
-      return (
-        this._data.data[(x + y * this._width) * 4 + 0] == rgb.r &&
-        this._data.data[(x + y * this._width) * 4 + 1] == rgb.g &&
-        this._data.data[(x + y * this._width) * 4 + 2] == rgb.b
-      );
-    };
-    this._parseCanvasTransparency(canvas, null, null);
-  }
-
-  parseCanvasTransparencyByColor(canvas: HTMLCanvasElement, color: string) {
-    const sum = (r: number, g: number, b: number) => r | (g << 8) | (b << 16);
-    const rgb = hexToRgb(color);
-    const transparent = sum(rgb.r, rgb.g, rgb.b);
-    //set:
-    this.opaque = (x: number, y: number): boolean => {
-      const start = (x + y * this._width) * 4;
-      const data = this._data.data.slice(start, start + 4);
-      const result =
-        //? opaque = pixel != color
-        sum(data[0], data[1], data[2]) != transparent;
-      return result;
-    };
-    this._parseCanvasTransparency(canvas, null, null);
-  }
-
-  _parseCanvasTransparency(
-    canvas: HTMLCanvasElement,
-    preferedWidth: number,
-    preferedHeight: number
-  ) {
     const w = preferedWidth || canvas.width;
     const h = preferedHeight || canvas.height;
     this._w = w;

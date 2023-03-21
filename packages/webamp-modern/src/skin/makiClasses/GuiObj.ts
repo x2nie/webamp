@@ -334,7 +334,7 @@ export default class GuiObj extends XmlObj {
    * @ret The top edge's position (in screen coordinates).
    */
   gettop(): number {
-    return this._y || 0;
+    return this._y;
   }
 
   /**
@@ -344,7 +344,7 @@ export default class GuiObj extends XmlObj {
    * @ret The left edge's position (in screen coordinates).
    */
   getleft(): number {
-    return this._x || 0;
+    return this._x;
   }
 
   /**
@@ -366,13 +366,6 @@ export default class GuiObj extends XmlObj {
   set height(value: number) {
     this._h = value;
     this._renderDimensions();
-  }
-  get height():number {
-    return this.getheight()
-  }
-  set height(value:number){
-    this._height = value;
-    this._renderDimensions()
   }
 
   /**
@@ -396,13 +389,6 @@ export default class GuiObj extends XmlObj {
   set width(value: number) {
     this._w = value;
     this._renderDimensions();
-  }
-  get width():number {
-    return this.getwidth()
-  }
-  set width(value:number){
-    this._width = value;
-    this._renderDimensions()
   }
 
   /**

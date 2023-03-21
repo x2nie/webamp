@@ -25,9 +25,6 @@ const DEFAULT_SKIN = "assets/skins/WinampModern566.wal";
 // type Webamp = window.WebampModern
 var webamp: IWebampModern;
 
-// type Webamp = window.WebampModern
-var webamp: IWebampModern;
-
 async function main() {
   // Purposefully don't await, let this load in parallel.
   initializeSkinListMenu();

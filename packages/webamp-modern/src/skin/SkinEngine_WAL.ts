@@ -1,5 +1,6 @@
 import parseXml, { XmlDocument, XmlElement } from "@rgrove/parse-xml";
 import { assert, getCaseInsensitiveFile, assume } from "../utils";
+import JSZip, { JSZipObject } from "jszip";
 import Bitmap from "./Bitmap";
 import ImageManager from "./ImageManager";
 import Layout from "./makiClasses/Layout";
@@ -257,7 +258,7 @@ export default class SkinEngineWAL extends SkinEngine {
       case "elements":
         return this.elements(node, parent);
       case "bitmap":
-        return this.bitmap(node.attributes);
+        return this.bitmap(node);
       case "bitmapfont":
         return await this.bitmapFont(node);
       case "color":
@@ -526,7 +527,7 @@ export default class SkinEngineWAL extends SkinEngine {
     //this._imageManager.addBitmap(bitmap);
 
     this._uiRoot.addBitmap(bitmap);
-    this._res.bitmaps[attributes.id] = true;
+    this._res.bitmaps[node.attributes.id] = true;
 
     // if (this._phase == GROUP_PHASE) {
     // this._imageManager.setBimapImg(bitmap);
@@ -738,7 +739,9 @@ export default class SkinEngineWAL extends SkinEngine {
       if (upperLeft) {
         //? default
         let bottomRight = this._uiRoot.getBitmap("studio.button.lowerRight");
-        let btnFace: Attributes = {
+        let dict: {
+          [attrName: string]: string;
+        } = {
           id: "studio.button",
           file: upperLeft.getFile(),
           x: String(upperLeft.getLeft()),
@@ -750,6 +753,7 @@ export default class SkinEngineWAL extends SkinEngine {
             bottomRight.getTop() - upperLeft.getTop() + bottomRight.getHeight()
           ),
         };
+        const btnFace = new XmlElement("bitmap", { ...dict });
         await this.bitmap(btnFace);
 
         //? pressed
@@ -757,7 +761,7 @@ export default class SkinEngineWAL extends SkinEngine {
         bottomRight = this._uiRoot.getBitmap(
           "studio.button.pressed.lowerRight"
         );
-        const btnPressedFace: Attributes = {
+        dict = {
           id: "studio.button.pressed",
           file: upperLeft.getFile(),
           x: String(upperLeft.getLeft()),
@@ -769,6 +773,7 @@ export default class SkinEngineWAL extends SkinEngine {
             bottomRight.getTop() - upperLeft.getTop() + bottomRight.getHeight()
           ),
         };
+        const btnPressedFace = new XmlElement("bitmap", { ...dict });
         await this.bitmap(btnPressedFace);
       } else {
         // we can't find ingredient, lets search the raw material
@@ -776,7 +781,9 @@ export default class SkinEngineWAL extends SkinEngine {
           return;
 
         //? default
-        const btnFace: Attributes= {
+        let dict: {
+          [attrName: string]: string;
+        } = {
           id: "studio.button",
           file: "window/window-elements.png",
           x: "1",
@@ -784,10 +791,11 @@ export default class SkinEngineWAL extends SkinEngine {
           w: "31",
           h: "31",
         };
+        const btnFace = new XmlElement("bitmap", { ...dict });
         await this.bitmap(btnFace);
 
         //? pressed
-        const btnPressedFace = {
+        dict = {
           id: "studio.button.pressed",
           file: "window/window-elements.png",
           x: "67",
@@ -795,6 +803,7 @@ export default class SkinEngineWAL extends SkinEngine {
           w: "31",
           h: "31",
         };
+        const btnPressedFace = new XmlElement("bitmap", { ...dict });
         await this.bitmap(btnPressedFace);
       }
 

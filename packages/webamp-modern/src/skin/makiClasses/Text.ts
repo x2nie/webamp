@@ -224,7 +224,6 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   init() {
     super.init();
-    this._invalidateFullWidth();
     if (this._ticker && this._ticker != "off") {
       this._prepareScrolling();
     }
