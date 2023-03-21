@@ -26,6 +26,11 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
       MENUITEM "&Edit bookmarks...	Ctrl+Alt+I",  40320
       MENUITEM "&Add current as bookmark	Ctrl+Alt+B",  40321
       MENUITEM SEPARATOR
+      POPUP "&Tools",  GRAYED
+      {
+        MENUITEM "Migrate/Import...",  40009
+        MENUITEM "Register Winamp...",  40010
+      }
     }
 }
 `;
@@ -37,10 +42,10 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Membuat fungsi untuk parsing string menu ke dalam format JSON
 function parseMenuToJson(menuContent) {
-  const result = {};
-  let currentMenu = result;
-  let levelStack = [];
-  let currentItem = null
+  const root = [];
+  let container = root;
+  let levelStack = [root];
+  // let currentItem = null
 
   // Looping setiap baris pada string menu
   for (let line of menuContent.split('\n')) {
@@ -50,7 +55,7 @@ function parseMenuToJson(menuContent) {
     }
 
     // Mengambil level pada baris saat ini
-    const level = line.search(/\S/);
+    // const level = line.search(/\S/);
 
     // Mengecek apakah baris merupakan menu
     // const menuMatch = line.match(/\s*(POPUP|MENUITEM)\s+"([^"]+)"(?:\s*,\s*(\d+))?,\s*(\d+),\s*(\d+)/i);
@@ -63,7 +68,7 @@ function parseMenuToJson(menuContent) {
       const id = type=='popup'? 65535: type == 'separator' ? 0 : parseInt(sid);
       // Membuat objek menu baru
       const newMenu = {
-        tag,
+        // tag,
         type,
         // caption: type == 'separator'? '' : t2,
         caption: t2,
@@ -75,6 +80,14 @@ function parseMenuToJson(menuContent) {
         flags,
         // children: [],
       };
+      container.push(newMenu); // attach to prent
+
+      if(type=='popup'){
+        newMenu.children = [];
+        container = newMenu.children;
+        levelStack.push(container)
+      }
+
       // console.log('m', newMenu, '>>', flags)
       console.log('m', newMenu)
 
@@ -92,18 +105,13 @@ function parseMenuToJson(menuContent) {
       //   currentItem = newMenu;
       // }
     } else if (line.trim() === '}') {
-      // // Menutup menu saat ini
-      // levelStack.pop();
-      // currentItem = levelStack.length > 0 ? currentMenu : result;
-    } else {
-      // Jika baris bukan menu, maka dianggap sebagai bagian dari menu sebelumnya
-      if(currentItem){
-          // currentItem.children[currentItem.children.length - 1].text += ` ${line.trim()}`;
-      }
+      // Menutup menu saat ini
+      levelStack.pop(); 
+      container = levelStack[levelStack.length-1];
     }
   }
 
-  return result.children;
+  return root;
 }
 
 var m = parseMenuToJson(menuContent)
