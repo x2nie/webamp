@@ -299,3 +299,13 @@ menu > .popup{
 .open > .popup{
   display: block;
 }
+
+.popup-menu-container{
+  position: absolute;
+  background: white;
+  padding: 10px;
+  border: 2px solid gray;
+  z-index: 100;
+  width: auto;
+  display: inline-block;
+}

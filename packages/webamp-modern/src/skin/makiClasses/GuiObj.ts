@@ -256,6 +256,7 @@ export default class GuiObj extends XmlObj {
 
     this._div.addEventListener("mousedown", (e) => {
       e.stopPropagation();
+      // e.preventDefault();
       console.log("mouse-down!");
       this.onLeftButtonDown(
         e.offsetX + this.getleft(),
@@ -263,6 +264,8 @@ export default class GuiObj extends XmlObj {
       );
 
       const mouseUpHandler = (e: MouseEvent) => {
+        // e.stopPropagation();
+        // e.preventDefault();
         console.log("mouse-up!");
         this.onLeftButtonUp(
           e.offsetX + this.getleft(),

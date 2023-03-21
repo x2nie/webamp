@@ -399,7 +399,7 @@ class Interpreter {
           try {
             // result = obj.value[methodName](...methodArgs);
             let afunction = obj.value[methodName];
-            // console.log('calling fun type:',afunction.constructor.name, '@'+methodName)
+            console.log('calling fun type:',afunction.constructor.name, `@${klass.name}.${methodName}`)
             if(afunction.constructor.name === 'AsyncFunction'){
               // result = await afunction(...methodArgs);
               result = await obj.value[methodName](...methodArgs);

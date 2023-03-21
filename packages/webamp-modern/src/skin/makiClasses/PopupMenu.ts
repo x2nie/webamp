@@ -41,45 +41,52 @@ type MenuItem =
       popup: PopupMenu;
     };
 
-function waitPopup(popup: PopupMenu): number {
-  let result: number = -1;
-  const itemClick = (id: number) => {
-    result = id;
-  };
-  const div = generatePopupDiv(popup, itemClick);
-  document.getElementById("web-amp").appendChild(div);
+ function waitPopup(popup: PopupMenu): Promise<number> {
+   // const closePopup = () => div.remove();
+   
+   // https://stackoverflow.com/questions/54916739/wait-for-click-event-inside-a-for-loop-similar-to-prompt
+   return new Promise(acc => {
+    // let result: number = -1;
+    const itemClick = (id: number) => {
+      closePopup()
+      // result = id;
+      acc(id);
+    };
+    const div = generatePopupDiv(popup, itemClick);
+    document.getElementById("web-amp").appendChild(div);
+    const closePopup = () => div.remove()
 
-  // const sleep = asyncFunctionBuilder(true)
-  // while (result < 0){
-  //   sleep(100);
-  // }
-  // return result;
-
-  // https://stackoverflow.com/questions/54916739/wait-for-click-event-inside-a-for-loop-similar-to-prompt
-  // return new Promise(acc => {
-  //   function handleClick() {
-  //     document.removeEventListener('click', handleClick);
-  //     acc(result);
-  //   }
-  //   document.addEventListener('click', handleClick);
-  // });
-  return 1;
+    function handleClick() {
+      document.removeEventListener('click', handleClick);
+      closePopup()
+      acc(-1);
+    }
+    document.addEventListener('click', handleClick);
+  });
+  // return 1;
 }
 
 function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElement {
   const root = document.createElement("ul");
+  root.className = 'popup-menu-container'
   root.style.zIndex = "1000";
   for (const menu of popup._items) {
-    const item = document.createElement("li");
-    root.appendChild(item);
+    // const item = document.createElement("li");
+    let item;
+    // root.appendChild(item);
     if (menu.type == "item") {
-      item.textContent = menu.text;
-      item.onclick = (e) => callback(item.id);
+      item = document.createElement("li");
+      item.textContent = `${menu.checked? '✓' : ' '} ${menu.text}`;
+      item.onclick = (e) => callback(menu.id);
     } else if (menu.type == "submenu") {
+      item = document.createElement("li");
       item.textContent = menu.text;
     } else if (menu.type == "separator") {
-      item.textContent = "-----";
+      item = document.createElement("hr");
+      // item.textContent = "-----";
+      // item.appendChild(document.createElement("hr")) ;
     }
+    root.appendChild(item);
   }
   return root;
 }
@@ -127,37 +134,40 @@ export default class PopupMenu extends BaseObject {
       }
     }
   }
-  // async popatmouse(): Promise<number> {
-  //   return await waitPopup(this)
-  // }
-  // popatxy(x:number, y:number):number{
-  //   return waitPopup(this)
-
-  // }
-  popatmouse(): number {
-    const message = this._items.map((item) => {
-      switch (item.type) {
-        case "separator":
-          return "------";
-        case "item":
-          return `(${item.id}) ${item.text}${item.checked ? " ✔" : ""}`;
-      }
-    });
-    message.unshift("Pick the number matching your choice:\n");
-    let choice: number | null = null;
-    while (
-      !this._items.some((item) => item.type === "item" && item.id === choice)
-    ) {
-      choice = Number(window.prompt(message.join("\n")));
-      if (choice == 0) break;
-    }
-    // TODO: Validate
-
-    return choice;
+  async popatmouse(): Promise<number> {
+    console.log('popAtMouse.start...:')
+    const result = await waitPopup(this)
+    console.log('popAtMouse.return:', result)
+    return result;
   }
-  popatxy(x: number, y: number): number {
-    return this.popatmouse();
+  async popatxy(x:number, y:number):Promise<number>{
+    return await waitPopup(this)
   }
+
+  // popatmouse(): number {
+  //   const message = this._items.map((item) => {
+  //     switch (item.type) {
+  //       case "separator":
+  //         return "------";
+  //       case "item":
+  //         return `(${item.id}) ${item.text}${item.checked ? " ✔" : ""}`;
+  //     }
+  //   });
+  //   message.unshift("Pick the number matching your choice:\n");
+  //   let choice: number | null = null;
+  //   while (
+  //     !this._items.some((item) => item.type === "item" && item.id === choice)
+  //   ) {
+  //     choice = Number(window.prompt(message.join("\n")));
+  //     if (choice == 0) break;
+  //   }
+  //   // TODO: Validate
+
+  //   return choice;
+  // }
+  // popatxy(x: number, y: number): number {
+  //   return this.popatmouse();
+  // }
   getnumcommands() {
     return this._items.length;
   }
