@@ -1,4 +1,4 @@
-import UI_ROOT from "../../UIRoot";
+import { UIRoot } from "../../UIRoot";
 import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import GuiObj from "../makiClasses/GuiObj";
 import { runInlineScript } from "./util";
@@ -9,8 +9,8 @@ export default class Player extends GuiObj {
   _controls: PlayerControls;
   _playState_onchange: string;
 
-  constructor() {
-    super();
+  constructor(uiRoot: UIRoot) {
+    super(uiRoot);
     // this.setXmlAttr("visible", "0");
     // Within script code, the Player object is accessed through the player global attribute rather than
     // through a name specified by an id attribute, which is not supported by the PLAYER element.
@@ -42,7 +42,7 @@ export default class Player extends GuiObj {
 
     if (this._playState_onchange != null) {
       //audio state change
-      UI_ROOT.audio.on("statchanged", () => this._updateAudioStatus());
+      this._uiRoot.audio.on("statchanged", () => this._updateAudioStatus());
       this._updateAudioStatus();
     }
   }
@@ -58,7 +58,7 @@ export default class Player extends GuiObj {
   get playState(): number {
     // taken from QuickSilver.wmz
 
-    switch (UI_ROOT.audio.getState()) {
+    switch (this._uiRoot.audio.getState()) {
       case AUDIO_STOPPED:
         return 1;
       case AUDIO_PAUSED:

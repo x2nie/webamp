@@ -19,11 +19,12 @@ import fetch from "node-fetch";
 import JSZip from "jszip";
 import fs from "fs/promises";
 import path from "path";
+import { getTransparentAreaSize } from "../transparency";
 
 export const IS_README = /(file_id\.diz)|(\.txt)$/i;
 // Skinning Updates.txt ?
 export const IS_NOT_README =
-  /(genex\.txt)|(genexinfo\.txt)|(gen_gslyrics\.txt)|(region\.txt)|(pledit\.txt)|(viscolor\.txt)|(winampmb\.txt)|("gen_ex help\.txt)|(mbinner\.txt)$/i;
+  /(dialogs\.txt)|(genex\.txt)|(genexinfo\.txt)|(gen_gslyrics\.txt)|(region\.txt)|(pledit\.txt)|(viscolor\.txt)|(winampmb\.txt)|("gen_ex help\.txt)|(mbinner\.txt)$/i;
 
 export default class SkinModel {
   constructor(readonly ctx: UserContext, readonly row: SkinRow) {}
@@ -266,9 +267,125 @@ export default class SkinModel {
     return withUrlAsTempFile(this.getSkinUrl(), filename, cb);
   }
 
-  async withScreenshotTempFile(
-    cb: (file: string) => Promise<void>
-  ): Promise<void> {
+  async _hasSpriteSheet(base: string): Promise<boolean> {
+    const ext = "(bmp)|(png)";
+    return this._hasFile(base, ext);
+  }
+
+  async _hasFile(base: string, ext: string): Promise<boolean> {
+    // TODO: Pre-compile regexp
+    const matcher = new RegExp(`^(.*[/\\\\])?${base}.(${ext})$`, "i");
+    const archiveFiles = await this.getArchiveFiles();
+    return archiveFiles.some((file) => {
+      return matcher.test(file.getFileName());
+    });
+  }
+
+  async _getFile(base: string, ext: string): Promise<ArchiveFileModel | null> {
+    // TODO: Pre-compile regexp
+    const matcher = new RegExp(`^(.*[/\\\\])?${base}.(${ext})$`, "i");
+    const archiveFiles = await this.getArchiveFiles();
+    const row = archiveFiles.find((file) => {
+      return matcher.test(file.getFileName());
+    });
+    return row || null;
+  }
+
+  async hasEqualizer(): Promise<boolean> {
+    return this._hasSpriteSheet("EQMAIN");
+  }
+  async hasPlaylist(): Promise<boolean> {
+    return this._hasSpriteSheet("PLEDIT");
+  }
+  async hasMediaLibrary(): Promise<boolean> {
+    return this.hasGeneral();
+  }
+
+  async hasBrowser(): Promise<boolean> {
+    return this._hasSpriteSheet("MB");
+  }
+
+  async hasAVS(): Promise<boolean> {
+    return this._hasSpriteSheet("AVS");
+  }
+
+  async hasVideo(): Promise<boolean> {
+    return this._hasSpriteSheet("VIDEO");
+  }
+
+  // Has built-in support for the MikroAMP plugin.
+  async hasMikro(): Promise<boolean> {
+    // Could also check for `WINAMPMB.TXT`.
+    return this._hasSpriteSheet("MIKRO");
+  }
+
+  // Has built-in support of the Amarok plugin.
+  async hasAmarok(): Promise<boolean> {
+    return this._hasSpriteSheet("AMAROK");
+  }
+
+  // Has built-in support of the vidamp
+  async hasVidamp(): Promise<boolean> {
+    return this._hasSpriteSheet("VIDAMP");
+  }
+
+  // Includes custom cursors
+  async hasCur(): Promise<boolean> {
+    const matcher = new RegExp(`.(cur)$`, "i");
+    const archiveFiles = await this.getArchiveFiles();
+    return archiveFiles.some((file) => {
+      return matcher.test(file.getFileName());
+    });
+  }
+
+  // Has transparency
+  async hasTransparency(): Promise<boolean> {
+    const size = await this.transparentAreaSize();
+    return size > 0;
+  }
+
+  async transparentPixels(): Promise<number> {
+    const region = await this._getFile("region", "txt");
+    if (region == null) {
+      return 0;
+    }
+    const text = await region.getTextContent();
+    if(text == null) {
+      return 0;
+    }
+    try {
+
+    return getTransparentAreaSize(text);
+    } catch(e) {
+      console.error(`Failed: ${this.getMd5()}`)
+      return 0
+    }
+  }
+
+  async hasAni(): Promise<boolean> {
+    // Note: This should be expanded to check for animated cursors that use the
+    // .cur extension (but are actually .ani under the hood).
+    const matcher = new RegExp(`.(ani)$`, "i");
+    const archiveFiles = await this.getArchiveFiles();
+    return archiveFiles.some((file) => {
+      return matcher.test(file.getFileName());
+    });
+  }
+
+  async hasGeneral(): Promise<boolean> {
+    return (
+      (await this._hasSpriteSheet("GEN")) &&
+      (await this._hasSpriteSheet("GENEX"))
+    );
+  }
+
+  async getAlgoliaIndexUpdates(limit?: number): Promise<any[]> {
+    return Skins.searchIndexUpdatesForSkin(this.getMd5(), limit);
+  }
+
+  async withScreenshotTempFile<T>(
+    cb: (file: string) => Promise<T>
+  ): Promise<T> {
     if (this.getSkinType() === "MODERN") {
       throw new Error("Modern skins do not have screenshots.");
     }

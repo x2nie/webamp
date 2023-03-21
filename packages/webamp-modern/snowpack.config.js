@@ -8,9 +8,15 @@ module.exports = {
     src: "/",
     assets: "/assets",
   },
-  exclude: ["*.tmp"],
+  exclude: ["*.tmp", "extracted-*"],
   plugins: [
     /* ... */
+    [
+      "./snowpack-maki-plugin.js",
+      {
+        /* pluginOptions */
+      },
+    ],
   ],
   packageOptions: {
     /* ... */

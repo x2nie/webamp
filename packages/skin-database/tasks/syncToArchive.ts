@@ -169,7 +169,10 @@ export async function identifierExists(identifier: string): Promise<boolean> {
 }
 
 async function getNewIdentifier(filename: string): Promise<string> {
-  const identifierBase = `winampskins_${sanitize(path.parse(filename).name)}`;
+  // The internet archvie has a max identifier length of 80 chars.
+  const identifierBase = `winampskins_${sanitize(
+    path.parse(filename).name
+  )}`.slice(0, 76);
   let counter = 0;
   function getIdentifier() {
     return identifierBase + (counter === 0 ? "" : `_${counter}`);
@@ -208,6 +211,7 @@ export async function syncToArchive(handler: DiscordEventHandler) {
   const unarchived = await knex("skins")
     .leftJoin("ia_items", "ia_items.skin_md5", "=", "skins.md5")
     .where({ "ia_items.id": null, skin_type: 1 })
+    .limit(100)
     .select("skins.md5");
 
   handler.handle({ type: "STARTED_SYNC_TO_ARCHIVE", count: unarchived.length });
@@ -218,10 +222,6 @@ export async function syncToArchive(handler: DiscordEventHandler) {
   await Parallel.map(
     unarchived,
     async ({ md5 }) => {
-      // The internet archive claims this one is corrupt for some reason.
-      if (md5 === "513fdd06bf39391e52f3ac5b233dd147") {
-        return;
-      }
       const skin = await SkinModel.fromMd5Assert(ctx, md5);
       try {
         console.log(`Attempting to upload ${md5}`);
@@ -231,6 +231,10 @@ export async function syncToArchive(handler: DiscordEventHandler) {
       } catch (e) {
         console.log("Archive failed...");
         errorCount++;
+        // The internet archive claims this one is corrupt for some reason.
+        if (md5 === "513fdd06bf39391e52f3ac5b233dd147") {
+          console.warn(`This skin is known to not upload correctly.`);
+        }
         if (/error checking archive/.test(e.message)) {
           console.log(`Corrupt archvie: ${skin.getMd5()}`);
         } else if (

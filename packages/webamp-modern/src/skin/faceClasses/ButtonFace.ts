@@ -1,4 +1,3 @@
-import UI_ROOT from "../../UIRoot";
 import { toBool } from "../../utils";
 import AudioEventedGui from "../AudioEventedGui";
 import Button from "../makiClasses/Button";
@@ -21,10 +20,10 @@ export default class ButtonFace extends Button {
       case "enabled":
         this._enabled = toBool(value);
         break;
-        case "disabledimage":
+      case "disabledimage":
         this._disabledImage = value;
         break;
-        default:
+      default:
         return false;
     }
     return true;
@@ -48,9 +47,12 @@ export default class ButtonFace extends Button {
 
   _renderBackground() {
     super._renderBackground();
-    
-    if (this._disabledImage != null) {
-      const disabledImage = UI_ROOT.getBitmap(this._disabledImage);
+
+    if (
+      this._disabledImage != null &&
+      this._uiRoot.hasBitmap(this._disabledImage)
+    ) {
+      const disabledImage = this._uiRoot.getBitmap(this._disabledImage);
       this.setDisabledBackgroundImage(disabledImage);
     } else {
       this.setDisabledBackgroundImage(null);
@@ -61,6 +63,6 @@ export default class ButtonFace extends Button {
     super.draw();
     this._div.classList.add("webamp--img");
     this._renderBackground();
-    this._renderDisabled()
+    this._renderDisabled();
   }
 }

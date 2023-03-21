@@ -1,5 +1,5 @@
 import GuiObj from "./GuiObj";
-import UI_ROOT from "../../UIRoot";
+import { UIRoot } from "../../UIRoot";
 import TrueTypeFont from "../TrueTypeFont";
 import BitmapFont from "../BitmapFont";
 import {
@@ -17,13 +17,15 @@ export default class Text extends GuiObj {
   static GUID = "efaa867241fa310ea985dcb74bcb5b52";
   _display: string;
   _displayValue: string = "";
+  _displayHandler: DisplayHandler; //pasive handler
   _disposeDisplaySubscription: Function;
   _disposeTrackChangedSubscription: Function;
   _text: string;
+  _alternateText: string;
   _bold: boolean;
   _forceuppercase: boolean;
   _forcelowercase: boolean;
-  _align: string = "center";
+  _align: string = "left";
   _valign: string = "center";
   _font_id: string;
   _font_obj: TrueTypeFont | BitmapFont;
@@ -32,6 +34,7 @@ export default class Text extends GuiObj {
   _ticker: string = "off"; // "scroll" | "bounce" | "off"
   _paddingX: number = 2;
   _timeColonWidth: number | null = null;
+  _timeroffstyle: number = 0;
   _textWrapper: HTMLElement;
   _scrollTimer: Timer;
   _scrollDirection: -1 | 1;
@@ -43,8 +46,9 @@ export default class Text extends GuiObj {
   _shadowY: number = 0;
   _drawn: boolean = false; // needed to check has parents
 
-  constructor() {
-    super();
+  constructor(uiRoot: UIRoot) {
+    super(uiRoot);
+    this._uiRoot = uiRoot;
     this._textWrapper = document.createElement("wrap");
     this._div.appendChild(this._textWrapper);
   }
@@ -61,6 +65,7 @@ export default class Text extends GuiObj {
       case "text":
       case "default":
         // (str) A static string to be displayed.
+        // console.log('THETEXT', value)
         this._text = value;
         this._renderText();
         break;
@@ -118,7 +123,10 @@ export default class Text extends GuiObj {
         this._prepareCss();
         this._renderText();
         break;
-
+      case "timeroffstyle":
+        this._timeroffstyle = num(value);
+        this._setDisplay(this._display);
+        break;
       case "shadowcolor":
         // (int) The comma delimited RGB color for underrendered shadow text.
         this._shadowColor = value;
@@ -156,13 +164,28 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     return true;
   }
 
+  // styledTime(time: string): string {
+  //   const originalTime = time;
+  //   if (this._timeroffstyle == 1) {
+  //     if (time.startsWith("-") && time.length == 5) {
+  //       // -9:59
+  //       time = time.replace("-", "-0");
+  //     } else if (time.length == 4) {
+  //       // 9:59
+  //       time = "0" + time;
+  //     }
+  //   }
+  //   console.log(`timer:'${time}' < '${originalTime}'`);
+  //   return time;
+  // }
+
   _autoDetectFontType() {
     if (this._font_id) {
-      this._font_obj = UI_ROOT.getFont(this._font_id);
+      this._font_obj = this._uiRoot.getFont(this._font_id);
       if (!this._font_obj) {
         const newFont = new TrueTypeFont();
         newFont._inlineFamily = this._font_id;
-        UI_ROOT.addFont(newFont);
+        this._uiRoot.addFont(newFont);
         this._font_obj = newFont;
       }
     }
@@ -175,7 +198,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         this._div.style.color = `rgb(${this._color})`;
         return;
       }
-      const color = UI_ROOT.getColor(this._color);
+      const color = this._uiRoot.getColor(this._color);
       if (color) {
         this._div.style.color = `var(${color.getCSSVar()}, ${color.getRgb()})`;
       }
@@ -189,12 +212,13 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       context.font = `${this._fontSize}px ${
         this._font_obj.getFontFamily() || "Arial"
       }`;
-      const metrics = context.measureText("IWH");
+      const metrics = context.measureText("IWjgyFH");
       const fontHeight =
         metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
 
       this._fontSize =
-        this._fontSize * (1 - (fontHeight - this._fontSize) / this._fontSize);
+        this._fontSize *
+        (1 - (1.0 * fontHeight - this._fontSize) / (1.0 * this._fontSize));
     }
   }
 
@@ -205,19 +229,26 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       this._prepareScrolling();
     }
     this._div.addEventListener("click", this._onClick);
+    if (this._displayHandler != null) {
+      this._displayHandler.init();
+    }
   }
 
   _onClick = () => {
     if (this._display.toLowerCase() == "time") {
-      UI_ROOT.audio.toggleRemainingTime();
-      this.setDisplayValue(integerToTime(UI_ROOT.audio.getCurrentTime()));
+      this._uiRoot.audio.toggleRemainingTime();
+      this.setDisplayTime();
     }
   };
 
   _setDisplay(display: string) {
-    if (display.toLowerCase() === this._display?.toLowerCase()) {
+    if (display == null) {
+      // this method may called premateurly by timeroffstyle, hence display==unset
       return;
     }
+    // if (display.toLowerCase() === this._display?.toLowerCase()) {
+    //   return;
+    // }
     if (this._disposeDisplaySubscription != null) {
       this._disposeDisplaySubscription();
     }
@@ -236,23 +267,29 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         this._displayValue = "vid_info";
         break;
       case "time":
-        this._disposeDisplaySubscription = UI_ROOT.audio.onCurrentTimeChange(
-          () => {
-            this.setDisplayValue(integerToTime(UI_ROOT.audio.getCurrentTime()));
-          }
-        );
-        this.setDisplayValue(integerToTime(UI_ROOT.audio.getCurrentTime()));
+        this._disposeDisplaySubscription =
+          this._uiRoot.audio.onCurrentTimeChange(() => {
+            // this.setDisplayValue(this.styledTime(
+            //   integerToTime(this._uiRoot.audio.getCurrentTime())
+            // ));
+            this.setDisplayTime();
+          });
+        console.log("in changing display = time. by:", display);
+        this.setDisplayTime();
+        // this.setDisplayValue(this.styledTime(
+        //   integerToTime(this._uiRoot.audio.getCurrentTime())
+        // ));
         break;
       case "songlength":
         this._displayValue = "5:58";
         break;
       case "songname":
       case "songtitle":
-        this._displayValue = UI_ROOT.playlist.getCurrentTrackTitle();
-        this._disposeTrackChangedSubscription = UI_ROOT.playlist.on(
+        this._displayValue = this._uiRoot.playlist.getCurrentTrackTitle();
+        this._disposeTrackChangedSubscription = this._uiRoot.playlist.on(
           "trackchange",
           () => {
-            this._displayValue = UI_ROOT.playlist.getCurrentTrackTitle();
+            this._displayValue = this._uiRoot.playlist.getCurrentTrackTitle();
             this._renderText();
           }
         );
@@ -265,6 +302,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       case "componentbucket":
         this._displayValue = "componentbucket";
         break;
+      case "custom": // not winamp api
+        // needed by a custom DisplayHandler
+        break;
       default:
         throw new Error(`Unknown text display name: "${this._display}".`);
     }
@@ -275,13 +315,45 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     if (newValue !== this._displayValue) {
       this._displayValue = newValue;
       this._renderText();
-      UI_ROOT.vm.dispatch(this, "ontextchanged", [
+      this._uiRoot.vm.dispatch(this, "ontextchanged", [
         { type: "STRING", value: this.gettext() },
       ]);
     }
   }
 
-  gettext() {
+  setDisplayTime() {
+    if (this._uiRoot.audio._isStop) {
+      switch (this._timeroffstyle) {
+        case 0:
+          this.setDisplayValue("  : ");
+          break;
+        case 1:
+          this.setDisplayValue("00:00");
+          break;
+        case 2:
+          this.setDisplayValue("");
+          break;
+      }
+      return;
+    }
+    this.setDisplayValue(
+      // this.styledTime(
+      integerToTime(this._uiRoot.audio.getCurrentTime())
+      // )
+    );
+  }
+
+  ontextchanged(s: string) {
+    this._uiRoot.vm.dispatch(this, "ontextchanged", [
+      { type: "STRING", value: this.gettext() },
+    ]);
+  }
+
+  gettext(): string {
+    if (this._alternateText) {
+      // alternate text is used in Winamp3 to show a hint of a Play button while mouse down.
+      return this._alternateText;
+    }
     if ((this._text || "").startsWith(":") && this._drawn) {
       const layout = this.getparentlayout();
       if (layout) {
@@ -289,6 +361,16 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       }
     }
     if (this._display) {
+      if (this._display == "songinfo") {
+        const track = this._uiRoot.playlist.currentTrack();
+        if (track) {
+          const m = track.metadata;
+          return `${m.bitrate}kbps ${m.channelMode} ${Math.floor(
+            m.sampleRate / 1000
+          )}khz`;
+        }
+      }
+
       return this._displayValue;
     }
     return this._text ?? "";
@@ -303,14 +385,15 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
   // overrides the display/text parameter with a custom string, set "" to cancel
   setalternatetext(txt: string) {
-    // TODO
+    this._alternateText = txt;
+    this._renderText();
   }
 
   //to speedup animation like text-scrolling, we spit rendering processes.
   //This function is only rendering static styles
   _prepareCss() {
     if (!this._font_obj && this._font_id) {
-      this._font_obj = UI_ROOT.getFont(this._font_id);
+      this._font_obj = this._uiRoot.getFont(this._font_id);
     }
     const font = this._font_obj;
     if (font instanceof BitmapFont) {
@@ -355,7 +438,10 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         this._textWrapper.setAttribute("font", "TrueType");
 
         this._div.style.fontFamily = font.getFontFamily();
-        this._div.style.fontSize = px(this._fontSize ?? 12);
+        this._div.style.fontSize = px(this._fontSize ?? 11);
+        // this._div.style.lineHeight = px(this._fontSize ?? 11);
+        // this._div.style.lineHeight = px(this._div.getBoundingClientRect().height);
+        this._div.style.lineHeight = "1";
         this._div.style.textTransform = this._forceuppercase
           ? "uppercase"
           : "none";
@@ -376,13 +462,19 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   _renderText() {
     //TODO: invalidating text width is only important when srolling?
-    this._invalidateFullWidth();
+    if (this._ticker != "off") this._invalidateFullWidth();
 
     const font = this._font_obj;
     if (font instanceof BitmapFont) {
       this._renderBitmapFont(font);
     } else {
+      // console.log('THETEXT', this.gettext())
+      // this._textWrapper.innerHTML = '<pre>'+ this.gettext().replace(/[\n\r]/g,'<br/>') + '</pre>';
+      // this._textWrapper.innerHTML = '<div>'+ this.gettext().replace(/[\n]/g,'<br/>') + '</div>';
+      // this._textWrapper.innerHTML = '<pre>'+ this.gettext() + '</pre>';
       this._textWrapper.innerText = this.gettext();
+      //? workaround of titlebar.text
+      // this._div.style.lineHeight = this._div.style.height;
     }
   }
 
@@ -409,6 +501,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
         // TODO: This is quite hacky.
         if (char === ":" && useColonWidth) {
           charNode.style.width = px(this._timeColonWidth);
+          charNode.style.marginRight = "0";
         }
         this._textWrapper.appendChild(charNode);
       }
@@ -439,7 +532,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     this._invalidateFullWidth();
     let textWidth = this._textFullWidth;
     if (this._relatw == "1") {
-      textWidth += this._width * -1;
+      textWidth += this._w * -1;
     }
     return textWidth;
   }
@@ -465,7 +558,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     const self = this;
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-    context.font = `${this._fontSize || 14}px ${
+    context.font = `${this._fontSize || 11}px ${
       (font && font.getFontFamily()) || "Arial"
     }`;
     const metrics = context.measureText(this.gettext());
@@ -477,13 +570,13 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     super.draw();
     this._renderText();
 
-    this._div.style.removeProperty("line-height");
+    // this._div.style.removeProperty("line-height");
     this._div.classList.add("webamp--img");
   }
 
   _prepareScrolling() {
     this._scrollDirection = -1;
-    const timer = (this._scrollTimer = new Timer());
+    const timer = (this._scrollTimer = new Timer(this._uiRoot));
     timer.setdelay(50);
     timer.setOnTimer(() => {
       this.doScrollText();
@@ -517,6 +610,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     if (this._disposeDisplaySubscription != null) {
       this._disposeDisplaySubscription();
     }
+    if (this._displayHandler != null) {
+      this._displayHandler.dispose();
+    }
   }
 
   /*
@@ -525,4 +621,39 @@ extern String Text.getText();
 extern int Text.getTextWidth();
 extern Text.onTextChanged(String newtxt);
   */
+
+  /**
+   *
+   * @param Handler a class inherited from DisplayHandler
+   */
+  setDisplayHandler(Handler: DisplayHandlerClass) {
+    if (this._displayHandler != null) {
+      this._displayHandler.dispose();
+    }
+    this._displayHandler = new Handler(this);
+  }
+}
+
+type DisplayHandlerClass = typeof DisplayHandler;
+
+export class DisplayHandler {
+  _text: Text;
+  _uiRoot: UIRoot;
+  _subscription: Function;
+
+  constructor(text: Text) {
+    this._text = text;
+    this._uiRoot = text._uiRoot;
+    this._subscription = () => {}; // deFault empty
+  }
+
+  init(): void {
+    //* possible add a hook to uiRoot
+    //* to update text, call:
+    //*   `this._text.setDisplayValue(newTextValue)`
+  }
+
+  dispose(): void {
+    this._subscription();
+  }
 }

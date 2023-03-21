@@ -1,4 +1,4 @@
-import UI_ROOT from "../../UIRoot";
+import { UIRoot } from "../../UIRoot";
 import { assert, num, px, removeAllChildNodes, toBool } from "../../utils";
 import Layout from "./Layout";
 import XmlObj from "../XmlObj";
@@ -12,9 +12,11 @@ import Group from "./Group";
 // -- http://wiki.winamp.com/wiki/Modern_Skin:_Container
 export default class Container extends XmlObj {
   static GUID = "e90dc47b4ae7840d0b042cb0fcf775d2";
+  _uiRoot: UIRoot;
   _layouts: Layout[] = [];
   _activeLayout: Layout | null = null;
   _visible: boolean = true;
+  _dynamic: boolean = false;
   _id: string;
   _originalId: string; // non lowercase'd
   _name: string;
@@ -23,8 +25,10 @@ export default class Container extends XmlObj {
   _componentGuid: string; // eg. "guid:{1234-...-0ABC}"
   _componentAlias: string; // eg. "guid:pl"
   _div: HTMLElement = document.createElement("container");
-  constructor() {
+
+  constructor(uiRoot: UIRoot) {
     super();
+    this._uiRoot = uiRoot;
   }
 
   setXmlAttr(_key: string, value: string): boolean {
@@ -34,11 +38,15 @@ export default class Container extends XmlObj {
     }
     switch (key) {
       case "name":
-        this._name = value;
+        // this._name = value;
+        this.setname(value);
         break;
       case "id":
         this._originalId = value;
         this._id = value.toLowerCase();
+        break;
+      case "dynamic":
+        this._dynamic = toBool(value);
         break;
       case "component":
         this._componentGuid = value.toLowerCase().split(":")[1];
@@ -68,31 +76,45 @@ export default class Container extends XmlObj {
     for (const layout of this._layouts) {
       layout.init();
     }
-    // maki need 'onSwitchToLayout':
-    // this.switchToLayout(this.getCurLayout().getId())
-    UI_ROOT.vm.dispatch(this, "onswitchtolayout", [
-      { type: "OBJECT", value: this.getCurLayout() },
+    for (const layout of this._layouts) {
+      layout.afterInited();
+    }
+    // maki need 'onswitchtolayout':
+    // this.switchtolayout(this.getcurlayout().getId())
+    this._uiRoot.vm.dispatch(this, "onswitchtolayout", [
+      { type: "OBJECT", value: this.getcurlayout() },
     ]);
   }
 
-  deinit() {
+  dispose() {
     for (const layout of this._layouts) {
-      layout.deinit();
+      layout.dispose();
     }
   }
 
+  setname(name: string) {
+    this._name = name;
+  }
+  getname(): string {
+    return this._name;
+  }
+  getguid(): string {
+    return this._componentGuid;
+  }
+
   resolveAlias() {
-    const knownContainerGuids = {
-      "{0000000a-000c-0010-ff7b-01014263450c}": "vis", // visualization
-      "{45f3f7c1-a6f3-4ee6-a15e-125e92fc3f8d}": "pl", // playlist editor
-      "{6b0edf80-c9a5-11d3-9f26-00c04f39ffc6}": "ml", // media library
-      "{7383a6fb-1d01-413b-a99a-7e6f655f4591}": "con", // config?
-      "{7a8b2d76-9531-43b9-91a1-ac455a7c8242}": "lir", // lyric?
-      "{a3ef47bd-39eb-435a-9fb3-a5d87f6f17a5}": "dl", // download??
-      "{f0816d7b-fffc-4343-80f2-e8199aa15cc3}": "video", // independent video window
-    };
+    // const knownContainerGuids = {
+    //   "{0000000a-000c-0010-ff7b-01014263450c}": "vis", // AVS {visualization}
+    //   "{45f3f7c1-a6f3-4ee6-a15e-125e92fc3f8d}": "pl", // playlist editor
+    //   "{6b0edf80-c9a5-11d3-9f26-00c04f39ffc6}": "ml", // media library
+    //   "{7383a6fb-1d01-413b-a99a-7e6f655f4591}": "con", // config?
+    //   "{7a8b2d76-9531-43b9-91a1-ac455a7c8242}": "lir", // lyric?
+    //   "{a3ef47bd-39eb-435a-9fb3-a5d87f6f17a5}": "dl", // download??
+    //   "{f0816d7b-fffc-4343-80f2-e8199aa15cc3}": "video", // independent video window
+    // };
     const guid = this._componentGuid;
-    this._componentAlias = knownContainerGuids[guid];
+    // this._componentAlias = knownContainerGuids[guid];
+    this._componentAlias = this._uiRoot.guid2alias(guid);
     if (this._componentGuid && !this._componentAlias) {
       console.warn(
         `unknown component alias for guid:${this._componentGuid}`,
@@ -134,6 +156,13 @@ export default class Container extends XmlObj {
     return this._activeLayout.getheight();
   }
 
+  setWidth(w: number) {
+    this._activeLayout.setXmlAttr("w", String(w));
+  }
+  setHeight(h: number) {
+    this._activeLayout.setXmlAttr("h", String(h));
+  }
+
   gettop(): number {
     return this._y;
   }
@@ -160,7 +189,7 @@ export default class Container extends XmlObj {
 
   show() {
     if (!this._activeLayout) {
-      this.switchToLayout(this._layouts[0]._id);
+      this.switchtolayout(this._layouts[0]._id);
     }
     this._visible = true;
     this._renderLayout();
@@ -201,9 +230,23 @@ export default class Container extends XmlObj {
   }
 
   /**
+   isDynamic()
+
+  Tells you if the current container is a dynamic 
+  container or not. Values are true (1) for dynamic
+  false (0) for static.
+  Dynamic Container can has multiple instance at one time.
+
+  @ret The container type (dynamic or static).
+  */
+  isdynamic(): number {
+    return this._dynamic ? 1 : 0;
+  }
+
+  /**
    * @ret Layout
    */
-  getCurLayout(): Layout {
+  getcurlayout(): Layout {
     return this._activeLayout;
   }
 
@@ -213,6 +256,14 @@ export default class Container extends XmlObj {
     if (this._activeLayout == null) {
       this._activeLayout = layout;
     }
+  }
+
+  getnumlayouts(): number {
+    return this._layouts.length;
+  }
+
+  enumlayout(num: number): Layout {
+    return this._layouts[num];
   }
 
   // parser need it.
@@ -225,10 +276,10 @@ export default class Container extends XmlObj {
     // this._div.removeChild(this._activeLayout.getDiv())
   }
 
-  switchToLayout(layout_id: string) {
+  switchtolayout(layout_id: string) {
     const layout = this.getlayout(layout_id);
     assert(layout != null, `Could not find layout with id "${layout_id}".`);
-    UI_ROOT.vm.dispatch(this, "onswitchtolayout", [
+    this._uiRoot.vm.dispatch(this, "onswitchtolayout", [
       { type: "OBJECT", value: layout },
     ]);
     this._clearCurrentLayout();
@@ -243,10 +294,10 @@ export default class Container extends XmlObj {
   ) {
     switch (action) {
       case "SWITCH":
-        this.switchToLayout(param);
+        this.switchtolayout(param);
         break;
       default:
-        UI_ROOT.dispatch(action, param, actionTarget);
+        this._uiRoot.dispatch(action, param, actionTarget);
     }
   }
 
@@ -272,7 +323,7 @@ export default class Container extends XmlObj {
   }
 
   draw() {
-    this._div.setAttribute("id", this.getId());
+    this.getId() && this._div.setAttribute("id", this.getId());
     this._div.setAttribute("tabindex", "1");
     this._renderDimensions();
     this._renderLayouts();

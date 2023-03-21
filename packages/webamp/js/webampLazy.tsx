@@ -1,5 +1,5 @@
 import * as React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 
 import {
@@ -8,9 +8,10 @@ import {
   Track,
   LoadedURLTrack,
   Middleware,
-  WindowPosition,
   ButterchurnOptions,
   PartialState,
+  Options,
+  MediaStatus,
 } from "./types";
 import getStore from "./store";
 import App from "./components/App";
@@ -20,7 +21,6 @@ import * as Selectors from "./selectors";
 import * as Actions from "./actionCreators";
 
 import { LOAD_STYLE } from "./constants";
-import * as Utils from "./utils";
 import * as FileUtils from "./fileUtils";
 
 import {
@@ -39,126 +39,31 @@ import Emitter from "./emitter";
 import { SerializedStateV1 } from "./serializedStates/v1Types";
 import Disposable from "./Disposable";
 
-export interface Options {
-  /**
-   * An object representing the initial skin to use.
-   *
-   * If omitted, the default skin, included in the bundle, will be used.
-   * Note: This URL must be served the with correct CORs headers.
-   *
-   * Example: `{ url: './path/to/skin.wsz' }`
-   */
-  initialSkin?: {
-    url: string;
-  };
-
-  /**
-   * An array of `Track`s to prepopulate the playlist with.
-   */
-  initialTracks?: Track[];
-
-  /**
-   * An array of objects representing available skins.
-   *
-   * These will appear in the "Options" menu under "Skins".
-   * Note: These URLs must be served with the correct CORs headers.
-   *
-   * Example: `[ { url: "./green.wsz", name: "Green Dimension V2" } ]`
-   */
-  availableSkins?: { url: string; name: string }[];
-
-  /**
-   * Should global hotkeys be enabled?
-   *
-   * Default: `false`
-   */
-  enableHotkeys?: boolean;
-
-  /**
-   * An array of additional file pickers.
-   *
-   * These will appear in the "Options" menu under "Play".
-   *
-   * In the offical version, this option is used to provide a "Dropbox" file picker.
-   */
-  filePickers?: [
-    {
-      /**
-       * The name that will appear in the context menu.
-       *
-       * Example: `"My File Picker..."`
-       */
-      contextMenuName: string;
-
-      /**
-       * A function which returns a Promise that resolves to an array of `Track`s
-       *
-       * Example: `() => Promise.resolve([{ url: './rick_roll.mp3' }])`
-       */
-      filePicker: () => Promise<Track[]>;
-
-      /**
-       * Indicates if this options should be made available when the user is offline.
-       */
-      requiresNetwork: boolean;
-    }
-  ];
-  zIndex?: number;
-  handleTrackDropEvent?: (
-    e: React.DragEvent<HTMLDivElement>
-  ) => Track[] | null | Promise<Track[] | null>;
-  handleAddUrlEvent?: () => Track[] | null | Promise<Track[] | null>;
-  handleLoadListEvent?: () => Track[] | null | Promise<Track[] | null>;
-  handleSaveListEvent?: (tracks: Track[]) => null | Promise<null>;
-}
-
-export type WindowLayout = {
-  [windowId: string]: {
-    size?: null | [number, number];
-    position: WindowPosition;
-  };
-};
-
 export interface PrivateOptions {
-  avaliableSkins?: { url: string; name: string }[]; // Old misspelled name
   requireJSZip(): Promise<any>; // TODO: Type JSZip
   requireMusicMetadata(): Promise<any>; // TODO: Type musicmetadata
   __initialState?: PartialState;
   __customMiddlewares?: Middleware[];
-  __initialWindowLayout?: WindowLayout;
   __butterchurnOptions?: ButterchurnOptions;
   // This is used by https://winampify.io/ to proxy through to Spotify's API.
   __customMediaClass?: typeof Media; // This should have the same interface as Media
 }
 
-// Return a promise that resolves when the store matches a predicate.
-// TODO #leak
-const storeHas = (
-  store: Store,
-  predicate: (state: AppState) => boolean
-): Promise<void> =>
-  new Promise((resolve) => {
-    if (predicate(store.getState())) {
-      resolve();
-      return;
-    }
-    const unsubscribe = store.subscribe(() => {
-      if (predicate(store.getState())) {
-        resolve();
-        unsubscribe();
-      }
-    });
-  });
-
 class Webamp {
   static VERSION = "1.5.0";
   _actionEmitter: Emitter;
-  _node: HTMLElement | null;
+  _root: ReactDOM.Root | null;
   _disposable: Disposable;
   options: Options & PrivateOptions; // TODO: Make this _private
   media: Media; // TODO: Make this _private
   store: Store; // TODO: Make this _private
-  static browserIsSupported() {
+
+  /**
+   * Returns a true if the current browser supports the features that Webamp depends upon.
+   *
+   * It is recommended to check this before you attempt to instantiate an instance of Winamp.
+   */
+  static browserIsSupported(): boolean {
     const supportsAudioApi = !!(
       window.AudioContext ||
       // @ts-ignore
@@ -170,14 +75,13 @@ class Webamp {
   }
 
   constructor(options: Options & PrivateOptions) {
-    this._node = null;
+    this._root = null;
     this._disposable = new Disposable();
     this._actionEmitter = new Emitter();
     this.options = options;
     const {
       initialTracks,
       initialSkin,
-      avaliableSkins, // Old misspelled name
       availableSkins,
       enableHotkeys = false,
       zIndex,
@@ -187,6 +91,7 @@ class Webamp {
       handleAddUrlEvent,
       handleLoadListEvent,
       handleSaveListEvent,
+      enableDoubleSizeMode,
       __butterchurnOptions,
       __customMediaClass,
     } = this.options;
@@ -227,6 +132,10 @@ class Webamp {
         handleSaveListEvent,
       }
     ) as Store;
+
+    if (enableDoubleSizeMode) {
+      this.store.dispatch(Actions.toggleDoubleSizeMode());
+    }
 
     if (navigator.onLine) {
       this.store.dispatch({ type: NETWORK_CONNECTED });
@@ -271,77 +180,83 @@ class Webamp {
       this._bufferTracks(initialTracks);
     }
 
-    if (avaliableSkins != null) {
+    // @ts-ignore
+    if (options.avaliableSkins != null) {
       console.warn(
         "The misspelled option `avaliableSkins` is deprecated. Please use `availableSkins` instead."
       );
+      // @ts-ignore
       this.store.dispatch({ type: SET_AVAILABLE_SKINS, skins: avaliableSkins });
     } else if (availableSkins != null) {
       this.store.dispatch({ type: SET_AVAILABLE_SKINS, skins: availableSkins });
     }
 
-    const layout = options.__initialWindowLayout;
-    if (layout == null) {
-      this.store.dispatch(Actions.stackWindows());
-    } else {
-      Utils.objectForEach(layout, (w, windowId) => {
-        if (w.size != null) {
-          this.store.dispatch(Actions.setWindowSize(windowId, w.size));
-        }
-      });
-      this.store.dispatch(
-        Actions.updateWindowPositions(
-          Utils.objectMap(layout, (w) => w.position),
-          false
-        )
-      );
-    }
+    this.store.dispatch(Actions.setWindowLayout(options.windowLayout));
 
     if (enableHotkeys) {
       this._disposable.add(bindHotkeys(this.store.dispatch));
     }
   }
 
-  play() {
+  /**
+   * Play the current tack
+   */
+  play(): void {
     this.store.dispatch(Actions.play());
   }
 
-  pause() {
+  /**
+   * Pause the current tack
+   */
+  pause(): void {
     this.store.dispatch(Actions.pause());
   }
 
-  stop() {
+  /**
+   * Stop the currently playing audio. Equivalent to pressing the "stop" button
+   */
+  stop(): void {
     this.store.dispatch(Actions.stop());
   }
 
+  /**
+   * Seek backward n seconds in the curent track
+   */
   seekBackward(seconds: number) {
     this.store.dispatch(Actions.seekBackward(seconds));
   }
 
+  /**
+   * Seek forward n seconds in the curent track
+   */
   seekForward(seconds: number) {
     this.store.dispatch(Actions.seekForward(seconds));
   }
 
+  /**
+   * Seek to a given time within the current track
+   */
   seekToTime(seconds: number) {
     this.store.dispatch(Actions.seekToTime(seconds));
   }
 
-  nextTrack() {
+  /**
+   * Play the next track
+   */
+  nextTrack(): void {
     this.store.dispatch(Actions.next());
   }
 
-  previousTrack() {
+  /**
+   * Play the previous track
+   */
+  previousTrack(): void {
     this.store.dispatch(Actions.previous());
   }
 
-  _bufferTracks(tracks: Track[]): void {
-    const nextIndex = Selectors.getTrackCount(this.store.getState());
-    this.store.dispatch(
-      Actions.loadMediaFiles(tracks, LOAD_STYLE.BUFFER, nextIndex)
-    );
-  }
-
-  // Append this array of tracks to the end of the current playlist.
+  /**
+   * Add an array of `Track`s to the end of the playlist.
+   */
   appendTracks(tracks: Track[]): void {
     const nextIndex = Selectors.getTrackCount(this.store.getState());
     this.store.dispatch(
@@ -349,33 +264,66 @@ class Webamp {
     );
   }
 
-  // Replace any existing tracks with this array of tracks, and begin playing.
+  /**
+   * Replace the playlist with an array of `Track`s and begin playing the first track.
+   */
   setTracksToPlay(tracks: Track[]): void {
     this.store.dispatch(Actions.loadMediaFiles(tracks, LOAD_STYLE.PLAY));
   }
 
-  getMediaStatus() {
+  /**
+   * Get the current "playing" status.
+   */
+  getMediaStatus(): MediaStatus | null {
     return Selectors.getMediaStatus(this.store.getState());
   }
 
+  /**
+   * A callback which will be called when Webamp is _about to_ close. Returns an
+   * "unsubscribe" function. The callback will be passed a `cancel` function
+   * which you can use to conditionally prevent Webamp from being closed.
+   *
+   * @returns An "unsubscribe" function. Useful if at some point in the future you want to stop listening to these events.
+   */
   onWillClose(cb: (cancel: () => void) => void): () => void {
     return this._actionEmitter.on(CLOSE_REQUESTED, (action) => {
       cb(action.cancel);
     });
   }
 
+  /**
+   * A callback which will be called when Webamp is closed.
+   *
+   * @returns An "unsubscribe" function. Useful if at some point in the future you want to stop listening to these events.
+   */
   onClose(cb: () => void): () => void {
     return this._actionEmitter.on(CLOSE_WINAMP, cb);
   }
 
+  /**
+   * Equivalent to selection "Close" from Webamp's options menu. Once closed,
+   * you can open it again with `.reopen()`.
+   */
   close(): void {
     this.store.dispatch(Actions.close());
   }
 
+  /**
+   * After `.close()`ing this instance, you can reopen it by calling this method.
+   */
   reopen(): void {
     this.store.dispatch(Actions.open());
   }
 
+  /**
+   * A callback which will be called when a new track starts loading.
+   *
+   * This can happen on startup when the first track starts buffering, or when a subsequent track starts playing.
+   * The callback will be called with an object `({url: 'https://example.com/track.mp3'})` containing the URL of the track.
+   * Note: If the user drags in a track, the URL may be an ObjectURL.
+   *
+   * @returns An "unsubscribe" function. Useful if at some point in the future you want to stop listening to these events.
+   */
   onTrackDidChange(cb: (trackInfo: LoadedURLTrack | null) => void): () => void {
     let previousTrackId: number | null = null;
     // TODO #leak
@@ -390,14 +338,31 @@ class Webamp {
     });
   }
 
+  /**
+   * A callback which will be called when Webamp is minimized.
+   *
+   * @returns An "unsubscribe" function. Useful if at some point in the future you want to stop listening to these events.
+   */
   onMinimize(cb: () => void): () => void {
     return this._actionEmitter.on(MINIMIZE_WINAMP, cb);
   }
 
+  /**
+   * Set the skin to use. This can be a URL or a base64 encoded string. The skin
+   * will be loaded asynchronously.
+   *
+   * NOTE: If the URL is not on the same domain as the page, you will need to consider CORS.
+   * https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+   */
   setSkinFromUrl(url: string): void {
     this.store.dispatch(Actions.setSkinFromUrl(url));
+    // TODO: Should this return a promise?
+    // return this.skinIsLoaded(); ??
   }
 
+  /**
+   * Returns a promise that resolves when the skin is done loading.
+   */
   async skinIsLoaded(): Promise<void> {
     // Wait for the skin to load.
     // TODO #leak
@@ -415,6 +380,56 @@ class Webamp {
     return;
   }
 
+  /**
+   * Webamp will wait until it has fetched the skin and fully parsed it and then render itself.
+   *
+   * Webamp is rendered into a new DOM node at the end of the <body> tag with the id `#webamp`.
+   *
+   * If a domNode is passed, Webamp will place itself in the center of that DOM node.
+   *
+   * @returns A promise is returned which will resolve after the render is complete.
+   */
+  async renderWhenReady(node: HTMLElement): Promise<void> {
+    this.store.dispatch(Actions.centerWindowsInContainer(node));
+    await this.skinIsLoaded();
+    if (this._disposable.disposed) {
+      return;
+    }
+    if (this._root != null) {
+      throw new Error("Cannot render a Webamp instance twice");
+    }
+    this._root = ReactDOM.createRoot(node);
+    this._disposable.add(() => {
+      if (this._root != null) {
+        this._root.unmount();
+        this._root = null;
+      }
+    });
+
+    this._root.render(
+      <Provider store={this.store}>
+        <App media={this.media} filePickers={this.options.filePickers || []} />
+      </Provider>
+    );
+  }
+
+  /**
+   * **Note:** _This method is not fully functional. It is currently impossible to
+   * clean up a Winamp instance. This method makes an effort, but it still leaks
+   * the whole instance. In the future the behavior of this method will improve,
+   * so you might as well call it._
+   *
+   * When you are done with a Webamp instance, call this method and Webamp will
+   * attempt to clean itself up to avoid memory leaks.
+   */
+  dispose(): void {
+    // TODO: Clean up store subscription in onTrackDidChange
+    // TODO: Every storeHas call represents a potential race condition
+    this.media.dispose();
+    this._actionEmitter.dispose();
+    this._disposable.dispose();
+  }
+
   __loadSerializedState(serializedState: SerializedStateV1): void {
     this.store.dispatch(Actions.loadSerializedState(serializedState));
   }
@@ -428,36 +443,34 @@ class Webamp {
     return this.store.subscribe(cb);
   }
 
-  async renderWhenReady(node: HTMLElement): Promise<void> {
-    this.store.dispatch(Actions.centerWindowsInContainer(node));
-    await this.skinIsLoaded();
-    // TODO #race We may have been destroyed
-    if (this._node != null) {
-      throw new Error("Cannot render a Webamp instance twice");
-    }
-    this._node = node;
-    this._disposable.add(() => {
-      if (this._node != null) {
-        ReactDOM.unmountComponentAtNode(this._node);
-        this._node = null;
-      }
-    });
-
-    const root = ReactDOM.createRoot(node);
-    root.render(
-      <Provider store={this.store}>
-        <App media={this.media} filePickers={this.options.filePickers || []} />
-      </Provider>
+  _bufferTracks(tracks: Track[]): void {
+    const nextIndex = Selectors.getTrackCount(this.store.getState());
+    this.store.dispatch(
+      Actions.loadMediaFiles(tracks, LOAD_STYLE.BUFFER, nextIndex)
     );
   }
-
-  dispose(): void {
-    // TODO: Clean up store subscription in onTrackDidChange
-    // TODO: Every storeHas call represents a potential race condition
-    this.media.dispose();
-    this._actionEmitter.dispose();
-    this._disposable.dispose();
-  }
 }
+
+// Return a promise that resolves when the store matches a predicate.
+// TODO #leak
+const storeHas = (
+  store: Store,
+  predicate: (state: AppState) => boolean
+): Promise<void> =>
+  new Promise((resolve) => {
+    if (predicate(store.getState())) {
+      resolve();
+      return;
+    }
+    const unsubscribe = store.subscribe(() => {
+      if (predicate(store.getState())) {
+        resolve();
+        unsubscribe();
+      }
+    });
+  });
+
+// @ts-ignore
+window.Webamp = Webamp;
 
 export default Webamp;

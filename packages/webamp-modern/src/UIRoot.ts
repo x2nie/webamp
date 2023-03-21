@@ -14,18 +14,32 @@ import {
 import BitmapFont from "./skin/BitmapFont";
 import Color from "./skin/Color";
 import GammaGroup from "./skin/GammaGroup";
-import Container from "./skin/makiClasses/Container";
 import Vm from "./skin/VM";
-import BaseObject from "./skin/makiClasses/BaseObject";
-import AUDIO_PLAYER, { AudioPlayer } from "./skin/AudioPlayer";
-import SystemObject from "./skin/makiClasses/SystemObject";
-import ComponentBucket from "./skin/makiClasses/ComponentBucket";
-import GroupXFade from "./skin/makiClasses/GroupXFade";
-import { PlEdit, Track } from "./skin/makiClasses/PlayList";
+import AUDIO_PLAYER, { AudioPlayer, Track } from "./skin/AudioPlayer";
 import PRIVATE_CONFIG from "./skin/PrivateConfig";
 import ImageManager from "./skin/ImageManager";
 
+import Container from "./skin/makiClasses/Container";
+import BaseObject from "./skin/makiClasses/BaseObject";
+import SystemObject from "./skin/makiClasses/SystemObject";
+import ComponentBucket from "./skin/makiClasses/ComponentBucket";
+import GroupXFade from "./skin/makiClasses/GroupXFade";
+import { PlEdit } from "./skin/makiClasses/PlayList";
+import Config from "./skin/makiClasses/Config";
+import WinampConfig from "./skin/makiClasses/WinampConfig";
+import Avs from "./skin/makiClasses/Avs";
+
+import { SkinEngineClass } from "./skin/SkinEngine";
+import { FileExtractor } from "./skin/FileExtractor";
+import Application from "./skin/makiClasses/Application";
+
 export class UIRoot {
+  _id: string;
+  _application: Application;
+  _avss: Avs[] = [];
+  _config: Config;
+  _winampConfig: WinampConfig;
+
   _div: HTMLDivElement = document.createElement("div");
   _imageManager: ImageManager;
   // Just a temporary place to stash things
@@ -43,23 +57,26 @@ export class UIRoot {
   _activeGammaSet: GammaGroup[] = [];
   _containers: Container[] = [];
   _systemObjects: SystemObject[] = [];
-  _buckets: { [wndType: string]: ComponentBucket } = {};
+  // _buckets: { [wndType: string]: ComponentBucket } = {};
+  _buckets: ComponentBucket[] = [];
   _bucketEntries: { [wndType: string]: XmlElement[] } = {};
   _xFades: GroupXFade[] = [];
   _input: HTMLInputElement = document.createElement("input");
   _skinInfo: { [key: string]: string } = {};
+  _skinEngineClass: SkinEngineClass;
   _eventListener: Emitter = new Emitter();
-  _jsScript: { [key: string]: string } = {}; //wmp
+  _additionalCss: string[] = [];
 
   // A list of all objects created for this skin.
   _objects: BaseObject[] = [];
 
   //published
-  vm: Vm = new Vm();
+  vm: Vm;
   audio: AudioPlayer = AUDIO_PLAYER;
-  playlist: PlEdit = new PlEdit();
+  playlist: PlEdit;
 
-  constructor() {
+  constructor(id: string = "ui-root") {
+    this._id = id;
     //"https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Auto-Pilot_-_03_-_Seventeen.mp3";
     this._input.type = "file";
     this._input.setAttribute("multiple", "true");
@@ -67,7 +84,33 @@ export class UIRoot {
     // TODO: dispose
     this._input.onchange = this._inputChanged;
 
-    this._imageManager = new ImageManager();
+    this._imageManager = new ImageManager(this);
+    this._config = new Config(this);
+    this._application = new Application(this);
+    this._winampConfig = new WinampConfig(this);
+    this.playlist = new PlEdit(this); // must be after _config.
+    this.vm = new Vm(this);
+  }
+
+  getId(): string {
+    return this._id;
+  }
+
+  guid2alias(guid: string): string {
+    const knownContainerGuids = {
+      "{0000000a-000c-0010-ff7b-01014263450c}": "vis", // AVS {visualization}
+      "{45f3f7c1-a6f3-4ee6-a15e-125e92fc3f8d}": "pl", // playlist editor
+      "{6b0edf80-c9a5-11d3-9f26-00c04f39ffc6}": "ml", // media library
+      "{7383a6fb-1d01-413b-a99a-7e6f655f4591}": "con", // config?
+      "{7a8b2d76-9531-43b9-91a1-ac455a7c8242}": "lir", // lyric?
+      "{a3ef47bd-39eb-435a-9fb3-a5d87f6f17a5}": "dl", // download??
+      "{f0816d7b-fffc-4343-80f2-e8199aa15cc3}": "video", // independent video window
+    };
+    if (guid.includes(":")) {
+      guid = guid.split(":")[1];
+    }
+    guid = guid.toLowerCase();
+    return knownContainerGuids[guid] || guid;
   }
 
   // shortcut of this.Emitter
@@ -81,15 +124,12 @@ export class UIRoot {
     this._eventListener.off(event, callback);
   }
 
-  getFileAsString: (filePath: string) => Promise<string>;
-  getFileAsBytes: (filePath: string) => Promise<ArrayBuffer>;
-  getFileAsBlob: (filePath: string) => Promise<Blob>;
-
   reset() {
     this.deinitSkin();
     this.dispose();
     this._bitmaps = {};
-    this._imageManager = new ImageManager();
+    this._imageManager.dispose();
+    this._imageManager = new ImageManager(this); //TODO: dispose first
     this._fonts = [];
     this._colors = [];
     this._groupDefs = {};
@@ -100,9 +140,10 @@ export class UIRoot {
     this._systemObjects = [];
     this._jsScript = {};
     this._gammaNames = {};
-    this._buckets = {};
+    this._buckets = [];
     this._bucketEntries = {};
     this._xFades = [];
+    this._additionalCss = [];
     removeAllChildNodes(this._div);
 
     // A list of all objects created for this skin.
@@ -112,10 +153,10 @@ export class UIRoot {
   deinitSkin() {
     // skin is being switched to another skin
     for (const container of this._containers) {
-      container.deinit();
+      container.dispose();
     }
     for (const systemObj of this._systemObjects) {
-      systemObj.deinit();
+      systemObj.dispose();
     }
   }
 
@@ -126,7 +167,7 @@ export class UIRoot {
   getImageManager(): ImageManager {
     return this._imageManager;
   }
-  setImageManager(imageManager:ImageManager) {
+  setImageManager(imageManager: ImageManager) {
     this._imageManager = imageManager;
   }
 
@@ -139,7 +180,6 @@ export class UIRoot {
     this._bitmaps[id] = bitmap;
   }
 
-  // TODO: Maybe return a default bitmap?
   getBitmap(id: string): Bitmap {
     if (!id) {
       return null;
@@ -153,16 +193,19 @@ export class UIRoot {
     assume(found != null, `Could not find bitmap with id ${id}.`);
     return found;
   }
+  removeBitmap(id: string) {
+    delete this._bitmaps[id.toLowerCase()];
+  }
   getBitmaps(): { [id: string]: Bitmap } {
     return this._bitmaps;
   }
-  hasBitmapFilepath(filePath:string): boolean {
-    for(const bitmap of Object.values(this._bitmaps)) {
-      if(bitmap.getFile()==filePath) {
-        return true
+  hasBitmapFilepath(filePath: string): boolean {
+    for (const bitmap of Object.values(this._bitmaps)) {
+      if (bitmap.getFile() == filePath) {
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   /**
@@ -191,9 +234,8 @@ export class UIRoot {
     return found ?? null;
   }
   getFonts(): (TrueTypeFont | BitmapFont)[] {
-    return this._fonts
+    return this._fonts;
   }
-
 
   addColor(color: Color) {
     this._colors.push(color);
@@ -234,13 +276,14 @@ export class UIRoot {
     return found;
   }
 
-
-  addComponentBucket(windowType: string, bucket: ComponentBucket) {
-    this._buckets[windowType] = bucket;
+  // addComponentBucket(windowType: string, bucket: ComponentBucket) {
+  addComponentBucket(bucket: ComponentBucket) {
+    // this._buckets[windowType] = bucket;
+    this._buckets.push(bucket);
   }
-  getComponentBucket(windowType: string): ComponentBucket {
-    return this._buckets[windowType];
-  }
+  // getComponentBucket(windowType: string): ComponentBucket {
+  //   return this._buckets[windowType];
+  // }
   addBucketEntry(windowType: string, entry: XmlElement) {
     if (!this._bucketEntries[windowType]) {
       this._bucketEntries[windowType] = [];
@@ -277,17 +320,27 @@ export class UIRoot {
     return this._groupDefs[groupdef_id];
   }
 
-  addContainers(container: Container) {
+  addContainers(container: Container): Container {
     this._containers.push(container);
+    return container;
   }
 
   getContainers(): Container[] {
     return this._containers;
   }
 
+  iterContainers(callback: (c: Container) => boolean): Container {
+    for (const container of this._containers) {
+      if (callback(container)) return container;
+    }
+  }
+
   findContainer(id: string): Container {
-    const container = findLast(this.getContainers(), (ct) => ct.hasId(id));
-    return container;
+    // const container = findLast(this.getContainers(), (ct) => ct.hasId(id));
+    // return container;
+    return this.iterContainers((ct: Container) => {
+      return ct.hasId(id);
+    });
   }
 
   addGammaSet(id: string, gammaSet: GammaGroup[]) {
@@ -315,16 +368,19 @@ export class UIRoot {
   }
 
   enableDefaultGammaSet() {
-    // TODO: restore the latest gammaSet picked by user for this skin
+    const start = performance.now();
+
     const gammaSetNames = Array.from(this._gammaSets.keys());
     const firstName = gammaSetNames[0] || "";
-    const antiBoring = gammaSetNames[1];
     const lastGamma = PRIVATE_CONFIG.getPrivateString(
       this.getSkinName(),
       "_gammagroup_",
       firstName
     );
     this.enableGammaSet(lastGamma);
+
+    const end = performance.now();
+    console.log(`Loading initial gamma took: ${(end - start) / 1000}s`);
   }
 
   _getGammaGroup(id: string): GammaGroup | null {
@@ -384,26 +440,28 @@ export class UIRoot {
     ) as BitmapFont[];
     // css of bitmaps
     for (const bitmap of [...Object.values(this._bitmaps), ...bitmapFonts]) {
-      const img = bitmap.getImg();
-      if (!img) {
-        console.warn(`Bitmap/font ${bitmap.getId()} has no img!`);
-        continue;
-      }
+      // const img = bitmap.getImg();
+      // if (!img) {
+      //   console.warn(`Bitmap/font ${bitmap.getId()} has no img!`);
+      //   continue;
+      // }
 
-      const groupId = bitmap.getGammaGroup();
-      const gammaGroup = this._getGammaGroup(groupId);
-      // const url = gammaGroup.transformImage(
-      //   img,
-      //   bitmap._x,
-      //   bitmap._y,
-      //   bitmap._width,
-      //   bitmap._height
-      //   );
-      const url = await gammaGroup.transformBitmap(bitmap);
-      cssRules.push(`  ${bitmap.getCSSVar()}: url(${url});`);
+      // const groupId = bitmap.getGammaGroup();
+      // const gammaGroup = this._getGammaGroup(groupId);
+      // const url = await gammaGroup.transformBitmap(bitmap);
+      // cssRules.push(`  ${bitmap.getCSSVar()}: url(${url});`);
+      // cssRules.push(await bitmap.getGammaTransformedUrl());
+      cssRules.push(await bitmap.getGammaTransformedUrl(this));
       //support multiple names
       maybeBitmapAliases(bitmap);
     }
+    // await Promise.all(
+    //   [...Object.values(this._bitmaps), ...bitmapFonts].map(async (bitmap) => {
+    //     cssRules.push(await bitmap.getGammaTransformedUrl(this));
+    //     //support multiple names
+    //     maybeBitmapAliases(bitmap);
+    //   })
+    // );
     // css of colors
     for (const color of this._colors) {
       const groupId = color.getGammaGroup();
@@ -415,8 +473,25 @@ export class UIRoot {
     for (const [dimension, size] of Object.entries(this._dimensions)) {
       cssRules.push(`  --dim-${dimension}: ${size}px;`);
     }
-    const cssEl = document.getElementById("bitmap-css");
-    cssEl.textContent = `:root{${cssRules.join("\n")}}`;
+    for (const additionalRule of this._additionalCss) {
+      cssRules.push(additionalRule);
+    }
+    const cssId = `${this._id}-bitmap-css`;
+    // const head = document.getElementsByTagName("head")[0];
+    // debugger;
+    // const cssEl = document.getElementById();
+    let cssEl = document.querySelector(`style#${cssId}`);
+    if (!cssEl) {
+      cssEl = document.createElement("style");
+      cssEl.setAttribute("type", "text/css");
+      cssEl.setAttribute("id", cssId);
+      document.head.appendChild(cssEl);
+    }
+    cssEl.textContent = `#${this._id} {${cssRules.join("\n")}}`;
+    // cssEl.textContent = `:root{${cssRules.join("\n")}}`;
+  }
+  addAdditionalCss(css: string) {
+    this._additionalCss.push(css);
   }
 
   getXuiElement(xuitag: string): XmlElement | null {
@@ -465,6 +540,15 @@ export class UIRoot {
         break;
       case "eject":
         this.eject();
+        break;
+      case "vis_next":
+      case "vis_prev":
+      case "vis_f5":
+        if (this._avss.length) {
+          for (const avs of this._avss) {
+            avs.dispatchAction(action, param, actionTarget);
+          }
+        }
         break;
       case "eq_toggle":
         this.eq_toggle();
@@ -559,7 +643,7 @@ export class UIRoot {
   }
 
   draw() {
-    this._div.setAttribute("id", "ui-root");
+    this._div.setAttribute("id", this._id);
     this._div.style.imageRendering = "pixelated";
     for (const container of this.getContainers()) {
       container.draw();
@@ -577,21 +661,19 @@ export class UIRoot {
   //? Zip things ========================
   /* because maki need to load a groupdef outside init() */
   _zip: JSZip;
+  // in rare case, we load from both zip & path.
+  // so `_preferZip` is used to decide which file-loader is used by default.
+  _preferZip: boolean;
 
   setZip(zip: JSZip) {
     this._zip = zip;
-    if (zip != null) {
-      this.getFileAsString = this.getFileAsStringZip;
-      this.getFileAsBytes = this.getFileAsBytesZip;
-      this.getFileAsBlob = this.getFileAsBlobZip;
-    } else {
-      this.getFileAsString = this.getFileAsStringPath;
-      this.getFileAsBytes = this.getFileAsBytesPath;
-      this.getFileAsBlob = this.getFileAsBlobPath;
-    }
+    this._preferZip = zip != null;
   }
   getZip(): JSZip {
     return this._zip;
+  }
+  setPreferZip(prefer: boolean) {
+    this._preferZip = prefer;
   }
 
   //? Path things ========================
@@ -606,46 +688,85 @@ export class UIRoot {
     return this._skinPath;
   }
 
-  async getFileAsStringZip(filePath: string): Promise<string> {
-    if (!filePath) return null;
-    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
-    return await zipObj.async("text");
+  //? FileExtractor ========================
+  _fileExtractor: FileExtractor;
+
+  setFileExtractor(fe: FileExtractor) {
+    this._fileExtractor = fe;
   }
 
-  async getFileAsBytesZip(filePath: string): Promise<ArrayBuffer> {
-    if (!filePath) return null;
-    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
-    return await zipObj.async("arraybuffer");
+  async getFileAsString(filePath: string): Promise<string> {
+    return await this._fileExtractor.getFileAsString(filePath);
+  }
+  async getFileAsBytes(filePath: string): Promise<ArrayBuffer> {
+    return await this._fileExtractor.getFileAsBytes(filePath);
+  }
+  async getFileAsBlob(filePath: string): Promise<Blob> {
+    return await this._fileExtractor.getFileAsBlob(filePath);
   }
 
-  async getFileAsBlobZip(filePath: string): Promise<Blob> {
-    if (!filePath) return null;
-    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
-    return await zipObj.async("blob");
-  }
+  // async getFileAsString(filePath: string): Promise<string> {
+  //   if (this._preferZip) {
+  //     return await this.getFileAsStringZip(filePath);
+  //   } else {
+  //     return await this.getFileAsStringPath(filePath);
+  //   }
+  // }
+  // async getFileAsBytes(filePath: string): Promise<ArrayBuffer> {
+  //   if (this._preferZip) {
+  //     return await this.getFileAsBytesZip(filePath);
+  //   } else {
+  //     return await this.getFileAsBytesPath(filePath);
+  //   }
+  // }
+  // async getFileAsBlob(filePath: string): Promise<Blob> {
+  //   if (this._preferZip) {
+  //     return await this.getFileAsBlobZip(filePath);
+  //   } else {
+  //     return await this.getFileAsBlobPath(filePath);
+  //   }
+  // }
 
-  async getFileAsStringPath(filePath: string): Promise<string> {
-    const response = await fetch(this._skinPath + filePath);
-    return await response.text();
-  }
+  // async getFileAsStringZip(filePath: string): Promise<string> {
+  //   if (!filePath) return null;
+  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+  //   if (!zipObj) return null;
+  //   return await zipObj.async("text");
+  // }
 
-  async getFileAsBytesPath(filePath: string): Promise<ArrayBuffer> {
-    const response = await fetch(this._skinPath + filePath);
-    return await response.arrayBuffer();
-  }
+  // async getFileAsBytesZip(filePath: string): Promise<ArrayBuffer> {
+  //   if (!filePath) return null;
+  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+  //   if (!zipObj) return null;
+  //   return await zipObj.async("arraybuffer");
+  // }
 
-  async getFileAsBlobPath(filePath: string): Promise<Blob> {
-    const response = await fetch(this._skinPath + filePath);
-    return await response.blob();
-  }
+  // async getFileAsBlobZip(filePath: string): Promise<Blob> {
+  //   if (!filePath) return null;
+  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+  //   if (!zipObj) return null;
+  //   return await zipObj.async("blob");
+  // }
 
-  getFileIsExist(filePath: string): boolean {
-    const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    return !!zipObj;
-  }
+  // async getFileAsStringPath(filePath: string): Promise<string> {
+  //   const response = await fetch(this._skinPath + filePath);
+  //   return await response.text();
+  // }
+
+  // async getFileAsBytesPath(filePath: string): Promise<ArrayBuffer> {
+  //   const response = await fetch(this._skinPath + filePath);
+  //   return await response.arrayBuffer();
+  // }
+
+  // async getFileAsBlobPath(filePath: string): Promise<Blob> {
+  //   const response = await fetch(this._skinPath + filePath);
+  //   return await response.blob();
+  // }
+
+  // getFileIsExist(filePath: string): boolean {
+  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
+  //   return !!zipObj;
+  // }
 
   //? System things ========================
   /* because maki need to be run if not inside any Group @init() */
@@ -656,9 +777,13 @@ export class UIRoot {
     for (const systemObject of this._systemObjects) {
       systemObject.init();
     }
-  }
-  getId() {
-    return "UIROOT";
+
+    this.logMessage("Initializing Maki...");
+    for (const container of this.getContainers()) {
+      container.init();
+    }
+
+    this.playlist.init();
   }
 
   setSkinInfo(skinInfo: { [key: string]: string }) {
@@ -671,26 +796,24 @@ export class UIRoot {
     return this.getSkinInfo()["name"];
   }
 
-  //? WindowsMediaPlayer ========================
-  addJsScript(js: string) {
-    //* sample: scriptFile="personal.js;res://wmploc/RT_TEXT/#132"
-
-    if (js.includes(";")) {
-      js = js.substring(0, js.indexOf(";"));
-      console.log(js);
-    }
-    this._jsScript[js] = js; //key'd because to avoid duplicate
+  set SkinEngineClass(Engine: SkinEngineClass) {
+    this._skinEngineClass = Engine;
   }
-  async loadJsScripts() {
-    for (const scriptPath of Object.keys(this._jsScript)) {
-      const scriptContent = await this.getFileAsString(scriptPath);
-      const scriptText = decodeWideChars(scriptContent);
-      const script = document.createElement("script");
-      script.textContent = scriptText;
-      script.textContent += ";debugger;";
-      script.type = "text/javascript";
-      document.head.appendChild(script);
-    }
+
+  get SkinEngineClass(): SkinEngineClass {
+    return this._skinEngineClass;
+  }
+
+  get APPLICATION(): Application {
+    return this._application;
+  }
+
+  get CONFIG(): Config {
+    return this._config;
+  }
+
+  get WINAMP_CONFIG(): WinampConfig {
+    return this._winampConfig;
   }
 
   //? Logging things ========================
@@ -702,7 +825,3 @@ export class UIRoot {
     this.trigger("onlogmessage", message);
   }
 }
-
-// Global Singleton for now
-let UI_ROOT = new UIRoot();
-export default UI_ROOT;

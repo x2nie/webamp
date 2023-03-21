@@ -1,9 +1,8 @@
-import UI_ROOT from "../../UIRoot";
 import { num, px, relative } from "../../utils";
 import Group from "./Group";
 
 export default class WasabiTitleBar extends Group {
-  static GUID = "7DFD324437514e7cBF4082AE5F3ADC33";
+  static GUID = "7DFD32444e7c3751AE8240BF33DC3A5F";
   _padtitleleft: number = 0;
   _padtitleright: number = 0;
 
@@ -37,19 +36,17 @@ export default class WasabiTitleBar extends Group {
   _renderWidth() {
     this._div.style.width =
       this._relatw == "1"
-        ? relative(
-            -this._padtitleleft + -this._padtitleright + this._width ?? 0
-          )
+        ? relative(-this._padtitleleft + -this._padtitleright + this._w ?? 0)
         : px(-this._padtitleright + this.getwidth());
   }
 
   init() {
     super.init();
-    UI_ROOT.vm.dispatch(this, "onresize", [
-      { type: "INT", value: 0 },
-      { type: "INT", value: 0 },
-      { type: "INT", value: this.getwidth() },
-      { type: "INT", value: this.getheight() },
-    ]);
+    // this._uiRoot.vm.dispatch(this, "onresize", [
+    //   { type: "INT", value: 0 },
+    //   { type: "INT", value: 0 },
+    //   { type: "INT", value: this.getwidth() },
+    //   { type: "INT", value: this.getheight() },
+    // ]);
   }
 }

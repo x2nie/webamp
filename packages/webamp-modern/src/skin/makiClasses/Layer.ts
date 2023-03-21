@@ -1,5 +1,4 @@
 import GuiObj from "./GuiObj";
-import UI_ROOT from "../../UIRoot";
 import Movable from "./Movable";
 import { Edges } from "../Clippath";
 
@@ -33,11 +32,11 @@ export default class Layer extends Movable {
 
   // This shadows `getheight()` on GuiObj
   getheight(): number {
-    if (this._height) {
-      return this._height;
+    if (this._h) {
+      return this._h;
     }
     if (this._image != null) {
-      const bitmap = UI_ROOT.getBitmap(this._image);
+      const bitmap = this._uiRoot.getBitmap(this._image);
       if (bitmap) return bitmap.getHeight();
     }
     return super.getheight();
@@ -45,41 +44,43 @@ export default class Layer extends Movable {
 
   // This shadows `getwidth()` on GuiObj
   getwidth(): number {
-    if (this._width) {
-      return this._width;
+    if (this._w) {
+      return this._w;
     }
     if (this._image != null) {
-      const bitmap = UI_ROOT.getBitmap(this._image);
+      const bitmap = this._uiRoot.getBitmap(this._image);
       if (bitmap) return bitmap.getWidth();
     }
     return super.getwidth();
   }
 
   _renderBackground() {
-    const bitmap = this._image != null ? UI_ROOT.getBitmap(this._image) : null;
+    const bitmap =
+      this._image != null ? this._uiRoot.getBitmap(this._image) : null;
     this.setBackgroundImage(bitmap);
     this.setInactiveBackgroundImage(bitmap);
     if (this._inactiveImage) {
-      this.setInactiveBackgroundImage(UI_ROOT.getBitmap(this._inactiveImage));
+      this.setInactiveBackgroundImage(
+        this._uiRoot.getBitmap(this._inactiveImage)
+      );
       this._div.classList.add("inactivable");
     }
   }
 
   _renderRegion() {
     if (this._sysregion == 1 && this._image) {
-      const bitmap = UI_ROOT.getBitmap(this._image);
-      if (!bitmap.getImg()) {
-        console.warn("can't process region on no img:" + this._image);
-        return;
+      const bitmap = this._uiRoot.getBitmap(this._image);
+      if (bitmap && bitmap.getImg()) {
+        const canvas = bitmap.getCanvas();
+        const edge = new Edges();
+        edge.parseCanvasTransparency(canvas, this.getwidth(), this.getheight());
+        if (!edge.isSimpleRect()) {
+          this._div.style.clipPath = edge.getPolygon();
+          return;
+        }
       }
-      const canvas = bitmap.getCanvas();
-      const edge = new Edges();
-      edge.parseCanvasTransparency(canvas, this.getwidth(), this.getheight());
-      if (edge.isSimpleRect()) {
-        this.setXmlAttr("sysregion", "0");
-      } else {
-        this._div.style.clipPath = edge.getPolygon();
-      }
+      // if anything failed, don't repeat:
+      this.setXmlAttr("sysregion", "0");
     }
   }
 

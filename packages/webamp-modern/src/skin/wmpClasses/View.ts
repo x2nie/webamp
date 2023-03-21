@@ -1,9 +1,10 @@
-import UI_ROOT, { UIRoot } from "../../UIRoot";
+import { UIRoot } from "../../UIRoot";
 import { num } from "../../utils";
 import Container from "../makiClasses/Container";
 import Group from "../makiClasses/Group";
 import GuiObj from "../makiClasses/GuiObj";
 import Layout from "../makiClasses/Layout";
+import { decodeWideChars } from "../SkinEngine_WindowsMediaPlayer";
 import Theme from "./Theme";
 import { runInlineScript } from "./util";
 
@@ -13,7 +14,8 @@ export default class View extends Container {
   _scriptFile: string;
   _onLoad: string;
   _timerInterval: number;
-  _onTimer:string;
+  _onTimer: string;
+  _jsScript: { [key: string]: string } = {}; //wmp
 
   getElTag(): string {
     return "container";
@@ -31,7 +33,7 @@ export default class View extends Container {
         break;
       case "scriptfile":
         this._scriptFile = value;
-        UI_ROOT.addJsScript(value);
+        this.addJsScript(value);
         break;
       case "onload":
         this._onLoad = value;
@@ -51,27 +53,72 @@ export default class View extends Container {
   init() {
     super.init();
 
+    // this.loadJsScripts(); //done in skinengin
+
+    const ctx = { view: this };
+
     // if (this._scriptFile) {
     //   this.prepareScriptGlobalObjects();
-      //? temporary disabling due incomplete methods
-      if (this._onLoad!=null) {
+    //? temporary disabling due incomplete methods
+    if (this._onLoad != null) {
       //   setTimeout(() => {
-          runInlineScript(this._onLoad);
+      runInlineScript(this._onLoad, ctx);
       //   }, 1000);
-      }
+    }
     // }
     // pending onLoad
-    if(this._onTimer && this._timerInterval!=null){
+    if (this._onTimer && this._timerInterval != null) {
       setTimeout(() => {
-        console.log('Blendshutter!?',this._onTimer)
-        runInlineScript(this._onTimer)
+        console.log("Blendshutter!?", this._onTimer);
+        runInlineScript(this._onTimer, ctx);
       }, this._timerInterval);
     }
+  }
+  // getwidth():number {
+  //   return this._activeLayout._w; // avoid getting bitmap.width
+  // }
+  // getheight():number {
+  //   return this._activeLayout._h; // avoid getting bitmap.width
+  // }
 
+  get width(): number {
+    return this.getWidth(); // container.getWidth
+  }
+  get height(): number {
+    return this.getHeight(); // container.getHeight
+  }
+  set width(w: number) {
+    this.setWidth(w);
+  }
+  set height(h: number) {
+    this.setHeight(h);
+  }
+
+  //? WindowsMediaPlayer ========================
+  addJsScript(js: string) {
+    //* sample: scriptFile="personal.js;res://wmploc/RT_TEXT/#132"
+
+    if (js.includes(";")) {
+      js = js.substring(0, js.indexOf(";"));
+      console.log(js);
+    }
+    this._jsScript[js] = js; //key'd because to avoid duplicate
+  }
+  async loadJsScripts() {
+    for (const scriptPath of Object.keys(this._jsScript)) {
+      const scriptContent = await this._uiRoot.getFileAsString(scriptPath);
+      const scriptText = decodeWideChars(scriptContent);
+      const script = document.createElement("script");
+      script.textContent = scriptText;
+      script.textContent += ";debugger;";
+      script.type = "text/javascript";
+      // TODO: register script loaded, to be unloadable.
+      document.head.appendChild(script);
+    }
   }
 
   prepareScriptGlobalObjects() {
-    const theme = UI_ROOT.findContainer("theme") as Theme;
+    const theme = this._uiRoot.findContainer("theme") as Theme;
     // window["theme"] = theme;
     // window["mediacenter"] = theme.mediaCenter;
     window["view"] = this;
@@ -88,7 +135,7 @@ export default class View extends Container {
       }
     };
 
-    const layout = this.getCurLayout()
+    const layout = this.getcurlayout();
     recursiveSetGlobal(layout);
   }
 
@@ -103,13 +150,12 @@ export default class View extends Container {
 
     if (this._scriptFile) {
       this.prepareScriptGlobalObjects();
-    //   //? temporary disabling due incomplete methods
-    //   if (this._onLoad) {
-    //     setTimeout(() => {
-    //       runInlineScript(this._onLoad);
-    //     }, 1000);
-    //   }
+      //   //? temporary disabling due incomplete methods
+      //   if (this._onLoad) {
+      //     setTimeout(() => {
+      //       runInlineScript(this._onLoad);
+      //     }, 1000);
+      //   }
     }
-
   }
 }

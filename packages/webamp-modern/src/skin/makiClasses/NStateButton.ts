@@ -1,9 +1,9 @@
-import UI_ROOT from "../../UIRoot";
 import { num } from "../../utils";
 import ToggleButton from "./ToggleButton";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cnstatesbutton.2F.3E
 export default class NStateButton extends ToggleButton {
+  static GUID = "OFFICIALLY-NO-GUID";
   //   static GUID = "b4dccfff4bcc81fe0f721b96ff0fbed5";
   _statesCount: number = 2;
   _states: number[] = [0, 1];
@@ -84,7 +84,7 @@ export default class NStateButton extends ToggleButton {
     ["image", "downimage", "hoverimage", "activeimage"].forEach((att) => {
       //this button has xml attribute?
       if (this._plainImages[att]) {
-        if (UI_ROOT.hasBitmap(this._plainImages[att] + bitmapSuffix)) {
+        if (this._uiRoot.hasBitmap(this._plainImages[att] + bitmapSuffix)) {
           super.setXmlAttr(att, this._plainImages[att] + bitmapSuffix);
         } else {
           super.setXmlAttr(att, this._plainImages[att]);

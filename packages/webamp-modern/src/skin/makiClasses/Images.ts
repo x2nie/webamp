@@ -1,10 +1,10 @@
-import UI_ROOT from "../../UIRoot";
 import { ensureVmInt, num, px } from "../../utils";
 import Layer from "./Layer";
 
 //? Images is used by classic skin to change background of Volume & Balance only.
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cimages.2F.3E
 export default class Images extends Layer {
+  static GUID = "OFFICIALLY-NO-GUID";
   _currentFrame: number = 0;
   _frameCount: number;
   _frameHeight: number;
@@ -42,31 +42,34 @@ export default class Images extends Layer {
       Math.ceil(this._getImageHeight() / this._frameHeight) - 1;
     if (this._source == "volume") {
       //TODO: make disposable:
-      UI_ROOT.audio.onVolumeChanged(this.updateVolume);
+      this._uiRoot.audio.onVolumeChanged(this.updateVolume);
       this.updateVolume();
     } else if (this._source == "balance") {
       //TODO: make disposable:
-      UI_ROOT.audio.onBalanceChanged(this.updateBalance);
+      this._uiRoot.audio.onBalanceChanged(this.updateBalance);
       this.updateBalance();
     }
   }
 
   updateVolume = () => {
-    const vol = UI_ROOT.audio.getVolume(); //0..1
-    this.gotoframe(vol * this._frameCount);
+    const vol = this._uiRoot.audio.getVolume(); //0..1
+    this.gotoFrame(vol * this._frameCount);
   };
 
   updateBalance = () => {
-    const balance = UI_ROOT.audio.getBalance(); //0..1
-    this.gotoframe(balance * this._frameCount);
+    const balance = this._uiRoot.audio.getBalance(); //0..1
+    this.gotoFrame(balance * this._frameCount);
   };
 
   _getImageHeight(): number {
-    const bitmap = UI_ROOT.getBitmap(this._image);
-    return bitmap.getHeight();
+    const bitmap = this._uiRoot.getBitmap(this._image);
+    if (bitmap) {
+      return bitmap.getHeight();
+    }
+    return null;
   }
 
-  gotoframe(framenum: number) {
+  gotoFrame(framenum: number) {
     this._currentFrame = Math.ceil(framenum);
     this._renderFrame();
   }

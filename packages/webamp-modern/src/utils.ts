@@ -51,10 +51,14 @@ export function relative(size: number): string {
 }
 
 export function toBool(str: string) {
+  str = str.toLowerCase();
   assume(
     str === "0" || str === "1" || str === "false" || str === "true",
     `Expected bool value to be "0" or "1", but it was "${str}".`
   );
+  if (!isNaN(parseInt(str))) {
+    return parseInt(str) > 0;
+  }
   return str === "1" || str === "true";
 }
 
@@ -89,6 +93,21 @@ export function ensureVmInt(num: number): number {
 export function clamp(num: number, min: number, max: number): number {
   return Math.max(min, Math.min(num, max));
 }
+// same as clamp, but goto next/prev instead floor/ceil.
+export function circular(num: number, min: number, max: number): number {
+  assert(min < max, "illegal circular parameter.");
+  while (num < min) {
+    // -2 < 0
+    num = max + num;
+  }
+  while (num > max) {
+    //   10 > 5
+    num = num - max; // = 10 - 5
+  }
+  // return Math.max(min, Math.min(num, max));
+  assert(num >= min && num <= max, "stupid in math, boss?");
+  return num;
+}
 
 export function normalizeDomId(id: string) {
   return id.replace(/[^a-zA-Z0-9]/g, "-");
@@ -102,7 +121,7 @@ export function removeAllChildNodes(parent: Element) {
 
 export function integerToTime(seconds: number): string {
   const mins = Math.floor(seconds / 60);
-  const secs = String(Math.abs(Math.round(seconds % 60))).padStart(2, "0");
+  const secs = String(Math.abs(Math.floor(seconds % 60))).padStart(2, "0");
   return `${mins}:${secs}`;
 }
 
@@ -157,6 +176,24 @@ export const throttle = (fn: Function, wait: number = 300) => {
     }
   };
 };
+
+export function unimplemented(value: any): any {
+  return value;
+}
+
+/**
+ * parse color string into byte values.
+ * @param hex only a valid html : '#XXXXXX'
+ * @returns an object with respected keys of: r,g,b.
+ */
+export function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+  };
+}
 
 /**
  * parse color string into byte values.

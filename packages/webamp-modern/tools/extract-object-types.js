@@ -11,7 +11,8 @@ const files = {
   config: path.join(lib566, "config.mi"),
   std: path.join(lib566, "std.mi"),
   winampconfig: path.join(lib566, "winampconfig.mi"),
-  // application: path.join(lib566, "application.mi"),
+  application: path.join(lib566, "application.mi"),
+  fileio: path.join(lib566, "fileio.mi"),
 };
 
 Object.keys(files).forEach((name) => {
@@ -19,11 +20,12 @@ Object.keys(files).forEach((name) => {
   const types = parser.parseFile(sourcePath);
   const destinationPath = path.join(
     __dirname,
-    `../src/maki/objectData/${name}.js`
+    `../src/maki/objectData/${name}.json`
   );
 
   fs.writeFileSync(
     destinationPath,
-    `export default ${JSON.stringify(types, null, 2)}`
+    JSON.stringify(types, null, 2)
+    // `export default ${JSON.stringify(types, null, 2)}`
   );
 });

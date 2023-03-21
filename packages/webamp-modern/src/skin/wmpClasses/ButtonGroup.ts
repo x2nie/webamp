@@ -1,4 +1,3 @@
-import UI_ROOT from "../../UIRoot";
 import Group from "../makiClasses/Group";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/buttongroup-element
@@ -44,7 +43,7 @@ export default class ButtonGroup extends Group {
   _renderBackground() {
     const setCssVar = (bitmapId: string, bitmapMethod: string) => {
       if (bitmapId != null) {
-        const bitmap = UI_ROOT.getBitmap(bitmapId);
+        const bitmap = this._uiRoot.getBitmap(bitmapId);
         if (bitmap != null) {
           bitmap[bitmapMethod](this._div);
         }
@@ -62,7 +61,7 @@ export default class ButtonGroup extends Group {
   getheight(): number {
     const h = super.getheight();
     if (!h && this._mappingImage != null) {
-      const bitmap = UI_ROOT.getBitmap(this._mappingImage);
+      const bitmap = this._uiRoot.getBitmap(this._mappingImage);
       if (bitmap) return bitmap.getHeight();
     }
     return h ?? 0;
@@ -72,7 +71,7 @@ export default class ButtonGroup extends Group {
   getwidth(): number {
     const w = super.getwidth();
     if (!w && this._mappingImage != null) {
-      const bitmap = UI_ROOT.getBitmap(this._mappingImage);
+      const bitmap = this._uiRoot.getBitmap(this._mappingImage);
       if (bitmap) return bitmap.getWidth();
     }
     return w || 0;
@@ -80,11 +79,11 @@ export default class ButtonGroup extends Group {
 
   draw() {
     super.draw();
-    if (!this._background/* &&!this._image */) {
+    if (!this._background /* &&!this._image */) {
       this._div.classList.remove("webamp--img");
     }
-    if (this._image!=null) {
-      this._div.classList.add('has-image')
+    if (this._image != null) {
+      this._div.classList.add("has-image");
     }
   }
 }

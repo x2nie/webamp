@@ -8,9 +8,12 @@ module.exports = {
     "dist",
     // TODO: Add these as we can...
     "/packages/webamp/",
-    // TODO: Fix config improt so that this can work.
+    // TODO: Fix config import so that this can work.
     "/packages/webamp-modern/src/__tests__/integration*",
   ],
   testEnvironment: "jsdom",
   setupFiles: ["<rootDir>/packages/skin-database/jest-setup.js"],
+  transform: {
+    "^.+\\.(t|j)sx?$": ["@swc/jest"],
+  },
 };

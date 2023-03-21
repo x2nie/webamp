@@ -1,3 +1,4 @@
+import { ITags } from "id3-parser/lib/interface";
 import { clamp, Emitter } from "../utils";
 
 const BANDS = [60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000];
@@ -5,6 +6,17 @@ const BANDS = [60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000];
 export const AUDIO_PAUSED = "paused";
 export const AUDIO_STOPPED = "stopped";
 export const AUDIO_PLAYING = "playing";
+
+// moved here because used by several files eg Playlist,AudioMetadata
+export type Track = {
+  id?: number; //used for identification while refreshing playlist
+  filename: string; // full url, or just File.name
+  file?: File; // Blob
+  metadata?: ITags; // http://forums.winamp.com/showthread.php?t=345521
+  title?: string;
+  rating?: number; // 0..5
+  duration?: number | null;
+};
 
 export class AudioPlayer {
   _audio: HTMLAudioElement = document.createElement("audio");
@@ -27,6 +39,7 @@ export class AudioPlayer {
   //events aka addEventListener()
   _eventListener: Emitter = new Emitter();
   _vuMeter: number = 0;
+  _last_itime: number = 0;
 
   constructor() {
     this._context = this._context = new (window.AudioContext ||
@@ -63,8 +76,10 @@ export class AudioPlayer {
 
     // Create the analyser node for the visualizer
     this._analyser = this._context.createAnalyser();
-    this._analyser.fftSize = 2048;
+    // this._analyser.fftSize = 2048;
     // this._analyser.fftSize = 32;
+    // this._analyser.fftSize = 512; //? to get same VIS to winamp osciloscpoe
+    this._analyser.fftSize = 1024; //? exactly identical to winamp VIS. truncated later in VIS
     // don't smooth audio analysis
     this._analyser.smoothingTimeConstant = 0.0;
 
@@ -152,6 +167,38 @@ export class AudioPlayer {
     //temporary: in the end of playing mp3, lets stop.
     //TODO: in future, when ended: play next mp3
     this._audio.addEventListener("ended", () => this.stop());
+    this._audio.addEventListener("timeupdate", () => this.doTimeUpdate());
+  }
+
+  /**
+   * This method should only the called directly by the audio
+   * purpose: call to update text only when the second is different (not per-250ms)
+   */
+  doTimeUpdate() {
+    const i = this._audio.currentTime << 0;
+    if (i != this._last_itime) {
+      this._last_itime = i;
+      this.trigger("timeupdate");
+      // console.log('ITEIMER:', this.getCurrentTime())
+    }
+  }
+
+  setEqEnabled(enable: boolean) {
+    this._eqEnabled = enable;
+    this._source.disconnect();
+    if (enable) {
+      this._source.connect(this.__preamp);
+    } else {
+      // bypassed.
+      this._source.connect(this._balanceNode);
+    }
+  }
+  getEqEnabled(): boolean {
+    return this._eqEnabled;
+  }
+
+  getAnalyser(): AnalyserNode {
+    return this._analyser;
   }
 
   setEqEnabled(enable: boolean) {
@@ -195,7 +242,10 @@ export class AudioPlayer {
   // 0-1
   setVolume(volume: number) {
     // this._audio.volume = volume;
-    this._volumeNode.gain.value = volume;
+    if (volume != this._volumeNode.gain.value) {
+      this._volumeNode.gain.value = volume;
+      this.trigger("volumechanged");
+    }
   }
 
   getBalance(): number {
@@ -209,8 +259,18 @@ export class AudioPlayer {
     this.trigger("balancechange");
   }
 
+  // 0.5 .. 4
+  getPlaybackRate(): number {
+    return this._audio.playbackRate;
+  }
+  setPlaybackRate(value: number) {
+    this._audio.playbackRate = clamp(value, 0.5, 4.0);
+    this.trigger("playbackratechange");
+  }
+
   play() {
     this._isStop = false;
+    this.trigger("timeupdate");
     this._audio.play();
     this.trigger("play");
     this.trigger("statchanged");
@@ -353,13 +413,14 @@ export class AudioPlayer {
     }
   }
 
-  onCurrentTimeChange(cb: () => void): () => void {
-    const handler = () => cb();
-    this._audio.addEventListener("timeupdate", handler);
-    const dispose = () => {
-      this._audio.removeEventListener("timeupdate", handler);
-    };
-    return dispose;
+  onCurrentTimeChange(cb: () => void): Function {
+    // const handler = () => cb();
+    // this._audio.addEventListener("timeupdate", handler);
+    // const dispose = () => {
+    //   this._audio.removeEventListener("timeupdate", handler);
+    // };
+    // return dispose;
+    return this.on("timeupdate", cb);
   }
 
   onSeek(cb: () => void): () => void {
@@ -371,13 +432,8 @@ export class AudioPlayer {
     return dispose;
   }
 
-  onVolumeChanged(cb: () => void): () => void {
-    const handler = () => cb();
-    this._audio.addEventListener("volumechange", handler);
-    const dispose = () => {
-      this._audio.removeEventListener("volumechange", handler);
-    };
-    return dispose;
+  onVolumeChanged(cb: Function): Function {
+    return this.on("volumechanged", cb);
   }
 
   onBalanceChanged(cb: () => void): Function {

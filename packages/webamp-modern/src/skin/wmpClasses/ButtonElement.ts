@@ -1,4 +1,4 @@
-import UI_ROOT from "../../UIRoot";
+import { UIRoot } from "../../UIRoot";
 import { toBool } from "../../utils";
 import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import { Edges } from "../Clippath";
@@ -18,8 +18,8 @@ export default class ButtonElement extends GuiObj {
   _sticky: boolean = false;
   _audioEvent: { [audioEvent: string]: string } = {};
 
-  constructor() {
-    super();
+  constructor(uiRoot: UIRoot) {
+    super(uiRoot);
     // TODO: Cleanup!
     // this._div.addEventListener("mousedown", this._handleMouseDown.bind(this));
     this._div.addEventListener("click", (e: MouseEvent) => {
@@ -58,7 +58,13 @@ export default class ButtonElement extends GuiObj {
         this.setAction(value);
         break;
       case "onclick":
-        this._onClick = value;
+        if (value.startsWith("visEffects.next()")) {
+          this.setAction("VIS_Next");
+        } else if (value.startsWith("visEffects.previous()")) {
+          this.setAction("VIS_Prev");
+        } else {
+          this._onClick = value;
+        }
         break;
       case "uptooltip":
         this._upTooltip = value;
@@ -128,18 +134,17 @@ export default class ButtonElement extends GuiObj {
     } else {
       this._div.classList.remove("down");
     }
-    this._renderTooltip()
+    this._renderTooltip();
   }
-  
+
   _renderTooltip() {
     if (this._down && (this._downTooltip || this._upTooltip)) {
       this._div.setAttribute("title", this._downTooltip || this._upTooltip);
-    } else if(!this._down && this._upTooltip) {
+    } else if (!this._down && this._upTooltip) {
       this._div.setAttribute("title", this._upTooltip);
     } else {
-      this._div.removeAttribute("title");      
+      this._div.removeAttribute("title");
     }
-
   }
 
   _renderDisabled() {
@@ -152,7 +157,9 @@ export default class ButtonElement extends GuiObj {
 
   _renderRegion() {
     if (this._mappingColor && this._parent instanceof ButtonGroup) {
-      const canvas = UI_ROOT.getBitmap(this._parent._mappingImage).getCanvas();
+      const canvas = this._uiRoot
+        .getBitmap(this._parent._mappingImage)
+        .getCanvas();
       const edge = new Edges();
       edge.parseCanvasTransparencyByNonColor(canvas, this._mappingColor);
       if (edge.isSimpleRect()) {
@@ -166,7 +173,9 @@ export default class ButtonElement extends GuiObj {
   init() {
     super.init();
     if (Object.keys(this._audioEvent).length > 0) {
-      UI_ROOT.audio.on("statchanged", () => this._updatePropsByAudioState());
+      this._uiRoot.audio.on("statchanged", () =>
+        this._updatePropsByAudioState()
+      );
       this._updatePropsByAudioState();
     }
   }
@@ -178,7 +187,7 @@ export default class ButtonElement extends GuiObj {
       [AUDIO_PAUSED]: { play: true, pause: false, stop: true },
       [AUDIO_STOPPED]: { play: true, pause: false, stop: false },
     };
-    const state = UI_ROOT.audio.getState(); // playing
+    const state = this._uiRoot.audio.getState(); // playing
     if (!buttonStates[state]) {
       console.warn("unknown audio state:", state);
       return;

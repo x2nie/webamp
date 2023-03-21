@@ -1,5 +1,4 @@
-import UI_ROOT from "../../UIRoot";
-import { num } from "../../utils";
+import { num, toBool } from "../../utils";
 import { AUDIO_PAUSED, AUDIO_PLAYING, AUDIO_STOPPED } from "../AudioPlayer";
 import { Edges } from "../Clippath";
 import Group from "../makiClasses/Group";
@@ -18,13 +17,19 @@ export default class SubView extends Group {
   }
 
   setXmlAttr(_key: string, value: string): boolean {
-    const key = _key.toLowerCase();
+    let key = _key.toLowerCase();
     if (value.startsWith("wmpenabled:player.controls.")) {
       this._audioEvent[value.split(".").pop()] = key;
       return;
     }
 
-    if (super.setXmlAttr(_key, value)) {
+    if (key == "passthrough") {
+      // key = 'ghost';
+      this.passThrough = value;
+      return true;
+    }
+
+    if (super.setXmlAttr(key, value)) {
       return true;
     }
 
@@ -50,6 +55,13 @@ export default class SubView extends Group {
         return false;
     }
     return true;
+  }
+
+  set passThrough(val: string) {
+    const noMouse = toBool(val);
+    this.getDiv().classList.toggle("passthrough", noMouse);
+    // this._ghost = noMouse;
+    // this._div.style.pointerEvents = this._ghost ? "none" : "auto";
   }
 
   moveTo(x: number, y: number, speed: number) {
@@ -82,19 +94,14 @@ export default class SubView extends Group {
     this._renderAlpha();
   }
 
-  set passThrough(value: string) {
-    this._ghost = value == "True";
-    this._div.style.pointerEvents = this._ghost ? "none" : "auto";
-  }
-
   init() {
     super.init();
-    UI_ROOT.audio.on("statchanged", () => this._updateStatus());
+    this._uiRoot.audio.on("statchanged", () => this._updateStatus());
     this._updateStatus();
   }
 
   _updateStatus() {
-    const state = UI_ROOT.audio.getState(); // playing
+    const state = this._uiRoot.audio.getState(); // playing
     for (const [audioEvent, prop] of Object.entries(this._audioEvent)) {
       this[prop] =
         (audioEvent == "play" && state != AUDIO_PLAYING) ||
@@ -107,7 +114,7 @@ export default class SubView extends Group {
     //* maybe, in win32/gdi the transparency has different.
     //* we thread both as same here, confirmed by visual see by eye is okay.
     if ((this._clippingColor || this._transparencyColor) && this._background) {
-      const canvas = UI_ROOT.getBitmap(this._background).getCanvas(false);
+      const canvas = this._uiRoot.getBitmap(this._background).getCanvas(false);
       const edge = new Edges();
       edge.parseCanvasTransparencyByColor(
         canvas,

@@ -1,7 +1,5 @@
-import UI_ROOT from "../../UIRoot";
 import { integerToTime, num } from "../../utils";
 import BitmapFont from "../BitmapFont";
-import GuiObj from "../makiClasses/GuiObj";
 import Text from "../makiClasses/Text";
 
 export default class TimeFace extends Text {
@@ -27,10 +25,10 @@ export default class TimeFace extends Text {
 
   // init(): void {
   //   super.init();
-  //   this._disposeDisplaySubscription = UI_ROOT.audio.onCurrentTimeChange(() => {
-  //     this.setDisplayValue(integerToTime(UI_ROOT.audio.getCurrentTime()));
+  //   this._disposeDisplaySubscription = this._uiRoot.audio.onCurrentTimeChange(() => {
+  //     this.setDisplayValue(integerToTime(this._uiRoot.audio.getCurrentTime()));
   //   });
-  //   this.setDisplayValue(integerToTime(UI_ROOT.audio.getCurrentTime()));
+  //   this.setDisplayValue(integerToTime(this._uiRoot.audio.getCurrentTime()));
   // }
 
   // _invalidateFullWidth() {
@@ -50,25 +48,31 @@ export default class TimeFace extends Text {
   setDisplayValue(newValue: string) {
     if (newValue !== this._displayValue) {
       const font = this._font_obj;
-      this._displayValue = newValue;
       if (this._digit != null && font instanceof BitmapFont) {
+        newValue = newValue.replace(":", "");
+        if (newValue.length < 4) {
+          newValue = "0" + newValue;
+        }
+        const char = newValue[this._digit - 1];
+        this._displayValue = char;
+
         this._renderDigit(font);
         return;
       }
-      // super.setDisplayValue(newValue)
-      this._renderText();
+      super.setDisplayValue(newValue);
+      // this._renderText();
     }
   }
 
   _renderDigit(font: BitmapFont) {
     let text = this.gettext();
     if (text != null) {
-      text = text.replace(":", "");
-      if (text.length < 4) {
-        text = "0" + text;
-      }
-      const char = text[this._digit - 1];
-      const charNode = font.renderLetter(char);
+      // text = text.replace(":", "");
+      // if (text.length < 4) {
+      //   text = "0" + text;
+      // }
+      // const char = text[this._digit - 1];
+      const charNode = font.renderLetter(text);
       this._textWrapper.replaceChildren(charNode);
     }
   }

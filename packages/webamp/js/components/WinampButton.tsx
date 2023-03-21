@@ -4,12 +4,18 @@ import {
   DetailedHTMLProps,
   HTMLAttributes,
   useState,
+  PointerEvent as ReactPointerEvent,
 } from "react";
 
 const ACTIVE_CLASSNAME = "winamp-active";
 const LEFT_MOUSE_NUMBER = 0;
 
-type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+interface DetailedHTMLPropsAndMore
+  extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  requireClicksOriginateLocally?: boolean;
+}
+
+type Props = DetailedHTMLPropsAndMore;
 
 /**
  * Renders a `div` with an `.winamp-active` class if the element is being clicked/tapped.
@@ -26,58 +32,69 @@ type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
  * > and the time it is depressed; for a finger in a multitouch environment, while
  * > the finger is touching the display surface).
  */
-export default function WinampButton(props: Props): JSX.Element {
+export default function WinampButton({
+  requireClicksOriginateLocally = true,
+  onPointerDown: originalOnPointerDown,
+  className,
+  ...htmlProps
+}: Props): JSX.Element {
   const [active, setActive] = useState(false);
-  const originalOnMouseDown = props.onMouseDown;
 
-  const onMouseDown = useCallback(
-    (e) => {
-      if (originalOnMouseDown != null) {
-        originalOnMouseDown(e);
+  const onPointerDown = useCallback(
+    (e: ReactPointerEvent<HTMLDivElement>) => {
+      if (originalOnPointerDown != null) {
+        originalOnPointerDown(e);
+      }
+      // Release the pointer capture
+      // https://w3c.github.io/pointerevents/#implicit-pointer-capture
+      // https://w3c.github.io/pointerevents/#pointer-capture
+      if (!requireClicksOriginateLocally) {
+        // @ts-ignore
+        e.target.releasePointerCapture(e.pointerId);
       }
       // We only care about left mouse.
-      if (e.nativeEvent.button !== LEFT_MOUSE_NUMBER) {
+      // -1 button comes on onPointerEnter so we allow that.
+      if (
+        e.nativeEvent.button !== -1 &&
+        e.nativeEvent.button !== LEFT_MOUSE_NUMBER
+      ) {
         return;
       }
       setActive(true);
 
-      function onUp(ee: MouseEvent) {
-        if (ee.button !== LEFT_MOUSE_NUMBER) {
-          return;
-        }
+      function onRelease(ee: PointerEvent) {
         setActive(false);
-        document.removeEventListener("mouseup", onUp);
+        document.removeEventListener("pointerup", onRelease);
       }
-      document.addEventListener("mouseup", onUp);
+      document.addEventListener("pointerup", onRelease);
     },
-    [originalOnMouseDown]
+    [originalOnPointerDown, requireClicksOriginateLocally]
   );
 
-  const originalOnTouchStart = props.onTouchStart;
+  // We watch for events onPointerEnter only when requireClicksOriginateLocally === false
+  // If the pointer enters the WinampButton area, and the pointer button is already down, trigger a PointerDown
+  const onPointerEnter = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.buttons === 1) {
+      // Emit a CustomEvent pointerup to get the other buttons to release.
+      // Add a special -42 detail value so we can identify this event elsewhere and ignore if needed.
+      document.dispatchEvent(
+        new CustomEvent("pointerup", {
+          detail: -42,
+        })
+      );
+      // Simulate a pointerdown on the current button
+      onPointerDown(e);
+    }
+  };
 
-  const onTouchStart = useCallback(
-    (e) => {
-      if (originalOnTouchStart != null) {
-        originalOnTouchStart(e);
-      }
-      setActive(true);
-
-      function onUp() {
-        setActive(false);
-        document.removeEventListener("touchend", onUp);
-      }
-      document.addEventListener("touchend", onUp);
-    },
-    [originalOnTouchStart]
-  );
-
-  const className = classnames(props.className, { [ACTIVE_CLASSNAME]: active });
   return (
     <div
-      {...props}
-      className={className}
-      onMouseDown={onMouseDown}
-      onTouchStart={onTouchStart}
+      {...htmlProps}
+      className={classnames(className, { [ACTIVE_CLASSNAME]: active })}
+      onPointerDown={onPointerDown}
+      onPointerEnter={
+        requireClicksOriginateLocally ? undefined : onPointerEnter
+      }
     />
   );
 }

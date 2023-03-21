@@ -1,3 +1,4 @@
+import { UIRoot } from "../../UIRoot";
 import XmlObj from "../XmlObj";
 import BaseObject from "./BaseObject";
 import ConfigItem from "./ConfigItem";
@@ -6,6 +7,7 @@ import ConfigPersistent, { SectionValues } from "./ConfigPersistent";
 export default class Config extends ConfigPersistent {
   static GUID = "593dba224976d07771f452b90b405536";
   _id: string = "CONFIG";
+  _uiRoot: UIRoot;
   _aliases: SectionValues;
   _items: { [key: string]: ConfigItem } = {};
 
@@ -13,8 +15,9 @@ export default class Config extends ConfigPersistent {
     return "_CONFIG_";
   }
 
-  constructor() {
+  constructor(uiRoot: UIRoot) {
     super();
+    this._uiRoot = uiRoot;
     this._aliases = this.getSectionValues("_alias_");
   }
 
@@ -27,10 +30,19 @@ export default class Config extends ConfigPersistent {
    * @returns
    */
   newitem(itemName: string, itemGuid: string): ConfigItem {
+    itemGuid = itemGuid.toLowerCase();
     // line below wouldn't replace the _configTree. ^_^v
-    const cfg = new ConfigItem(itemName, itemGuid);
+    // const cfg = new ConfigItem(this._uiRoot, this, itemName, itemGuid);
 
-    this._items[itemGuid] = cfg;
+    let cfg = this._items[itemGuid];
+    if (!cfg) {
+      cfg = new ConfigItem(this._uiRoot, this, itemName, itemGuid);
+      this._items[itemGuid] = cfg;
+    }
+
+    if (itemName.toLowerCase() == itemGuid) {
+      itemName = itemGuid;
+    }
     this._aliases[itemName] = itemGuid;
     this._saveState();
     return cfg;
@@ -38,7 +50,7 @@ export default class Config extends ConfigPersistent {
 
   getitem(item_name: string): ConfigItem {
     const item_guid = this._aliases[item_name] || item_name;
-    const cfg = this._items[item_guid];
+    const cfg = this._items[item_guid.toLowerCase()];
     if (!cfg) {
       return this.newitem(item_name, item_guid);
     }
@@ -46,6 +58,7 @@ export default class Config extends ConfigPersistent {
   }
 
   getitembyguid(item_guid: string): ConfigItem {
+    item_guid = item_guid.toLowerCase();
     const cfg = this._items[item_guid];
     if (!cfg) {
       const item_name =
@@ -59,4 +72,4 @@ export default class Config extends ConfigPersistent {
 }
 
 // Global Singleton
-export const CONFIG: Config = new Config();
+// export const CONFIG: Config = new Config();

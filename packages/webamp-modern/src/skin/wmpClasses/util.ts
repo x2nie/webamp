@@ -1,18 +1,27 @@
 import GuiObj from "../makiClasses/GuiObj";
 
-export function runInlineScript(script: string) {
+export function runInlineScript(script: string, context: object = {}) {
+  for (const [key, value] of Object.entries(context)) {
+    // console.log(`${key}: ${value}`);
+    window[key] = value;
+  }
   // console.log('runOnClick:', script)
   for (var expression of script.split(";")) {
     if (expression == "") continue;
     console.log(`/${expression}/`);
     if (expression.endsWith("()")) {
       expression = expression.replace(/\(\)/, "");
-      try{
+      try {
         window[expression]();
-      } catch(error) {
-        console.log('failed to run expression:',`|${expression}|`,'@', script)
-        
-        console.warn(error)
+      } catch (error) {
+        console.log(
+          "failed to run expression:",
+          `|${expression}|`,
+          "@",
+          script
+        );
+
+        console.warn(error);
         // throw error
       }
     }

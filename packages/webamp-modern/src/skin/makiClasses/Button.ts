@@ -1,7 +1,7 @@
 import GuiObj from "./GuiObj";
-import UI_ROOT from "../../UIRoot";
 import { V } from "../../maki/v";
 import AudioEventedGui from "../AudioEventedGui";
+import { UIRoot } from "../../UIRoot";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cbutton.2F.3E_.26_.3Ctogglebutton.2F.3E
 export default class Button extends AudioEventedGui {
@@ -15,8 +15,8 @@ export default class Button extends AudioEventedGui {
   _param: string | null = null;
   _actionTarget: string | null = null;
 
-  constructor() {
-    super();
+  constructor(uiRoot: UIRoot) {
+    super(uiRoot);
     // TODO: Cleanup!
     this._div.addEventListener("mousedown", this._handleMouseDown.bind(this));
     this._div.addEventListener("click", (e: MouseEvent) => {
@@ -66,11 +66,11 @@ export default class Button extends AudioEventedGui {
 
   // This shadows `getheight()` on GuiObj
   getheight(): number {
-    if (this._height) {
-      return this._height;
+    if (this._h) {
+      return this._h;
     }
     if (this._image != null) {
-      const bitmap = UI_ROOT.getBitmap(this._image);
+      const bitmap = this._uiRoot.getBitmap(this._image);
       if (bitmap) return bitmap.getHeight();
     }
     return super.getheight();
@@ -78,11 +78,11 @@ export default class Button extends AudioEventedGui {
 
   // This shadows `getwidth()` on GuiObj
   getwidth(): number {
-    if (this._width) {
-      return this._width;
+    if (this._w) {
+      return this._w;
     }
     if (this._image != null) {
-      const bitmap = UI_ROOT.getBitmap(this._image);
+      const bitmap = this._uiRoot.getBitmap(this._image);
       if (bitmap) return bitmap.getWidth();
     }
     return super.getwidth();
@@ -91,15 +91,15 @@ export default class Button extends AudioEventedGui {
   getactivated(): boolean {
     return this._active ? true : false;
   }
-  setactivated(_onoff: boolean | number) {
-    const onoff = Boolean(_onoff);
+  setactivated(onoff: boolean): void {
+    onoff = Boolean(onoff); // may receive int as bool
 
     if (onoff !== this._active) {
       this._active = onoff;
       this._renderActive();
     }
     //sometime maki call: setactivated(getactivated())
-    UI_ROOT.vm.dispatch(this, "onactivate", [V.newBool(onoff)]);
+    this._uiRoot.vm.dispatch(this, "onactivate", [V.newBool(onoff)]);
   }
 
   setactivatednocallback(onoff: boolean) {
@@ -118,7 +118,7 @@ export default class Button extends AudioEventedGui {
   }
 
   onLeftClick() {
-    UI_ROOT.vm.dispatch(this, "onleftclick", []);
+    this._uiRoot.vm.dispatch(this, "onleftclick", []);
   }
 
   handleAction(
@@ -143,7 +143,7 @@ export default class Button extends AudioEventedGui {
    * eg action="EQ_TOGGLE" will set button to active|not
    */
   invalidateActionState() {
-    const active = UI_ROOT.getActionState(
+    const active = this._uiRoot.getActionState(
       this._action,
       this._param,
       this._actionTarget
@@ -158,7 +158,7 @@ export default class Button extends AudioEventedGui {
 
     if (this._action != null) {
       // listen the actual action state
-      UI_ROOT.on(this._action.toLowerCase(), () =>
+      this._uiRoot.on(this._action.toLowerCase(), () =>
         this.invalidateActionState()
       );
     }
@@ -174,29 +174,32 @@ export default class Button extends AudioEventedGui {
   }
 
   _renderBackground() {
-    if (this._image != null) {
-      const bitmap = UI_ROOT.getBitmap(this._image);
+    if (this._image != null && this._uiRoot.hasBitmap(this._image)) {
+      const bitmap = this._uiRoot.getBitmap(this._image);
       this.setBackgroundImage(bitmap);
     } else {
       this.setBackgroundImage(null);
     }
 
-    if (this._downimage != null) {
-      const downBitmap = UI_ROOT.getBitmap(this._downimage);
+    if (this._downimage != null && this._uiRoot.hasBitmap(this._downimage)) {
+      const downBitmap = this._uiRoot.getBitmap(this._downimage);
       this.setDownBackgroundImage(downBitmap);
     } else {
       this.setDownBackgroundImage(null);
     }
 
-    if (this._hoverimage != null) {
-      const hoverimage = UI_ROOT.getBitmap(this._hoverimage);
+    if (this._hoverimage != null && this._uiRoot.hasBitmap(this._hoverimage)) {
+      const hoverimage = this._uiRoot.getBitmap(this._hoverimage);
       this.setHoverBackgroundImage(hoverimage);
     } else {
       this.setHoverBackgroundImage(null);
     }
 
-    if (this._activeimage != null) {
-      const activeimage = UI_ROOT.getBitmap(this._activeimage);
+    if (
+      this._activeimage != null &&
+      this._uiRoot.hasBitmap(this._activeimage)
+    ) {
+      const activeimage = this._uiRoot.getBitmap(this._activeimage);
       this.setActiveBackgroundImage(activeimage);
     } else {
       this.setActiveBackgroundImage(null);

@@ -2,7 +2,7 @@ import { debounce } from "../../utils";
 import BaseObject from "./BaseObject";
 
 export type SectionValues = { [key: string]: string };
-export default class ConfigPersistent extends BaseObject {
+export default abstract class ConfigPersistent extends BaseObject {
   _configTree: { [section: string]: SectionValues };
 
   getStorageName(): string {
@@ -32,10 +32,12 @@ export default class ConfigPersistent extends BaseObject {
   }
 
   getValue(section: string, key: string): string {
+    key = key.toLowerCase();
     return this.getSectionValues(section)[key];
   }
 
   setValue(section: string, key: string, value: string): string {
+    key = key.toLowerCase();
     if (this.getValue(section, key) != value) {
       const values = this.getSectionValues(section);
       values[key] = value;
@@ -50,5 +52,5 @@ export default class ConfigPersistent extends BaseObject {
       this.getStorageName(),
       JSON.stringify(this._configTree)
     );
-  }, 500);
+  }, 2000);
 }
