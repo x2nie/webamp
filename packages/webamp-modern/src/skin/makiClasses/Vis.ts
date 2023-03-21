@@ -656,7 +656,7 @@ class WavePaintHandler extends VisPaintHandler {
     var ctx = this._bar.getContext("2d");
     for (let y = 0; y < 5; y++) {
       ctx.fillStyle = gammaGroup.transformColor(vis._colorOsc[y]);
-      console.log("ctx.fillStyle:", ctx.fillStyle);
+      // console.log("ctx.fillStyle:", ctx.fillStyle);
       ctx.fillRect(0, y, 1, y + 1);
     }
     // const imgData = ctx.getImageData(0, 0, 1, 5);
