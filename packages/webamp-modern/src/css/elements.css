@@ -311,11 +311,41 @@ menu > .popup{
   display: inline-block;
 }
 ul.popup-menu-container li {
-  display: block;
+  display: flex;
   padding: 2px 10px;
+  padding: 0;
   white-space: nowrap;
 }
-ul.popup-menu-container li:hover {
+ul.popup-menu-container li > span {
+  padding: 4px 0;
+}
+ul.popup-menu-container li:hover > span {
   background: blue;
   color: white;
+}
+
+.popup-menu-container .checkmark{
+  min-width: 15px;
+  text-align: center;
+}
+.popup-menu-container .keystroke{
+  min-width: 20px;
+  flex-grow: 1;
+  /* background: fuchsia; */
+  text-align: right;
+  padding-left: 10px;
+}
+.popup-menu-container .chevron{
+  min-width: 15px;
+  text-align: center;
+  font-size: smaller;
+}
+
+/* nested popup */
+.popup-menu-container > li > .popup-menu-container{
+  left: 100%;
+  display: none;
+}
+.popup-menu-container > li:hover > .popup-menu-container{
+  display: unset;
 }

@@ -71,27 +71,74 @@ export type MenuItem =
 export function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElement {
   const root = document.createElement("ul");
   root.className = 'popup-menu-container'
-  root.style.zIndex = "1000";
+  // root.style.zIndex = "1000";
   console.log('generating popup:', popup)
   for (const menu of popup._items) {
     // const menuitem = document.createElement("li");
-    let item;
+    let item: HTMLElement;
     // root.appendChild(item);
-    if (menu.type == "menuitem") {
-      item = document.createElement("li");
-      item.textContent = `${menu.checked? '✓' : ' '} ${menu.caption}`;
-      item.onclick = (e) => callback(menu.id);
-    } else if (menu.type == "popup") {
-      item = document.createElement("li");
-      item.textContent = menu.caption;
-    } else if (menu.type == "separator") {
-      item = document.createElement("hr");
-      // item.textContent = "-----";
-      // item.appendChild(document.createElement("hr")) ;
+    switch (menu.type) {
+      case "menuitem":
+        item = generatePopupItem(menu);
+        item.onclick = (e) => callback(menu.id);
+        break;
+      case "popup":
+        item = generatePopupItem(menu);
+        const subMenu = generatePopupDiv(menu.popup, callback);
+        item.appendChild(subMenu)
+        break;
+      case "separator":
+        item = document.createElement("hr");
+        break;
     }
     root.appendChild(item);
   }
   return root;
+}
+
+//? one row of popup
+function generatePopupItem(menu: MenuItem): HTMLElement {
+  const item = document.createElement("li");
+
+  //? checkmark
+  const checkMark = document.createElement("span");
+  checkMark.classList.add('checkmark')
+  checkMark.textContent = menu.checked? '✓' : ' ';
+  item.appendChild(checkMark)
+  
+  //? display text
+  const [caption, keystroke] = menu.caption.split('\t')  
+  const label = generateCaption(caption);
+  label.classList.add('caption')
+  item.appendChild(label)
+
+  //? keystroke
+  const shortcut = document.createElement("span");
+  shortcut.classList.add('keystroke')
+  shortcut.textContent = keystroke;
+  item.appendChild(shortcut)
+
+  //? sub-menu sign
+  const chevron = document.createElement("span");
+  chevron.classList.add('chevron')
+  chevron.textContent = menu.type=='popup'? '⮀' : ' ';
+  item.appendChild(chevron)
+  // item.textContent = `${menu.checked? '✓' : ' '} ${menu.caption}`;
+
+  return item;
+}
+
+function generateCaption(caption: string): HTMLElement {
+  const regex = /(&(\w))/gm;
+  const subst = `<u>$2</u>`;
+
+  // The substituted value will be contained in the result variable
+  caption = caption.replace(regex, subst);
+
+  const span = document.createElement("span");
+  span.classList.add('caption')
+  span.innerHTML = caption;
+  return span
 }
 
 export default class PopupMenu extends BaseObject {
