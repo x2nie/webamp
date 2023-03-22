@@ -26,19 +26,21 @@ const asyncFunctionBuilder =
 // const sleep = sp(async_sleep)
 // const sleep = sp(asyncFunctionBuilder(true))
 
-type MenuItem =
+export type MenuItem =
   | {
-      type: "item";
-      text: string;
+      type: "menuitem";
+      caption: string;
       id: number;
       checked: boolean;
       disabled: boolean;
     }
-  | { type: "separator" }
-  | {
-      type: "submenu";
-      text: string;
+    | { type: "separator" }
+    | {
+      type: "popup";
+      caption: string;
       popup: PopupMenu;
+      disabled: boolean;
+      children?: MenuItem[];
     };
 
  function waitPopup(popup: PopupMenu): Promise<number> {
@@ -71,16 +73,16 @@ function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElement {
   root.className = 'popup-menu-container'
   root.style.zIndex = "1000";
   for (const menu of popup._items) {
-    // const item = document.createElement("li");
+    // const menuitem = document.createElement("li");
     let item;
     // root.appendChild(item);
-    if (menu.type == "item") {
+    if (menu.type == "menuitem") {
       item = document.createElement("li");
-      item.textContent = `${menu.checked? '✓' : ' '} ${menu.text}`;
+      item.textContent = `${menu.checked? '✓' : ' '} ${menu.caption}`;
       item.onclick = (e) => callback(menu.id);
-    } else if (menu.type == "submenu") {
+    } else if (menu.type == "popup") {
       item = document.createElement("li");
-      item.textContent = menu.text;
+      item.textContent = menu.caption;
     } else if (menu.type == "separator") {
       item = document.createElement("hr");
       // item.textContent = "-----";
@@ -101,8 +103,8 @@ export default class PopupMenu extends BaseObject {
     disabled: boolean
   ) {
     this._items.push({
-      type: "item",
-      text: cmdText,
+      type: "menuitem",
+      caption: cmdText,
       id: cmd_id,
       checked,
       disabled,
@@ -111,24 +113,24 @@ export default class PopupMenu extends BaseObject {
   addseparator() {
     this._items.push({ type: "separator" });
   }
-  addsubmenu(submenu: PopupMenu, submenutext: string) {
-    this._items.push({ type: "submenu", popup: submenu, text: submenutext });
+  addsubmenu(popup: PopupMenu, submenutext: string) {
+    this._items.push({ type: "popup", popup: popup, caption: submenutext });
     // // TODO:
     // this.addcommand(submenutext, 0, false, false)
   }
   checkcommand(cmd_id: number, check: boolean) {
     const item = this._items.find((item) => {
-      return item.type === "item" && item.id === cmd_id;
+      return item.type === "menuitem" && item.id === cmd_id;
     });
     assume(item != null, `Could not find item with id "${cmd_id}"`);
-    if (item.type !== "item") {
+    if (item.type !== "menuitem") {
       throw new Error("Expected item to be an item.");
     }
     item.checked = check;
   }
   disablecommand(cmd_id: number, disable: boolean) {
     for (const item of this._items) {
-      if (item.type == "item" && item.id == cmd_id) {
+      if (item.type == "menuitem" && item.id == cmd_id) {
         item.disabled = disable;
         break;
       }
