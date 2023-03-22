@@ -1,5 +1,7 @@
 // Author: ChatGPT 3.5 @ https://chat.openai.com/chat
 
+import { MenuItem } from "../skin/makiClasses/PopupMenu";
+
 const menuContent = `256 MENUEX
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 {
@@ -22,7 +24,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
     MENUITEM "Media Library &Preferences...", 40372, MFT_STRING | MFT_RIGHTJUSTIFY, MFS_ENABLED
   }
   POPUP "&Bookmarks"
-    {
+  {
       MENUITEM "&Edit bookmarks...	Ctrl+Alt+I",  40320
       MENUITEM "&Add current as bookmark	Ctrl+Alt+B",  40321
       MENUITEM SEPARATOR
@@ -31,9 +33,27 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
         MENUITEM "Migrate/Import...",  40009
         MENUITEM "Register Winamp...",  40010
       }
-    }
+  }
 }
 `;
+const another_sample = `IDC_WIN32CUSTOMMENUBARAEROTHEME MENUEX
+BEGIN
+    POPUP "&File",                          65535,MFT_STRING,MFS_ENABLED
+    BEGIN
+        MENUITEM "E&xit",                       IDM_EXIT,MFT_STRING,MFS_ENABLED
+    END
+    POPUP "&Another",                       65535,MFT_STRING,MFS_ENABLED
+    BEGIN
+        MENUITEM "&One",                        ID_ANOTHER_ONE,MFT_STRING,MFS_ENABLED
+        MENUITEM "&Two",                        ID_ANOTHER_TWO,MFT_STRING,MFS_ENABLED
+    END
+    MENUITEM "&Disabled",                   ID_DISABLED,MFT_STRING,MFS_GRAYED
+    MENUITEM "&Grayed",                     ID_GRAYED,  MFT_STRING,MFS_GRAYED
+    POPUP "&Help",                          65535,MFT_STRING | MFT_RIGHTJUSTIFY,MFS_ENABLED
+    BEGIN
+        MENUITEM "&About ...",                  IDM_ABOUT,MFT_STRING,MFS_ENABLED
+    END
+END`
 
 
 // Untuk mengkonversi menu tersebut ke dalam format JSON, 
@@ -59,37 +79,55 @@ function parseMenuToJson(menuContent) {
 
     // Mengecek apakah baris merupakan menu
     // const menuMatch = line.match(/\s*(POPUP|MENUITEM)\s+"([^"]+)"(?:\s*,\s*(\d+))?,\s*(\d+),\s*(\d+)/i);
-    const menuMatch = line.match(/\s*(POPUP|MENUITEM)\s+(SEPARATOR|"([^"]*)")(?:\s*,\s*(\d+)[\s,]*(.*))?/i);
+    const menuMatch = line.match(/\s*(POPUP|MENUITEM)\s+(SEPARATOR|"([^"]*)")(?:\s*,\s*(\w+)[\s,]*(.*))?/i);
     if (menuMatch) {
       // console.log('match', menuMatch)
       // Mengambil informasi menu
-      const [, tag, t1,t2, sid, flags] = menuMatch;
-      const type = tag=='POPUP'? 'popup': (t1 == 'SEPARATOR' || (flags || '').indexOf('MFT_SEPARATOR') >= 0) ? 'separator': 'menuitem';
-      const id = type=='popup'? 65535: type == 'separator' ? 0 : parseInt(sid);
+      let [, tag, t1, t2, id, flags] = menuMatch;
+      const type = tag == 'POPUP' ? 'popup' : (t1 == 'SEPARATOR' || (flags || '').indexOf('MFT_SEPARATOR') >= 0) ? 'separator' : 'menuitem';
+
+      flags = flags || ''
       // Membuat objek menu baru
-      const newMenu = {
+      // @ts-ignore
+      const menu: MenuItem = {
         // tag,
         type,
-        // caption: type == 'separator'? '' : t2,
-        caption: t2,
-        // t2,
-        // id: parseInt(id) || 0,
-        id,
-        // type: type.toLowerCase(),
-        // flags: parseInt(flags),
-        flags,
-        // children: [],
+        // // caption: type == 'separator'? '' : t2,
+        // caption: t2,
+        // // t2,
+        // // id: parseInt(id) || 0,
+        // id,
+        // // type: type.toLowerCase(),
+        // // flags: parseInt(flags),
+        // flags,
+        // // children: [],
       };
-      container.push(newMenu); // attach to prent
+      container.push(menu); // attach to prent
+      switch (menu.type) {
+        case 'popup':
+          menu.caption = t2;
+          menu.children = [];
+          container = menu.children;
+          if (flags.indexOf('GRAYED') >= 0) menu.disabled = true;
+          levelStack.push(container)
+          break;
+        case 'menuitem':
+          menu.caption = t2;
+          menu.id = id;
+          // if(flags.indexOf('GRAYED') >= 0) menu.disabled = true;
+          flags.indexOf('GRAYED') >= 0 && (menu.disabled = true)
+          break;
 
-      if(type=='popup'){
-        newMenu.children = [];
-        container = newMenu.children;
-        levelStack.push(container)
+        default:
+          break;
       }
+      // const id = type=='popup'? 65535: type == 'separator' ? 0 : parseInt(sid);
 
       // console.log('m', newMenu, '>>', flags)
-      console.log('m', newMenu)
+      // @ts-ignore
+      // menu.flags = flags;
+
+      console.log('m', menu)
 
       // Menambahkan objek menu baru ke dalam parent menu yang sesuai
       // if (level > levelStack[levelStack.length - 1]) {
@@ -104,10 +142,10 @@ function parseMenuToJson(menuContent) {
       //   currentItem.children.push(newMenu);
       //   currentItem = newMenu;
       // }
-    } else if (line.trim() === '}') {
+    } else if (['}', 'END'].includes(line.trim())) {
       // Menutup menu saat ini
-      levelStack.pop(); 
-      container = levelStack[levelStack.length-1];
+      levelStack.pop();
+      container = levelStack[levelStack.length - 1];
     }
   }
 
@@ -115,4 +153,7 @@ function parseMenuToJson(menuContent) {
 }
 
 var m = parseMenuToJson(menuContent)
+console.log(m)
+
+var m = parseMenuToJson(another_sample)
 console.log(m)
