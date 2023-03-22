@@ -30,16 +30,16 @@ export type MenuItem =
   | {
       type: "menuitem";
       caption: string;
-      id: number;
+      id: number|string;
       checked: boolean;
-      disabled: boolean;
+      disabled?: boolean;
     }
     | { type: "separator" }
     | {
       type: "popup";
       caption: string;
       popup: PopupMenu;
-      disabled: boolean;
+      disabled?: boolean;
       children?: MenuItem[];
     };
 

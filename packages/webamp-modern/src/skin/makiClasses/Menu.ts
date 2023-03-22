@@ -4,6 +4,7 @@ import Group from "./Group";
 // import { px, toBool, clamp } from "../../utils";
 // import Button from "./Button";
 import Layer from "./Layer";
+import { getWa5Popup } from "./menuWa5";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#?
 export default class Menu extends Group {
@@ -160,5 +161,10 @@ export default class Menu extends Group {
     this._popup.classList.add("fake-popup");
     // this._appendChildrenToDiv(this._popup);
     this._div.appendChild(this._popup);
+
+    if(this._menuId.startsWith('WA5:')){
+      const [,popupId] = this._menuId.split(':')
+      getWa5Popup(popupId)
+    }
   }
 }
