@@ -30,7 +30,7 @@ export type MenuItem =
   | {
       type: "menuitem";
       caption: string;
-      id: number|string;
+      id: number;
       checked: boolean;
       disabled?: boolean;
     }

@@ -1,16 +1,19 @@
 import PopupMenu, { MenuItem } from "./PopupMenu";
 
 export function getWa5Popup(popupId: string): PopupMenu {
+    if(popupId=='PE_Help') popupId = 'Help';
     const res = wa5commonRes.includes(popupId) ? wa5commonRes : wa5miscRes.includes(popupId) ? popupId : '';
     const popupJson =getPopupJson(popupId, res);
     console.log('FOUND', popupId, popupJson)
 
 }
 
-function getPopupJson(popupId: string, res:string) {
+function getPopupJson(popupId: string, res:string): MenuItem[] {
     const root = [];
     let container = root;
     let levelStack = [root];
+    let popup: PopupMenu = null;
+    let popupStack: PopupMenu[] = [];
     let found = false;
     // let currentItem = null
 
@@ -35,8 +38,9 @@ function getPopupJson(popupId: string, res:string) {
         if (menuMatch) {
             // console.log('match', menuMatch)
             // Mengambil informasi menu
-            let [, tag, t1, t2, id, flags] = menuMatch;
+            let [, tag, t1, t2, sid, flags] = menuMatch;
             const type = tag == 'POPUP' ? 'popup' : (t1 == 'SEPARATOR' || (flags || '').indexOf('MFT_SEPARATOR') >= 0) ? 'separator' : 'menuitem';
+            const id = parseInt(sid)
 
 
             if(!found) {
@@ -56,6 +60,13 @@ function getPopupJson(popupId: string, res:string) {
             container.push(menu); // attach to prent
             switch (menu.type) {
                 case 'popup':
+                    const newPopup = new PopupMenu();
+                    if(popup){  // if it is a sub-popup, attach to parent
+                        popup.addsubmenu(newPopup, t2)
+                    }
+                    popup = newPopup;
+                    popupStack.push(popup);
+                    menu.popup = popup;
                     menu.caption = t2;
                     menu.children = [];
                     container = menu.children;
@@ -66,10 +77,11 @@ function getPopupJson(popupId: string, res:string) {
                     menu.caption = t2;
                     menu.id = id;
                     // if(flags.indexOf('GRAYED') >= 0) menu.disabled = true;
-                    flags.indexOf('GRAYED') >= 0 && (menu.disabled = true)
+                    menu.disabled = flags.indexOf('GRAYED') >= 0;
+                    popup.addcommand(t2, id, false, menu.disabled)
                     break;
-
-                default:
+                case 'separator':
+                    popup.addseparator()
                     break;
             }
             // const id = type=='popup'? 65535: type == 'separator' ? 0 : parseInt(sid);
@@ -84,8 +96,12 @@ function getPopupJson(popupId: string, res:string) {
             // Menutup menu saat ini
             levelStack.pop();
             container = levelStack[levelStack.length - 1];
-            if(found && container == root){
-                break;
+            if(found) { 
+                if(container == root)
+                    break;
+
+                popupStack.pop();
+                popup = popupStack[popupStack.length - 1];
             }
         }
     }
