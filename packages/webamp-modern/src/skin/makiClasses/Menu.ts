@@ -5,6 +5,7 @@ import Group from "./Group";
 // import Button from "./Button";
 import Layer from "./Layer";
 import { getWa5Popup } from "./menuWa5";
+import { generatePopupDiv } from "./PopupMenu";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#?
 export default class Menu extends Group {
@@ -156,15 +157,20 @@ export default class Menu extends Group {
     //   this._div.classList.remove("vertical");
     // }
 
-    this._popup = document.createElement("div");
-    this._popup.classList.add("popup");
-    this._popup.classList.add("fake-popup");
-    // this._appendChildrenToDiv(this._popup);
-    this._div.appendChild(this._popup);
-
+   
     if(this._menuId.startsWith('WA5:')){
       const [,popupId] = this._menuId.split(':')
-      getWa5Popup(popupId)
+      const popupMenu = getWa5Popup(popupId)
+      // function menuClick(id:number){
+      //   console.log('menu clicked:', id)
+      // }
+      this._popup = generatePopupDiv(popupMenu, (id:number) => console.log('menu clicked:', id))
+    } else {
+      this._popup = document.createElement("div");
+      this._popup.classList.add("fake-popup");
     }
+    this._popup.classList.add("popup");
+    // this._appendChildrenToDiv(this._popup);
+    this._div.appendChild(this._popup);
   }
 }

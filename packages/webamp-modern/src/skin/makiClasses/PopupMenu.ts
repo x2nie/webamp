@@ -68,10 +68,11 @@ export type MenuItem =
   // return 1;
 }
 
-function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElement {
+export function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElement {
   const root = document.createElement("ul");
   root.className = 'popup-menu-container'
   root.style.zIndex = "1000";
+  console.log('generating popup:', popup)
   for (const menu of popup._items) {
     // const menuitem = document.createElement("li");
     let item;
