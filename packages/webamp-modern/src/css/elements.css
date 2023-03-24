@@ -176,7 +176,7 @@ windowholder
   left: 0;
   top: 0;
   display: block;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 group {
   overflow: visible;
@@ -305,10 +305,12 @@ menu > .popup{
   margin: 0;
   background: white;
   padding: 0;
-  border: 2px solid gray;
+  /* border: 2px solid gray; */
+  border: 1px solid #C9CCD2;
   z-index: 100;
   width: auto;
   display: inline-block;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 ul.popup-menu-container li {
   display: flex;
@@ -343,7 +345,7 @@ ul.popup-menu-container li:hover > span {
 
 /* nested popup */
 .popup-menu-container > li > .popup-menu-container{
-  left: 100%;
+  left: calc(100% - 3px);
   display: none;
 }
 .popup-menu-container > li:hover > .popup-menu-container{
