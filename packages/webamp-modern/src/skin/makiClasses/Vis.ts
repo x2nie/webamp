@@ -21,23 +21,23 @@ export class VisPaintHandler {
    * Attemp to build cached bitmaps for later use while render a frame.
    * Purpose: fast rendering in animation loop
    */
-  prepare() {}
+  prepare() { }
 
   /**
    * Called once per frame rendiring
    */
-  paintFrame() {}
+  paintFrame() { }
 
   /**
    * Attemp to cleanup cached bitmaps
    */
-  dispose() {}
+  dispose() { }
 
   /**
    * called if it is an AVS.
    * @param action vis_prev | vis_next | vis_f5 (fullscreen) |
    */
-  doAction(action: string, param: string) {}
+  doAction(action: string, param: string) { }
 }
 
 // type VisPaintHandlerClass = {new(vis: Vis): VisPaintHandler;};
@@ -665,25 +665,16 @@ class WavePaintHandler extends VisPaintHandler {
       // console.log("ctx.fillStyle:", ctx.fillStyle);
       ctx.fillRect(0, y, 1, y + 1);
     }
-    // const imgData = ctx.getImageData(0, 0, 1, 5);
-    // for (var y = 0; y < 5; y++) {
-    //   const [red, green, blue] = gammaGroup.transformColor2rgb(vis._colorOsc[y]);
-    //   const i = y * 4;
-    //   imgData.data[i] = red;
-    //   imgData.data[i + 1] = green;
-    //   imgData.data[i + 2] = blue;
-    //   imgData.data[i + 3] = 255;
-    // }
-    // // Write the image back to the canvas
-    // ctx.putImageData(imgData, 0, 0);
 
     this._ctx = vis._canvas.getContext("2d");
     this._ctx.imageSmoothingEnabled = false;
+    // @ts-ignore
     this._ctx.mozImageSmoothingEnabled = false;
+    // @ts-ignore
     this._ctx.webkitImageSmoothingEnabled = false;
+    // @ts-ignore
     this._ctx.msImageSmoothingEnabled = false;
     // Just use one of the viscolors for now
-    // this._ctx.strokeStyle = gammaGroup.transformColor(vis._colorOsc[1]);
 
     if (this._vis._oscStyle == "dots") {
       this.paintWav = this.paintWavDot.bind(this);
@@ -707,66 +698,40 @@ class WavePaintHandler extends VisPaintHandler {
       // console.log(JSON.stringify(Array.from(this._dataArray)))
       this._datafetched = true;
     }
-    // const ctx = this._ctx;
-    const ctx = this._ctx = this._16h.getContext("2d");
-    // const width = ctx.canvas.width;
-    let width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-    ctx.clearRect(0, 0, width, height);
-    // ctx.lineWidth = PIXEL_DENSITY;
 
-    // Since dataArray has more values than we have pixels to display, we
-    // have to average several dataArray values per pixel. We call these
-    // groups slices.
-    //
-    // We use the  2x scale here since we only want to plot values for
-    // "real" pixels.
-    // width = 64;
+    const using16temporaryCanvas = this._vis._canvas.height != 16;
+
+    if (using16temporaryCanvas) {
+      this._ctx = this._16h.getContext("2d");
+    }
+    let width = this._ctx.canvas.width;
+    const height = this._ctx.canvas.height;
+    this._ctx.clearRect(0, 0, width, height);
+
     const sliceWidth = Math.floor(/* this._bufferLength */ bandwidth / width);
 
-    // ctx.beginPath();
-    // Iterate over the width of the canvas in "real" pixels.
+    // Iterate over the width of the canvas in fixed 72 pixels.
     for (let j = 0; j <= width; j++) {
       // const amplitude = sliceAverage(this._dataArray, sliceWidth, j);
       const amplitude = slice1st(this._dataArray, sliceWidth, j);
-      // const percentAmplitude = amplitude / 255; // dataArray gives us bytes
-      // const y = (1 - percentAmplitude) * height; // flip y
       const [y, colorIndex] = this.rangeByAmplitude(amplitude);
       const x = j * PIXEL_DENSITY;
 
-      // Canvas coordinates are in the middle of the pixel by default.
-      // When we want to draw pixel perfect lines, we will need to
-      // account for that here
-      // if (x === 0) {
-      //   ctx.moveTo(x, y);
-      // } else {
-      //   ctx.lineTo(x, y);
-      // }
       this.paintWav(x, y, colorIndex);
     }
 
-    const canvas = this._vis._canvas
-    const visCtx = canvas.getContext('2d');
-    visCtx.clearRect(0, 0, canvas.width,canvas.height);
-    visCtx.drawImage(
-      this._16h,
-      0,0, // sx,sy
-      72,16, // sw,sh
-      0,0, //dx,dy
-      canvas.width,canvas.height //dw,dh
-    );
-
-    // ctx.stroke();
-    // for (var i = 0; i < 30; i += 1) {
-    //   var r = Math.floor(Math.random() * 255);
-    //   var g = Math.floor(Math.random() * 255);
-    //   var b = Math.floor(Math.random() * 255);
-
-    //   ctx.moveTo(Math.random() * width, Math.random() * height);
-    //   ctx.lineTo(Math.random() * width, Math.random() * height);
-    //   ctx.strokeStyle = "rgba(" + r + "," + g + "," + b + ",1)";
-    //   ctx.stroke();
-    // }
+    if (using16temporaryCanvas) {
+      const canvas = this._vis._canvas
+      const visCtx = canvas.getContext('2d');
+      visCtx.clearRect(0, 0, canvas.width, canvas.height);
+      visCtx.drawImage(
+        this._16h,
+        0, 0, // sx,sy
+        72, 16, // sw,sh
+        0, 0, //dx,dy
+        canvas.width, canvas.height //dw,dh
+      );
+    }
   }
 
   /**
@@ -839,37 +804,21 @@ class WavePaintHandler extends VisPaintHandler {
     for (y = top; y <= bottom; y++) {
       this._ctx.drawImage(
         this._bar,
-        0,
-        colorIndex, // sx,sy
-        1,
-        1, // sw,sh
-        x,
-        y, //dx,dy
-        1,
-        1 //dw,dh
+        0, colorIndex, // sx,sy
+        1, 1, // sw,sh
+        x, y, //dx,dy
+        1, 1 //dw,dh
       );
     }
-    //? below is same as above, but stretching a pixel; which also render a "rainbow"
-    // this._ctx.drawImage(
-    //   this._bar,
-    //   0, colorIndex,  // sx,sy
-    //   1, 1,            // sw,sh
-    //   x, top,  //dx,dy
-    //   1, h   //dw,dh
-    // );
   }
 
   paintWavDot(x: number, y: number, colorIndex: number) {
     this._ctx.drawImage(
       this._bar,
-      0,
-      colorIndex, // sx,sy
-      1,
-      1, // sw,sh
-      x,
-      y, //dx,dy
-      1,
-      1 //dw,dh
+      0, colorIndex, // sx,sy
+      1, 1, // sw,sh
+      x, y, //dx,dy
+      1, 1 //dw,dh
     );
   }
 
@@ -886,24 +835,12 @@ class WavePaintHandler extends VisPaintHandler {
     for (y = top; y <= bottom; y++) {
       this._ctx.drawImage(
         this._bar,
-        0,
-        colorIndex, // sx,sy
-        1,
-        1, // sw,sh
-        x,
-        y, //dx,dy
-        1,
-        1 //dw,dh
+        0, colorIndex, // sx,sy
+        1, 1, // sw,sh
+        x, y, //dx,dy
+        1, 1 //dw,dh
       );
     }
-    //? below is same as above, but stretching a pixel; which also render a "rainbow"
-    // this._ctx.drawImage(
-    //   this._bar,
-    //   0, colorIndex,  // sx,sy
-    //   1, 1,            // sw,sh
-    //   x, top,  //dx,dy
-    //   1, h   //dw,dh
-    // );
   }
 }
 registerPainter("2", WavePaintHandler);
