@@ -702,7 +702,7 @@ class WavePaintHandler extends VisPaintHandler {
     let width = ctx.canvas.width;
     const height = ctx.canvas.height;
     //console.log("ctx.canvas.height:", ctx.canvas.height); //wanted to confirm the canvas height being correctly reported
-    const adjustHeight = ctx.canvas.height/16; //this has to exist to get the value of the width
+    const adjustHeight = ctx.canvas.height/16; //this has to exist to get the value of the height
     ctx.clearRect(0, 0, width, height);
     // ctx.lineWidth = PIXEL_DENSITY;
 
@@ -806,7 +806,7 @@ class WavePaintHandler extends VisPaintHandler {
   }
   paintWavLine(x: number, y: number, colorIndex: number) {
     const ctx = this._ctx;
-    const height = ctx.canvas.height; //this has to exist to get the value of the width
+    const height = ctx.canvas.height; //this has to exist to get the value of the height
     const adjustHeight = ctx.canvas.height/16;
 
     if (x === 0) this._lastY = y;
@@ -846,7 +846,7 @@ class WavePaintHandler extends VisPaintHandler {
 
   paintWavDot(x: number, y: number, colorIndex: number) {
     const ctx = this._ctx;
-    const height = ctx.canvas.height; //this has to exist to get the value of the width
+    const height = ctx.canvas.height; //this has to exist to get the value of the height
     const adjustHeight = ctx.canvas.height/16;
     this._ctx.drawImage(
       this._bar,
@@ -864,7 +864,7 @@ class WavePaintHandler extends VisPaintHandler {
 
   paintWavSolid(x: number, y: number, colorIndex: number) {
     const ctx = this._ctx;
-    const height = ctx.canvas.height; //this has to exist to get the value of the width
+    const height = ctx.canvas.height; //this has to exist to get the value of the height
     const adjustHeight = ctx.canvas.height/16;
     
     var top, bottom;
