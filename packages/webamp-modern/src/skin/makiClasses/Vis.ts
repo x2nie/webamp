@@ -629,6 +629,7 @@ class WavePaintHandler extends VisPaintHandler {
   _pixelRatio: number; // 1 or 2
   // Off-screen canvas for drawing perfect pixel (no blured lines)
   _bar: HTMLCanvasElement = document.createElement("canvas");
+  _16h: HTMLCanvasElement = document.createElement("canvas"); // non-stretched
   paintWav: PaintWavFunction;
   _datafetched: boolean = false;
   _colors: string[];
@@ -647,6 +648,11 @@ class WavePaintHandler extends VisPaintHandler {
     const vis = this._vis;
     const groupId = vis._gammagroup;
     const gammaGroup = this._vis._uiRoot._getGammaGroup(groupId);
+
+    this._16h.width = 1;
+    this._16h.height = 16;
+    this._16h.setAttribute("width", "72");
+    this._16h.setAttribute("height", "16");
 
     //? paint bar
     this._bar.width = 1;
@@ -672,8 +678,12 @@ class WavePaintHandler extends VisPaintHandler {
     // ctx.putImageData(imgData, 0, 0);
 
     this._ctx = vis._canvas.getContext("2d");
+    this._ctx.imageSmoothingEnabled = false;
+    this._ctx.mozImageSmoothingEnabled = false;
+    this._ctx.webkitImageSmoothingEnabled = false;
+    this._ctx.msImageSmoothingEnabled = false;
     // Just use one of the viscolors for now
-    this._ctx.strokeStyle = gammaGroup.transformColor(vis._colorOsc[1]);
+    // this._ctx.strokeStyle = gammaGroup.transformColor(vis._colorOsc[1]);
 
     if (this._vis._oscStyle == "dots") {
       this.paintWav = this.paintWavDot.bind(this);
@@ -697,12 +707,11 @@ class WavePaintHandler extends VisPaintHandler {
       // console.log(JSON.stringify(Array.from(this._dataArray)))
       this._datafetched = true;
     }
-    const ctx = this._ctx;
+    // const ctx = this._ctx;
+    const ctx = this._ctx = this._16h.getContext("2d");
     // const width = ctx.canvas.width;
     let width = ctx.canvas.width;
     const height = ctx.canvas.height;
-    //console.log("ctx.canvas.height:", ctx.canvas.height); //wanted to confirm the canvas height being correctly reported
-    const adjustHeight = ctx.canvas.height/16; //this has to exist to get the value of the height
     ctx.clearRect(0, 0, width, height);
     // ctx.lineWidth = PIXEL_DENSITY;
 
@@ -715,7 +724,7 @@ class WavePaintHandler extends VisPaintHandler {
     // width = 64;
     const sliceWidth = Math.floor(/* this._bufferLength */ bandwidth / width);
 
-    ctx.beginPath();
+    // ctx.beginPath();
     // Iterate over the width of the canvas in "real" pixels.
     for (let j = 0; j <= width; j++) {
       // const amplitude = sliceAverage(this._dataArray, sliceWidth, j);
@@ -733,10 +742,21 @@ class WavePaintHandler extends VisPaintHandler {
       // } else {
       //   ctx.lineTo(x, y);
       // }
-      this.paintWav(x, Math.round(y*(adjustHeight)), colorIndex); //originally the osc was stuck at 16px height
-      //regardless of size, this was undesired, so adjustHeight fixes this
+      this.paintWav(x, y, colorIndex);
     }
-    ctx.stroke();
+
+    const canvas = this._vis._canvas
+    const visCtx = canvas.getContext('2d');
+    visCtx.clearRect(0, 0, canvas.width,canvas.height);
+    visCtx.drawImage(
+      this._16h,
+      0,0, // sx,sy
+      72,16, // sw,sh
+      0,0, //dx,dy
+      canvas.width,canvas.height //dw,dh
+    );
+
+    // ctx.stroke();
     // for (var i = 0; i < 30; i += 1) {
     //   var r = Math.floor(Math.random() * 255);
     //   var g = Math.floor(Math.random() * 255);
@@ -805,10 +825,6 @@ class WavePaintHandler extends VisPaintHandler {
     return [15, 4];
   }
   paintWavLine(x: number, y: number, colorIndex: number) {
-    const ctx = this._ctx;
-    const height = ctx.canvas.height; //this has to exist to get the value of the height
-    const adjustHeight = ctx.canvas.height/16;
-
     if (x === 0) this._lastY = y;
 
     let top = y;
@@ -830,8 +846,7 @@ class WavePaintHandler extends VisPaintHandler {
         x,
         y, //dx,dy
         1,
-        Math.round(1*(adjustHeight)) //dw,dh
-        //dh is being modified to emulate the pixels being stretched when height is above 16px
+        1 //dw,dh
       );
     }
     //? below is same as above, but stretching a pixel; which also render a "rainbow"
@@ -845,9 +860,6 @@ class WavePaintHandler extends VisPaintHandler {
   }
 
   paintWavDot(x: number, y: number, colorIndex: number) {
-    const ctx = this._ctx;
-    const height = ctx.canvas.height; //this has to exist to get the value of the height
-    const adjustHeight = ctx.canvas.height/16;
     this._ctx.drawImage(
       this._bar,
       0,
@@ -857,23 +869,18 @@ class WavePaintHandler extends VisPaintHandler {
       x,
       y, //dx,dy
       1,
-      Math.round(1*(adjustHeight)) //dw,dh
-      //dh is being modified to emulate the pixels being stretched when height is above 16px
+      1 //dw,dh
     );
   }
 
   paintWavSolid(x: number, y: number, colorIndex: number) {
-    const ctx = this._ctx;
-    const height = ctx.canvas.height; //this has to exist to get the value of the height
-    const adjustHeight = ctx.canvas.height/16;
-    
     var top, bottom;
-    if (y >= Math.round(8*(adjustHeight))) {
-      top = Math.round(8*(adjustHeight));
+    if (y >= 8) {
+      top = 8;
       bottom = y;
     } else {
       top = y;
-      bottom = Math.round(7*(adjustHeight));
+      bottom = 7;
     }
     // const h = bottom - top + 1;
     for (y = top; y <= bottom; y++) {
@@ -886,8 +893,7 @@ class WavePaintHandler extends VisPaintHandler {
         x,
         y, //dx,dy
         1,
-        Math.round(1*(adjustHeight)) //dw,dh
-        //dh is being modified to emulate the pixels being stretched when height is above 16px
+        1 //dw,dh
       );
     }
     //? below is same as above, but stretching a pixel; which also render a "rainbow"
