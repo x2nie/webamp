@@ -176,6 +176,7 @@ export default class Vis extends GuiObj {
     this.setmode(this._mode); // in case xml doesn't define mode.
     super.init();
     this.audioStatusChanged();
+    this._startVisualizer(); // visualizer always runs regardless of playback
   }
 
   dispose() {
@@ -232,6 +233,7 @@ export default class Vis extends GuiObj {
     let newMode = this.getmode() + 1;
     if (newMode > 2) {
       newMode = 0;
+      this._setPainter(NoVisualizerHandler);
     }
     this.setmode(String(newMode));
   }
@@ -251,12 +253,13 @@ export default class Vis extends GuiObj {
   // disposable
   audioStatusChanged = () => {
     // to avoid multiple loop, we always stop the old painting loop
-    this._stopVisualizer();
+    //this._stopVisualizer();
+    // never stop the visualizer, the object continously runs regardless of playback
 
     // start the new loop
     const playing = this._uiRoot.audio.getState() == AUDIO_PLAYING;
     if (playing) {
-      this._startVisualizer();
+      //this._startVisualizer();
     }
   };
 
@@ -461,6 +464,9 @@ class BarPaintHandler extends VisPaintHandler {
         this._barPeakFrames[j] = 0;
       } else {
         this._barPeakFrames[j] += 1;
+      } if(barPeak < 10){
+        barPeak = 10;
+        this._barPeakFrames[j] = 0;
       }
       this._barPeaks[j] = barPeak;
 
@@ -511,6 +517,9 @@ class BarPaintHandler extends VisPaintHandler {
         this._barPeakFrames[j] = 0;
       } else {
         this._barPeakFrames[j] += 1;
+      } if(barPeak < 10){
+        barPeak = 10;
+        this._barPeakFrames[j] = 0;
       }
       this._barPeaks[j] = barPeak;
 
