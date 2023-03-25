@@ -81,6 +81,8 @@ export class AudioPlayer {
     // this._analyser.fftSize = 512; //? to get same VIS to winamp osciloscpoe
     this._analyser.fftSize = 1024; //? exactly identical to winamp VIS. truncated later in VIS
     // don't smooth audio analysis
+    this._analyser.maxDecibels = -20;
+    this._analyser.minDecibels = -70;
     this._analyser.smoothingTimeConstant = 0.0;
 
     // default pan set to 0 - center
