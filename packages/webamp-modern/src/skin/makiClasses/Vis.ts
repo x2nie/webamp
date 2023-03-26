@@ -373,6 +373,7 @@ class BarPaintHandler extends VisPaintHandler {
   _bufferLength: number;
   _octaveBuckets: number[];
   _dataArray: Uint8Array;
+  _dataArray2: Uint8Array;
   _ctx: CanvasRenderingContext2D;
   paintBar: PaintBarFunction;
   paintFrame: PaintFrameFunction;
@@ -383,6 +384,7 @@ class BarPaintHandler extends VisPaintHandler {
     this._bufferLength = this._analyser.frequencyBinCount;
     this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
     this._dataArray = new Uint8Array(this._bufferLength);
+    this._dataArray2 = new Uint8Array(this._bufferLength);
   }
 
   prepare() {
@@ -440,19 +442,25 @@ class BarPaintHandler extends VisPaintHandler {
     const ctx = this._ctx;
     const w = ctx.canvas.width;
     const h = ctx.canvas.height;
+    //const weighting = new Uint8Array([0, 5, 10, 15, 20, 25, 30, 35, 40]);
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = this._color;
-
     this._analyser.getByteFrequencyData(this._dataArray);
+
     const heightMultiplier = h / 256;
     // const xOffset = this._barWidth + PIXEL_DENSITY; // Bar width, plus a pixel of spacing to the right.
+
     for (let j = 0; j < NUM_BARS - 1; j++) {
       const start = this._octaveBuckets[j];
       const end = this._octaveBuckets[j + 1];
       let amplitude = 0;
+      let weightingnum = 0;
       amplitude /= end - start;
+      for (let i = start; i < end; i++) {
+        weightingnum = Math.max(weightingnum+3, this._dataArray2[i]); //see comments on paintFrameThin()
+      }
       for (let k = start; k < end; k++) {
-        amplitude = Math.max(amplitude, this._dataArray[k]);
+        amplitude = Math.max(amplitude, ((this._dataArray[k]*3.4)-600)+weightingnum); //see comments on paintFrameThin()
       }
 
       // The drop rate should probably be normalized to the rendering FPS, for now assume 60 FPS
@@ -467,6 +475,9 @@ class BarPaintHandler extends VisPaintHandler {
       } if(barPeak < 10){
         barPeak = 10;
         this._barPeakFrames[j] = 0;
+      } if(barPeak > 255){
+        barPeak = 255;
+        this._barPeakFrames[j] += 1;
       }
       this._barPeaks[j] = barPeak;
 
@@ -503,9 +514,15 @@ class BarPaintHandler extends VisPaintHandler {
       const start = this._octaveBuckets[j];
       const end = this._octaveBuckets[j + 1];
       let amplitude = 0;
+      let weightingnum = 0;
       amplitude /= end - start;
+      for (let i = start; i < end; i++) {
+        weightingnum = Math.max(weightingnum+6.6, this._dataArray2[i]); //adds "weighting" to the analyzer
+      }
       for (let k = start; k < end; k++) {
-        amplitude = Math.max(amplitude, this._dataArray[k]);
+        amplitude = Math.max(amplitude, ((this._dataArray[k]*3.4)-600)+weightingnum); //the values between Wide and Thin aren't the same
+        //perhaps it makes more sense to have the amplitude data somewhere more accessible and only apply it to the painting
+        //states there? weightingnum has a different value compared to Wide
       }
 
       // The drop rate should probably be normalized to the rendering FPS, for now assume 60 FPS
@@ -520,6 +537,9 @@ class BarPaintHandler extends VisPaintHandler {
       } if(barPeak < 10){
         barPeak = 10;
         this._barPeakFrames[j] = 0;
+      } if(barPeak > 255){
+        barPeak = 255;
+        this._barPeakFrames[j] += 1;
       }
       this._barPeaks[j] = barPeak;
 
