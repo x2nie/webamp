@@ -489,8 +489,8 @@ class BarPaintHandler extends VisPaintHandler {
         // j /* * xOffset */,
         x1,
         x2,
-        amplitude * heightMultiplier,
-        barPeak * heightMultiplier
+        Math.round(amplitude * heightMultiplier),
+        Math.round(barPeak * heightMultiplier)
       );
     }
   }
@@ -551,8 +551,8 @@ class BarPaintHandler extends VisPaintHandler {
         // j /* * xOffset */,
         j,
         j,
-        amplitude * heightMultiplier,
-        barPeak * heightMultiplier
+        Math.round(amplitude * heightMultiplier),
+        Math.round(barPeak * heightMultiplier)
       );
     }
   }
