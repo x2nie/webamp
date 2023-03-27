@@ -457,7 +457,7 @@ class BarPaintHandler extends VisPaintHandler {
       let weightingnum = 0;
       amplitude /= end - start;
       for (let i = start; i < end; i++) {
-        weightingnum = Math.max(weightingnum+3, this._dataArray2[i]); //see comments on paintFrameThin()
+        weightingnum = Math.max(weightingnum+2.5, this._dataArray2[i]); //see comments on paintFrameThin()
       }
       for (let k = start; k < end; k++) {
         amplitude = Math.max(amplitude, ((this._dataArray[k]*3.4)-600)+weightingnum); //see comments on paintFrameThin()
@@ -743,12 +743,12 @@ class WavePaintHandler extends VisPaintHandler {
     for (let j = 0; j <= width; j++) {
       // const amplitude = sliceAverage(this._dataArray, sliceWidth, j);
       const amplitude = slice1st(this._dataArray, sliceWidth, j);
-      const [y, colorIndex] = this.rangeByAmplitude(amplitude);
+      const [y, colorIndex] = this.rangeByAmplitude(amplitude*1.60-65);
       const x = j * PIXEL_DENSITY;
 
       this.paintWav(x, y, colorIndex);
     }
-
+//:)
     if (using16temporaryCanvas) {
       const canvas = this._vis._canvas
       const visCtx = canvas.getContext('2d');
@@ -826,7 +826,7 @@ class WavePaintHandler extends VisPaintHandler {
     this._lastY = y;
 
     if (bottom < top) {
-      [bottom, top] = [top, bottom];
+      [bottom, top] = [top, y];
     }
     // const h = bottom - top + 1;
 
