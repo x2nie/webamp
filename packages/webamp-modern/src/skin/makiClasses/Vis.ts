@@ -178,7 +178,7 @@ export default class Vis extends GuiObj {
     this.audioStatusChanged();
     this._startVisualizer(); // visualizer always runs regardless of playback
   }
-//:)
+
   dispose() {
     super.dispose();
     this._stopVisualizer();
@@ -743,12 +743,12 @@ class WavePaintHandler extends VisPaintHandler {
     for (let j = 0; j <= width; j++) {
       // const amplitude = sliceAverage(this._dataArray, sliceWidth, j);
       const amplitude = slice1st(this._dataArray, sliceWidth, j);
-      const [y, colorIndex] = this.rangeByAmplitude(amplitude*1.60-65);
+      const [y, colorIndex] = this.rangeByAmplitude(amplitude*1.60-75);
       const x = j * PIXEL_DENSITY;
 
       this.paintWav(x, y, colorIndex);
     }
-//:)
+
     if (using16temporaryCanvas) {
       const canvas = this._vis._canvas
       const visCtx = canvas.getContext('2d');
