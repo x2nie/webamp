@@ -117,7 +117,7 @@ export default class Vis extends GuiObj {
       case "colorband15":
       case "colorband16":
         // color spectrum band #
-        const cobaIndex = parseInt(key.substring(9)) - 1;
+        const cobaIndex = -(parseInt(key.substring(9)) - 1)+16; //sure... i'll take that fix
         this._colorBands[cobaIndex] = value;
         break;
       case "colorallbands":
