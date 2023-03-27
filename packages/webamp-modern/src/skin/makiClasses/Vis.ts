@@ -827,6 +827,7 @@ class WavePaintHandler extends VisPaintHandler {
 
     if (bottom < top) {
       [bottom, top] = [top, bottom];
+      top++; //this emulates Winamp's/WACUP's OSC behavior correctly
     }
     // const h = bottom - top + 1;
 
