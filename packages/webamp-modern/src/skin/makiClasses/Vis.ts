@@ -178,7 +178,7 @@ export default class Vis extends GuiObj {
     this.audioStatusChanged();
     this._startVisualizer(); // visualizer always runs regardless of playback
   }
-
+//:)
   dispose() {
     super.dispose();
     this._stopVisualizer();
@@ -826,7 +826,7 @@ class WavePaintHandler extends VisPaintHandler {
     this._lastY = y;
 
     if (bottom < top) {
-      [bottom, top] = [top, y];
+      [bottom, top] = [top, bottom];
     }
     // const h = bottom - top + 1;
 
