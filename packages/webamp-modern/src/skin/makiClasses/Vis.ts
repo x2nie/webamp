@@ -392,25 +392,31 @@ class BarPaintHandler extends VisPaintHandler {
     this._peak.height = 1;
     this._peak.width = 1;
     var ctx = this._peak.getContext("2d");
-    ctx.fillStyle = `rgb(${this._vis._colorBandPeak})`;
+    ctx.fillStyle = gammaGroup.transformColor(vis._colorBandPeak);
     ctx.fillRect(0, 0, 1, 1);
 
     //? paint bar
-    this._bar.height = vis._canvas.height;
+    this._bar.height = 16;
     this._bar.width = 1;
+    this._bar.setAttribute("width", "1");
+    this._bar.setAttribute("height", "16");
     var ctx = this._bar.getContext("2d");
-    const grd = ctx.createLinearGradient(0, 0, 0, vis._canvas.height);
-    for (let i = 0; i < vis._colorBands.length; i++) {
-      grd.addColorStop(
-        (1 / (vis._colorBands.length - 1)) * i,
-        gammaGroup.transformColor(vis._colorBands[i])
-      );
+    // const grd = ctx.createLinearGradient(0, 0, 0, vis._canvas.height);
+    // for (let i = 0; i < vis._colorBands.length; i++) {
+    //   grd.addColorStop(
+    //     (1 / (vis._colorBands.length - 1)) * i,
+    //     gammaGroup.transformColor(vis._colorBands[i])
+    //   );
+    // }
+    // ctx.strokeStyle = this._color;
+    // ctx.fillStyle = grd;
+    // ctx.fillRect(0, 0, 1, vis._canvas.height);
+    // ctx.imageSmoothingEnabled = false;
+    for (let y = 0; y < 16; y++) {
+      ctx.fillStyle = gammaGroup.transformColor(vis._colorBands[y]);
+      ctx.fillRect(0, y, 1, y + 1);
     }
 
-    ctx.strokeStyle = this._color;
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, 1, vis._canvas.height);
-    ctx.imageSmoothingEnabled = false;
     this._ctx = this._vis._canvas.getContext("2d");
 
     if (this._vis._bandwidth == "wide") {
@@ -427,6 +433,9 @@ class BarPaintHandler extends VisPaintHandler {
 
     if (this._vis._coloring == "fire") {
       this.paintBar = this.paintBarFire.bind(this);
+    } 
+    else if (this._vis._coloring == "line") {
+      this.paintBar = this.paintBarLine.bind(this);
     } else {
       this.paintBar = this.paintBarNormal.bind(this);
     }
@@ -647,7 +656,36 @@ class BarPaintHandler extends VisPaintHandler {
    * 🟥🟧🟨
    * 🟥🟧🟨🟩
    */
-  paintBarLine(){
+  paintBarLine( ctx: CanvasRenderingContext2D,
+    // barIndex: number,
+    x: number,
+    x2: number,
+    barHeight: number,
+    peakHeight: number
+  ) {
+    // const w = ctx.canvas.width;
+    const h = ctx.canvas.height;
+    // var x = Math.round(this._barWidth * barIndex);
+    // var r = this._barWidth - 2;
+    // var x2 = Math.round(this._barWidth * (barIndex + 1)) - 2;
+    var y = h - barHeight;
+
+    // ctx.drawImage(this._bar, x, y, x2 - x + 1, h - y);
+    ctx.drawImage(
+      this._bar,
+      0,  // sx
+      0,  // sy
+      this._bar.width,  // sw
+      h - y,            // sh
+      x, y, //  dx,dy
+      x2 - x + 1, //dw
+      h - y       //dh
+    );
+
+    if (this._vis._peaks) {
+      const peakY = h - peakHeight;
+      ctx.drawImage(this._peak, 0, 0, 1, 1, x, peakY, x2 - x + 1, 1);
+    }
 
   }
 }
@@ -727,7 +765,6 @@ class WavePaintHandler extends VisPaintHandler {
     var ctx = this._bar.getContext("2d");
     for (let y = 0; y < 5; y++) {
       ctx.fillStyle = gammaGroup.transformColor(vis._colorOsc[y]);
-      // console.log("ctx.fillStyle:", ctx.fillStyle);
       ctx.fillRect(0, y, 1, y + 1);
     }
 
