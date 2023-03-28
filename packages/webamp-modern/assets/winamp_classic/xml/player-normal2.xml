@@ -21,7 +21,7 @@
         w="72" h="16"
         coloring="fire"
         bandwidth="thin"
-        mode="2"
+        mode="1"
         oscstyle="lines"
         
     />
