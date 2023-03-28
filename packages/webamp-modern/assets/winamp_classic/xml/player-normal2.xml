@@ -1,4 +1,4 @@
-<groupdef id="mainwindow" x="0" y="0" w="550" h="232" relatw="1" relath="1">
+<groupdef id="mainwindow" x="0" y="0" w="550" h="232" >
     <layer id="main.bg" x="0" y="0" w="0" h="0" relatw="1" relath="1" move="1"/>
     <layer id="blah" dblClickAction="SWITCH;shade" x="0" y="0" h="14" w="275" move="1"/>
     
@@ -19,8 +19,9 @@
         id="vis"
         x="24" y="43"
         w="72" h="16"
-        coloring="fire"
-        bandwidth="thin"
+        ccoloring="fire"
+        coloring="line"
+        bbandwidth="thin"
         mode="1"
         oscstyle="lines"
         

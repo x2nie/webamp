@@ -365,6 +365,7 @@ class BarPaintHandler extends VisPaintHandler {
   // Off-screen canvas for pre-rendering a single bar gradient
   _bar: HTMLCanvasElement = document.createElement("canvas");
   _peak: HTMLCanvasElement = document.createElement("canvas");
+  _16h: HTMLCanvasElement = document.createElement("canvas"); // non-stretched
   _barPeaks: number[] = new Array(NUM_BARS).fill(0);
   _barPeakFrames: number[] = new Array(NUM_BARS).fill(0);
   _bufferLength: number;
@@ -380,6 +381,11 @@ class BarPaintHandler extends VisPaintHandler {
     this._bufferLength = this._analyser.frequencyBinCount;
     this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
     this._dataArray = new Uint8Array(this._bufferLength);
+
+    this._16h.width = 1;
+    this._16h.height = 16;
+    this._16h.setAttribute("width", "72");
+    this._16h.setAttribute("height", "16");
   }
 
   prepare() {
@@ -744,6 +750,11 @@ class WavePaintHandler extends VisPaintHandler {
     // this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
     this._dataArray = new Uint8Array(this._bufferLength);
 
+    this._16h.width = 1;
+    this._16h.height = 16;
+    this._16h.setAttribute("width", "72");
+    this._16h.setAttribute("height", "16");
+
     //* see https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#monitoring_screen_resolution_or_zoom_level_changes
     this._pixelRatio = window.devicePixelRatio || 1;
   }
@@ -752,10 +763,6 @@ class WavePaintHandler extends VisPaintHandler {
     const groupId = vis._gammagroup;
     const gammaGroup = this._vis._uiRoot._getGammaGroup(groupId);
 
-    this._16h.width = 1;
-    this._16h.height = 16;
-    this._16h.setAttribute("width", "72");
-    this._16h.setAttribute("height", "16");
 
     //? paint bar
     this._bar.width = 1;
