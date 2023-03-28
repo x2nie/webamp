@@ -117,7 +117,7 @@ export default class Vis extends GuiObj {
       case "colorband15":
       case "colorband16":
         // color spectrum band #
-        const cobaIndex = -(parseInt(key.substring(9)) - 1)+16; //sure... i'll take that fix
+        const cobaIndex = parseInt(key.substring(9)) - 1;
         this._colorBands[cobaIndex] = value;
         break;
       case "colorallbands":
@@ -176,7 +176,6 @@ export default class Vis extends GuiObj {
     this.setmode(this._mode); // in case xml doesn't define mode.
     super.init();
     this.audioStatusChanged();
-    this._startVisualizer(); // visualizer always runs regardless of playback
   }
 
   dispose() {
@@ -233,7 +232,6 @@ export default class Vis extends GuiObj {
     let newMode = this.getmode() + 1;
     if (newMode > 2) {
       newMode = 0;
-      this._setPainter(NoVisualizerHandler);
     }
     this.setmode(String(newMode));
   }
@@ -253,13 +251,12 @@ export default class Vis extends GuiObj {
   // disposable
   audioStatusChanged = () => {
     // to avoid multiple loop, we always stop the old painting loop
-    //this._stopVisualizer();
-    // never stop the visualizer, the object continously runs regardless of playback
+    this._stopVisualizer();
 
     // start the new loop
     const playing = this._uiRoot.audio.getState() == AUDIO_PLAYING;
     if (playing) {
-      //this._startVisualizer();
+      this._startVisualizer();
     }
   };
 
@@ -373,7 +370,6 @@ class BarPaintHandler extends VisPaintHandler {
   _bufferLength: number;
   _octaveBuckets: number[];
   _dataArray: Uint8Array;
-  _dataArray2: Uint8Array;
   _ctx: CanvasRenderingContext2D;
   paintBar: PaintBarFunction;
   paintFrame: PaintFrameFunction;
@@ -384,7 +380,6 @@ class BarPaintHandler extends VisPaintHandler {
     this._bufferLength = this._analyser.frequencyBinCount;
     this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
     this._dataArray = new Uint8Array(this._bufferLength);
-    this._dataArray2 = new Uint8Array(this._bufferLength);
   }
 
   prepare() {
@@ -437,6 +432,16 @@ class BarPaintHandler extends VisPaintHandler {
     }
   }
 
+  /**
+   * ⬜⬜⬜ ⬜⬜⬜
+   * 🟧🟧🟧
+   * 🟫🟫🟫 🟧🟧🟧 
+   * 🟫🟫🟫 🟫🟫🟫 
+   * 🟫🟫🟫 🟫🟫🟫 ⬜⬜⬜ 
+   * 🟫🟫🟫 🟫🟫🟫 🟧🟧🟧
+   * 🟫🟫🟫 🟫🟫🟫 🟫🟫🟫
+   * 1 bar = multiple pixels
+   */
   paintFrameWide() {
     if (!this._ctx) return;
     const ctx = this._ctx;
@@ -445,8 +450,8 @@ class BarPaintHandler extends VisPaintHandler {
     //const weighting = new Uint8Array([0, 5, 10, 15, 20, 25, 30, 35, 40]);
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = this._color;
-    this._analyser.getByteFrequencyData(this._dataArray);
 
+    this._analyser.getByteFrequencyData(this._dataArray);
     const heightMultiplier = h / 256;
     // const xOffset = this._barWidth + PIXEL_DENSITY; // Bar width, plus a pixel of spacing to the right.
 
@@ -457,7 +462,7 @@ class BarPaintHandler extends VisPaintHandler {
       let weightingnum = 0;
       amplitude /= end - start;
       for (let i = start; i < end; i++) {
-        weightingnum = Math.max(weightingnum+2.5, this._dataArray2[i]); //see comments on paintFrameThin()
+        weightingnum += 2.5;
       }
       for (let k = start; k < end; k++) {
         amplitude = Math.max(amplitude, ((this._dataArray[k]*3.4)-600)+weightingnum); //see comments on paintFrameThin()
@@ -472,7 +477,8 @@ class BarPaintHandler extends VisPaintHandler {
         this._barPeakFrames[j] = 0;
       } else {
         this._barPeakFrames[j] += 1;
-      } if(barPeak < 10){
+      } 
+      if(barPeak < 10){
         barPeak = 10;
         this._barPeakFrames[j] = 0;
       } if(barPeak > 255){
@@ -496,6 +502,13 @@ class BarPaintHandler extends VisPaintHandler {
   }
 
   /**
+   * ⬜⬜
+   * 🟧
+   * 🟫🟧
+   * 🟫🟫⬜⬜
+   * 🟫🟫🟧  
+   * 🟫🟫🟫🟧⬜
+   * 🟫🟫🟫🟫🟧
    * drawing 1pixel width bars
    */
   paintFrameThin() {
@@ -517,7 +530,7 @@ class BarPaintHandler extends VisPaintHandler {
       let weightingnum = 0;
       amplitude /= end - start;
       for (let i = start; i < end; i++) {
-        weightingnum = Math.max(weightingnum+6.6, this._dataArray2[i]); //adds "weighting" to the analyzer
+        weightingnum += 6.6; //adds "weighting" to the analyzer
       }
       for (let k = start; k < end; k++) {
         amplitude = Math.max(amplitude, ((this._dataArray[k]*3.4)-600)+weightingnum); //the values between Wide and Thin aren't the same
@@ -534,7 +547,8 @@ class BarPaintHandler extends VisPaintHandler {
         this._barPeakFrames[j] = 0;
       } else {
         this._barPeakFrames[j] += 1;
-      } if(barPeak < 10){
+      } 
+      if(barPeak < 10){
         barPeak = 10;
         this._barPeakFrames[j] = 0;
       } if(barPeak > 255){
@@ -557,6 +571,12 @@ class BarPaintHandler extends VisPaintHandler {
     }
   }
 
+  /**
+   * 🟥
+   * 🟧🟧
+   * 🟨🟨🟨
+   * 🟩🟩🟩🟩
+   */
   paintBarNormal(
     ctx: CanvasRenderingContext2D,
     // barIndex: number,
@@ -581,6 +601,12 @@ class BarPaintHandler extends VisPaintHandler {
     }
   }
 
+  /**
+   * 🟥
+   * 🟧🟥
+   * 🟨🟧🟥
+   * 🟩🟨🟧🟥
+   */
   paintBarFire(
     ctx: CanvasRenderingContext2D,
     // barIndex: number,
@@ -613,6 +639,16 @@ class BarPaintHandler extends VisPaintHandler {
       const peakY = h - peakHeight;
       ctx.drawImage(this._peak, 0, 0, 1, 1, x, peakY, x2 - x + 1, 1);
     }
+  }
+
+  /**
+   * 🟥
+   * 🟥🟧
+   * 🟥🟧🟨
+   * 🟥🟧🟨🟩
+   */
+  paintBarLine(){
+
   }
 }
 registerPainter("1", BarPaintHandler);
@@ -743,7 +779,7 @@ class WavePaintHandler extends VisPaintHandler {
     for (let j = 0; j <= width; j++) {
       // const amplitude = sliceAverage(this._dataArray, sliceWidth, j);
       const amplitude = slice1st(this._dataArray, sliceWidth, j);
-      const [y, colorIndex] = this.rangeByAmplitude(amplitude*1.60-75);
+      const [y, colorIndex] = this.rangeByAmplitude(amplitude);
       const x = j * PIXEL_DENSITY;
 
       this.paintWav(x, y, colorIndex);
