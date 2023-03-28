@@ -424,11 +424,11 @@ class BarPaintHandler extends VisPaintHandler {
       this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
     } else {
       // thin
+      this.paintFrame = this.paintFrameThin.bind(this);
       const w = this._vis._canvas.width;
       this._barPeaks = new Array(w).fill(0);
       this._barPeakFrames = new Array(w).fill(0);
       this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength, w);
-      this.paintFrame = this.paintFrameThin.bind(this);
     }
 
     if (this._vis._coloring == "fire") {
