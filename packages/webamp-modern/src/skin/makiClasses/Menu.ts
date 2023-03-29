@@ -7,6 +7,9 @@ import Layer from "./Layer";
 import { getWa5Popup } from "./menuWa5";
 import { generatePopupDiv } from "./PopupMenu";
 
+let ACTIVE_MENU_GROUP: string = ''
+let ACTIVE_MENU: Menu = null;
+
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#?
 export default class Menu extends Group {
   static GUID = "73c00594401b961f24671b9b6541ac27";
@@ -99,20 +102,48 @@ export default class Menu extends Group {
       }
     }
   }
-  onLeftButtonDown(x: number, y: number) {
-    super.onLeftButtonDown(x, y);
-    this._showButton(this._elDown);
-  }
-  onEnterArea() {
-    super.onEnterArea();
-    this._showButton(this._elHover);
-    this._div.classList.add("open");
-  }
-  onLeaveArea() {
-    super.onLeaveArea();
+  
+  doCloseMenu(){
     this._showButton(this._elNormal);
     this._div.classList.remove("open");
+    ACTIVE_MENU = null;
   }
+
+  onLeftButtonDown(x: number, y: number) {
+    // super.onLeftButtonDown(x, y);
+    // this._showButton(this._elDown);
+    //? toggle dropdown visibility
+    if(ACTIVE_MENU_GROUP != this._menuGroupId){
+      ACTIVE_MENU_GROUP = this._menuGroupId;
+    } else {
+      ACTIVE_MENU_GROUP = null;
+      if(ACTIVE_MENU != null){
+        ACTIVE_MENU.doCloseMenu()
+      }
+    }
+    this.onEnterArea()
+  }
+  onEnterArea() {
+    // super.onEnterArea();
+    if(ACTIVE_MENU_GROUP == this._menuGroupId){
+      if(ACTIVE_MENU != null){
+        ACTIVE_MENU.doCloseMenu()
+      }
+      this._showButton(this._elDown);    
+      this._div.classList.add("open");
+      ACTIVE_MENU = this;
+    } else {
+      this._showButton(this._elHover);    
+    }
+  }
+  onLeaveArea() {
+    // super.onLeaveArea();
+    if(ACTIVE_MENU_GROUP != this._menuGroupId){
+      this._showButton(this._elNormal);
+      // this._div.classList.remove("open");
+    }
+  }
+
 
   init() {
     super.init();
@@ -120,6 +151,7 @@ export default class Menu extends Group {
     // this._uiRoot.vm.dispatch(this, "onstartup", []);
   }
   resolveButtonsAction() {
+    // TODO: change to findObject, because BigBento's menus arent wrapped with parent?
     //console.log('found img')
     // debugger;
     for (const obj of this.getparent()._children) {
@@ -157,14 +189,14 @@ export default class Menu extends Group {
     //   this._div.classList.remove("vertical");
     // }
 
-   
-    if(this._menuId.startsWith('WA5:')){
-      const [,popupId] = this._menuId.split(':')
+
+    if (this._menuId.startsWith('WA5:')) {
+      const [, popupId] = this._menuId.split(':')
       const popupMenu = getWa5Popup(popupId)
       // function menuClick(id:number){
       //   console.log('menu clicked:', id)
       // }
-      this._popup = generatePopupDiv(popupMenu, (id:number) => console.log('menu clicked:', id))
+      this._popup = generatePopupDiv(popupMenu, (id: number) => console.log('menu clicked:', id))
     } else {
       this._popup = document.createElement("div");
       this._popup.classList.add("fake-popup");
