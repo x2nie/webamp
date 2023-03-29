@@ -103,10 +103,12 @@ function generatePopupItem(menu: MenuItem): HTMLElement {
   //? checkmark
   const checkMark = document.createElement("span");
   checkMark.classList.add('checkmark')
+  // @ts-ignore
   checkMark.textContent = menu.checked? '✓' : ' ';
   item.appendChild(checkMark)
   
   //? display text
+  // @ts-ignore
   const [caption, keystroke] = menu.caption.split('\t')  
   const label = generateCaption(caption);
   label.classList.add('caption')
