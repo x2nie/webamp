@@ -80,7 +80,8 @@ export function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElem
     switch (menu.type) {
       case "menuitem":
         item = generatePopupItem(menu);
-        item.onclick = (e) => callback(menu.id);
+        item.addEventListener("mousedown", (e) => callback(menu.id));
+        // item.onclick = (e) => callback(menu.id);
         break;
       case "popup":
         item = generatePopupItem(menu);
