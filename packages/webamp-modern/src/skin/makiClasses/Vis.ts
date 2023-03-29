@@ -908,13 +908,18 @@ class WavePaintHandler extends VisPaintHandler {
     let bottom = this._lastY;
     this._lastY = y;
 
-    if (bottom < top) {
+    //if (bottom < top)
+    //for winamp classic emulation
+    if (bottom > top) { //bottom > top exists because Winamp3/Winamp5 somehow flipped things
       [bottom, top] = [top, bottom];
-      top++; //this emulates Winamp's/WACUP's OSC behavior correctly
+      top--; //top++, that emulates Winamp's/WACUP's OSC behavior correctly
+      //top-- is for emulating what Winamp3/Winamp5 Freeform Skin Engine does
     }
     // const h = bottom - top + 1;
 
-    for (y = top; y <= bottom; y++) {
+    //for (y = top; y <= bottom; y++)
+    //for winamp classic emulation
+    for (y = bottom; y <= top; y++) { //exists to emulate what Winamp3/Winamp5 Freeform Skin Engine does
       this._ctx.drawImage(
         this._bar,
         0, colorIndex, // sx,sy
