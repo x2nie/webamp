@@ -824,10 +824,10 @@ class WavePaintHandler extends VisPaintHandler {
       // const amplitude = sliceAverage(this._dataArray, sliceWidth, j);
       const amplitude = slice1st(this._dataArray, sliceWidth, j);
       // [2:51 AM]Eris Lund: amplitude*1.63 is mulitplying amplitude by 1.63 times, 
-      //   and -75 then centers the data again so it looks correct again, 
+      //   and -79 then centers the data again so it looks correct again, 
       //   this roughly matches what is seen in winamp
       //   this may better match winamp now - 29.03.2023
-      const [y, colorIndex] = this.rangeByAmplitude(amplitude*1.63-75);
+      const [y, colorIndex] = this.rangeByAmplitude(amplitude*1.63-79);
       const x = j * PIXEL_DENSITY;
 
       this.paintWav(x, y, colorIndex);
