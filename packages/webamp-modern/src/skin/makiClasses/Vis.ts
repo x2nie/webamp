@@ -338,7 +338,7 @@ function octaveBucketsForBufferLength(
   barCount: number = NUM_BARS
 ): number[] {
   const octaveBuckets = new Array(barCount).fill(0);
-  const minHz = 200;
+  const minHz = 80;
   const maxHz = 22050;
   const octaveStep = Math.pow(maxHz / minHz, 1 / barCount);
 
