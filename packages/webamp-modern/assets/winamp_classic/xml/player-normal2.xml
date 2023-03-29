@@ -18,7 +18,7 @@
     <vis
         id="vis"
         x="24" y="43"
-        w="72" h="16"
+        w="75" h="16"
         ccoloring="fire"
         coloring="line"
         bbandwidth="thin"
