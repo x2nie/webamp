@@ -84,6 +84,26 @@ export default class Container extends XmlObj {
     this._uiRoot.vm.dispatch(this, "onswitchtolayout", [
       { type: "OBJECT", value: this.getcurlayout() },
     ]);
+
+    this.getDiv().addEventListener("keydown", (e)=>{
+      /*
+      https://codepen.io/melwinalm/pen/zKeWWj
+      if (e.which == 77) {
+        alert("M key was pressed");
+      } else if (e.ctrlKey && e.which == 66) {
+        alert("Ctrl + B shortcut combination was pressed");
+      } else if (e.ctrlKey && e.altKey && e.which == 89) {
+        alert("Ctrl + Alt + Y shortcut combination was pressed");
+      } else if (e.ctrlKey && e.altKey && e.shiftKey && e.which == 85) {
+        alert("Ctrl + Alt + Shift + U shortcut combination was pressed");
+      }
+      */
+      if (!e.repeat) {
+        console.log(`Container.Key "${e.key}" pressed [event: keydown]`);
+      } else {
+        // console.log(`Container.Key "${e.key}" repeating [event: keydown]`);
+      }
+    })
   }
 
   dispose() {
