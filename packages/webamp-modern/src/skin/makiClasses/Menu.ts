@@ -31,6 +31,7 @@ function installGlobalClickListener() {
 function uninstallGlobalClickListener() {
   if (globalClickInstalled) {
     document.removeEventListener("mousedown", globalWindowClick);
+    globalClickInstalled = false;
   }
 
   uninstallGlobalMouseDown(globalWindowClick)
