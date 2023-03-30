@@ -827,7 +827,10 @@ class WavePaintHandler extends VisPaintHandler {
       //   and -79 then centers the data again so it looks correct again, 
       //   this roughly matches what is seen in winamp
       //   this may better match winamp now - 29.03.2023
-      const [y, colorIndex] = this.rangeByAmplitude(amplitude*1.63-79);
+      const [y, colorIndex] = this.rangeByAmplitude(-(amplitude*1.63-85)+256);
+      // amplitude is now upside down because we're flipping the rendering
+      // of the oscilloscope upside down as well
+      // why? because the modern skin engine does this, and i dont like that
       const x = j * PIXEL_DENSITY;
 
       this.paintWav(x, y, colorIndex);
@@ -909,23 +912,18 @@ class WavePaintHandler extends VisPaintHandler {
     let bottom = this._lastY;
     this._lastY = y;
 
-    //if (bottom < top)
-    //for winamp classic emulation
-    if (bottom > top) { //bottom > top exists because Winamp3/Winamp5 somehow flipped things
+    if (bottom < top) { 
       [bottom, top] = [top, bottom];
-      top--; //top++, that emulates Winamp's/WACUP's OSC behavior correctly
-      //top-- is for emulating what Winamp3/Winamp5 Freeform Skin Engine does
+      top++; //top++, that emulates Winamp's/WACUP's OSC behavior correctly
     }
     // const h = bottom - top + 1;
 
-    //for (y = top; y <= bottom; y++)
-    //for winamp classic emulation
-    for (y = bottom; y <= top; y++) { //exists to emulate what Winamp3/Winamp5 Freeform Skin Engine does
+    for (y = top; y <= bottom; y++) { 
       this._ctx.drawImage(
         this._bar,
         0, colorIndex, // sx,sy
         1, 1, // sw,sh
-        x, y, //dx,dy
+        x, -y+15, //dx,dy, dy is upside down because Winamp3/Winamp5 does it, so we have to emulate it
         1, 1 //dw,dh
       );
     }
@@ -936,7 +934,7 @@ class WavePaintHandler extends VisPaintHandler {
       this._bar,
       0, colorIndex, // sx,sy
       1, 1, // sw,sh
-      x, y, //dx,dy
+      x, -y+15, //dx,dy, dy is upside down because Winamp3/Winamp5 does it, so we have to emulate it
       1, 1 //dw,dh
     );
   }
@@ -956,7 +954,7 @@ class WavePaintHandler extends VisPaintHandler {
         this._bar,
         0, colorIndex, // sx,sy
         1, 1, // sw,sh
-        x, y, //dx,dy
+        x, -y+15, //dx,dy, dy is upside down because Winamp3/Winamp5 does it, so we have to emulate it
         1, 1 //dw,dh
       );
     }
