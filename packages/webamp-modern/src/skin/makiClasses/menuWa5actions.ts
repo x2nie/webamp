@@ -2,7 +2,7 @@ import { UIRoot } from "../../UIRoot";
 import PopupMenu, { MenuItem } from "./PopupMenu";
 
 type MenuActionEvent = (menu: MenuItem, uiRoot: UIRoot) => void;
-type MenuActionExecution = (uiRoot: UIRoot) => boolean;
+type MenuActionExecution = (uiRoot: UIRoot) => boolean | void;
 type MenuAction = {
     onUpdate?: MenuActionEvent;     //? attemp to update disability, checkmark, visiblity, etc
     onExecute?: MenuActionExecution;    //? function to run when menu is clicked
@@ -43,6 +43,27 @@ register(40038, { //? Time remaining
     onUpdate: (menu: MenuItem, uiRoot: UIRoot) => { menu.checked = uiRoot.audio._timeRemaining },
     onExecute: (uiRoot: UIRoot) => { uiRoot.audio._timeRemaining = true; return true },
 })
+
+register(40044, { //? Previous
+    onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('prev')
+})
+
+register(40045, { //? Play
+    onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('play')
+})
+
+register(40046, { //? Pause
+    onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('pause')
+})
+
+register(40047, { //? Stop
+    onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('stop')
+})
+
+register(40048, { //? Next
+    onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('next')
+})
+
 
 register(11111140038, { //? 
     onUpdate: (menu: MenuItem) => { }

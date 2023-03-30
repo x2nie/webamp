@@ -516,7 +516,7 @@ export class UIRoot {
     cssEl.textContent = cssRules.join("\n");
   }
 
-  dispatch(action: string, param: string | null, actionTarget: string | null) {
+  dispatch(action: string, param?: string | null, actionTarget?: string | null) {
     switch (action.toLowerCase()) {
       case "play":
         this.audio.play();
