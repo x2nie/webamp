@@ -25,6 +25,7 @@ function installGlobalClickListener() {
     installGlobalMouseDown(globalWindowClick);  // call globalWindowClick on any GuiObj
     if (!globalClickInstalled) {
       document.addEventListener("mousedown", globalWindowClick); // call globalWindowClick on document
+      globalClickInstalled = true;
     }
   }, 500);
 }
