@@ -21,10 +21,9 @@ function globalWindowClick(){
 let globalClickInstalled = false;
 function installGlobalClickListener(){
   setTimeout(() => {  // using promise to prevent immediately executing of globalWindowClick 
-    // document.addEventListener("mousedown", globalWindowClick);
-    installGlobalMouseDown(globalWindowClick);
+    installGlobalMouseDown(globalWindowClick);  // call globalWindowClick on any GuiObj
     if(!globalClickInstalled){
-      document.addEventListener("mousedown", globalWindowClick);
+      document.addEventListener("mousedown", globalWindowClick); // call globalWindowClick on document
     }
   }, 500);
 }
