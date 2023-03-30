@@ -5,33 +5,34 @@ import Group from "./Group";
 // import Button from "./Button";
 import Layer from "./Layer";
 import { getWa5Popup } from "./menuWa5";
-import { generatePopupDiv } from "./PopupMenu";
+import PopupMenu, { generatePopupDiv } from "./PopupMenu";
+import { findAction, updateActions } from "./menuWa5actions";
 
 let ACTIVE_MENU_GROUP: string = ''
 let ACTIVE_MENU: Menu = null;
 
-function globalWindowClick(){
+function globalWindowClick() {
   console.log('globalWindowClick')
-  if(ACTIVE_MENU != null){
+  if (ACTIVE_MENU != null) {
     ACTIVE_MENU.doCloseMenu()
   }
   ACTIVE_MENU_GROUP = ''
 }
 
 let globalClickInstalled = false;
-function installGlobalClickListener(){
+function installGlobalClickListener() {
   setTimeout(() => {  // using promise to prevent immediately executing of globalWindowClick 
     installGlobalMouseDown(globalWindowClick);  // call globalWindowClick on any GuiObj
-    if(!globalClickInstalled){
+    if (!globalClickInstalled) {
       document.addEventListener("mousedown", globalWindowClick); // call globalWindowClick on document
     }
   }, 500);
 }
-function uninstallGlobalClickListener(){
-  if(globalClickInstalled){
+function uninstallGlobalClickListener() {
+  if (globalClickInstalled) {
     document.removeEventListener("mousedown", globalWindowClick);
   }
-  
+
   uninstallGlobalMouseDown(globalWindowClick)
 }
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#?
@@ -49,7 +50,8 @@ export default class Menu extends Group {
   _elHover: GuiObj;
   _elDown: GuiObj;
   _elImage: Layer;
-  _popup: HTMLElement;
+  _popup: PopupMenu;
+  _popupDiv: HTMLElement;
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -126,8 +128,8 @@ export default class Menu extends Group {
       }
     }
   }
-  
-  doCloseMenu(){
+
+  doCloseMenu() {
     this._showButton(this._elNormal);
     this._div.classList.remove("open");
     ACTIVE_MENU = null;
@@ -140,7 +142,7 @@ export default class Menu extends Group {
     // super.onLeftButtonDown(x, y);
     // this._showButton(this._elDown);
     //? toggle dropdown visibility
-    if(ACTIVE_MENU_GROUP != this._menuGroupId){
+    if (ACTIVE_MENU_GROUP != this._menuGroupId) {
       ACTIVE_MENU_GROUP = this._menuGroupId;
       // setTimeout(() => {
       //   installGlobalMouseDown(globalWindowClick);
@@ -149,7 +151,7 @@ export default class Menu extends Group {
 
     } else {
       ACTIVE_MENU_GROUP = null;
-      if(ACTIVE_MENU != null){
+      if (ACTIVE_MENU != null) {
         ACTIVE_MENU.doCloseMenu()
       }
     }
@@ -157,21 +159,21 @@ export default class Menu extends Group {
   }
   onEnterArea() {
     // super.onEnterArea();
-    if(ACTIVE_MENU_GROUP == this._menuGroupId){
-      if(ACTIVE_MENU != null){
+    if (ACTIVE_MENU_GROUP == this._menuGroupId) {
+      if (ACTIVE_MENU != null) {
         ACTIVE_MENU.doCloseMenu()
       }
-      this._showButton(this._elDown);    
+      this._showButton(this._elDown);
       this._div.classList.add("open");
-      
+
       ACTIVE_MENU = this;
     } else {
-      this._showButton(this._elHover);    
+      this._showButton(this._elHover);
     }
   }
   onLeaveArea() {
     // super.onLeaveArea();
-    if(ACTIVE_MENU_GROUP != this._menuGroupId){
+    if (ACTIVE_MENU_GROUP != this._menuGroupId) {
       this._showButton(this._elNormal);
       // this._div.classList.remove("open");
     }
@@ -225,17 +227,38 @@ export default class Menu extends Group {
 
     if (this._menuId.startsWith('WA5:')) {
       const [, popupId] = this._menuId.split(':')
-      const popupMenu = getWa5Popup(popupId)
+      this._popup = getWa5Popup(popupId);
+      this.invalidatePopup()
       // function menuClick(id:number){
       //   console.log('menu clicked:', id)
       // }
-      this._popup = generatePopupDiv(popupMenu, (id: number) => console.log('menu clicked:', id))
-    } else {
-      this._popup = document.createElement("div");
-      this._popup.classList.add("fake-popup");
     }
-    this._popup.classList.add("popup");
-    // this._appendChildrenToDiv(this._popup);
-    this._div.appendChild(this._popup);
+  }
+
+  /**
+   * update the checkmark, enabled/disabled, etc
+   */
+  invalidatePopup() {
+    const self = this;
+    if (this._popup) {
+      const menuItemClick = (id: number) => {
+        console.log('menu clicked:', id);
+        const action = findAction(id);
+        const invalidateRequired = action.onExecute(self._uiRoot);
+        if(invalidateRequired) self.invalidatePopup();  
+      }
+      if(this._popupDiv){
+        this._popupDiv.remove()
+      }
+      updateActions(this._popup, this._uiRoot); // let winamp5 menus reflect the real config/condition
+      this._popupDiv = generatePopupDiv(this._popup, menuItemClick);
+      // } else {
+      // this._popupDiv = document.createElement("div");
+      // this._popupDiv.classList.add("fake-popup");
+      // }
+      this._popupDiv.classList.add("popup");
+      // this._appendChildrenToDiv(this._popup);
+      this._div.appendChild(this._popupDiv);
+    }
   }
 }

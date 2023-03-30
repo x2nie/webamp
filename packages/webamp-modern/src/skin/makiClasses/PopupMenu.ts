@@ -34,11 +34,18 @@ export type MenuItem =
       checked: boolean;
       disabled?: boolean;
     }
-    | { type: "separator" }
+    | { 
+      type: "separator" 
+      caption?: string;
+      id?: number;
+      checked?: boolean;
+      disabled?: boolean;
+    }
     | {
       type: "popup";
       caption: string;
       popup: PopupMenu;
+      checked?: boolean;
       disabled?: boolean;
       children?: MenuItem[];
     };
