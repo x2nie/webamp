@@ -1,4 +1,4 @@
-import GuiObj from "./GuiObj";
+import GuiObj, { installGlobalMouseDown, uninstallGlobalMouseDown } from "./GuiObj";
 // import { UIRoot } from "../../UIRoot";
 import Group from "./Group";
 // import { px, toBool, clamp } from "../../utils";
@@ -10,6 +10,31 @@ import { generatePopupDiv } from "./PopupMenu";
 let ACTIVE_MENU_GROUP: string = ''
 let ACTIVE_MENU: Menu = null;
 
+function globalWindowClick(){
+  console.log('globalWindowClick')
+  if(ACTIVE_MENU != null){
+    ACTIVE_MENU.doCloseMenu()
+  }
+  ACTIVE_MENU_GROUP = ''
+}
+
+let globalClickInstalled = false;
+function installGlobalClickListener(){
+  setTimeout(() => {  // using promise to prevent immediately executing of globalWindowClick 
+    // document.addEventListener("mousedown", globalWindowClick);
+    installGlobalMouseDown(globalWindowClick);
+    if(!globalClickInstalled){
+      document.addEventListener("mousedown", globalWindowClick);
+    }
+  }, 500);
+}
+function uninstallGlobalClickListener(){
+  if(globalClickInstalled){
+    document.removeEventListener("mousedown", globalWindowClick);
+  }
+  
+  uninstallGlobalMouseDown(globalWindowClick)
+}
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#?
 export default class Menu extends Group {
   static GUID = "73c00594401b961f24671b9b6541ac27";
@@ -107,6 +132,9 @@ export default class Menu extends Group {
     this._showButton(this._elNormal);
     this._div.classList.remove("open");
     ACTIVE_MENU = null;
+    // document.removeEventListener("mousedown", globalWindowClick);
+    // uninstallGlobalMouseDown(globalWindowClick)
+    uninstallGlobalClickListener()
   }
 
   onLeftButtonDown(x: number, y: number) {
@@ -115,6 +143,11 @@ export default class Menu extends Group {
     //? toggle dropdown visibility
     if(ACTIVE_MENU_GROUP != this._menuGroupId){
       ACTIVE_MENU_GROUP = this._menuGroupId;
+      // setTimeout(() => {
+      //   installGlobalMouseDown(globalWindowClick);
+      // }, 500);
+      installGlobalClickListener()
+
     } else {
       ACTIVE_MENU_GROUP = null;
       if(ACTIVE_MENU != null){
@@ -131,6 +164,7 @@ export default class Menu extends Group {
       }
       this._showButton(this._elDown);    
       this._div.classList.add("open");
+      
       ACTIVE_MENU = this;
     } else {
       this._showButton(this._elHover);    
