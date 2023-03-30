@@ -99,7 +99,7 @@ export default class Container extends XmlObj {
       }
       */
       if (!e.repeat) {
-        console.log(`Container.Key "${e.key}" pressed [event: keydown]`);
+        console.log(`Container.Key "${e.key}" pressed [event: keydown] | `, e);
       } else {
         // console.log(`Container.Key "${e.key}" repeating [event: keydown]`);
       }
