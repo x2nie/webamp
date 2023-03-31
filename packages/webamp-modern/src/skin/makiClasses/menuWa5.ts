@@ -1,4 +1,5 @@
-import PopupMenu, { MenuItem } from "./PopupMenu";
+import PopupMenu from "./PopupMenu";
+import { MenuItem } from "./MenuItem";
 
 export function getWa5Popup(popupId: string): PopupMenu {
     if(['PE_Help', 'ML_Help'].includes(popupId)) popupId = 'Help';
@@ -173,7 +174,7 @@ function getPopupMenu(popupId: string, res:string): PopupMenu {
                     popupStack.push(popup);
                     menu.popup = popup;
                     menu.caption = t2;
-                    menu.children = [];
+                    // menu.children = [];
                     // container = menu.children;
                     if (flags.indexOf('GRAYED') >= 0) menu.disabled = true;
                     // levelStack.push(container)

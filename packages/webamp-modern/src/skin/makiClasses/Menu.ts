@@ -5,7 +5,8 @@ import Group from "./Group";
 // import Button from "./Button";
 import Layer from "./Layer";
 import { getWa5Popup } from "./menuWa5";
-import PopupMenu, { generatePopupDiv } from "./PopupMenu";
+import PopupMenu from "./PopupMenu";
+import { generatePopupDiv } from "./MenuItem";
 import { findAction, updateActions } from "./menuWa5actions";
 
 let ACTIVE_MENU_GROUP: string = ''
