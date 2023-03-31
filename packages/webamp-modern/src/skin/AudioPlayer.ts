@@ -177,12 +177,13 @@ export class AudioPlayer {
    * purpose: call to update text only when the second is different (not per-250ms)
    */
   doTimeUpdate() {
-    const i = this._audio.currentTime << 0;
-    if (i != this._last_itime) {
-      this._last_itime = i;
-      this.trigger("timeupdate");
-      // console.log('ITEIMER:', this.getCurrentTime())
-    }
+    // const i = this._audio.currentTime << 0;
+    // if (i != this._last_itime) {
+    //   this._last_itime = i;
+    //   this.trigger("timeupdate");
+    //   // console.log('ITEIMER:', this.getCurrentTime())
+    // }
+    this.trigger("timeupdate");
   }
 
   setEqEnabled(enable: boolean) {
