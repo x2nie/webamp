@@ -187,6 +187,7 @@ export default class Menu extends Group {
     super.init();
     // this.resolveButtonsAction();
     // this._uiRoot.vm.dispatch(this, "onstartup", []);
+    this.getparentlayout().registerShortcuts(this._popup)
   }
   resolveButtonsAction() {
     // TODO: change to findObject, because BigBento's menus arent wrapped with parent?
@@ -231,6 +232,7 @@ export default class Menu extends Group {
     if (this._menuId.startsWith('WA5:')) {
       const [, popupId] = this._menuId.split(':')
       this._popup = getWa5Popup(popupId);
+      
       this.invalidatePopup()
       // function menuClick(id:number){
       //   console.log('menu clicked:', id)
@@ -244,16 +246,21 @@ export default class Menu extends Group {
   invalidatePopup() {
     const self = this;
     if (this._popup) {
+
+      // destroy old DOM
+      if(this._popupDiv){
+        this._popupDiv.remove()
+      }
+
+      updateActions(this._popup, this._uiRoot); // let winamp5 menus reflect the real config/condition
+
       const menuItemClick = (id: number) => {
         console.log('menu clicked:', id);
         const action = findAction(id);
         const invalidateRequired = action.onExecute(self._uiRoot);
         if(invalidateRequired) self.invalidatePopup();  
       }
-      if(this._popupDiv){
-        this._popupDiv.remove()
-      }
-      updateActions(this._popup, this._uiRoot); // let winamp5 menus reflect the real config/condition
+      
       this._popupDiv = generatePopupDiv(this._popup, menuItemClick);
       // } else {
       // this._popupDiv = document.createElement("div");

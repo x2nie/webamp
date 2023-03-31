@@ -85,6 +85,11 @@ export default class Container extends XmlObj {
       { type: "OBJECT", value: this.getcurlayout() },
     ]);
 
+    this.handleShortcut()
+  }
+
+  handleShortcut() {
+
     this.getDiv().addEventListener("keydown", (e)=>{
       /*
       https://codepen.io/melwinalm/pen/zKeWWj
@@ -98,8 +103,15 @@ export default class Container extends XmlObj {
         alert("Ctrl + Alt + Shift + U shortcut combination was pressed");
       }
       */
-      if (!e.repeat) {
-        console.log(`Container.Key "${e.key}" pressed [event: keydown] | `, e);
+      if (!e.repeat && e.code.startsWith('Key')) {
+        // console.log(`Container.Key "${e.key}" pressed [event: keydown] | `, e);
+        const Ctrl = e.ctrlKey? 'Ctrl+' : '';
+        const Alt = e.altKey? 'Alt+' : '';
+        const Shift = e.shiftKey? 'Shift+' : '';
+        const Key = e.key.toUpperCase();
+        const shortcut = `${Ctrl}${Alt}${Shift}${Key}`
+        console.log(`Container: Shortcut "${shortcut}" just pressed.`);
+        this.getcurlayout().executeShorcut(shortcut)
       } else {
         // console.log(`Container.Key "${e.key}" repeating [event: keydown]`);
       }

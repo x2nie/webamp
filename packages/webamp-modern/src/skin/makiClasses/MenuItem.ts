@@ -1,4 +1,8 @@
-type IMenuItem = {
+export interface IPopupMenu {
+  children: MenuItem[];
+}  
+
+export type IMenuItem = {
   type: "menuitem";
   caption: string;
   id: number;
@@ -12,9 +16,6 @@ type IMenuSeparator = {
   type: "separator"
 }
 
-export interface IPopupMenu {
-  children: MenuItem[];
-}  
 type IMenuPopup = {
   type: "popup";
   caption: string;
@@ -24,7 +25,21 @@ type IMenuPopup = {
   children?: MenuItem[];
 };
 
-export type MenuItem = IMenuItem | IMenuSeparator | IMenuPopup;
+export type MenuItem = | IMenuItem | IMenuSeparator | IMenuPopup;
+
+
+// ################## MenuItem Utils ##########################33
+
+export function forEachMenuItem(popup: IPopupMenu, callback:Function){
+  for(const menu of popup.children){
+    if(menu.type=="menuitem"){
+      callback(menu)
+    }
+    else if(menu.type=="popup"){
+      forEachMenuItem(menu.popup, callback)
+    }
+  }
+}
 
 type ExtractedCaptions = {
   caption: string;

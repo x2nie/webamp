@@ -4,6 +4,9 @@ import Container from "./Container";
 import { LEFT, RIGHT, TOP, BOTTOM, CURSOR, MOVE } from "../Cursor";
 import { px, unimplemented } from "../../utils";
 import { UIRoot } from "../../UIRoot";
+import PopupMenu from "./PopupMenu";
+import { forEachMenuItem, IMenuItem } from "./MenuItem";
+import { findAction } from "./menuWa5actions";
 
 // > A layout is a special kind of group, which shown inside a container. Each
 // > layout represents an appearance for that window. Layouts give you the ability
@@ -25,6 +28,7 @@ export default class Layout extends Group {
   _movingStartY: number;
   _moving: boolean = false;
   _snap = { left: 0, top: 0, right: 0, bottom: 0 };
+  _shortcuts: {[key:string]:number} = {};
 
   constructor(uiRoot: UIRoot) {
     super(uiRoot);
@@ -258,5 +262,21 @@ export default class Layout extends Group {
       this._invalidateSize();
       this._moving = false;
     }
+  }
+
+  // MENU SHORTCUT HANDLER HERE ======================
+  registerShortcuts(popup: PopupMenu){
+    forEachMenuItem(popup, (m: IMenuItem) => {
+      if(m.shortcut){
+        this._shortcuts[m.shortcut] = m.id
+      }
+    })
+  }
+
+  executeShorcut(shortcut:string){
+    const menuId = this._shortcuts[shortcut]
+    const action = findAction(menuId);
+    // console.log('Layout:', this._name, 'executing shortcut:',shortcut, '@action.id:', menuId, '=:', action )
+    const invalidateRequired = action.onExecute(this._uiRoot);
   }
 }
