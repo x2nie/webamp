@@ -109,9 +109,10 @@ async function initializeSkinListMenu() {
     // MODERN
     { filename: "[Winamp] default", download_url: "" },
     { filename: "[Winamp] MMD3", download_url: "assets/skins/MMD3.wal" },
-    { filename: "[Winamp] MMD3+Thinger", download_url: "assets/skins/MMD3+Thinger/" },
+    { filename: "Paused after 3 seconds playing", download_url: "assets/skins/3sPaused/" },
+    // { filename: "[Winamp] MMD3+Thinger", download_url: "assets/skins/MMD3+Thinger/" },
     // { filename: "[Folder] MMD3", download_url: "assets/skins/extracted/MMD3/" },
-    { filename: "[Winamp] BigBento", download_url: "assets/skins/BigBento/" },
+    // { filename: "[Winamp] BigBento", download_url: "assets/skins/BigBento/" },
     { filename: "CornerAmp_Redux", download_url: "assets/skins/CornerAmp_Redux.wal" },
 
     
