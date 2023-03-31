@@ -183,8 +183,11 @@ function getPopupMenu(popupId: string, res:string): PopupMenu {
                     menu.caption = t2;
                     menu.id = id;
                     // if(flags.indexOf('GRAYED') >= 0) menu.disabled = true;
-                    menu.disabled = flags.indexOf('GRAYED') >= 0;
+                    menu.disabled = flags.indexOf('GRAYED') != -1;
                     popup.addcommand(t2, id, false, menu.disabled)
+                    if(flags.indexOf('HIDDEN') != -1){
+                      popup.hideMenu(id)
+                    }
                     break;
                 case 'separator':
                     popup.addseparator()
@@ -315,8 +318,9 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
       }
     }
     MENUITEM "", 0, MFT_SEPARATOR, MFS_ENABLED
-    MENUITEM "&Time elapsed	Ctrl+T toggles", 40037, MFT_STRING, MFS_ENABLED
-    MENUITEM "Time re&maining	Ctrl+T toggles", 40038, MFT_STRING, MFS_ENABLED
+    MENUITEM "&Time elapsed	Alt+T toggles", 40037, MFT_STRING, MFS_ENABLED
+    MENUITEM "Time re&maining	Alt+T toggles", 40038, MFT_STRING, MFS_ENABLED
+    MENUITEM "Time remaining toggle	Alt+T", 40039, MFT_STRING, WEBAMP_HIDDEN
     MENUITEM "", 0, MFT_SEPARATOR, MFS_ENABLED
     MENUITEM "&Always On Top	Ctrl+A", 40019, MFT_STRING, MFS_ENABLED
     MENUITEM "&Double Size	Ctrl+D", 40165, MFT_STRING, MFS_ENABLED

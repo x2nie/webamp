@@ -10,6 +10,7 @@ export type IMenuItem = {
   disabled?: boolean;
   shortcut?: string;  // "Ctrl+Alt+Shift+A"
   keychar?: string;   // 'p' of "&Play"
+  invisible?: boolean;// special case to register shortcut only
 }
 
 type IMenuSeparator = {
@@ -65,6 +66,9 @@ export function generatePopupDiv(popup: IPopupMenu, callback: Function): HTMLEle
     // root.appendChild(item);
     switch (menu.type) {
       case "menuitem":
+        if(menu.invisible===true){
+          continue;
+        }
         item = generatePopupItem(menu);
         item.addEventListener("mousedown", (e) => callback(menu.id));
         // item.onclick = (e) => callback(menu.id);

@@ -136,4 +136,14 @@ export default class PopupMenu extends BaseObject implements IPopupMenu {
   getnumcommands() {
     return this.children.length;
   }
+
+  hideMenu(cmd_id: number) {
+    for (const item of this.children) {
+      if (item.type == "menuitem" && item.id == cmd_id) {
+        item.invisible = true;
+        break;
+      }
+    }
+  }
+
 }

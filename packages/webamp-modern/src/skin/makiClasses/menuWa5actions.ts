@@ -4,6 +4,7 @@ import { IMenuItem, IPopupMenu, MenuItem } from "./MenuItem";
 
 type MenuActionEvent = (menu: MenuItem, uiRoot: UIRoot) => void;
 type MenuActionExecution = (uiRoot: UIRoot) => boolean | void;
+
 type MenuAction = {
     onUpdate?: MenuActionEvent;     //? attemp to update disability, checkmark, visiblity, etc
     onExecute?: MenuActionExecution;    //? function to run when menu is clicked
@@ -43,6 +44,10 @@ register(40037, { //? Time elapsed
 register(40038, { //? Time remaining
     onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => { menu.checked = uiRoot.audio._timeRemaining },
     onExecute: (uiRoot: UIRoot) => { uiRoot.audio._timeRemaining = true; return true },
+})
+
+register(40039, { //? Time remaining
+    onExecute: (uiRoot: UIRoot) => { uiRoot.audio.toggleRemainingTime(); return true },
 })
 
 register(40044, { //? Previous

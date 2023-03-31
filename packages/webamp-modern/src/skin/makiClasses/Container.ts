@@ -89,6 +89,18 @@ export default class Container extends XmlObj {
   }
 
   handleShortcut() {
+    // window.addEventListener("keydown", function(event) {
+    // document.addEventListener("keydown", function(event) {
+    //   console.log(`Container.window.keydown "${event.key}" pressed [event: keydown] | `, event);
+    //   if(event.ctrlKey && event.keyCode == 84) { 
+    //     console.log("Hey! Ctrl+T event captured!");
+    //     event.preventDefault(); 
+    //   }
+    //   if(event.ctrlKey && event.keyCode == 83) { 
+    //     console.log("Hey! Ctrl+S event captured!");
+    //     event.preventDefault(); 
+    //   }
+    // });
 
     this.getDiv().addEventListener("keydown", (e)=>{
       /*
@@ -103,6 +115,11 @@ export default class Container extends XmlObj {
         alert("Ctrl + Alt + Shift + U shortcut combination was pressed");
       }
       */
+    //  console.log(`Container.Key "${e.key}" pressed [event: keydown] | `, e);
+    //   if(e.ctrlKey && e.keyCode == 84) { 
+    //     console.log("Hey! Ctrl+T event captured!");
+    //     e.preventDefault(); 
+    //   }
       if (!e.repeat && e.code.startsWith('Key')) {
         // console.log(`Container.Key "${e.key}" pressed [event: keydown] | `, e);
         const Ctrl = e.ctrlKey? 'Ctrl+' : '';
@@ -112,6 +129,7 @@ export default class Container extends XmlObj {
         const shortcut = `${Ctrl}${Alt}${Shift}${Key}`
         console.log(`Container: Shortcut "${shortcut}" just pressed.`);
         this.getcurlayout().executeShorcut(shortcut)
+        e.preventDefault()
       } else {
         // console.log(`Container.Key "${e.key}" repeating [event: keydown]`);
       }

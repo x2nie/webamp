@@ -271,6 +271,7 @@ export default class Layout extends Group {
         this._shortcuts[m.shortcut] = m.id
       }
     })
+    // console.log('layout.shortcuts:', this._shortcuts)
   }
 
   executeShorcut(shortcut:string){
