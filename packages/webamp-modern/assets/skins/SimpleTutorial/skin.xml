@@ -10,11 +10,11 @@
     <homepage></homepage>
     <screenshot>screenshot.png</screenshot>
   </skininfo>
-  <include file="@DEFAULTSKINPATH@xml/eq.xml"/>
-  <include file="@DEFAULTSKINPATH@xml/thinger.xml"/>
-  <include file="@DEFAULTSKINPATH@xml/pledit.xml"/>
-  <include file="@DEFAULTSKINPATH@xml/player-elements.xml"/>
-  <include file="@DEFAULTSKINPATH@xml/pledit-normal-group.xml"/>
-  <include file="@DEFAULTSKINPATH@xml/video.xml"/>
+  <!-- <include file="@DEFAULTSKINPATH@xml/eq.xml"/> -->
+  <!-- <include file="@DEFAULTSKINPATH@xml/thinger.xml"/> -->
+  <!-- <include file="@DEFAULTSKINPATH@xml/pledit.xml"/> -->
+  <!-- <include file="@DEFAULTSKINPATH@xml/player-elements.xml"/> -->
+  <!-- <include file="@DEFAULTSKINPATH@xml/pledit-normal-group.xml"/> -->
+  <!-- <include file="@DEFAULTSKINPATH@xml/video.xml"/> -->
   <include file="xml/player.xml"/>
 </WinampAbstractionLayer>
