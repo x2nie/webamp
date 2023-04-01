@@ -82,10 +82,11 @@
   <text
 	id="timer"
 	display="time"
-	x="30" y="24"
+	x="26" y="26"
 	w="70" h="18"
 	font="player.BIGNUM" fontsize="21" align="right"
 	timecolonwidth="7"
+	timeroffstyle="1"
   />
   <!-- <layer id="black.backdrop"
     x="105" y="20" 
@@ -114,7 +115,8 @@
   -->
   <vis
 	id="vis"
-	x="24" y="43"
+	xx="24" yy="43"
+	x="20" y="46"
 	w="72" h="16"
 	mode="1"
 colorband1="255,17,74"		c1="red"	i1="8"
