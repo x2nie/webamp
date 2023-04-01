@@ -32,6 +32,6 @@ export default class Application extends BaseObject {
   */
   getapplicationpath(): string {
     // in windows, should be C:\Program Files\Winamp
-    return unimplemented("./");
+    return unimplemented("");
   }
 }
