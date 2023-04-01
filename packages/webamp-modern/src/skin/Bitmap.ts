@@ -1,6 +1,7 @@
 import { UIRoot } from "../UIRoot";
 import { assert, getId, hexToRgb, normalizeDomId, num, px } from "../utils";
 import ImageManager from "./ImageManager";
+import { FileExtractor } from "./FileExtractor";
 
 export function genCssVar(bitmapId: string): string {
   return `--bitmap-${bitmapId.replace(/[^a-zA-Z0-9]/g, "-")}`;
@@ -21,6 +22,7 @@ export default class Bitmap {
   _file: string;
   _transparentColor: string;
   _gammagroup: string;
+  fileExtractor: FileExtractor;
 
   // I am not sure, is bitmap need UiRoot?
   constructor(uiRoot: UIRoot = null) {

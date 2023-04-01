@@ -260,11 +260,6 @@ export default class ClassicSkinEngine extends SkinEngine {
 
   async loadBmp_bignum() {
     //? Bignum = numfont.png | numbers.bmp | nums_ex.bmp
-    // const getFile = this._uiRoot._fileExtractor.getFileAsBlob
-    // let bignum = await getFile('numfont.png')
-    // if(null != (await this._uiRoot._fileExtractor.getFileAsBlob('numfont.png'))){ // 0123456789- with transparency
-    //   await this.loadInline(`<bitmapfont id="player.BIGNUM" file="numfont.png" charwidth="9" charheight="13" hspacing="3" vspacing="1"/>`);
-    // } else
     if (
       null != (await this._uiRoot._fileExtractor.getFileAsBlob("nums_ex.bmp"))
     ) {

@@ -29,7 +29,6 @@ export default class ImageManager {
 
   async getUrl(filePath: string): Promise<string | null> {
     if (!this._urlCache.hasOwnProperty(filePath)) {
-      // const imgBlob = await this._uiRoot.getFileAsBlob(filePath);
       const imgBlob = await this.getBlob(filePath);
       if (imgBlob == null) {
         this._urlCache[filePath] = null;
@@ -102,12 +101,6 @@ export default class ImageManager {
     return await Promise.all(
       bitmaps.map(async (bitmap) => {
         // console.log("IM.ensure:", bitmap.getId());
-        // await this.setBimapImg(bitmap);
-        // bitmap._img = await this.getImage(bitmap.getFile());
-        // if (bitmap._img && bitmap._w == null && bitmap._h == null) {
-        //   bitmap.setXmlAttr("w", String(bitmap._img.width));
-        //   bitmap.setXmlAttr("h", String(bitmap._img.height));
-        // }
         return bitmap.ensureImageLoaded(this);
       })
     );

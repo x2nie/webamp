@@ -518,11 +518,8 @@ export default class SkinEngineWAL extends SkinEngine {
   }
 
   async bitmap(node: XmlElement): Promise<Bitmap> {
-    assume(
-      node.children.length === 0,
-      "Unexpected children in <bitmap> XML node."
-    );
-    const bitmap = new Bitmap();
+    // console.log('bitmap:', node.attributes.id)
+    const bitmap = this._uiRoot.hasBitmap(node.attributes.id)? this._uiRoot.getBitmap(node.attributes.id) :  new Bitmap();
     bitmap.setXmlAttributes(node.attributes);
     //this._imageManager.addBitmap(bitmap);
 
@@ -531,7 +528,7 @@ export default class SkinEngineWAL extends SkinEngine {
 
     // if (this._phase == GROUP_PHASE) {
     // this._imageManager.setBimapImg(bitmap);
-    await bitmap.ensureImageLoaded(this._imageManager);
+    bitmap.ensureImageLoaded(this._imageManager);
     // }
     return bitmap;
   }

@@ -700,69 +700,6 @@ export class UIRoot {
     return await this._fileExtractor.getFileAsBlob(filePath);
   }
 
-  // async getFileAsString(filePath: string): Promise<string> {
-  //   if (this._preferZip) {
-  //     return await this.getFileAsStringZip(filePath);
-  //   } else {
-  //     return await this.getFileAsStringPath(filePath);
-  //   }
-  // }
-  // async getFileAsBytes(filePath: string): Promise<ArrayBuffer> {
-  //   if (this._preferZip) {
-  //     return await this.getFileAsBytesZip(filePath);
-  //   } else {
-  //     return await this.getFileAsBytesPath(filePath);
-  //   }
-  // }
-  // async getFileAsBlob(filePath: string): Promise<Blob> {
-  //   if (this._preferZip) {
-  //     return await this.getFileAsBlobZip(filePath);
-  //   } else {
-  //     return await this.getFileAsBlobPath(filePath);
-  //   }
-  // }
-
-  // async getFileAsStringZip(filePath: string): Promise<string> {
-  //   if (!filePath) return null;
-  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-  //   if (!zipObj) return null;
-  //   return await zipObj.async("text");
-  // }
-
-  // async getFileAsBytesZip(filePath: string): Promise<ArrayBuffer> {
-  //   if (!filePath) return null;
-  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-  //   if (!zipObj) return null;
-  //   return await zipObj.async("arraybuffer");
-  // }
-
-  // async getFileAsBlobZip(filePath: string): Promise<Blob> {
-  //   if (!filePath) return null;
-  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-  //   if (!zipObj) return null;
-  //   return await zipObj.async("blob");
-  // }
-
-  // async getFileAsStringPath(filePath: string): Promise<string> {
-  //   const response = await fetch(this._skinPath + filePath);
-  //   return await response.text();
-  // }
-
-  // async getFileAsBytesPath(filePath: string): Promise<ArrayBuffer> {
-  //   const response = await fetch(this._skinPath + filePath);
-  //   return await response.arrayBuffer();
-  // }
-
-  // async getFileAsBlobPath(filePath: string): Promise<Blob> {
-  //   const response = await fetch(this._skinPath + filePath);
-  //   return await response.blob();
-  // }
-
-  // getFileIsExist(filePath: string): boolean {
-  //   const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-  //   return !!zipObj;
-  // }
-
   //? System things ========================
   /* because maki need to be run if not inside any Group @init() */
   addSystemObject(systemObj: SystemObject) {
