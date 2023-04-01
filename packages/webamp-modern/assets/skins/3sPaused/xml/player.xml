@@ -135,6 +135,8 @@
 	xx="20" yy="46"
 	w="72" h="16"
 	mode="1"
+	ccoloring="fire"
+
 colorband1="255,17,74"		c1="red"	i1="8"
 colorband2="255,174,21"
 colorband3="254,239,31"
