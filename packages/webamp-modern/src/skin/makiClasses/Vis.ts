@@ -419,7 +419,7 @@ class BarPaintHandler extends VisPaintHandler {
     // ctx.fillRect(0, 0, 1, vis._canvas.height);
     // ctx.imageSmoothingEnabled = false;
     for (let y = 0; y < 16; y++) {
-      ctx.fillStyle = gammaGroup.transformColor(vis._colorBands[y]);
+      ctx.fillStyle = gammaGroup.transformColor(vis._colorBands[15-y]);
       ctx.fillRect(0, y, 1, y + 1);
     }
 
@@ -482,6 +482,7 @@ class BarPaintHandler extends VisPaintHandler {
       for (let k = start; k < end; k++) {
         amplitude = Math.max(amplitude, ((this._dataArray[k]*3.4)-600)+weightingnum); //see comments on paintFrameThin()
       }
+      //amplitude = this._dataArray[start]
 
       // The drop rate should probably be normalized to the rendering FPS, for now assume 60 FPS
       let barPeak =
@@ -606,9 +607,16 @@ class BarPaintHandler extends VisPaintHandler {
     // var r = this._barWidth - 2;
     // var x2 = Math.round(this._barWidth * (barIndex + 1)) - 2;
     var y = h - barHeight;
+    // var y = barHeight;
 
     // ctx.drawImage(this._bar, 0, y, 1, h - y, x, y, x2 - x + 1, h - y);
-    ctx.drawImage(this._bar, 0, y, 1, h - y, x, y, x2 - x + 1, h - y);
+    ctx.drawImage(
+      this._bar, 
+      0, y, 
+      1, h - y, 
+      x, y, 
+      x2 - x + 1, h - y
+    );
 
     if (this._vis._peaks) {
       const peakY = h - peakHeight;
