@@ -90,27 +90,31 @@
 	ghost="1" 
 	image="black.backdrop"
   /> -->
-  <text
+<!--   <text
     id="songticker" ticker="1"
 	display="songname" default="" showlen="1"
 	x="108" y="23"
 	w="157" h="14"
 	font="wasabi.font.default" fontsize="13"
-  />
+  /> -->
   <!-- Song File Information-->
-  <text
+  <!-- <text
 	id="infoline" ticker="1"
 	display="songinfo" default=""
 	x="108" y="54"
 	w="157" h="11"
 	font="wasabi.font.default" fontsize="12" ghost="1"
-  />
-  <!-- Visualzation -->
+  /> -->
+
+  <!-- 
+	Visualzation 
+	takenfrom="https://pbs.twimg.com/media/DSwMZCfVwAMDLE8.jpg"
+  -->
   <vis
 	id="vis"
 	x="24" y="43"
 	w="72" h="16"
-	takenfrom="https://pbs.twimg.com/media/DSwMZCfVwAMDLE8.jpg"
+	mode="1"
 colorband1="255,17,74"		c1="red"	i1="8"
 colorband2="255,174,21"
 colorband3="254,239,31"
@@ -124,14 +128,13 @@ colorband8="46,49,55"	c8="31"
 colorband9="230,8,198"
 colorband10="145,3,241"
 
-colorband11="73,38,58"	c11="27?"
+colorband11="73,38,58"	c11="27"
 colorband12="32,76,236"	c12="25"
 colorband13="25,236,244"
 colorband14="24,65,14"
 colorband15="52,101,37"
 colorband16="113,166,50"
   />
-  	<script file="scripts/autopause.maki" param="3000"/>
 </groupdef>
 
 <!-- Main Window: Container and Layout -->
@@ -143,3 +146,5 @@ colorband16="113,166,50"
 	<group id="player.normal.playbuttons" x="12" y="85" />
   </layout>
 </container>
+
+  	<script file="scripts/autopause.maki" param="3000"/>

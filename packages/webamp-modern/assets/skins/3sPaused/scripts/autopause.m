@@ -9,10 +9,11 @@ Global Timer mainTimer;
 System.onScriptLoaded() {
   mainTimer = new Timer;
   mainTimer.setDelay(3000);
+  mainTimer.stop();
 }
 
 System.onScriptUnloading() {
-    mainTimer.stop();
+    // mainTimer.stop();
 	delete mainTimer;
 }
 
@@ -26,6 +27,6 @@ System.onResume(){
 }
 
 mainTimer.onTimer(){
-    System.pause();
     mainTimer.stop();
+    System.pause();
 }
