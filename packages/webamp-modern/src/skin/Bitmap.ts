@@ -107,8 +107,6 @@ export default class Bitmap {
     return this._img;
   }
   setImage(img: CanvasImageSource) {
-    // await imageManager.setImage(this._file, url);
-    // await this.ensureImageLoaded(imageManager);
     this._img = img;
   }
 
