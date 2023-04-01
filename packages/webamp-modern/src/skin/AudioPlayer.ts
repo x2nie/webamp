@@ -83,7 +83,7 @@ export class AudioPlayer {
     // don't smooth audio analysis
     // this._analyser.maxDecibels = -25;
     // this._analyser.minDecibels = -150;
-    this._analyser.smoothingTimeConstant = 0.0;
+    this._analyser.smoothingTimeConstant = 0.25;
 
     // default pan set to 0 - center
     this._balanceNode = new StereoPannerNode(this._context, { pan: 0 });

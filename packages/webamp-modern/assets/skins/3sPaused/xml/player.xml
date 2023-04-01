@@ -104,6 +104,13 @@
 	w="157" h="11"
 	font="wasabi.font.default" fontsize="12" ghost="1"
   />
+  <text
+	id="position2"
+	text="0"
+	x="152" y="53"
+	w="157" h="11"
+	font="wasabi.font.default" fontsize="12" ghost="1"
+  />
   <!-- <layer id="black.backdrop"
     x="105" y="20" 
 	ghost="1" 

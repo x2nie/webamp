@@ -1111,8 +1111,14 @@ export default class SystemObject extends BaseObject {
     return String.fromCharCode(charnum);
   }
 
+  /**
+   * Eventually I can confirm that it remove all fraction
+   * eg. 5998 => 5000
+   * @param d Float
+   * @returns int
+   */
   integer(d: number): number {
-    return Math.round(Number(d));
+    return Math.floor(Number(d));
   }
 
   frac(d: number): number {
@@ -1127,7 +1133,7 @@ export default class SystemObject extends BaseObject {
    * @param  value   The integer to change into a string.
    */
   integertostring(value: number): string {
-    return String(Math.round(value));
+    return String(this.integer(value));
   }
 
   /**
