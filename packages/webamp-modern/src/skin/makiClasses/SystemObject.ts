@@ -1104,7 +1104,7 @@ export default class SystemObject extends BaseObject {
    */
   seekto(pos: number) {
     // Note: For some reason I seem to be getting passed seconds here not MS
-    this._uiRoot.audio.seekTo(pos);
+    this._uiRoot.audio.seekTo(pos / 1000);
   }
 
   chr(charnum: number): string {
