@@ -10,12 +10,13 @@ window.onload = function() {
     var analyser = context.createAnalyser();
 
     var canvas = document.getElementById("canvas");
-    canvas.width = 72;
+    canvas.width = 76;
     canvas.height = 16;
     // var ctx = canvas.getContext("2d");
 
     src.connect(analyser);
     analyser.connect(context.destination);
+    analyser.smoothingTimeConstant = 0.9;
 
     analyser.fftSize = 256;
 
@@ -44,7 +45,12 @@ window.onload = function() {
       audio.play();
     }
 
+    const NUM_BARS = 20;
     audio.onplay = function (e) {
+      var logged = false;
+      setTimeout(() => {
+        console.log(dataArray)
+      }, 100);
       // var context = new AudioContext();
       // var src = context.createMediaElementSource(audio);
       // var analyser = context.createAnalyser();
@@ -67,15 +73,20 @@ window.onload = function() {
       var WIDTH = canvas.width;
       var HEIGHT = canvas.height;
   
-      var barWidth = (WIDTH / bufferLength) * 2.5;
+      var barWidth = 3;
       var barHeight;
       var x = 0;
+      var animProgress = 0;
   
       function renderFrame() {
-        requestAnimationFrame(renderFrame);
+        animProgress = requestAnimationFrame(renderFrame);
   
         
         analyser.getByteFrequencyData(dataArray);
+        // if(!logged){
+        //   console.log(dataArray)
+        //   logged = true;
+        // }
   
         ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -85,15 +96,20 @@ window.onload = function() {
         bufferLength = 32;
         
         x = 0;
-        for (var i = 0; i < bufferLength; i++) {
+        for (var i = 0; i < NUM_BARS; i++) {
           barHeight = dataArray[i] / 16;
           
-          ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+          ctx.fillRect(
+            x, HEIGHT - barHeight, 
+            barWidth, barHeight);
   
           x += barWidth + 1;
         }
       }
   
+      if(animProgress != 0){
+        cancelAnimationFrame(animProgress); // stop old loop
+      }
       // audio.play();
       renderFrame();
     };
