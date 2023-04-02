@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Webamp Modern" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico" />
+    <title>JS Audio Visualizer</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        #thefile {
+            position: fixed;
+            bottom: 100px;
+            left: 10px;
+            z-index: 100;
+        }
+        .grid{
+            display: block;
+            position: relative;
+            width: 486px;
+            height: 126px;
+            background-image: url(preview/grid.png);
+            background-size: contain;
+            image-rendering: pixelated;
+            margin: 10px;
+            /* transform: scale(6); */
+            /* transform-origin: 0 0; */
+        }
+        .grid > .grid {
+            margin: 0;
+        }
+        #canvas {
+            position: absolute;
+            left: calc(3 * 6px);
+            top: calc(2 * 6px);
+            /* width: 432px; */
+            /* height: 96px; */
+            width: 72px;
+            height: 16px;
+            transform: scale(6);
+            transform-origin: 0 0;
+        }
+
+        audio {
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            width: calc(100% - 20px);
+        }
+        #content {
+            width: calc(100% - 210px);
+            height: 100%;
+            border: 1px solid red;
+            
+        }
+        #choices {
+            width: 200px;
+            height: 100%;
+            /* float: right; */
+            position: absolute;
+            right: 0;
+            top: 0;
+            border: 1px solid blue;
+        }
+        button {
+            display: block;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <div class="grid">
+            <div class="grid" id="preview">
+            </div>
+        </div>
+        <!-- <img src="preview/440-square.png" /> -->
+        <div class="grid">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <input type="file" id="thefile" accept="audio/*" />
+        <audio id="audio" controls></audio>
+    </div>
+
+    <div id="choices">
+        <button media="440-square">square</button>
+        <button media="440-sawtooth">sawtooth</button>
+    </div>
+    <script src="./js.js"></script>
+</body>
+
+</html>
