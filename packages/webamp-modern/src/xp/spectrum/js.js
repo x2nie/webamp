@@ -10,8 +10,8 @@ window.onload = function() {
     var analyser = context.createAnalyser();
 
     var canvas = document.getElementById("canvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = 72;
+    canvas.height = 16;
     // var ctx = canvas.getContext("2d");
 
     src.connect(analyser);
@@ -74,21 +74,20 @@ window.onload = function() {
       function renderFrame() {
         requestAnimationFrame(renderFrame);
   
-        x = 0;
-  
+        
         analyser.getByteFrequencyData(dataArray);
   
-        ctx.fillStyle = "#00f";
+        ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  
+        
+        ctx.fillStyle = "#fff";
+        
+        bufferLength = 32;
+        
+        x = 0;
         for (var i = 0; i < bufferLength; i++) {
-          barHeight = dataArray[i];
+          barHeight = dataArray[i] / 16;
           
-          var r = barHeight + (25 * (i/bufferLength));
-          var g = 250 * (i/bufferLength);
-          var b = 50;
-  
-          ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
           ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
   
           x += barWidth + 1;

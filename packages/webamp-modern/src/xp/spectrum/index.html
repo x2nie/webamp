@@ -48,10 +48,10 @@
         }
 
         audio {
-            position: fixed;
-            left: 10px;
+            /* position: fixed; */
+            /* left: 10px; */
             bottom: 10px;
-            width: calc(100% - 20px);
+            width: calc(100% - 0px);
         }
         #content {
             width: calc(100% - 210px);
@@ -87,12 +87,13 @@
         </div>
 
         <input type="file" id="thefile" accept="audio/*" />
-        <audio id="audio" controls></audio>
     </div>
-
+    
     <div id="choices">
+        <audio id="audio" controls></audio>
         <button media="440-square">square</button>
         <button media="440-sawtooth">sawtooth</button>
+        <button media="440-triangle">triangle</button>
     </div>
     <script src="./js.js"></script>
 </body>
