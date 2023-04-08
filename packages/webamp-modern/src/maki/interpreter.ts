@@ -370,7 +370,7 @@ class Interpreter {
           let argCount: number = klass.prototype[methodName].length;
 
           const methodDefinition = getMethod(guid, methodName);
-          if (methodName.toLowerCase() != "setup") {
+          // if (methodName.toLowerCase() != "setup") {
             assert(
               argCount === (methodDefinition.parameters.length ?? 0),
               `Arg count mismatch. Expected ${
@@ -379,7 +379,7 @@ class Interpreter {
                 klass.name
               }.${methodName}`
             );
-          }
+          // }
 
           const methodArgs = [];
           while (argCount--) {

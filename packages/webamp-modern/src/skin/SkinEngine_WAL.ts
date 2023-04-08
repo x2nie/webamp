@@ -413,7 +413,8 @@ export default class SkinEngineWAL extends SkinEngine {
 
   addToGroup(obj: GuiObj, parent: Group) {
     try {
-      parent.addChild(obj);
+      // parent.addChild(obj);
+      obj.init(parent);
     } catch (err) {
       console.warn("addToGroup failed. child:", obj, "pareng:", parent);
     }
@@ -425,8 +426,9 @@ export default class SkinEngineWAL extends SkinEngine {
     parent: any
   ): Promise<Awaited<Type>> {
     const gui = new Type(this._uiRoot);
+    gui.init(parent);
     gui.setXmlAttributes(node.attributes);
-    this.addToGroup(gui, parent);
+    // this.addToGroup(gui, parent);
     return gui;
   }
 
@@ -436,10 +438,11 @@ export default class SkinEngineWAL extends SkinEngine {
     parent: any
   ): Promise<Awaited<Type>> {
     const group = new Type(this._uiRoot);
+    group.init(parent);
     await this.maybeApplyGroupDef(group, node);
     group.setXmlAttributes(node.attributes);
     await this.traverseChildren(node, group);
-    this.addToGroup(group, parent);
+    // this.addToGroup(group, parent);
     if (node.attributes.instanceid)
       group.setxmlparam("id", node.attributes.instanceid);
     return group;
@@ -689,9 +692,33 @@ export default class SkinEngineWAL extends SkinEngine {
       "Unexpected children in <sendparams> XML node."
     );
 
-    // TODO: Parse sendparams
+    //process <sendparams> and <hideobject>
     if (parent instanceof GuiObj) {
-      parent._metaCommands.push(node);
+      // parent._metaCommands.push(node);
+      const cmd = node.name.toLowerCase();
+      const el = node.attributes.group
+        ? parent.findobject(node.attributes.group)
+        : parent;
+      const targets_ids = node.attributes.target.split(";");
+      for (const target_id of targets_ids) {
+        // individual target
+        const gui = el.findobjectF(
+          target_id,
+          `<${cmd}(${target_id})=notfound. @${parent.getId()}`
+        );
+        if (gui == null) {
+          continue;
+        }
+        if (cmd == "sendparams") {
+          for (let attribute in node.attributes) {
+            if (gui && attribute != "target") {
+              gui.setxmlparam(attribute, node.attributes[attribute]);
+            }
+          }
+        } else if (cmd == "hideobject" && target_id != "close") {
+          gui.hide();
+        }
+      }
     }
   }
 

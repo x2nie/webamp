@@ -94,6 +94,11 @@ export default class GuiObj extends XmlObj {
     );
   }
 
+  init(group: Group) {
+    this.setParent(group);
+    group.addChild(this);
+  }
+
   getElTag(): string {
     return this.constructor.name;
   }
@@ -246,34 +251,6 @@ export default class GuiObj extends XmlObj {
   setSize(newWidth: number, newHeight: number) {}
 
   setup() {
-    //process <sendparams> and <hideobject>
-    for (const node of this._metaCommands) {
-      const cmd = node.name.toLowerCase();
-      const el = node.attributes.group
-        ? this.findobject(node.attributes.group)
-        : this;
-      const targets_ids = node.attributes.target.split(";");
-      for (const target_id of targets_ids) {
-        // individual target
-        const gui = el.findobjectF(
-          target_id,
-          `<${cmd}(${target_id})=notfound. @${this.getId()}`
-        );
-        if (gui == null) {
-          continue;
-        }
-        if (cmd == "sendparams") {
-          for (let attribute in node.attributes) {
-            if (gui && attribute != "target") {
-              gui.setxmlparam(attribute, node.attributes[attribute]);
-            }
-          }
-        } else if (cmd == "hideobject" && target_id != "close") {
-          gui.hide();
-        }
-      }
-    }
-
     if (this._configAttrib) {
       this._cfgAttribChanged(this._configAttrib.getdata());
     }
