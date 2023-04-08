@@ -318,8 +318,8 @@ export default class SkinEngineWAL extends SkinEngine {
       case "hideobject":
       case "sendparams":
         return this.sendparams(node, parent);
-      case "wasabi:titlebar":
-        return this.wasabiTitleBar(node, parent);
+      // case "wasabi:titlebar":
+      //   return this.wasabiTitleBar(node, parent);
       case "wasabi:button":
         return this.wasabiButton(node, parent);
       case "truetypefont":
@@ -492,7 +492,7 @@ export default class SkinEngineWAL extends SkinEngine {
 
   async dynamicXuiElement(node: XmlElement, parent: any) {
     const xuitag: string = node.name; // eg. Wasabi:MainFrame:NoStatus
-    const xuiEl: XmlElement = this._uiRoot.getXuiElement(xuitag);
+    const xuiEl: XmlElement = this._uiRoot.getXuiElement(xuitag); // got <groupdef xuitag=Wasabi:MainFrame:NoStatus
     if (xuiEl) {
       const xuiFrame = new XmlElement("dummy", { id: xuiEl.attributes.id });
       const Element: XuiElement = await this.newGroup(

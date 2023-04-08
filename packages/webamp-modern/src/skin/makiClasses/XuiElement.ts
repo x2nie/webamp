@@ -14,7 +14,17 @@ export default abstract class XuiElement extends Group {
     if (super.setXmlAttr(lowerkey, value)) {
       return true;
     }
-    this._unhandledXuiParams.push({ key: lowerkey, value });
+
+    if (this.__inited) {
+      for (const systemObject of this._systemObjects) {
+        this._uiRoot.vm.dispatch(systemObject, "onsetxuiparam", [
+          { type: "STRING", value: _key },
+          { type: "STRING", value: value },
+        ]);
+      }
+    } else {
+      this._unhandledXuiParams.push({ key: lowerkey, value });
+    }
     return true;
   }
 

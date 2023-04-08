@@ -832,6 +832,7 @@ export default class GuiObj extends XmlObj {
    */
 
   clienttoscreenx(x: number): number {
+    return x;
     const element = this.getDiv();
     const position = element.getBoundingClientRect();
     return window.screenX + position.left + x;
@@ -850,6 +851,7 @@ export default class GuiObj extends XmlObj {
   }
 
   screentoclientx(x: number): number {
+    return x;
     const element = this.getDiv();
     const position = element.getBoundingClientRect();
     return x - (window.screenX + position.left);

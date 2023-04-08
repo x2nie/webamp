@@ -537,7 +537,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     if (font instanceof BitmapFont) {
       this._textFullWidth = this._getBitmapFontTextWidth(font);
     } else {
-      this._textFullWidth = this._getTrueTypeTextWidth(font) + this._paddingX * 2;
+      this._textFullWidth = this._getTrueTypeTextWidth(font) + this._paddingX ;
     }
     this._div.style.setProperty("--full-width", px(this._textFullWidth));
   }
@@ -579,12 +579,12 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-    context.font = `${this._fontSize || 11}px ${
+    context.font = `${this._bold ? '700':''} ${this._fontSize || 11}px ${
       (font && font.getFontFamily()) || "Arial"
     }`;
 
     const metrics = context.measureText(txt);
-    return metrics.width /*+ self._paddingX * 2*/;
+    return Math.ceil(metrics.width /*+ self._paddingX * 2*/);
   }
 
   draw() {
