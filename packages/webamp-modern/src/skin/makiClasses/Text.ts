@@ -66,7 +66,7 @@ export default class Text extends GuiObj {
       case "default":
         // (str) A static string to be displayed.
         // console.log('THETEXT', value)
-        if(value.startsWith(':')){
+        if (value.startsWith(':')) {
           value = this._interpolateText(value)
         }
         this._text = value;
@@ -212,9 +212,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     if (this._font_obj instanceof TrueTypeFont && this._fontSize) {
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
-      context.font = `${this._fontSize}px ${
-        this._font_obj.getFontFamily() || "Arial"
-      }`;
+      context.font = `${this._fontSize}px ${this._font_obj.getFontFamily() || "Arial"
+        }`;
       const metrics = context.measureText("IWjgyFH");
       const fontHeight =
         metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
@@ -351,8 +350,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     ]);
   }
 
-  _interpolateText(value:string):string {
-    switch(value.toLowerCase()) {
+  _interpolateText(value: string): string {
+    switch (value.toLowerCase()) {
       case ":componentname":
         const layout = this.getparentlayout();
         if (layout) {
@@ -535,9 +534,9 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   _invalidateFullWidth() {
     const font = this._font_obj;
     if (font instanceof BitmapFont) {
-      this._textFullWidth = this._getBitmapFontTextWidth(font);
+      this._textFullWidth = this._getBitmapFontTextWidth(font) + this._paddingX * 2;
     } else {
-      this._textFullWidth = this._getTrueTypeTextWidth(font) + this._paddingX ;
+      this._textFullWidth = this._getTrueTypeTextWidth(font) + this._paddingX * 2;
     }
     this._div.style.setProperty("--full-width", px(this._textFullWidth));
   }
@@ -557,7 +556,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   _getBitmapFontTextWidth(font: BitmapFont): number {
     const charWidth = font._charWidth;
-    return this.gettext().length * charWidth + this._paddingX * 2;
+    return this.gettext().length * charWidth;
   }
 
   _getTrueTypeTextWidth(font: TrueTypeFont): number {
@@ -571,17 +570,16 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
      */
     // const self = this;
     let txt = this.gettext();
-    if(this._forceuppercase) {
+    if (this._forceuppercase) {
       txt = txt.toUpperCase()
-    } else if(this._forcelowercase) {
+    } else if (this._forcelowercase) {
       txt = txt.toLowerCase()
     }
-    
+    const fontFamily = (font && font.getFontFamily()) || "Arial";
+
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-    context.font = `${this._bold ? '700':''} ${this._fontSize || 11}px ${
-      (font && font.getFontFamily()) || "Arial"
-    }`;
+    context.font = `${this._bold ? '700' : ''} ${this._fontSize || 11}px ${fontFamily}`;
 
     const metrics = context.measureText(txt);
     return Math.ceil(metrics.width /*+ self._paddingX * 2*/);
@@ -666,7 +664,7 @@ export class DisplayHandler {
   constructor(text: Text) {
     this._text = text;
     this._uiRoot = text._uiRoot;
-    this._subscription = () => {}; // deFault empty
+    this._subscription = () => { }; // deFault empty
   }
 
   setup(): void {

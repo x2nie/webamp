@@ -80,7 +80,7 @@ export default class Group extends Movable {
 
   addChild(child: GuiObj) {
     child.setParent(this);
-    if(this._children.indexOf(child) != -1){
+    if(this._children.indexOf(child) == -1){
       this._children.push(child);
     }
   }
