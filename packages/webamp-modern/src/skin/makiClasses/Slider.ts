@@ -217,8 +217,8 @@ export default class Slider extends GuiObj {
     return true;
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     this._initializeActionHandler();
     this._registerDragEvents();
   }

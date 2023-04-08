@@ -37,8 +37,8 @@ export default class Player extends GuiObj {
     return true;
   }
 
-  init(): void {
-    super.init();
+  setup(): void {
+    super.setup();
 
     if (this._playState_onchange != null) {
       //audio state change

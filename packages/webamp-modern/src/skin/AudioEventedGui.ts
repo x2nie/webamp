@@ -31,8 +31,8 @@ export default class AudioEventedGui extends GuiObj {
     return false;
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     this._registerAudioEvents();
   }
 

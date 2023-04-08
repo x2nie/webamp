@@ -209,8 +209,8 @@ export default class AnimatedLayer extends Layer {
     return this._h || this._div.getBoundingClientRect().height;
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     if (!this._frameHeight) {
       this._frameHeight = this.getheight();
     }

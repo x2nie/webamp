@@ -11,9 +11,9 @@ export default class Avs extends Vis {
   static GUID = "OFFICIALLY-NO-GUID";
   // static GUID = "0000000a0010000c01017bff0c456342";
 
-  init() {
+  setup() {
     this._mode = "milkdrop";
-    super.init();
+    super.setup();
     this._uiRoot._avss.push(this);
   }
 

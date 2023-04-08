@@ -170,8 +170,8 @@ export default class ButtonElement extends GuiObj {
     }
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     if (Object.keys(this._audioEvent).length > 0) {
       this._uiRoot.audio.on("statchanged", () =>
         this._updatePropsByAudioState()

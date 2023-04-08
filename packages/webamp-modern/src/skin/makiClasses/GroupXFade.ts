@@ -65,8 +65,8 @@ export default class GroupXFade extends Group {
     return false;
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
   }
 
   async _switchTo(group_id: string) {
@@ -87,7 +87,7 @@ export default class GroupXFade extends Group {
       const parser = new SkinParser(this._uiRoot);
       child = await parser.group(dummyNode, this);
       child.draw();
-      child.init();
+      child.setup();
       this._div.appendChild(child.getDiv());
     }
     await this._fadeIn(child);

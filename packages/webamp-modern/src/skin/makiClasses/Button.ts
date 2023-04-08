@@ -155,8 +155,8 @@ export default class Button extends AudioEventedGui {
     }
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
 
     if (this._action != null) {
       // listen the actual action state

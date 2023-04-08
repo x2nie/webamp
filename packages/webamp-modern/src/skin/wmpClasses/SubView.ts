@@ -94,8 +94,8 @@ export default class SubView extends Group {
     this._renderAlpha();
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     this._uiRoot.audio.on("statchanged", () => this._updateStatus());
     this._updateStatus();
   }

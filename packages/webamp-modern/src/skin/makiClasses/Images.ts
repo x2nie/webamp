@@ -36,8 +36,8 @@ export default class Images extends Layer {
     return true;
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     this._frameCount =
       Math.ceil(this._getImageHeight() / this._frameHeight) - 1;
     if (this._source == "volume") {

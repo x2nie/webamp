@@ -98,9 +98,9 @@ export default class ComponentBucket extends Group {
     return false;
   }
 
-  init() {
+  setup() {
     this.resolveButtonsAction();
-    super.init();
+    super.setup();
     this._uiRoot.vm.dispatch(this, "onstartup", []);
   }
   resolveButtonsAction() {

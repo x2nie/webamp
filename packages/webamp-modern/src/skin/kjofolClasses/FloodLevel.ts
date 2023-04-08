@@ -60,8 +60,8 @@ export default class FloodLevel extends GuiObj {
     return true;
   }
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     this._map = new MakiMap(this._uiRoot);
     this._map.loadmap(this._mapImage);
     this._actionHandler = new ActionHandler(this); // to be always has an handler

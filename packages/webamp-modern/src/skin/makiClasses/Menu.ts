@@ -183,8 +183,8 @@ export default class Menu extends Group {
   }
 
 
-  init() {
-    super.init();
+  setup() {
+    super.setup();
     // this.resolveButtonsAction();
     // this._uiRoot.vm.dispatch(this, "onstartup", []);
     this.getparentlayout().registerShortcuts(this._popup)

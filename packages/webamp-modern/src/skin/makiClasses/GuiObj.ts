@@ -245,7 +245,7 @@ export default class GuiObj extends XmlObj {
 
   setSize(newWidth: number, newHeight: number) {}
 
-  init() {
+  setup() {
     //process <sendparams> and <hideobject>
     for (const node of this._metaCommands) {
       const cmd = node.name.toLowerCase();

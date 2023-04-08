@@ -96,7 +96,7 @@ export default class SystemObject extends BaseObject {
     });
   }
 
-  init() {
+  setup() {
     // dumpScriptDebug(this._parsedScript);
     // console.log('initing script:', this._id)
     const initialVariable = this._parsedScript.variables[0];

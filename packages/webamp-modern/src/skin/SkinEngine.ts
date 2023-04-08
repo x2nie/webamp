@@ -78,7 +78,7 @@ export class SkinEngine {
 
     uiRoot.logMessage("Rendering skin for the first time...");
     uiRoot.draw();
-    uiRoot.init();
+    uiRoot.setup();
 
     uiRoot.logMessage("");
   }

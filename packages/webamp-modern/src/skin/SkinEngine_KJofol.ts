@@ -714,7 +714,7 @@ function parserRC(content: string): { [key: string]: string | string[] } {
 class PitchTextHandler extends DisplayHandler {
   //
 
-  init(): void {
+  setup(): void {
     // this._slider.setPercentValue(this._uiRoot.audio.getVolume());
     this._subscription = this._uiRoot.audio.on(
       "playbackratechange",
