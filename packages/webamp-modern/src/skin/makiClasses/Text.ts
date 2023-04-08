@@ -537,7 +537,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     if (font instanceof BitmapFont) {
       this._textFullWidth = this._getBitmapFontTextWidth(font);
     } else {
-      this._textFullWidth = this._getTrueTypeTextWidth(font);
+      this._textFullWidth = this._getTrueTypeTextWidth(font) + this._paddingX * 2;
     }
     this._div.style.setProperty("--full-width", px(this._textFullWidth));
   }
@@ -569,7 +569,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
      *
      * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
      */
-    const self = this;
+    // const self = this;
     let txt = this.gettext();
     if(this._forceuppercase) {
       txt = txt.toUpperCase()
@@ -584,7 +584,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     }`;
 
     const metrics = context.measureText(txt);
-    return metrics.width + self._paddingX * 2;
+    return metrics.width /*+ self._paddingX * 2*/;
   }
 
   draw() {
