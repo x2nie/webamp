@@ -80,7 +80,9 @@ export default class Group extends Movable {
 
   addChild(child: GuiObj) {
     child.setParent(this);
-    this._children.push(child);
+    if(this._children.indexOf(child) != -1){
+      this._children.push(child);
+    }
   }
 
   /* Required for Maki */
