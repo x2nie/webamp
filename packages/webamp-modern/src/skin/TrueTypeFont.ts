@@ -36,7 +36,7 @@ export default class TrueTypeFont {
   }
 
   getFontFamily() {
-    return `'${this._inlineFamily || this._fontFace.family || this.getId()}'`;
+    return this._inlineFamily || `'${this._fontFace.family || this.getId()}'`;
   }
 
   dispose() {

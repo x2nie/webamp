@@ -101,7 +101,7 @@ export default class SkinEngineWAL extends SkinEngine {
   async prepareArial() {
     const node: XmlElement = new XmlElement("truetypefont", {
       id: "Arial",
-      family: "Arial",
+      family: "Arial, 'DejaVu Sans Mono'",
     });
     await this.trueTypeFont(node, null);
   }

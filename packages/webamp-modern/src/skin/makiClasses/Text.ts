@@ -66,6 +66,9 @@ export default class Text extends GuiObj {
       case "default":
         // (str) A static string to be displayed.
         // console.log('THETEXT', value)
+        if(value.startsWith(':')){
+          value = this._interpolateText(value)
+        }
         this._text = value;
         this._renderText();
         break;
@@ -348,17 +351,29 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     ]);
   }
 
+  _interpolateText(value:string):string {
+    switch(value.toLowerCase()) {
+      case ":componentname":
+        const layout = this.getparentlayout();
+        if (layout) {
+          return layout.getcontainer()._name || value;
+        }
+        break;
+    }
+    return value
+  }
+
   gettext(): string {
     if (this._alternateText) {
       // alternate text is used in Winamp3 to show a hint of a Play button while mouse down.
       return this._alternateText;
     }
-    if ((this._text || "").startsWith(":") && this._drawn) {
-      const layout = this.getparentlayout();
-      if (layout) {
-        return layout.getcontainer()._name || this._text;
-      }
-    }
+    // if ((this._text || "").startsWith(":") && this._drawn) {
+    //   const layout = this.getparentlayout();
+    //   if (layout) {
+    //     return layout.getcontainer()._name || this._text;
+    //   }
+    // }
     if (this._display) {
       if (this._display == "songinfo") {
         const track = this._uiRoot.playlist.currentTrack();
@@ -555,12 +570,20 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
      * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
      */
     const self = this;
+    let txt = this.gettext();
+    if(this._forceuppercase) {
+      txt = txt.toUpperCase()
+    } else if(this._forcelowercase) {
+      txt = txt.toLowerCase()
+    }
+    
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
     context.font = `${this._fontSize || 11}px ${
       (font && font.getFontFamily()) || "Arial"
     }`;
-    const metrics = context.measureText(this.gettext());
+
+    const metrics = context.measureText(txt);
     return metrics.width + self._paddingX * 2;
   }
 
