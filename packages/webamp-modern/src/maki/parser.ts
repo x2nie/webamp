@@ -42,7 +42,7 @@ const PRIMITIVE_TYPES = {
   6: "STRING",
 };
 
-export function parse(data: ArrayBuffer, maki_id: string): ParsedMaki {
+export function parse(data: ArrayBuffer, maki_id: string=''): ParsedMaki {
   const makiFile = new MakiFile(data);
 
   const magic = readMagic(makiFile);

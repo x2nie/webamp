@@ -457,7 +457,7 @@ async function main() {
   // textarea.innerHTML = decompiled;
   // document.body.appendChild(textarea);
   document.getElementById("editor").innerHTML = decompiled;
-  window.loaded();
+  // window.loaded();
 }
 
 main();
