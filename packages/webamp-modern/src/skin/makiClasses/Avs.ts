@@ -1,5 +1,5 @@
 import { UIRoot } from "../../UIRoot";
-import { VisPaintHandler, registerPainter } from "./Vis";
+import { VisPaintHandler } from "./VisPainter";
 import Vis from "./Vis";
 import butterchurn from "butterchurn";
 import butterchurnPresets from "butterchurn-presets";
@@ -47,19 +47,21 @@ class ButterchurnPaintHandler extends VisPaintHandler {
   }
 
   _buildButterchurn() {
-    const audio = this._vis._uiRoot.audio;
+    // const audio = this._vis._uiRoot.audio;
+    const audioContext = this._vis.audioContext;
+    const analyser = this._vis.analyser;
 
     // const audioContext = new AudioContext();
-    const canvas = this._vis._canvas;
+    const canvas = this._vis.canvas;
     const width = canvas.width;
     const height = canvas.height;
     // const width = 400;
     // const height = 300;
-    this._visualizer = butterchurn.createVisualizer(audio._context, canvas, {
+    this._visualizer = butterchurn.createVisualizer(audioContext, canvas, {
       width /* : canvas.width */,
       height /* : canvas.height */,
     });
-    this._visualizer.connectAudio(audio._analyser);
+    this._visualizer.connectAudio(analyser);
 
     this._visualizer.setRendererSize(width, height);
 
@@ -74,8 +76,8 @@ class ButterchurnPaintHandler extends VisPaintHandler {
 
   paintFrame() {
     if (!this._visualizer) {
-      if (!document.getElementById(this._vis._canvas.id)) return;
-      if (!(this._vis._uiRoot.audio.getState() == AUDIO_PLAYING)) return;
+      if (!document.getElementById(this._vis.canvas.id)) return;
+      // if (!(this._vis._uiRoot.audio.getState() == AUDIO_PLAYING)) return;
       this._buildButterchurn();
     }
     this._visualizer.render();
@@ -123,7 +125,7 @@ class ButterchurnPaintHandler extends VisPaintHandler {
     // this._visualizer.disconnectAudio(audio._analyser)
     // this._visualizer.connectAudio(audio._analyser)
 
-    const canvas = this._vis._canvas;
+    const canvas = this._vis.canvas;
     const bound = canvas.getBoundingClientRect();
     const width = Math.max(bound.width, 10);
     const height = Math.max(bound.height, 10);
@@ -137,4 +139,4 @@ class ButterchurnPaintHandler extends VisPaintHandler {
     this._visualizer.render();
   }
 }
-registerPainter("milkdrop", ButterchurnPaintHandler);
+// registerPainter("milkdrop", ButterchurnPaintHandler);
