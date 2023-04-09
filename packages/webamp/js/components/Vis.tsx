@@ -19,6 +19,7 @@ import {
   BarPaintHandler,
   WavePaintHandler,
   NoVisualizerHandler,
+  BarPaintHandlerFake,
 } from "./VisPainter";
 
 type Props = {
@@ -120,20 +121,16 @@ export default function Vis({ analyser }: Props) {
     // console.log(" vis mode:", mode);
     switch (mode) {
       case VISUALIZERS.OSCILLOSCOPE:
-        // canvasCtx.drawImage(bgCanvas, 0, 0);
-        // paintOscilloscopeFrame(canvasCtx);
         _setPainter(WavePaintHandler);
         break;
       case VISUALIZERS.BAR:
-        _setPainter(BarPaintHandler);
-        // canvasCtx.drawImage(bgCanvas, 0, 0);
-        // paintBarFrame(canvasCtx);
+        // _setPainter(BarPaintHandler);
+        _setPainter(BarPaintHandlerFake);
         break;
       case VISUALIZERS.NONE:
         _setPainter(NoVisualizerHandler);
         break;
       default:
-        // canvasCtx.clearRect(0, 0, width, height);
         _setPainter(NoVisualizerHandler);
     }
   }, [canvas, _setPainter, mode]);
