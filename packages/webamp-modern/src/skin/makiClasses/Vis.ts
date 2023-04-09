@@ -28,13 +28,13 @@ export default class Vis extends GuiObj implements IVis {
   _colorBands: ColorTriplet[] = new Array(17).fill("255,255,255"); // 1..16
   _colorBandPeak: ColorTriplet = "255,255,255";
   _colorOsc: ColorTriplet[] = []; // 1..5
-  _coloring: string = "normal";
+  _coloring: "fire" | "line" | "normal" = "normal";
   _peaks: boolean = true;
-  _oscStyle: string;
-  _bandwidth: string = "wide";
+  _oscStyle: "dots" | "solid" | "lines" = "lines";
+  _bandwidth: "wide" | "thin" = "wide";
   _gammagroup: string;
   _realtime: boolean = true;
-  _colors: string[] = new Array(24).fill("rgb(0,0,0)");  //IVis
+  _colors: string[] = new Array(24).fill("rgb(255,128,0)");  //IVis
 
   constructor(uiRoot: UIRoot) {
     super(uiRoot);
@@ -94,6 +94,7 @@ export default class Vis extends GuiObj implements IVis {
         break;
       case "coloring":
         // Change coloring method for spectroscope ("Normal", "Fire" or "Line").
+        // @ts-ignore
         this._coloring = value;
         break;
       case "colorbandpeak":
@@ -106,6 +107,7 @@ export default class Vis extends GuiObj implements IVis {
         break;
       case "bandwidth":
         // (string) Change the style of the spectrum ("thin" or "wide").
+        // @ts-ignore
         this._bandwidth = value;
         break;
 
@@ -127,6 +129,7 @@ export default class Vis extends GuiObj implements IVis {
         break;
       case "oscstyle":
         //  (string) Change the style of the oscilloscope ("solid", "dots" or "lines").
+        // @ts-ignore
         this._oscStyle = value;
         break;
       case "others":
@@ -161,8 +164,21 @@ export default class Vis extends GuiObj implements IVis {
   get colors(){
     return this._colors;
   }
+  get oscStyle(){
+    return this._oscStyle;
+  }
+  get bandwidth() {
+    return this._bandwidth;
+  }
+  get coloring() {
+    return this._coloring;
+  }
+  get peaks() {
+    return this._peaks;
+  }
 
   _colorThemeChanged = (newGammaId: string) => {
+    console.log('colorthemechanged!')
     //? this.colors should be in compatible order to wmz.VISCOLORS.TXT
     const gammaGroup = this._uiRoot._getGammaGroup(this._gammagroup);
     for (let i = 0; i <= 16; i++) {
@@ -199,7 +215,7 @@ export default class Vis extends GuiObj implements IVis {
     //   VISPAINTERS[mode] || VISPAINTERS["0"]; /* NoVisualizerHandler */
     // this._setPainter(painterClass);
     // return
-    switch (mode) {
+    switch (String(mode)) {
       case '1':
         // "1" is spectrum,
         this._setPainter(BarPaintHandler);
