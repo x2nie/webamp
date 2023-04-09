@@ -45,6 +45,11 @@ export interface Vis {
   //? =============================== BAR PAINTER ===============================
   export class BarPaintHandler extends VisPaintHandler {
     prepare() {}
+
+    randomColor(){
+        const i = Math.floor(Math.random() * 16)
+        return this._vis.colors[i]
+    }
   
     paintFrame() {
       if (!this._ctx) return;
@@ -52,16 +57,17 @@ export interface Vis {
       const width = ctx.canvas.width;
       const height = ctx.canvas.height;
       ctx.clearRect(0, 0, width, height);
-      ctx.lineWidth = 5;
+      ctx.lineWidth = 3;
       for (let i = 0; i < 30; i += 1) {
-        const r = Math.floor(Math.random() * 255);
-        const g = Math.floor(Math.random() * 255);
-        const b = Math.floor(Math.random() * 255);
+        // const r = Math.floor(Math.random() * 255);
+        // const g = Math.floor(Math.random() * 255);
+        // const b = Math.floor(Math.random() * 255);
+        // ctx.strokeStyle = `rgba(${r},${g},${b},1)`;
   
         ctx.beginPath();
         ctx.moveTo(Math.random() * width, Math.random() * height);
         ctx.lineTo(Math.random() * width, Math.random() * height);
-        ctx.strokeStyle = `rgba(${r},${g},${b},1)`;
+        ctx.strokeStyle = this.randomColor();
         ctx.stroke();
       }
     }
