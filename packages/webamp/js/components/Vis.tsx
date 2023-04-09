@@ -61,7 +61,7 @@ function preRenderBg(
 
 export default function Vis({ analyser }: Props) {
   useLayoutEffect(() => {
-    analyser.fftSize = 2048;
+    analyser.fftSize = 1024;
   }, [analyser, analyser.fftSize]);
   const colors = useTypedSelector(Selectors.getSkinColors);
   const mode = useTypedSelector(Selectors.getVisualizerStyle);
