@@ -95,37 +95,44 @@ export default function Vis({ analyser }: Props) {
 
   //? painter administration
   const [painter, setPainter] = useState<VisPaintHandler | null>(null);
-  const _vis: IVis = useMemo(() => {
-    if (!canvas) return { colors, analyser };
-    return { canvas, colors, analyser };
-  }, [analyser, canvas, colors]);
-  const _setPainter = useCallback(
-    (PainterType: typeof VisPaintHandler) => {
-      if (!canvas) return;
+  // const _vis: IVis = useMemo(() => {
+  //   if (!canvas) return { colors, analyser };
+  //   return { canvas, colors, analyser };
+  // }, [analyser, canvas, colors]);
+
+  useEffect(() => {
+    if (!canvas) return;
+    const _setPainter = (PainterType: typeof VisPaintHandler) => {
+      const _vis: IVis = {
+        canvas,
+        colors,
+        analyser,
+        oscStyle: "lines",
+        bandwidth: "thin",
+        coloring: "normal",
+        peaks: true,
+      };
+
       // uninteruptable painting requires _painter to be always available
-      const oldPainter = painter;
+      // const oldPainter = painter;
       const newPainter = new PainterType(_vis);
       newPainter.prepare();
       setPainter(newPainter);
 
       // this.audioStatusChanged(); // stop loop of old painter, preparing new painter.
 
-      if (oldPainter) {
-        oldPainter.dispose();
-      }
-    },
-    [canvas, _vis, painter]
-  );
-
-  useEffect(() => {
+      // if (oldPainter) {
+      //   oldPainter.dispose();
+      // }
+    };
     // console.log(" vis mode:", mode);
     switch (mode) {
       case VISUALIZERS.OSCILLOSCOPE:
         _setPainter(WavePaintHandler);
         break;
       case VISUALIZERS.BAR:
-        // _setPainter(BarPaintHandler);
-        _setPainter(BarPaintHandlerFake);
+        _setPainter(BarPaintHandler);
+        // _setPainter(BarPaintHandlerFake);
         break;
       case VISUALIZERS.NONE:
         _setPainter(NoVisualizerHandler);
@@ -133,7 +140,7 @@ export default function Vis({ analyser }: Props) {
       default:
         _setPainter(NoVisualizerHandler);
     }
-  }, [canvas, _setPainter, mode]);
+  }, [analyser, canvas, mode, colors]);
 
   useEffect(() => {
     if (canvas == null || painter == null) {

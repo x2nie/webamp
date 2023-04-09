@@ -129,15 +129,35 @@ export class BarPaintHandler extends VisPaintHandler {
 
   constructor(vis: Vis) {
     super(vis);
-    this._analyser = this._vis.analyser;
+    this._analyser = this._vis.analyser!;
     this._bufferLength = this._analyser.frequencyBinCount;
     this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
     this._dataArray = new Uint8Array(this._bufferLength);
+    this._barWidth = Math.ceil(vis.canvas!.width / NUM_BARS);
 
     this._16h.width = 1;
     this._16h.height = 16;
     this._16h.setAttribute("width", "72");
     this._16h.setAttribute("height", "16");
+    if (this._vis.bandwidth === "wide") {
+      this.paintFrame = this.paintFrameWide.bind(this);
+      this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
+    } else {
+      // thin
+      this.paintFrame = this.paintFrameThin.bind(this);
+      const w = this._vis.canvas!.width;
+      this._barPeaks = new Array(w).fill(0);
+      this._barPeakFrames = new Array(w).fill(0);
+      this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength, w);
+    }
+
+    if (this._vis.coloring === "fire") {
+      this.paintBar = this.paintBarFire.bind(this);
+    } else if (this._vis.coloring === "line") {
+      this.paintBar = this.paintBarLine.bind(this);
+    } else {
+      this.paintBar = this.paintBarNormal.bind(this);
+    }
   }
 
   prepare() {
@@ -145,7 +165,7 @@ export class BarPaintHandler extends VisPaintHandler {
     if (!vis.canvas) return;
     // const groupId = vis._gammagroup;
     // const gammaGroup = this._vis._uiRoot._getGammaGroup(groupId);
-    this._barWidth = Math.ceil(vis.canvas.width / NUM_BARS);
+    // this._barWidth = Math.ceil(vis.canvas.width / NUM_BARS);
 
     //? paint peak
     this._peak.height = 1;
@@ -179,26 +199,6 @@ export class BarPaintHandler extends VisPaintHandler {
     }
 
     // this._ctx = this._vis.canvas.getContext("2d");
-
-    if (this._vis.bandwidth === "wide") {
-      this.paintFrame = this.paintFrameWide.bind(this);
-      this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
-    } else {
-      // thin
-      this.paintFrame = this.paintFrameThin.bind(this);
-      const w = this._vis.canvas!.width;
-      this._barPeaks = new Array(w).fill(0);
-      this._barPeakFrames = new Array(w).fill(0);
-      this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength, w);
-    }
-
-    if (this._vis.coloring === "fire") {
-      this.paintBar = this.paintBarFire.bind(this);
-    } else if (this._vis.coloring === "line") {
-      this.paintBar = this.paintBarLine.bind(this);
-    } else {
-      this.paintBar = this.paintBarNormal.bind(this);
-    }
   }
 
   /**
@@ -261,8 +261,8 @@ export class BarPaintHandler extends VisPaintHandler {
       }
       this._barPeaks[j] = barPeak;
 
-      var x1 = Math.round(this._barWidth * j);
-      var x2 = Math.round(this._barWidth * (j + 1)) - 2;
+      const x1 = Math.round(this._barWidth * j);
+      const x2 = Math.round(this._barWidth * (j + 1)) - 2;
 
       this.paintBar(
         ctx,
