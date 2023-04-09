@@ -3,6 +3,7 @@ export interface Vis {
     colors: string[];
     analyser: AnalyserNode;
     audioContext?: AudioContext;    //butterchurn need it
+    oscStyle?: "dots" | "solid" | "lines";
   }
   
     
