@@ -48,7 +48,7 @@ export class VisPaintHandler {
 }
 
 //? =============================== BAR PAINTER (fake)===============================
-export class BarPaintHandlerFake extends VisPaintHandler {
+export class FakeBarPaintHandler extends VisPaintHandler {
   prepare() { }
 
   paintFrame() {
@@ -139,6 +139,7 @@ export class BarPaintHandler extends VisPaintHandler {
     this._16h.height = 16;
     this._16h.setAttribute("width", "72");
     this._16h.setAttribute("height", "16");
+
     if (this._vis.bandwidth === "wide") {
       this.paintFrame = this.paintFrameWide.bind(this);
       this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
@@ -463,7 +464,7 @@ export class BarPaintHandler extends VisPaintHandler {
 
 //? =============================== OSCILOSCOPE PAINTER ===============================
 
-export class WavePaintHandler0000000____ extends VisPaintHandler {
+export class FakeWavePaintHandler extends VisPaintHandler {
   prepare() {}
 
   paintFrame() {
