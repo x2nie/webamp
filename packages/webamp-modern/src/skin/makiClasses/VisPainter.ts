@@ -47,9 +47,9 @@ export class VisPaintHandler {
   doAction(action: string, param: string) {}
 }
 
-//? =============================== BAR PAINTER (fake)===============================
+//? =============================== VIS.TEST PAINTER (fake) ===============================
 export class FakeBarPaintHandler extends VisPaintHandler {
-  prepare() { }
+  prepare() {}
 
   paintFrame() {
     if (!this._ctx) return;
@@ -67,6 +67,25 @@ export class FakeBarPaintHandler extends VisPaintHandler {
       ctx.moveTo(Math.random() * width, Math.random() * height);
       ctx.lineTo(Math.random() * width, Math.random() * height);
       ctx.strokeStyle = `rgba(${r},${g},${b},1)`;
+      ctx.stroke();
+    }
+  }
+}
+export class FakeWavePaintHandler extends VisPaintHandler {
+  prepare() {}
+
+  paintFrame() {
+    if (!this._ctx) return;
+    const ctx = this._ctx;
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+    ctx.clearRect(0, 0, width, height);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#fff";
+    for (let i = 0; i < 30; i += 1) {
+      ctx.beginPath();
+      ctx.moveTo(Math.random() * width, Math.random() * height);
+      ctx.lineTo(Math.random() * width, Math.random() * height);
       ctx.stroke();
     }
   }
@@ -128,7 +147,6 @@ export class BarPaintHandler extends VisPaintHandler {
   paintFrame: PaintFrameFunction;
 
   constructor(vis: Vis) {
-    console.log('VIS:', vis)
     super(vis);
     this._analyser = this._vis.analyser!;
     this._bufferLength = this._analyser.frequencyBinCount;
@@ -464,25 +482,6 @@ export class BarPaintHandler extends VisPaintHandler {
 
 //? =============================== OSCILOSCOPE PAINTER ===============================
 
-export class FakeWavePaintHandler extends VisPaintHandler {
-  prepare() {}
-
-  paintFrame() {
-    if (!this._ctx) return;
-    const ctx = this._ctx;
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-    ctx.clearRect(0, 0, width, height);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "#fff";
-    for (let i = 0; i < 30; i += 1) {
-      ctx.beginPath();
-      ctx.moveTo(Math.random() * width, Math.random() * height);
-      ctx.lineTo(Math.random() * width, Math.random() * height);
-      ctx.stroke();
-    }
-  }
-}
 type PaintWavFunction = (x: number, y: number, colorIndex: number) => void;
 // Return the average value in a slice of dataArray
 function sliceAverage(
@@ -529,7 +528,7 @@ export class WavePaintHandler extends VisPaintHandler {
 
   constructor(vis: Vis) {
     super(vis);
-    this._analyser = this._vis.analyser;
+    this._analyser = this._vis.analyser!;
     this._bufferLength = this._analyser.fftSize;
     // this._octaveBuckets = octaveBucketsForBufferLength(this._bufferLength);
     this._dataArray = new Uint8Array(this._bufferLength);
