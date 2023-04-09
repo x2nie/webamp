@@ -9,7 +9,7 @@
     "build": "snowpack build",
     "minify": "snowpack build --config ./snowpack.x2nie.config.mjs",
     "serve": "http-server ./build",
-    "lint": "eslint . --ext ts,js --rulesdir=./tools/eslint-rules --ignore-pattern=temp/",
+    "lint": "eslint . --ext ts,js --rulesdir=./tools/eslint-rules",
     "test": "jest",
     "puppet1": "node tools/puppet1.js",
     "extract-object-types": "node tools/extract-object-types.js",
