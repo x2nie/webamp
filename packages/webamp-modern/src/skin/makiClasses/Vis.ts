@@ -831,14 +831,13 @@ class WavePaintHandler extends VisPaintHandler {
     for (let j = 0; j <= width; j++) {
       // const amplitude = sliceAverage(this._dataArray, sliceWidth, j);
       const amplitude = slice1st(this._dataArray, sliceWidth, j);
-      // [2:51 AM]Eris Lund: amplitude*1.63 is mulitplying amplitude by 1.63 times, 
-      //   and -79 then centers the data again so it looks correct again, 
-      //   this roughly matches what is seen in winamp
-      //   this may better match winamp now - 29.03.2023
-      const [y, colorIndex] = this.rangeByAmplitude(-(amplitude*1.63-85)+256);
+      // forget all that was here, -4 is set to off center the oscilloscope
+      // because completely centered looks a bit weird
+      const [y, colorIndex] = this.rangeByAmplitude(-(amplitude-4)+256);
       // amplitude is now upside down because we're flipping the rendering
       // of the oscilloscope upside down as well
       // why? because the modern skin engine does this, and i dont like that
+      // change to this.rangeByAmplitude(amplitude+4); for Winamp Classic behavior
       const x = j * PIXEL_DENSITY;
 
       this.paintWav(x, y, colorIndex);
@@ -932,6 +931,7 @@ class WavePaintHandler extends VisPaintHandler {
         0, colorIndex, // sx,sy
         1, 1, // sw,sh
         x, -y+15, //dx,dy, dy is upside down because Winamp3/Winamp5 does it, so we have to emulate it
+        //set to x, y, for Winamp Classic behavior
         1, 1 //dw,dh
       );
     }
@@ -943,6 +943,7 @@ class WavePaintHandler extends VisPaintHandler {
       0, colorIndex, // sx,sy
       1, 1, // sw,sh
       x, -y+15, //dx,dy, dy is upside down because Winamp3/Winamp5 does it, so we have to emulate it
+      //set to x, y, for Winamp Classic behavior
       1, 1 //dw,dh
     );
   }
@@ -963,6 +964,7 @@ class WavePaintHandler extends VisPaintHandler {
         0, colorIndex, // sx,sy
         1, 1, // sw,sh
         x, -y+15, //dx,dy, dy is upside down because Winamp3/Winamp5 does it, so we have to emulate it
+        //set to x, y, for Winamp Classic behavior
         1, 1 //dw,dh
       );
     }
