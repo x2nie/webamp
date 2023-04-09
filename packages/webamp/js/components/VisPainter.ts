@@ -1,7 +1,8 @@
 export interface Vis {
   canvas?: HTMLCanvasElement;
-  analyser: AnalyserNode;
   colors: string[];
+  analyser: AnalyserNode;
+  audioContext?: AudioContext; //butterchurn need it
   oscStyle?: "dots" | "solid" | "lines";
 }
 
