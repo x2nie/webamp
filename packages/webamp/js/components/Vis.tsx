@@ -117,7 +117,7 @@ export default function Vis({ analyser }: Props) {
   );
 
   useEffect(() => {
-    console.log(" vis mode:", mode);
+    // console.log(" vis mode:", mode);
     switch (mode) {
       case VISUALIZERS.OSCILLOSCOPE:
         // canvasCtx.drawImage(bgCanvas, 0, 0);
