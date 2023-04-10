@@ -14,7 +14,8 @@ window.onload = function () {
     for (var i = 0; i < inputs.length; i++) {
         inputs[i].addEventListener("click",
             function (e) {
-                console.log('click', this.attributes.name)
+                // console.log('click', this.attributes.name)
+                rebuildVis(this.attributes.name.value, this.value)
             }
         )
     }
@@ -62,12 +63,36 @@ window.onload = function () {
         audio.play();
     }
 
+    //? PAINTER ===============================
+
     const vis: IVis = {
         canvas,
         colors: new Array<string>(24).fill('rgb(255,255,255)'),
         analyser,
+        oscStyle: "lines",
+        bandwidth: "wide",
+        coloring: "normal",
+        peaks: true,
     }
-    const painter = new FakeBarPaintHandler(vis);
+    // let painter = new FakeBarPaintHandler(vis);
+    let painter: VisPaintHandler
+    rebuildVis('skin','classic');
+
+    //? CONFIG ===============================
+
+    function rebuildVis(attr: string, value: string) {
+        console.log(attr, value);
+        vis[attr] = value;
+
+        const mode = document.querySelector('input[name=mode]:checked') as HTMLInputElement;
+        if (mode.value === "spectrum") {
+            // painter = new FakeBarPaintHandler(vis);
+            painter = new BarPaintHandler(vis);
+        } else {
+            painter = new WavePaintHandler(vis);
+        }
+        painter.prepare();
+    }
 
     var animProgress = 0;
     audio.onplay = function (e) {

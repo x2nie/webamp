@@ -12,34 +12,46 @@
 
 <body>
     <div id="content">
-        <div class="grid">
-            <div class="grid" id="preview">
+        <fieldset id="target">
+            <div class="grid">
+                <div class="grid" id="preview">
+                </div>
             </div>
-        </div>
+        </fieldset>
         <!-- <img src="preview/440-square.png" /> -->
-        <div class="grid">
-            <canvas id="canvas"></canvas>
-        </div>
+        <fieldset id="live">
+            <div class="grid">
+                <canvas id="canvas"></canvas>
+            </div>
+        </fieldset>
 
         <div id="options">
             <fieldset id="skin">
-                <input type="radio" name="skin" checked >Classic</input>
-                <input type="radio" name="skin" disabled>Modern</input>
+                <input type="radio" name="skin" checked value="classic"/>
+                <input type="radio" name="skin" disabled value="modern"/>
+                <note>classic: 76x16 | modern: 72x16px</note>
             </fieldset>
-
+            
             <fieldset id="layout">
-                <input type="radio" name="layout" checked>Normal</input>
-                <input type="radio" name="layout" disabled>Shade</input>
+                <input type="radio" name="layout" checked value="normal"/>
+                <input type="radio" name="layout" disabled value="shade"/>
+                <note>WinShade: 38x5</note>
+            </fieldset>
+            
+            <fieldset id="zoom">
+                <input type="radio" name="zoom" value="normal" checked/>
+                <input type="radio" name="zoom" value="double pixel" disabled/>
             </fieldset>
 
             <fieldset id="mode">
-                <input type="radio" name="mode" checked>Spectrum</input>
-                <input type="radio" name="mode">Oscilloscope</input>
+                <input type="radio" name="mode" checked value="spectrum"/>
+                <input type="radio" name="mode" value="oscilloscope"/>
             </fieldset>
 
             <fieldset id="bandwidth">
-                <input type="radio" name="bandwidth" checked>Wide</input>
-                <input type="radio" name="bandwidth">Thin</input>
+                <input type="radio" name="bandwidth" checked value="wide"/>
+                <input type="radio" name="bandwidth" value="thin"/>
+                <note>wide: 3+1   thin: 1+0</note>
             </fieldset>
 
             <fieldset id="coloring">
@@ -49,9 +61,9 @@
             </fieldset>
 
             <fieldset id="oscStyle">
-                <input type="radio" name="oscStyle" checked>lines</input>
-                <input type="radio" name="oscStyle">solid</input>
-                <input type="radio" name="oscStyle">dots</input>
+                <input type="radio" name="oscStyle" checked value="lines"/>
+                <input type="radio" name="oscStyle" value="solid"/>
+                <input type="radio" name="oscStyle" value="dots"/>
             </fieldset>
         </div>
     </div>

@@ -9,17 +9,18 @@ html {
     /* bottom: 100px; */
     /* left: 10px; */
     z-index: 100;
+    width: 100%;
 }
 
 .grid {
-    display: block;
+    display: inline-block;
     position: relative;
     width: 486px;
     height: 126px;
     background-image: url(preview/grid.png);
     background-size: contain;
     image-rendering: pixelated;
-    margin: 10px;
+    /* margin: 10px; */
     /* transform: scale(6); */
     /* transform-origin: 0 0; */
 }
@@ -56,7 +57,7 @@ audio {
 
 #choices {
     width: 200px;
-    height: 100%;
+    height: 99%;
     /* float: right; */
     position: absolute;
     right: 0;
@@ -69,6 +70,19 @@ button {
     margin: 10px;
 }
 
+fieldset {
+    border-collapse: collapse;
+    /* display: table-cell; */
+    border: 1px solid silver;
+    position: relative;
+}
+
+fieldset::after {
+    content: ':';
+    position: absolute;
+    left: 89px;
+    top: 6px;
+}
 fieldset::before {
     content: attr(id) ;
     text-transform: capitalize;
@@ -76,6 +90,7 @@ fieldset::before {
     display: inline-block;
     text-align: right;
     padding-right: 15px;
+    vertical-align: top;
 }
 
 input[type="radio"] {
@@ -89,17 +104,28 @@ input[type="radio"] {
     background-color: aqua;
     border: 1px solid transparent;
     cursor: pointer;
-    line-height: 2;
+    /* line-height: 2; */
+    width:100px;
 }
 input[type="radio"]:hover {
     background-color: silver;
     border-color: blue;
 }
+
 input[type="radio"]::before {
     vertical-align: middle;
     content: attr(value) ;
     text-transform: capitalize;
-    padding: 7px;
     padding-left: 29px;
     padding-right: 15px;
+    position: absolute;
+    left: 37px;
+    white-space: nowrap;
+}
+
+fieldset note {
+    position: absolute;
+    left: 500px;
+    /* color: blue; */
+    font-family: monospace;
 }
