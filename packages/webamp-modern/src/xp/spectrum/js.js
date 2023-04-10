@@ -1,6 +1,15 @@
 // taken from: https://codepen.io/nfj525/pen/rVBaab
 window.onload = function() {
   
+    const inputs = document.querySelectorAll('input[type=radio]');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener("click", 
+        function(e){
+          console.log('click',this.attributes.name)
+        }
+      )
+    }
+
     var file = document.getElementById("thefile");
     var audio = document.getElementById("audio");
     var preview = document.getElementById("preview");
@@ -8,6 +17,9 @@ window.onload = function() {
     var context = new AudioContext();
     var src = context.createMediaElementSource(audio);
     var analyser = context.createAnalyser();
+
+    var coloring = document.querySelector('input[name=coloring]:checked').value;
+    console.log('coloring:', coloring)
 
     var canvas = document.getElementById("canvas");
     canvas.width = 76;

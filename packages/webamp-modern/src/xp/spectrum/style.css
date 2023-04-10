@@ -1,0 +1,105 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+#thefile {
+    /* position: fixed; */
+    /* bottom: 100px; */
+    /* left: 10px; */
+    z-index: 100;
+}
+
+.grid {
+    display: block;
+    position: relative;
+    width: 486px;
+    height: 126px;
+    background-image: url(preview/grid.png);
+    background-size: contain;
+    image-rendering: pixelated;
+    margin: 10px;
+    /* transform: scale(6); */
+    /* transform-origin: 0 0; */
+}
+
+.grid>.grid {
+    margin: 0;
+}
+
+#canvas {
+    position: absolute;
+    left: calc(3 * 6px);
+    top: calc(2 * 6px);
+    /* width: 432px; */
+    /* height: 96px; */
+    width: 76px;
+    height: 16px;
+    transform: scale(6);
+    transform-origin: 0 0;
+}
+
+audio {
+    /* position: fixed; */
+    /* left: 10px; */
+    bottom: 10px;
+    width: calc(100% - 0px);
+}
+
+#content {
+    width: calc(100% - 210px);
+    height: 100%;
+    border: 1px solid red;
+
+}
+
+#choices {
+    width: 200px;
+    height: 100%;
+    /* float: right; */
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: 1px solid blue;
+}
+
+button {
+    display: block;
+    margin: 10px;
+}
+
+fieldset::before {
+    content: attr(id) ;
+    text-transform: capitalize;
+    width: 70px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 15px;
+}
+
+input[type="radio"] {
+    display: inline-block;
+    box-sizing: content-box;
+    min-width: 40px;
+    text-align: left;
+    /* margin: 0; */
+    position: relative;
+    margin-left: 10px;
+    background-color: aqua;
+    border: 1px solid transparent;
+    cursor: pointer;
+    line-height: 2;
+}
+input[type="radio"]:hover {
+    background-color: silver;
+    border-color: blue;
+}
+input[type="radio"]::before {
+    vertical-align: middle;
+    content: attr(value) ;
+    text-transform: capitalize;
+    padding: 7px;
+    padding-left: 29px;
+    padding-right: 15px;
+}
