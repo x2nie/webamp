@@ -19,7 +19,7 @@ import {
   BarPaintHandler,
   WavePaintHandler,
   NoVisualizerHandler,
-  BarPaintHandlerFake,
+  FakeBarPaintHandler,
 } from "./VisPainter";
 
 type Props = {
