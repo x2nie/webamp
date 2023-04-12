@@ -77,8 +77,8 @@ export class FFT {
             this.InitEnvelopeTable(envelope_power);
         if (bEqualize)
             this.InitEqualizeTable();
-        this.temp1 = new Array(this.NFREQ);
-        this.temp2 = new Array(this.NFREQ);
+        this.temp1 = new Array(this.NFREQ).fill(0.0);
+        this.temp2 = new Array(this.NFREQ).fill(0.0);
     }
 
     /*****************************************************************************/
@@ -267,8 +267,10 @@ export class FFT {
         // memset(this.temp2, 0, sizeof(float) * this.NFREQ);
 
         // 2. perform FFT
-        let real = this.temp1;
-        let imag = this.temp2;
+        // let real = this.temp1;
+        // let imag = this.temp2;
+        let real = [...this.temp1];
+        let imag = [...this.temp2];
         let dftsize = 2;
         let t = 0;
         while (dftsize <= this.NFREQ) {

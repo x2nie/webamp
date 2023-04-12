@@ -7,6 +7,8 @@ import {
     FakeBarPaintHandler,
 } from "../../skin/makiClasses/VisPainter";
 
+import { SpectrumPaintHandler } from "../../skin/makiClasses/VisSatan";
+
 // taken from: https://codepen.io/nfj525/pen/rVBaab
 window.onload = function () {
 
@@ -21,11 +23,11 @@ window.onload = function () {
     }
 
     var file = document.getElementById("thefile") as HTMLInputElement;
-    var audio = document.getElementById("audio") as HTMLMediaElement;
+    var audio1 = document.getElementById("audio") as HTMLMediaElement;
     var preview = document.getElementById("preview");
 
     var context = new AudioContext();
-    var src = context.createMediaElementSource(audio);
+    var src = context.createMediaElementSource(audio1);
     var analyser = context.createAnalyser();
 
     // var coloring = document.querySelector('input[name=coloring]:checked').value;
@@ -41,6 +43,7 @@ window.onload = function () {
     analyser.smoothingTimeConstant = 0.9;
 
     analyser.fftSize = 256;
+    analyser.fftSize = 512;
 
     var bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
@@ -51,16 +54,16 @@ window.onload = function () {
     for (const btn of buttons) {
         btn.onclick = function (e) {
             preview.style.backgroundImage = `url(preview/${this.attributes.media.value}.png)`;
-            audio.src = `/assets/audio/check-sound/${this.attributes.media.value}.wav`;
-            audio.play();
+            audio1.src = `/assets/audio/check-sound/${this.attributes.media.value}.wav`;
+            audio1.play();
         }
     };
 
     file.onchange = function () {
         var files = this.files;
-        audio.src = URL.createObjectURL(files[0]);
-        audio.load();
-        audio.play();
+        audio1.src = URL.createObjectURL(files[0]);
+        audio1.load();
+        audio1.play();
     }
 
     //? PAINTER ===============================
@@ -87,7 +90,8 @@ window.onload = function () {
         const mode = document.querySelector('input[name=mode]:checked') as HTMLInputElement;
         if (mode.value === "spectrum") {
             // painter = new FakeBarPaintHandler(vis);
-            painter = new BarPaintHandler(vis);
+            // painter = new BarPaintHandler(vis);
+            painter = new SpectrumPaintHandler(vis);
         } else {
             painter = new WavePaintHandler(vis);
         }
@@ -95,7 +99,7 @@ window.onload = function () {
     }
 
     var animProgress = 0;
-    audio.onplay = function (e) {
+    audio1.onplay = function (e) {
         const NUM_BARS = 20;
         var logged = false;
         //   setTimeout(() => {
@@ -142,11 +146,11 @@ window.onload = function () {
         if (animProgress != 0) {
             cancelAnimationFrame(animProgress); // stop old loop
         }
-        // audio.play();
+        // audio1.play();
         renderFrame();
     };
 
-    audio.onpause = function (e) {
+    audio1.onpause = function (e) {
         if (animProgress != 0) {
             cancelAnimationFrame(animProgress); // stop old loop
         }
