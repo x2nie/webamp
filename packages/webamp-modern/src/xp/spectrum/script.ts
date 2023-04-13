@@ -41,13 +41,13 @@ window.onload = function () {
 
     src.connect(analyser);
     analyser.connect(context.destination);
-    analyser.smoothingTimeConstant = 0.0;
+    analyser.smoothingTimeConstant = 0.4;
 
     analyser.fftSize = 256;
     analyser.fftSize = 512;
     analyser.fftSize = 1024;
     // analyser.fftSize = 2048;
-    analyser.minDecibels = -100;
+    // analyser.minDecibels = -100;
     analyser.maxDecibels = 0;
 
     var bufferLength = analyser.frequencyBinCount;
@@ -75,12 +75,14 @@ window.onload = function () {
     const MAX_BARS = 576;
     // logaritmic
     const nFftFrequencies = analyser.fftSize; // 512
-    const bands = 19;
-    // const naBarTable: number[] = new Array(MAX_BARS).fill(0); // mendefinisikan array dengan ukuran MAX_BARS, diisi dengan nilai 0
-    // LogBarValueTable(nFftFrequencies, 44100, 16000, bands, naBarTable);
+    const bands = 20;
+    let naBarTable: number[];
+    naBarTable = new Array(MAX_BARS).fill(0); // mendefinisikan array dengan ukuran MAX_BARS, diisi dengan nilai 0
+    LogBarValueTable(nFftFrequencies, 44100, 16000, bands, naBarTable);
+    // naBarTable: number[] = [3,3,3, 3,3,  4,5,6, 6,9,  14,17,21,35,42, 42,42,42, 42,  72,104,149,182,214,214,214,256,308,0,0,0,0]
+    
     // const naBarTable = [2,2,2,2,3,4,5,6,9,13,18,25,35,51,72,104,149,214,308,0,0,0,0]
-    const naBarTable: number[] = [2,2,2,2,3,4,5,6,9,13,18,25,35,51,72,104,149,182,214,214,214,256,308,0,0,0,0]
-    console.log('naBarTable:', JSON.stringify(naBarTable).substring(0,130));
+    // console.log('naBarTable:', JSON.stringify(naBarTable).substring(0,130));
 
     //? PAINTER ===============================
 
@@ -140,7 +142,7 @@ window.onload = function () {
 
 
             analyser.getByteFrequencyData(dataArray);
-            console.log('dataArray:', JSON.stringify(dataArray).substring(0,100));
+            // console.log('dataArray:', JSON.stringify(dataArray).substring(0,100));
             const fFftScale = 3.0;
             // scaleFFT(dataArray, fFftScale)
 
@@ -170,7 +172,7 @@ window.onload = function () {
                 // } else
                 //     peaklevel[x] = peak_level_lookup[peakreferencelevel[x]][peakchange[x]];
             }
-            console.log('levele:', JSON.stringify(level).substring(0,100));
+            // console.log('levele:', JSON.stringify(level).substring(0,100));
 
             // ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
             // ctx.fillRect(0, 0, WIDTH, HEIGHT);
