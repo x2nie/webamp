@@ -47,8 +47,8 @@ window.onload = function () {
     analyser.fftSize = 512;
     analyser.fftSize = 1024;
     // analyser.fftSize = 2048;
-    analyser.minDecibels = -95;
-    analyser.maxDecibels = -10;
+    analyser.minDecibels = -100;
+    analyser.maxDecibels = 0;
 
     var bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
@@ -75,9 +75,12 @@ window.onload = function () {
     const MAX_BARS = 576;
     // logaritmic
     const nFftFrequencies = analyser.fftSize; // 512
-    const bands = 20;
-    const naBarTable: number[] = new Array(MAX_BARS).fill(0); // mendefinisikan array dengan ukuran MAX_BARS, diisi dengan nilai 0
-    LogBarValueTable(nFftFrequencies, 44100, 16000, bands-1, naBarTable);
+    const bands = 19;
+    // const naBarTable: number[] = new Array(MAX_BARS).fill(0); // mendefinisikan array dengan ukuran MAX_BARS, diisi dengan nilai 0
+    // LogBarValueTable(nFftFrequencies, 44100, 16000, bands, naBarTable);
+    // const naBarTable = [2,2,2,2,3,4,5,6,9,13,18,25,35,51,72,104,149,214,308,0,0,0,0]
+    const naBarTable: number[] = [2,2,2,2,3,4,5,6,9,13,18,25,35,51,72,104,149,182,214,214,214,256,308,0,0,0,0]
+    console.log('naBarTable:', JSON.stringify(naBarTable).substring(0,130));
 
     //? PAINTER ===============================
 
@@ -144,11 +147,11 @@ window.onload = function () {
             const level: number[] = new Array(bands);
 
             for (let i = 0, nLow = 0; i < bands; i++) {
-                let nHigh = nLow + naBarTable[i+1] -1;
+                let nHigh = nLow + naBarTable[i+1];
                 // _ASSERT((unsigned int)nLow < nFftFrequencies);
                 // _ASSERT((unsigned int)nHigh <= nFftFrequencies);
                 const newlevel = AverageLevelCalcMono(nLow, nHigh, dataArray);
-                nLow = nHigh +1;
+                nLow = nHigh;
                 // volume += volume_func[newlevel];
         
                 // level[i] = Math.round(newlevel / fFftScale);
@@ -169,8 +172,9 @@ window.onload = function () {
             }
             console.log('levele:', JSON.stringify(level).substring(0,100));
 
-            ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
-            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+            // ctx.fillStyle = "rgba(0, 0, 255, 0.2)";
+            // ctx.fillRect(0, 0, WIDTH, HEIGHT);
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
             ctx.fillStyle = "#fff";
 
@@ -214,7 +218,7 @@ function AverageLevelCalcMono(low: number, high: number, spectrumData: Uint8Arra
         // newlevel += spectrumDataLeft[i];
         // newlevel += spectrumDataRight[i];
         // newlevel += spectrumData[i];
-        newlevel += (spectrumData[i] * 2);
+        newlevel += (spectrumData[i] || 0) * 2;
     }
 
     // return newlevel / (/* 2 * */ (high - low));
