@@ -47,13 +47,16 @@ window.onload = function () {
     analyser.fftSize = 512;
     analyser.fftSize = 1024;
     // analyser.fftSize = 2048;
-    // analyser.minDecibels = -100;
+    analyser.minDecibels = -100;
+    // analyser.minDecibels = -80;
     analyser.maxDecibels = 0;
+    // analyser.maxDecibels = -15;
 
     var bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
 
     var dataArray = new Uint8Array(bufferLength);
+    var fdataArray = new Float32Array(bufferLength);
 
     const buttons = document.querySelectorAll('button');
     for (const btn of buttons) {
@@ -79,10 +82,15 @@ window.onload = function () {
     let naBarTable: number[];
     naBarTable = new Array(MAX_BARS).fill(0); // mendefinisikan array dengan ukuran MAX_BARS, diisi dengan nilai 0
     LogBarValueTable(nFftFrequencies, 44100, 16000, bands, naBarTable);
+    // LogBarValueTable(MAX_BARS, 44100, 16000, bands, naBarTable);
+    // LogBarValueTable(nFftFrequencies, 44100, 11025, bands, naBarTable);
+    // LogBarValueTable(MAX_BARS, 44100, 16000, bands+1, naBarTable);
     // naBarTable: number[] = [3,3,3, 3,3,  4,5,6, 6,9,  14,17,21,35,42, 42,42,42, 42,  72,104,149,182,214,214,214,256,308,0,0,0,0]
     
     // const naBarTable = [2,2,2,2,3,4,5,6,9,13,18,25,35,51,72,104,149,214,308,0,0,0,0]
     // console.log('naBarTable:', JSON.stringify(naBarTable).substring(0,130));
+
+    console.log('new formula:', bandsRange(nFftFrequencies, bands))
 
     //? PAINTER ===============================
 
@@ -119,6 +127,7 @@ window.onload = function () {
 
     var animProgress = 0;
     audio1.onplay = function (e) {
+        console.log('sampleRate:', context.sampleRate, context.baseLatency)
         // const NUM_BARS = 20;
         var logged = false;
         //   setTimeout(() => {
@@ -133,7 +142,7 @@ window.onload = function () {
         var barHeight;
         var x = 0;
 
-        function renderFrame1() {
+        function renderFrame0() {
             animProgress = requestAnimationFrame(renderFrame);
             painter.paintFrame();
         }
@@ -142,6 +151,14 @@ window.onload = function () {
 
 
             analyser.getByteFrequencyData(dataArray);
+            // console.log('dataArray:', JSON.stringify(dataArray).substring(0,100));
+            
+            console.log('dataArray:', JSON.stringify(Array.from(dataArray)).substring(0,200));
+
+            analyser.getFloatFrequencyData(fdataArray);
+            let floats = Array.from(fdataArray);
+            floats = floats.map(f => Math.floor(f))
+            console.log('fdataArray:', JSON.stringify(floats).substring(0,200));
             // console.log('dataArray:', JSON.stringify(dataArray).substring(0,100));
             const fFftScale = 3.0;
             // scaleFFT(dataArray, fFftScale)
@@ -157,7 +174,7 @@ window.onload = function () {
                 // volume += volume_func[newlevel];
         
                 // level[i] = Math.round(newlevel / fFftScale);
-                level[i] = newlevel;
+                level[i] = newlevel - 35;
                 // if (newlevel > (level[x] -= falloffrate)) {
                 //     level[x] = newlevel;
                 // }
@@ -224,7 +241,49 @@ function AverageLevelCalcMono(low: number, high: number, spectrumData: Uint8Arra
     }
 
     // return newlevel / (/* 2 * */ (high - low));
-    return Math.round(newlevel / ( 2 * (high - low)));
+    return Math.floor(newlevel / ( 2 * (high - low)));
+}
+
+/**
+    see: https://hotmart.com/en/blog/audio-quality
+    Each time the frequency doubles, that sounds like going up an octave.
+    That means that: 
+        the difference between 200 and 300 Hz 
+            is FAR more than 
+        the difference between 5000 and 5100, for example!
+        
+    So, when trying to analyze, you'll want to look at (probably):
+          BASS   : 200 - 800 Hz range;           
+          TREBLE : 1,400 - 11,025 Hz range ; , you'll want the
+
+    If you want to get 3 bands, try it this way:
+          a) 11,025 / 200 = 55.125
+          b) to get the number of octaves between 200 and 11,025 Hz, solve for n:
+                 2^n = 55.125
+                 n = log 55.125 / log 2
+                 n = 5.785
+          c) so each band should represent 5.785/3 = 1.928 octaves; the ranges are:
+                 1) 200 - 200*2^1.928                    or  200  - 761   Hz
+                 2) 200*2^1.928 - 200*2^(1.928*2)        or  761  - 2897  Hz
+                 3) 200*2^(1.928*2) - 200*2^(1.928*3)    or  2897 - 11025 Hz
+
+ */
+function bandsRange(nData:number, nBars:number): number[][] {
+    const ret: number[][] = Array.from({ length: nBars }, () => new Array(2));
+    const a = 16000 / 200;
+    const n = a / nBars +1;
+    const b = Math.log(n) / Math.log(2)
+    let z = a
+    console.log(`a:${a} n=${n} b:${b}`)
+    for (let i = 0; i < ret.length; i++) {
+        const start = 2**(i) 
+        const end   = 2**( b* i)
+        
+        // const bar = ret[i]; 
+        ret[i] = [start, end]        
+    }
+
+    return ret;
 }
 
 // calculate number of bins to assign, will be at least 1
