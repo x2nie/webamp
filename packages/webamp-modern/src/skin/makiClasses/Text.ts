@@ -575,7 +575,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     } else if (this._forcelowercase) {
       txt = txt.toLowerCase()
     }
-    const fontFamily = (font && font.getFontFamily()) || "Arial";
+    const fontFamily = (font && font.getFontFamily()) || '"Liberation Sans", "DejaVu Sans", Arial';
 
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
