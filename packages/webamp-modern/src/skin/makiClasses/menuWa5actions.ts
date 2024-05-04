@@ -74,3 +74,8 @@ register(40048, { //? Next
 register(11111140038, { //? 
     onUpdate: (menu: MenuItem) => { }
 })
+
+register(40244, { //? Equalizer Enabled
+    onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => { menu.checked = uiRoot.audio._eqEnabled },
+    onExecute: (uiRoot: UIRoot) => { uiRoot.eq_toggle(); return true },
+})
