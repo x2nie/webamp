@@ -558,6 +558,10 @@ export class UIRoot {
       case "close":
         this.closeContainer();
         break;
+
+      case "sysmenu":
+        getWa5Popup('Main').popatmouse()
+        break;
       case "pe_add":
         getWa5Popup('Add').popatmouse()
         break;
