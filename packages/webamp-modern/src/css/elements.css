@@ -344,6 +344,7 @@ ul.popup-menu-container li:hover > span {
   min-width: 15px;
   text-align: center;
   font-size: smaller;
+  line-height: 1;
 }
 
 /* nested popup */

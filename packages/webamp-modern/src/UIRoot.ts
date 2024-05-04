@@ -573,7 +573,7 @@ export class UIRoot {
     }
   }
 
-  getActionState(action: string, param: string, actionTarget: string): boolean {
+  getActionState(action: string, param: string, actionTarget: string=''): boolean {
     if (action != null) {
       switch (action.toLowerCase()) {
         case "eq_toggle":
