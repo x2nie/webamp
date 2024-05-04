@@ -313,6 +313,7 @@ menu > .popup{
   width: auto;
   display: inline-block;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  font-size: 10.5px;
 }
 ul.popup-menu-container li {
   display: flex;
@@ -324,7 +325,7 @@ ul.popup-menu-container li > span {
   padding: 4px 0;
 }
 ul.popup-menu-container li:hover > span {
-  background: blue;
+  background: #316ac5;
   color: white;
 }
 
