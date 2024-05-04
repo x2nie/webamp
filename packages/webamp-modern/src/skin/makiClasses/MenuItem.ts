@@ -114,7 +114,7 @@ function generatePopupItem(menu: | IMenuItem | IMenuPopup): HTMLElement {
   //? sub-menu sign
   const chevron = document.createElement("span");
   chevron.classList.add('chevron')
-  chevron.textContent = menu.type=='popup'? '⮀' : ' ';
+  chevron.textContent = menu.type=='popup'? '🞂' : ' ';
   item.appendChild(chevron)
   // item.textContent = `${menu.checked? '✓' : ' '} ${menu.caption}`;
 
