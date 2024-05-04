@@ -3,7 +3,8 @@ import { MenuItem } from "./MenuItem";
 
 export function getWa5Popup(popupId: string): PopupMenu {
     if(['PE_Help', 'ML_Help'].includes(popupId)) popupId = 'Help';
-    const res = wa5commonRes.includes(popupId) ? wa5commonRes : wa5miscRes.includes(popupId) ? popupId : '';
+    const res = wa5commonRes.includes(`POPUP "${popupId}"`) ? wa5commonRes : wa5miscRes.includes(`POPUP "${popupId}"`) ? wa5miscRes : '';
+    // const res = wa5commonRes.includes(popupId) ? wa5commonRes : wa5miscRes.includes(popupId) ? popupId : '';
     // const popupJson =getPopupJson(popupId, res);
     // console.log('FOUND', popupId, popupJson)
     const popup =getPopupMenu(popupId, res);

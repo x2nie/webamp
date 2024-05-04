@@ -28,6 +28,8 @@ import Config from "./skin/makiClasses/Config";
 import WinampConfig from "./skin/makiClasses/WinampConfig";
 import Avs from "./skin/makiClasses/Avs";
 
+import { getWa5Popup } from "./skin/makiClasses/menuWa5";
+
 import { SkinEngineClass } from "./skin/SkinEngine";
 import { FileExtractor } from "./skin/FileExtractor";
 import Application from "./skin/makiClasses/Application";
@@ -555,6 +557,12 @@ export class UIRoot {
         break;
       case "close":
         this.closeContainer();
+        break;
+      case "pe_add":
+        getWa5Popup('Add').popatmouse()
+        break;
+      case "pe_rem":
+        getWa5Popup('Remove').popatmouse()
         break;
       default:
         assume(false, `Unknown global action: ${action}`);
