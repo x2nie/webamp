@@ -728,3 +728,56 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
   }
 }
 `;
+
+//from gen_ff.dll
+const wa5controlRes = `1281 MENU
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+{
+  POPUP "ControlMenu"
+  {
+    POPUP "&Opacity"
+    {
+      MENUITEM "1&00%",  42211
+      MENUITEM "&90%",  42210
+      MENUITEM "&80%",  42209
+      MENUITEM "&70%",  42208
+      MENUITEM "&60%",  42207
+      MENUITEM "&50%",  42206
+      MENUITEM "&40%",  42205
+      MENUITEM "&30%",  42204
+      MENUITEM "&20%",  42203
+      MENUITEM "&10%",  42202
+      MENUITEM "&Custom",  42227
+      MENUITEM SEPARATOR
+      MENUITEM "Opaque on &Focus",  42228
+      MENUITEM "Opaque on &Hover",  42226
+    }
+    POPUP "&Scaling"
+    {
+      MENUITEM "&50%",  42214
+      MENUITEM "&75%",  42215
+      MENUITEM "&100%",  42216
+      MENUITEM "150%",  42222
+      MENUITEM "&200%",  42217
+      MENUITEM "250%",  42218
+      MENUITEM "&300%",  42219
+      MENUITEM "&Custom",  42224
+      MENUITEM SEPARATOR
+      MENUITEM "&Locked",  42223
+      MENUITEM "&Temporary",  42225
+    }
+    POPUP "Docked Toolbar"
+    {
+      MENUITEM "Auto-&Hide",  42235
+      MENUITEM "&Always On Top",  42234
+      MENUITEM SEPARATOR
+      MENUITEM "Top",  42229
+      MENUITEM "Left",  42236
+      MENUITEM "Right",  42231
+      MENUITEM "Bottom",  42232
+      MENUITEM "Not docked",  42233
+      MENUITEM SEPARATOR
+      MENUITEM "Dock/Undock Windows by Dragging",  42237
+    }
+  }
+}`
