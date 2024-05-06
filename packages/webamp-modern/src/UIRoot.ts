@@ -42,6 +42,7 @@ export class UIRoot {
   _winampConfig: WinampConfig;
 
   _div: HTMLDivElement = document.createElement("div");
+  _mousePos : {x:number,y:number} = {x:0, y:0}
   _imageManager: ImageManager;
   // Just a temporary place to stash things
   _bitmaps: { [id: string]: Bitmap } = {};
@@ -91,6 +92,7 @@ export class UIRoot {
     this._winampConfig = new WinampConfig(this);
     this.playlist = new PlEdit(this); // must be after _config.
     this.vm = new Vm(this);
+    this.setlistenMouseMove(true)
   }
 
   getId(): string {
@@ -559,6 +561,9 @@ export class UIRoot {
         this.closeContainer();
         break;
 
+      case "controlmenu":
+        getWa5Popup('ControlMenu', this).popatmouse()
+        break;
       case "sysmenu":
         getWa5Popup('Main', this).popatmouse()
         break;
@@ -663,6 +668,17 @@ export class UIRoot {
     for (const obj of this._objects) {
       obj.dispose();
     }
+  }
+
+  setlistenMouseMove( listen: boolean ){
+    const update = (e:MouseEvent) => {
+      this._mousePos = {
+        // https://stackoverflow.com/questions/6073505/what-is-the-difference-between-screenx-y-clientx-y-and-pagex-y
+        x : e.pageX,
+        y : e.pageY
+      }
+    }
+    window.document[`${listen?'add':'remove'}EventListener`]('mousemove', update);
   }
 
   //? Zip things ========================

@@ -4,7 +4,8 @@ import { MenuItem } from "./MenuItem";
 
 export function getWa5Popup(popupId: string, uiRoot: UIRoot): PopupMenu {
     if(['PE_Help', 'ML_Help'].includes(popupId)) popupId = 'Help';
-    const res = wa5commonRes.includes(`POPUP "${popupId}"`) ? wa5commonRes : wa5miscRes.includes(`POPUP "${popupId}"`) ? wa5miscRes : '';
+    const id = `POPUP "${popupId}"`;
+    const res = wa5commonRes.includes(id) ? wa5commonRes : wa5miscRes.includes(id) ? wa5miscRes : wa5controlRes;
     // const res = wa5commonRes.includes(popupId) ? wa5commonRes : wa5miscRes.includes(popupId) ? popupId : '';
     const popup =getPopupJson(popupId, res, uiRoot);
     // console.log('FOUND', popupId, popupJson)
@@ -769,7 +770,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
       MENUITEM "&Locked",  42223
       MENUITEM "&Temporary",  42225
     }
-    POPUP "Docked Toolbar"
+    POPUP "Docked Toolbar", 65535, MFT_STRING, MFS_GRAYED, 0
     {
       MENUITEM "Auto-&Hide",  42235
       MENUITEM "&Always On Top",  42234
@@ -784,3 +785,19 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
     }
   }
 }`
+
+const ffCustomScaleDialog = `1286 DIALOGEX 0, 0, 165, 70
+STYLE DS_SYSMODAL | DS_SHELLFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Custom Scale"
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+{
+   CONTROL "Scale : 100%", 1026, BUTTON, BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 7, 7, 151, 37 
+   CONTROL "Slider1", 1025, "msctls_trackbar32", TBS_HORZ | TBS_BOTH | TBS_NOTICKS | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 13, 17, 139, 11 
+   CONTROL "10%", -1, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 17, 30, 14, 8 
+   CONTROL "300%", -1, STATIC, SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 131, 30, 18, 8 
+   CONTROL "OK", 1, BUTTON, BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 54, 50, 50, 13 
+   CONTROL "Cancel", 2, BUTTON, BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 108, 50, 50, 13 
+}
+`

@@ -1,5 +1,5 @@
 import BaseObject from "./BaseObject";
-import { assume } from "../../utils";
+import { assume, px } from "../../utils";
 import { MenuItem, IPopupMenu, generatePopupDiv, extractCaption } from "./MenuItem";
 import { UIRoot } from "../../UIRoot";
 // import { sleep } from 'deasync';
@@ -30,7 +30,7 @@ import { UIRoot } from "../../UIRoot";
 
 
 
- function waitPopup(popup: IPopupMenu): Promise<number> {
+ function waitPopup(popup: PopupMenu, x=0, y=0): Promise<number> {
    // const closePopup = () => div.remove();
    
    // https://stackoverflow.com/questions/54916739/wait-for-click-event-inside-a-for-loop-similar-to-prompt
@@ -42,6 +42,10 @@ import { UIRoot } from "../../UIRoot";
       acc(id);
     };
     const div = generatePopupDiv(popup, itemClick);
+    if(x || y){
+      div.style.left = px(x);
+      div.style.top = px(y);
+    }
     document.getElementById("web-amp").appendChild(div);
     const closePopup = () => div.remove()
 
@@ -112,12 +116,13 @@ export default class PopupMenu extends BaseObject implements IPopupMenu {
   }
   async popatmouse(): Promise<number> {
     console.log('popAtMouse.start...:')
-    const result = await waitPopup(this)
+    const mousePos = this._uiRoot._mousePos;
+    const result = await waitPopup(this, mousePos.x, mousePos.y)
     console.log('popAtMouse.return:', result)
     return result;
   }
   async popatxy(x:number, y:number):Promise<number>{
-    return await waitPopup(this)
+    return await waitPopup(this, x, y)
   }
 
   // popatmouse(): number {
