@@ -81,7 +81,7 @@ register(40244, { //? Equalizer Enabled
 })
 
 register(40040, { //? View/ Playlist Editor
-    onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => {debugger; menu.checked = uiRoot.getActionState('toggle', 'guid:pl')},
+    onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => {menu.checked = uiRoot.getActionState('toggle', 'guid:pl')},
     onExecute: (uiRoot: UIRoot) => { uiRoot.dispatch('toggle', 'guid:pl'); return true },
 })
 
