@@ -231,7 +231,7 @@ export default class Menu extends Group {
 
     if (this._menuId.startsWith('WA5:')) {
       const [, popupId] = this._menuId.split(':')
-      this._popup = getWa5Popup(popupId);
+      this._popup = getWa5Popup(popupId, this._uiRoot);
       
       this.invalidatePopup()
       // function menuClick(id:number){

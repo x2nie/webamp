@@ -560,13 +560,13 @@ export class UIRoot {
         break;
 
       case "sysmenu":
-        getWa5Popup('Main').popatmouse()
+        getWa5Popup('Main', this).popatmouse()
         break;
       case "pe_add":
-        getWa5Popup('Add').popatmouse()
+        getWa5Popup('Add', this).popatmouse()
         break;
       case "pe_rem":
-        getWa5Popup('Remove').popatmouse()
+        getWa5Popup('Remove', this).popatmouse()
         break;
       default:
         assume(false, `Unknown global action: ${action}`);

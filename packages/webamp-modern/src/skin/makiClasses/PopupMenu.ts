@@ -1,6 +1,7 @@
 import BaseObject from "./BaseObject";
 import { assume } from "../../utils";
 import { MenuItem, IPopupMenu, generatePopupDiv, extractCaption } from "./MenuItem";
+import { UIRoot } from "../../UIRoot";
 // import { sleep } from 'deasync';
 // import { deasync } from '@kaciras/deasync';
 // import sp from 'synchronized-promise';
@@ -57,6 +58,16 @@ import { MenuItem, IPopupMenu, generatePopupDiv, extractCaption } from "./MenuIt
 export default class PopupMenu extends BaseObject implements IPopupMenu {
   static GUID = "f4787af44ef7b2bb4be7fb9c8da8bea9";
   children: MenuItem[] = [];
+  _uiRoot: UIRoot;
+  
+  constructor(uiRoot: UIRoot) {
+    super();
+    this._uiRoot = uiRoot;
+
+    // this._div = document.createElement(
+    //   this.getElTag().toLowerCase().replace("_", "")
+    // );
+  }
   addcommand(
     cmdText: string,
     cmd_id: number,
