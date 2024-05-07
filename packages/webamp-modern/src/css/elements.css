@@ -117,6 +117,12 @@ text wrap {
 text wrap {
   margin-left: 2px;
 }
+text wrap[font="TrueType"] {
+  /* needed for titlebar */
+  line-height: 16px; 
+  vertical-align: var(--valign, center);
+  text-align: var(--align, center);
+}
 text wrap[font="BitmapFont"] {
   display: flex;
   white-space: nowrap;
