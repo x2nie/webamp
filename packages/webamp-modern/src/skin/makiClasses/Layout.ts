@@ -20,6 +20,7 @@ export default class Layout extends Group {
   static GUID = "60906d4e482e537e94cc04b072568861";
   _resizingDiv: HTMLDivElement = null;
   _resizing: boolean = false;
+  _resizing_start : DOMRect = null;
   _canResize: number = 0; // combination of 4 directions: N/E/W/S
   _scale: number = 1.0;
   _opacity: number = 1.0;
@@ -182,21 +183,33 @@ export default class Layout extends Group {
       h = this._minimumHeight ? Math.max(h, this._minimumHeight) : h;
       return h;
     };
-    const container = this._parent;
-    const r = this._div.getBoundingClientRect();
+    // const container = this._parent;
     if (cmd == "constraint") {
       this._canResize = dx;
     } else if (cmd == "start") {
       this.bringtofront();
+      const r = this._div.getBoundingClientRect();
+      // r.x = container.getleft()
+      // r.y = container.gettop()
+      this._resizing_start = r;
+      // this._resizing_o = r;
       this._resizing = true;
       this._resizingDiv = document.createElement("div");
       this._resizingDiv.className = "resizing";
-      this._resizingDiv.style.cssText = "position:fixed;";
-      this._resizingDiv.style.width = px(r.width);
-      this._resizingDiv.style.height = px(r.height);
-      this._resizingDiv.style.top = px(container.gettop());
-      this._resizingDiv.style.left = px(container.getleft());
-      this._div.appendChild(this._resizingDiv);
+      // this._resizingDiv.style.cssText = "position:fixed;";
+      // this._resizingDiv.style.width = px(r.width);
+      // this._resizingDiv.style.height = px(r.height);
+      // this._resizingDiv.style.top = px(container.gettop());
+      // this._resizingDiv.style.left = px(container.getleft());
+      const {left,top,width,height} = r
+      this._resizingDiv.style.cssText = `
+        width: ${px(width)};
+        height: ${px(height)};
+        left: ${px(left)};
+        top: ${px(top)};
+        `;
+      // this._div.appendChild(this._resizingDiv);
+      document.body.appendChild(this._resizingDiv);
     } else if (dx == CURSOR && dy == CURSOR) {
       this._resizingDiv.style.cursor = cmd;
     } else if (cmd == "move") {
@@ -204,19 +217,37 @@ export default class Layout extends Group {
         return;
       }
       // console.log(`resizing dx:${dx} dy:${dy}`);
+      let {left,top,width,height, right, bottom} = this._resizing_start
       if (this._canResize & RIGHT)
-        this._resizingDiv.style.width = px(clampW(r.width + dx));
+        width = clampW(width + dx);
       if (this._canResize & BOTTOM)
-        this._resizingDiv.style.height = px(clampH(r.height + dy));
+        height = (clampH(height + dy));
 
       if (this._canResize & LEFT) {
-        this._resizingDiv.style.left = px(container.getleft() + dx);
-        this._resizingDiv.style.width = px(clampW(r.width + -dx));
+        width = (clampW(width + -dx));
+        let l = (left + dx);
+        if(l+width <= right) {
+          left = l;
+        } else {
+          left = right - this._minimumWidth
+        }
       }
       if (this._canResize & TOP) {
-        this._resizingDiv.style.top = px(container.gettop() + dy);
-        this._resizingDiv.style.height = px(clampH(r.height + -dy));
+        height = (clampH(height + -dy));
+        let t = (top + dy);
+        if(t+height <= bottom) {
+          top = t;
+        } else {
+          top = bottom - this._minimumHeight
+        }
       }
+      this._resizingDiv.style.cssText = `
+        width: ${px(width)};
+        height: ${px(height)};
+        left: ${px(left)};
+        top: ${px(top)};
+      `;
+
     } else if (cmd == "final") {
       if (!this._resizing) {
         return;

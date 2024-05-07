@@ -277,11 +277,12 @@ container:not(:active):not(container:focus-within) .webamp--img.inactivable {
 }
 
 .resizing {
+  position:fixed; 
   border: 1px solid blue;
   background-color: rgba(74, 74, 251, 0.205);
   z-index: 1000;
   box-sizing: border-box;
-  transition: width 0.1s, height 0.1s, left 0.1s, top 0.1s;
+  /* transition: width 0.1s, height 0.1s, left 0.1s, top 0.1s; */
 }
 
 

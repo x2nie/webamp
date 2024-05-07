@@ -119,29 +119,31 @@ export default abstract class Movable extends GuiObj {
       CURSOR,
       CURSOR
     );
-    const startX = downEvent.clientX;
-    const startY = downEvent.clientY;
+    const startX = downEvent.pageX;
+    const startY = downEvent.pageY;
 
     const handleMove = (moveEvent: MouseEvent) => {
-      const newMouseX = moveEvent.clientX;
-      const newMouseY = moveEvent.clientY;
+      const newMouseX = moveEvent.pageX;
+      const newMouseY = moveEvent.pageY;
       const deltaY = newMouseY - startY;
       const deltaX = newMouseX - startX;
       layout.setResizing("move", deltaX, deltaY);
     };
 
+    const trottledMove = throttle(handleMove, 5);
+
     const handleMouseUp = (upEvent: MouseEvent) => {
       upEvent.stopPropagation();
       if (upEvent.button != 0) return; // only care LeftButton
-      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mousemove", trottledMove);
       document.removeEventListener("mouseup", handleMouseUp);
-      const newMouseX = upEvent.clientX;
-      const newMouseY = upEvent.clientY;
+      const newMouseX = upEvent.pageX;
+      const newMouseY = upEvent.pageY;
       const deltaY = newMouseY - startY;
       const deltaX = newMouseX - startX;
       layout.setResizing("final", deltaX, deltaY);
     };
-    document.addEventListener("mousemove", throttle(handleMove, 75));
+    document.addEventListener("mousemove", trottledMove);
     document.addEventListener("mouseup", handleMouseUp);
   };
 
