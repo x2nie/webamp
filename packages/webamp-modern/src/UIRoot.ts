@@ -573,6 +573,12 @@ export class UIRoot {
       case "pe_rem":
         getWa5Popup('Remove', this).popatmouse()
         break;
+      case "pe_sel":
+        getWa5Popup('Select', this).popatmouse()
+        break;
+      case "pe_misc":
+        getWa5Popup('MiscOpt', this).popatmouse()
+        break;
       default:
         assume(false, `Unknown global action: ${action}`);
     }
