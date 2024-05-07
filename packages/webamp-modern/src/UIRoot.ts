@@ -579,6 +579,9 @@ export class UIRoot {
       case "pe_misc":
         getWa5Popup('MiscOpt', this).popatmouse()
         break;
+      case "pe_list":
+        getWa5Popup('Playlist', this).popatmouse()
+        break;
       default:
         assume(false, `Unknown global action: ${action}`);
     }
