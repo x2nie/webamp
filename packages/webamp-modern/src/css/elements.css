@@ -156,6 +156,11 @@ menu {
   padding: 0;
   list-style: none;
 }
+.popup hr {
+  margin-block-start: 3px;
+  margin-block-end: 3px;
+  border-bottom: none;
+}
 /* frame2 {
   box-shadow: inset 0 0 5px red;
 } */
