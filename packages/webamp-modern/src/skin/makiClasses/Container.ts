@@ -352,8 +352,9 @@ export default class Container extends XmlObj {
   }
 
   _renderDimensions() {
-    this._div.style.left = px(this._x);
-    this._div.style.top = px(this._y);
+    // this._div.style.left = px(this._x);
+    // this._div.style.top = px(this._y);
+    this._div.setAttribute('style', `left: ${px(this._x)}; top: ${px(this._y)}`)
   }
 
   _renderLayout() {
