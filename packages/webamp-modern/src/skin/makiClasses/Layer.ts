@@ -55,16 +55,16 @@ export default class Layer extends Movable {
   }
 
   _renderBackground() {
-    const bitmap =
-      this._image != null ? this._uiRoot.getBitmap(this._image) : null;
-    this.setBackgroundImage(bitmap);
-    this.setInactiveBackgroundImage(bitmap);
-    if (this._inactiveImage) {
-      this.setInactiveBackgroundImage(
-        this._uiRoot.getBitmap(this._inactiveImage)
-      );
-      this._div.classList.add("inactivable");
-    }
+      const bitmap =
+         this._image != null ? this._uiRoot.getBitmap(this._image) : null;
+      this.setBackgroundImage(bitmap);
+      this.setInactiveBackgroundImage(bitmap);
+      if (this._inactiveImage) {
+        this.setInactiveBackgroundImage(
+          this._uiRoot.getBitmap(this._inactiveImage)
+        );
+        this._div.classList.add("inactivable");
+      }
   }
 
   _renderRegion() {
@@ -86,6 +86,7 @@ export default class Layer extends Movable {
 
   draw() {
     super.draw();
+    if (this._sysregion != -2 ) 
     this._div.classList.add("webamp--img");
     this._renderBackground();
   }
