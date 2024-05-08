@@ -4,6 +4,7 @@ import { MenuItem } from "./MenuItem";
 
 export function getWa5Popup(popupId: string, uiRoot: UIRoot): PopupMenu {
     if(['PE_Help', 'ML_Help'].includes(popupId)) popupId = 'Help';
+    else if(popupId.toLowerCase()=='presets') popupId = 'EQpresets'
     const id = `POPUP "${popupId}"`;
     const res = wa5commonRes.includes(id) ? wa5commonRes : wa5miscRes.includes(id) ? wa5miscRes : wa5controlRes;
     // const res = wa5commonRes.includes(popupId) ? wa5commonRes : wa5miscRes.includes(popupId) ? popupId : '';

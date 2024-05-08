@@ -561,6 +561,10 @@ export class UIRoot {
         this.closeContainer();
         break;
 
+      case "menu":
+        getWa5Popup(param, this).popatmouse()
+        break;
+
       case "controlmenu":
         getWa5Popup('ControlMenu', this).popatmouse()
         break;
