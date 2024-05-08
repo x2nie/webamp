@@ -2,6 +2,7 @@ import GuiObj from "./GuiObj";
 import { V } from "../../maki/v";
 import AudioEventedGui from "../AudioEventedGui";
 import { UIRoot } from "../../UIRoot";
+import { toBool } from "../../utils";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cbutton.2F.3E_.26_.3Ctogglebutton.2F.3E
 export default class Button extends AudioEventedGui {
@@ -10,6 +11,7 @@ export default class Button extends AudioEventedGui {
   _downimage: string;
   _hoverimage: string;
   _activeimage: string;
+  _center_image: boolean = false;
   _active: boolean = false;
   _action: string | null = null;
   _param: string | null = null;
@@ -48,6 +50,10 @@ export default class Button extends AudioEventedGui {
         break;
       case "activeimage":
         this._activeimage = value;
+        this._renderBackground();
+        break;
+      case "center_image":
+        this._center_image = toBool(value);
         this._renderBackground();
         break;
       case "action":
@@ -205,6 +211,10 @@ export default class Button extends AudioEventedGui {
       this.setActiveBackgroundImage(activeimage);
     } else {
       this.setActiveBackgroundImage(null);
+    }
+
+    if(this._center_image) {
+      this._div.classList.add('wasabi', 'center_image')
     }
   }
 
