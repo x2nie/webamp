@@ -379,6 +379,10 @@ export default class SkinEngineWAL extends SkinEngine {
     let xmlRootPath: string = "assets/freeform/xml/";
     let xmlFilePath: string = null;
     switch (tag) {
+      case "thinger":
+        xmlRootPath = "/";
+        xmlFilePath = "resources/freeform/xml/winamp/thinger.xml";
+        break;
       case "wasabi:text":
         xmlRootPath += "wasabi/";
         xmlFilePath = "xml/xui/text/text.xml";
@@ -402,7 +406,7 @@ export default class SkinEngineWAL extends SkinEngine {
     this._uiRoot.setZip(null);
     this._uiRoot.setSkinDir(xmlRootPath);
 
-    const node = new XmlElement("include", { file: xmlFilePath });
+    const node = new XmlElement("include", { file: xmlFilePath, /*parent_path: xmlRootPath*/ });
     await this.include(node, null);
 
     // pop
@@ -478,16 +482,32 @@ export default class SkinEngineWAL extends SkinEngine {
       parent
     );
     // if (!bucket.getWindowType()){
-    //   await this._loadThinger(bucket);
+      // await this._loadThinger(bucket);
     // }
     // this._uiRoot.addComponentBucket(bucket.getWindowType(), bucket);
+    // await this._predefinedXuiNode('thinger');
     this._uiRoot.addComponentBucket(bucket);
   }
 
   async _loadThinger(bucket: ComponentBucket) {
-    const ifileExtractor: FileExtractor = this._uiRoot._fileExtractor;
-    const fileExtractor: FileExtractor = new PathFileExtractor();
+    const oldFileExtractor: FileExtractor = this._uiRoot._fileExtractor;
+    const fileExtractor: PathFileExtractor = new PathFileExtractor();
+    // await fileExtractor.prepare()
+    await await fileExtractor.prepare("assets/plugins/winamp/thinger/", null)
     this._uiRoot.setFileExtractor(fileExtractor);
+    
+    // const node = new XmlElement("include", { file: 'thinger.xml', /*parent_path: xmlRootPath*/ });
+    const includedXml = await this._uiRoot.getFileAsString("thinger.xml");
+
+    // Note: Included files don't have a single root node, so we add a synthetic one.
+    // A different XML parser library might make this unnessesary.
+    const parsed = parseXml(includedXml) as unknown as XmlElement;
+
+    await this.traverseChildren(parsed);
+    // await this.include(node, null);
+
+    this._uiRoot.setFileExtractor(oldFileExtractor);
+  
   }
 
   async dynamicXuiElement(node: XmlElement, parent: any) {

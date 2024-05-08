@@ -367,3 +367,17 @@ ul.popup-menu-container li:hover > span {
 .popup-menu-container > li:hover > .popup-menu-container{
   display: unset;
 }
+
+/* COMPONENT BUCKET */
+componentbucket[id="component list"] wrapper button {
+  width: 44px;
+  height: 34px;
+  /* border: none; */
+  /* border: 2px solid fuchsia; */
+  margin: 0 1px;
+  position: unset;
+    display: inline-block;
+    /* left: unset; */
+    /* top: unset; */
+    /* background: red; */
+}

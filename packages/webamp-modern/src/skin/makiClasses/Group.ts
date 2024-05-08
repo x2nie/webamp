@@ -200,6 +200,7 @@ export default class Group extends Movable {
     let hasRegions = false;
     for (const child of this._children) {
       if (child._sysregion == -1 || child._sysregion == -2) {
+        // console.log(`applying region: ${child._id} to ${this._id}`)
         this.putAsRegion(child);
         hasRegions = true;
       }

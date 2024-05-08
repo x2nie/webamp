@@ -119,7 +119,10 @@ export default class ComponentBucket extends Group {
   _scrollPage(step: 1 | -1) {
     if (!this._children.length) return;
     const oneChild = this._children[0];
-    const oneStep = this._vertical ? oneChild.getheight() : oneChild.getwidth();
+    const el : HTMLElement = oneChild instanceof HTMLElement ? oneChild : oneChild._div;
+    const bound = el.getBoundingClientRect()
+    // const oneStep = this._vertical ? oneChild.getheight() : oneChild.getwidth();
+    const oneStep = this._vertical ? bound.height : bound.width;
     const anchor = this._vertical ? "top" : "left";
     const currentStep = this._vertical
       ? this._wrapper.offsetTop
@@ -128,7 +131,7 @@ export default class ComponentBucket extends Group {
     const maxViewport = this._vertical
       ? viewportSize.height
       : viewportSize.width;
-    const maxSteps = Math.ceil(maxViewport / oneStep);
+    const maxSteps = this._vertical ? Math.ceil(maxViewport / oneStep) : 1;
     const wrapperSize = this._wrapper.getBoundingClientRect();
     const maxScroll = this._vertical
       ? wrapperSize.height - viewportSize.height
@@ -147,8 +150,22 @@ export default class ComponentBucket extends Group {
     this._appendChildrenToDiv(this._wrapper);
   }
 
+  drawComponentList(){
+    const containers = ['library', 'pledit', 'video', 'vis']
+    containers.forEach(name => {
+      const button = document.createElement('button')
+      button.classList.add('webamp--img',name)
+      button.setAttribute('name',name)
+      button.style.setProperty('--background-image',`url(/assets/plugins/winamp/thinger/${name}-unselected.png)`)
+      button.style.setProperty('--hover-background-image',`url(/assets/plugins/winamp/thinger/${name}-hilited.png)`)
+      this._wrapper.appendChild(button)
+      // this._children.push(button)
+    })
+  }
+
   draw() {
     super.draw();
+    if(this._id == 'component list') this.drawComponentList()
     if (this._vertical) {
       this._div.classList.add("vertical");
       this._wrapper.style.marginTop = px(this._leftmargin);
