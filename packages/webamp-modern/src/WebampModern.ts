@@ -38,7 +38,7 @@ export class Webamp5 extends WebAmpModern {
     this._options = { ...DEFAULT_OPTIONS, ...options };
     DIV_UNIQUER++;
     this._uiRoot = new UIRoot(`ui-root-${DIV_UNIQUER}`);
-    parent.appendChild(this._uiRoot.getRootDiv());
+    this._parent.appendChild(this._uiRoot.getRootDiv());
     this.switchSkin(this._options.skin);
     for (const song of this._options.tracks) {
       this._uiRoot.playlist.enqueuefile(song);
@@ -46,6 +46,7 @@ export class Webamp5 extends WebAmpModern {
   }
 
   setSkins(skins: Skin[]){
+    this._skins = skins;
     this._uiRoot._skins = skins
   }
   addSkins(skin: Skin){
@@ -53,6 +54,14 @@ export class Webamp5 extends WebAmpModern {
   }
 
   async switchSkin(skinPath: string) {
+    if(this._uiRoot){
+      this._uiRoot.dispose()
+      this._uiRoot = null;
+      DIV_UNIQUER++;
+      this._uiRoot = new UIRoot(`ui-root-${DIV_UNIQUER}`);
+      this._uiRoot._skins = this._skins
+      this._parent.appendChild(this._uiRoot.getRootDiv());
+    }
     this._uiRoot.switchSkin(skinPath)
     // this._parent.appendChild(this._uiRoot.getRootDiv());
   }
