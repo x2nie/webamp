@@ -1,4 +1,4 @@
-import { UIRoot } from "../../UIRoot";
+import { Skin, UIRoot } from "../../UIRoot";
 import PopupMenu from "./PopupMenu";
 import { IMenuItem, IPopupMenu, MenuItem } from "./MenuItem";
 
@@ -32,56 +32,61 @@ export async function updateActions(popup: IPopupMenu, uiRoot: UIRoot) {
     );
 }
 
-const register = (menuId: number, action: MenuAction) => {
+export const registerAction = (menuId: number, action: MenuAction) => {
     actions[menuId] = action;
 }
 
-register(40037, { //? Time elapsed
+registerAction(40037, { //? Time elapsed
     onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => { menu.checked = !uiRoot.audio._timeRemaining },
     onExecute: (uiRoot: UIRoot) => { uiRoot.audio._timeRemaining = false; return true },
 })
 
-register(40038, { //? Time remaining
+registerAction(40038, { //? Time remaining
     onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => { menu.checked = uiRoot.audio._timeRemaining },
     onExecute: (uiRoot: UIRoot) => { uiRoot.audio._timeRemaining = true; return true },
 })
 
-register(40039, { //? Time remaining
+registerAction(40039, { //? Time remaining
     onExecute: (uiRoot: UIRoot) => { uiRoot.audio.toggleRemainingTime(); return true },
 })
 
-register(40044, { //? Previous
+registerAction(40044, { //? Previous
     onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('prev')
 })
 
-register(40045, { //? Play
+registerAction(40045, { //? Play
     onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('play')
 })
 
-register(40046, { //? Pause
+registerAction(40046, { //? Pause
     onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('pause')
 })
 
-register(40047, { //? Stop
+registerAction(40047, { //? Stop
     onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('stop')
 })
 
-register(40048, { //? Next
+registerAction(40048, { //? Next
     onExecute: (uiRoot: UIRoot) => uiRoot.dispatch('next')
 })
 
 
-register(11111140038, { //? 
+registerAction(11111140038, { //? 
     onUpdate: (menu: MenuItem) => { }
 })
 
-register(40244, { //? Equalizer Enabled
+registerAction(40244, { //? Equalizer Enabled
     onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => { menu.checked = uiRoot.audio._eqEnabled },
     onExecute: (uiRoot: UIRoot) => { uiRoot.eq_toggle(); return true },
 })
 
-register(40040, { //? View/ Playlist Editor
+registerAction(40040, { //? View/ Playlist Editor
     onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => {menu.checked = uiRoot.getActionState('toggle', 'guid:pl')},
     onExecute: (uiRoot: UIRoot) => { uiRoot.dispatch('toggle', 'guid:pl'); return true },
 })
+
+// registerAction(32767, { //? Skin, checked or not
+//     onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => {menu.checked = uiRoot.getSkinName() == menu.caption},
+//     onExecute: (uiRoot: UIRoot) => { uiRoot.switchSkin(menu.data as Skin); return true },
+// })
 

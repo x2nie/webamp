@@ -1,7 +1,8 @@
 import BaseObject from "./BaseObject";
 import { assume, px } from "../../utils";
-import { MenuItem, IPopupMenu, generatePopupDiv, extractCaption, ICLoseablePopup, destroyActivePopup, setActivePopup, deactivePopup } from "./MenuItem";
-import { UIRoot } from "../../UIRoot";
+import { MenuItem, IPopupMenu, generatePopupDiv, extractCaption, ICLoseablePopup, destroyActivePopup, setActivePopup, deactivePopup, IMenuItem } from "./MenuItem";
+import { Skin, UIRoot } from "../../UIRoot";
+import { registerAction } from "./menuWa5actions";
 // import { sleep } from 'deasync';
 // import { deasync } from '@kaciras/deasync';
 // import sp from 'synchronized-promise';
@@ -172,10 +173,18 @@ export default class PopupMenu extends BaseObject implements IPopupMenu, ICLosea
   _successPromise: Function = null
 
   _loadSkins(){
-    this._uiRoot._skins.forEach(skin => {
+    let action_id = 32767;
+    this._uiRoot._skins.forEach(skin => {      
       const name = typeof skin === 'string' ? skin : skin.name;
       const url = typeof skin === 'string' ? skin : skin.url;
-      this._addcommand(name, 32767, false, false, {url})
+      const skin_info: Skin = {name, url}
+      action_id++;
+
+      registerAction(action_id, { //? Skin, checked or not
+        onUpdate: (menu: IMenuItem, uiRoot: UIRoot) => {menu.checked = uiRoot.getSkinName() == menu.caption || uiRoot.getSkinUrl() == menu.data.url },
+        onExecute: (uiRoot: UIRoot) => { uiRoot.switchSkin(skin_info); return true },
+      })
+      this._addcommand(name, action_id, false, false, skin_info)
     })
   }
 

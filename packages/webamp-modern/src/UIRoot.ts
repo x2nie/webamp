@@ -45,12 +45,11 @@ export type Skin = | string | {name: string, url: string};
 
 export class UIRoot {
   _id: string;
-  _skins: Skin[] = []
   _application: Application;
   _avss: Avs[] = [];
   _config: Config;
   _winampConfig: WinampConfig;
-
+  
   _div: HTMLDivElement = document.createElement("div");
   _mousePos : {x:number,y:number} = {x:0, y:0}
   _imageManager: ImageManager;
@@ -75,6 +74,8 @@ export class UIRoot {
   _xFades: GroupXFade[] = [];
   _input: HTMLInputElement = document.createElement("input");
   _skinInfo: { [key: string]: string } = {};
+  _skin: Skin = {name:'', url:''};
+  _skins: Skin[] = []
   _skinEngineClass: SkinEngineClass;
   _eventListener: Emitter = new Emitter();
   _additionalCss: string[] = [];
@@ -687,7 +688,7 @@ export class UIRoot {
   }
 
   dispose() {
-    // this._div.remove();
+    this._div.remove();
     for (const obj of this._objects) {
       obj.dispose();
     }
@@ -770,7 +771,14 @@ export class UIRoot {
   }
 
   setSkinInfo(skinInfo: { [key: string]: string }) {
-    this._skinInfo = skinInfo;
+    const url = this._skinInfo.url
+    this._skinInfo = {...skinInfo, url};
+  }
+  setSkinUrl(url:string){
+    this._skinInfo.url = url;
+  }
+  getSkinUrl(){
+    return this._skinInfo.url
   }
   getSkinInfo(): { [key: string]: string } {
     return this._skinInfo;
@@ -780,15 +788,22 @@ export class UIRoot {
   }
 
   // THIS IS A BIG THING, MOVED HERE FROM AN AGNOSTIC SKIN ENGINES
-  async switchSkin(skinPath: string) {
+  async switchSkin(skin: Skin) {
     //* getting skin engine is complicated:
     //* SkinEngine is not yet instanciated during looking for a skinEngine.
     //* If file extension is know then we loop for registered Engines
     //* But sometime (if its a `.zip` or a path `/`), we need to detect by
     //* if a file exist, with a name is expected by skinEngine
 
+    const parentDiv = this.getRootDiv().parentElement;
     this.reset();
     // this._parent.appendChild(this._uiRoot.getRootDiv());
+    parentDiv.appendChild(this.getRootDiv());
+
+    const name = typeof skin === 'string' ? skin : skin.name;
+    const skinPath = typeof skin === 'string' ? skin : skin.url;
+    this.setSkinUrl(skinPath)
+
 
     let skinFetched = false;
     let SkinEngineClass = null;

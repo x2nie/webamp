@@ -53,7 +53,7 @@ export class Webamp5 extends WebAmpModern {
   }
 
   async switchSkin(skinPath: string) {
-    await this._uiRoot.switchSkin(skinPath)
+    this._uiRoot.switchSkin(skinPath)
     // this._parent.appendChild(this._uiRoot.getRootDiv());
   }
 
