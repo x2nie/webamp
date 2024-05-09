@@ -31,11 +31,21 @@ import Avs from "./skin/makiClasses/Avs";
 import { getWa5Popup } from "./skin/makiClasses/menuWa5";
 
 import { SkinEngineClass } from "./skin/SkinEngine";
-import { FileExtractor } from "./skin/FileExtractor";
+import { FileExtractor, PathFileExtractor, ZipFileExtractor, } from "./skin/FileExtractor";
 import Application from "./skin/makiClasses/Application";
+
+import {
+  getSkinEngineClass,
+  getSkinEngineClassByContent,
+  SkinEngine,
+} from "./skin/SkinEngine";
+
+
+export type Skin = | string | {name: string, url: string};
 
 export class UIRoot {
   _id: string;
+  _skins: Skin[] = []
   _application: Application;
   _avss: Avs[] = [];
   _config: Config;
@@ -677,7 +687,7 @@ export class UIRoot {
   }
 
   dispose() {
-    this._div.remove();
+    // this._div.remove();
     for (const obj of this._objects) {
       obj.dispose();
     }
@@ -768,6 +778,100 @@ export class UIRoot {
   getSkinName(): string {
     return this.getSkinInfo()["name"];
   }
+
+  // THIS IS A BIG THING, MOVED HERE FROM AN AGNOSTIC SKIN ENGINES
+  async switchSkin(skinPath: string) {
+    //* getting skin engine is complicated:
+    //* SkinEngine is not yet instanciated during looking for a skinEngine.
+    //* If file extension is know then we loop for registered Engines
+    //* But sometime (if its a `.zip` or a path `/`), we need to detect by
+    //* if a file exist, with a name is expected by skinEngine
+
+    this.reset();
+    // this._parent.appendChild(this._uiRoot.getRootDiv());
+
+    let skinFetched = false;
+    let SkinEngineClass = null;
+
+    //? usually the file extension is explicitly for SkinEngine. eg: `.wal`
+    let SkinEngineClasses = await getSkinEngineClass(skinPath);
+
+    //? when file extension is ambiguous eg. `.zip`, several
+    //? skinEngines are supporting, but only one is actually working with.
+    //? lets detect:
+    if (SkinEngineClasses.length > 1) {
+      await this._loadSkinPathToUiroot(skinPath, null);
+      skinFetched = true;
+      SkinEngineClass = await getSkinEngineClassByContent(
+        SkinEngineClasses,
+        skinPath,
+        this
+      );
+    } else {
+      SkinEngineClass = SkinEngineClasses[0];
+    }
+    if (SkinEngineClass == null) {
+      throw new Error(`Skin not supported`);
+    }
+
+    //? success found a skin-engine
+    this.SkinEngineClass = SkinEngineClass;
+    const parser: SkinEngine = new SkinEngineClass(this);
+    if (!skinFetched)
+      await this._loadSkinPathToUiroot(skinPath, parser);
+    // await parser.parseSkin();
+    await parser.buildUI();
+
+    // loadSkin(this._parent, skinPath);
+  }
+
+  /**
+   * Time to load the skin file
+   * @param skinPath url string
+   * @param uiRoot
+   * @param skinEngine An instance of SkinEngine
+   */
+  private async _loadSkinPathToUiroot(
+    skinPath: string,
+    skinEngine: SkinEngine
+  ) {
+    let response: Response;
+    let fileExtractor: FileExtractor;
+    //? pick one of correct fileExtractor
+
+    if (skinPath.endsWith("/")) {
+      fileExtractor = new PathFileExtractor();
+    } else {
+      response = await fetch(skinPath);
+      if (response.status == 404) {
+        throw new Error(`Skin does not exist`);
+      }
+      if (skinEngine != null) {
+        fileExtractor = skinEngine.getFileExtractor();
+      }
+    }
+    if (fileExtractor == null) {
+      if (response.headers.get("content-type").startsWith("application/")) {
+        fileExtractor = new ZipFileExtractor();
+      } else {
+        fileExtractor = new PathFileExtractor();
+      }
+    }
+
+    await fileExtractor.prepare(skinPath, response);
+    // const skinZipBlob = await response.blob();
+
+    //   const zip = await JSZip.loadAsync(skinZipBlob);
+    //   uiRoot.setZip(zip);
+    // } else {
+    //   uiRoot.setZip(null);
+    //   const slash = skinPath.endsWith("/") ? "" : "/";
+    //   uiRoot.setSkinDir(skinPath + slash);
+    // }
+    this.setFileExtractor(fileExtractor);
+  }
+
+
 
   set SkinEngineClass(Engine: SkinEngineClass) {
     this._skinEngineClass = Engine;

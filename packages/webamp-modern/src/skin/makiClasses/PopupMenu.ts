@@ -80,11 +80,12 @@ export default class PopupMenu extends BaseObject implements IPopupMenu, ICLosea
     //   this.getElTag().toLowerCase().replace("_", "")
     // );
   }
-  addcommand(
+  private _addcommand(
     cmdText: string,
     cmd_id: number,
-    checked: boolean,
-    disabled: boolean
+    checked: boolean=false,
+    disabled: boolean=false,
+    data: {[key:string]: any}={}
   ) {
     this.children.push({
       type: "menuitem",
@@ -93,7 +94,22 @@ export default class PopupMenu extends BaseObject implements IPopupMenu, ICLosea
       id: cmd_id,
       checked,
       disabled,
+      data
     });
+    
+  }  
+  addcommand(
+    cmdText: string,
+    cmd_id: number,
+    checked: boolean,
+    disabled: boolean
+  ) {
+    
+    if(cmd_id==32767) {
+      this._loadSkins()
+      return
+    }
+    this._addcommand(cmdText, cmd_id, checked, disabled)
   }
   addseparator() {
     this.children.push({ type: "separator" });
@@ -155,6 +171,13 @@ export default class PopupMenu extends BaseObject implements IPopupMenu, ICLosea
   }
   _successPromise: Function = null
 
+  _loadSkins(){
+    this._uiRoot._skins.forEach(skin => {
+      const name = typeof skin === 'string' ? skin : skin.name;
+      const url = typeof skin === 'string' ? skin : skin.url;
+      this._addcommand(name, 32767, false, false, {url})
+    })
+  }
 
   // popatmouse(): number {
   //   const message = this.children.map((item) => {

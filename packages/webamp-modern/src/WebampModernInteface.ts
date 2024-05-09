@@ -17,6 +17,7 @@ export interface Options {
  */
 export interface IWebampModern {
   switchSkin(skinPath: string): void;
+  setSkins(skins: any[]);
   playSong(songurl: string /* or track */): void;
   onLogMessage(callback: (message: string) => void);
 }
@@ -27,6 +28,7 @@ export interface IWebampModern {
 export class WebAmpModern implements IWebampModern {
   constructor(parent: HTMLElement, options: Options = {}) {}
 
+  setSkins(skins: any[]) {};
   switchSkin(skinPath: string): void {}
 
   playSong(songurl: string /* or track */): void {}

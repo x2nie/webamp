@@ -27,7 +27,7 @@ var webamp: IWebampModern;
 
 async function main() {
   // Purposefully don't await, let this load in parallel.
-  initializeSkinListMenu();
+  const skinLoading = initializeSkinListMenu();
 
   const skinPath = getUrlQuery(window.location, "skin") || DEFAULT_SKIN;
   // changeSkinByUrl();
@@ -46,6 +46,7 @@ async function main() {
   setStatus("Downloading MP3...");
   webamp = new window.WebampModern(document.getElementById("web-amp"), option);
   webamp.onLogMessage(setStatus);
+  skinLoading.then((skins)=> webamp.setSkins(skins))
 
   // var webamp2 = new window.WebampModern(document.getElementById("web-amp"), {...option, skin:"assets/skins/MMD3.wal"});
   setStatus("");
@@ -107,99 +108,102 @@ async function initializeSkinListMenu() {
 
   const internalSkins = [
     // MODERN
-    { filename: "[Winamp] default", download_url: "" },
-    { filename: "[Winamp] MMD3", download_url: "assets/skins/MMD3.wal" },
-    { filename: "Paused after 3 seconds playing", download_url: "assets/skins/3sPaused/" },
-    // { filename: "[Winamp] MMD3+Thinger", download_url: "assets/skins/MMD3+Thinger/" },
-    // { filename: "[Folder] MMD3", download_url: "assets/skins/extracted/MMD3/" },
-    // { filename: "[Winamp] BigBento", download_url: "assets/skins/BigBento/" },
-    { filename: "CornerAmp_Redux", download_url: "assets/skins/CornerAmp_Redux.wal" },
+    { name: "[Winamp] default", url: "" },
+    { name: "[Winamp] 5 (Live Editing)", url: "assets/skins/WinampModernThinger/" },
+    { name: "[Winamp] MMD3", url: "assets/skins/MMD3.wal" },
+    { name: "[Winamp] 3", url: "assets/skins/Default_winamp3_build499.wal" },
+    // { name: "Paused after 3 seconds playing", url: "assets/skins/3sPaused/" },
+    // { name: "[Winamp] MMD3+Thinger", url: "assets/skins/MMD3+Thinger/" },
+    // { name: "[Folder] MMD3", url: "assets/skins/extracted/MMD3/" },
+    // { name: "[Winamp] BigBento", url: "assets/skins/BigBento/" },
+    { name: "CornerAmp_Redux", url: "assets/skins/CornerAmp_Redux.wal" },
 
     
     // CLASSIC
-    { filename: "[Winamp Classic]", download_url: "assets/skins/base-2.91.wsz" },
+    { name: "[Winamp Classic]", url: "assets/skins/base-2.91.wsz" },
     {
-      filename: "[Winamp Classic] MacOSXAqua1-5",
-      download_url: "assets/skins/MacOSXAqua1-5.698dd4ab.wsz",
+      name: "[Winamp Classic] MacOSXAqua1-5",
+      url: "assets/skins/MacOSXAqua1-5.698dd4ab.wsz",
     },
     {
-      filename: "[Winamp Classic] Green-Dimension-V2",
-      download_url: "assets/skins/Green-Dimension-V2.6f88d5c3.wsz",
+      name: "[Winamp Classic] Green-Dimension-V2",
+      url: "assets/skins/Green-Dimension-V2.6f88d5c3.wsz",
     },
 
     // WINDOWS MEDIA PLAYER
     {
-      filename: "[wmp] Quicksilver WindowsMediaPlayer!",
-      download_url: "assets/skins/Quicksilver.wmz",
+      name: "[wmp] Quicksilver WindowsMediaPlayer!",
+      url: "assets/skins/Quicksilver.wmz",
     },
-    { filename: "[wmp] Windows XP", download_url: "assets/skins/Windows-XP.wmz" },
+    { name: "[wmp] Windows XP", url: "assets/skins/Windows-XP.wmz" },
     {
-      filename: "[wmp] Famous Headspace",
-      download_url: "assets/skins/Headspace.wmz",
+      name: "[wmp] Famous Headspace",
+      url: "assets/skins/Headspace.wmz",
     },
     {
-      filename: "[wmp] Disney Mix Central",
-      download_url: "assets/skins/DisneyMixCentral.wmz",
+      name: "[wmp] Disney Mix Central",
+      url: "assets/skins/DisneyMixCentral.wmz",
     },
 
     // AUDION
     {
-      filename: "[Audion Face] Smoothface 2",
-      download_url: "assets/skins/Smoothface2.face",
+      name: "[Audion Face] Smoothface 2",
+      url: "assets/skins/Smoothface2.face",
     },
     {
-      filename: "[Audion Face] Gizmo 2.0",
-      download_url: "assets/skins/Gizmo2.0.face",
+      name: "[Audion Face] Gizmo 2.0",
+      url: "assets/skins/Gizmo2.0.face",
     },
     {
-      filename: "[Audion Face] Tokyo Bay",
-      download_url: "assets/skins/TokyoBay.face",
+      name: "[Audion Face] Tokyo Bay",
+      url: "assets/skins/TokyoBay.face",
     },
 
     // K-JOFOL
-    { filename: "[K-Jofol] Default", download_url: "assets/skins/Default.kjofol" },
+    { name: "[K-Jofol] Default", url: "assets/skins/Default.kjofol" },
     {
-      filename: "[K-Jofol] Illusion 1.0",
-      download_url: "assets/skins/Illusion1-0.kjofol",
+      name: "[K-Jofol] Illusion 1.0",
+      url: "assets/skins/Illusion1-0.kjofol",
     },
     {
-      filename: "[K-Jofol] K-Nine 05r",
-      download_url: "assets/skins/K-Nine05r.kjofol",
+      name: "[K-Jofol] K-Nine 05r",
+      url: "assets/skins/K-Nine05r.kjofol",
     },
-    { filename: "[K-Jofol] Limus 2.0", download_url: "assets/skins/Limus2-0.zip" },
+    { name: "[K-Jofol] Limus 2.0", url: "assets/skins/Limus2-0.zip" },
 
     // SONIQUE
-    { filename: "[Sonique] Default", download_url: "assets/skins/sonique.sgf" },
+    { name: "[Sonique] Default", url: "assets/skins/sonique.sgf" },
     {
-      filename: "[Sonique] Scifi-Stories",
-      download_url: "assets/skins/scifi-stories.sgf",
+      name: "[Sonique] Scifi-Stories",
+      url: "assets/skins/scifi-stories.sgf",
     },
     {
-      filename: "[Sonique] Panthom (SkinBuilder)",
-      download_url: "assets/skins/phantom.sgf",
+      name: "[Sonique] Panthom (SkinBuilder)",
+      url: "assets/skins/phantom.sgf",
     },
-    { filename: "[Sonique] ChainZ and", download_url: "assets/skins/ChainZ-and.sgf" },
+    { name: "[Sonique] ChainZ and", url: "assets/skins/ChainZ-and.sgf" },
 
     // COWON JET-AUDIO
     {
-      filename: "[JetAudio] Small Bar",
-      download_url: "assets/skins/DefaultBar_s.jsk",
+      name: "[JetAudio] Small Bar",
+      url: "assets/skins/DefaultBar_s.jsk",
     },
-    { filename: "[Cowon JetAudio] Gold", download_url: "assets/skins/Gold.uib" },
+    { name: "[Cowon JetAudio] Gold", url: "assets/skins/Gold.uib" },
 
     // AIMP
-    { filename: "[AIMP] Flo-4K", download_url: "assets/skins/AIMP-Flo-4K.acs5" },
+    { name: "[AIMP] Flo-4K", url: "assets/skins/AIMP-Flo-4K.acs5" },
   ];
 
   const skins = [...internalSkins, ...bankskin1];
+  
 
   for (const skin of skins) {
     const option = document.createElement("option");
-    option.value = skin.download_url;
-    option.textContent = skin.filename;
-    if (current === skin.download_url) {
+    option.value = skin.url;
+    option.textContent = skin.name;
+    if (current === skin.url) {
       option.selected = true;
-      downloadLink.href = skin.download_url;
+      downloadLink.href = skin.url;
     }
     select.appendChild(option);
   }
@@ -227,6 +231,8 @@ async function initializeSkinListMenu() {
 
   document.body.appendChild(select);
   document.body.appendChild(downloadLink);
+
+  return skins
 }
 
 main();

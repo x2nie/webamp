@@ -20,7 +20,7 @@ import Text from "./makiClasses/Text";
 export class SkinEngine {
   _uiRoot: UIRoot;
   _imageManager: ImageManager;
-
+  
   constructor(uiRoot: UIRoot) {
     this._uiRoot = uiRoot;
     this._imageManager = uiRoot.getImageManager();

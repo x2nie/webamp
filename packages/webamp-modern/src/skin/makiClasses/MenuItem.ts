@@ -13,6 +13,7 @@ export type IMenuItem = {
   shortcut?: string;  // "Ctrl+Alt+Shift+A"
   keychar?: string;   // 'p' of "&Play"
   invisible?: boolean;// special case to register shortcut only
+  data?:{[key:string]: any}; // used by skin's popup item
 }
 
 type IMenuSeparator = {
