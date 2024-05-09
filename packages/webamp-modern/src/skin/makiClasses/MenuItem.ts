@@ -1,3 +1,5 @@
+import { installGlobalMouseDown, uninstallGlobalMouseDown } from "./GuiObj";
+
 export interface IPopupMenu {
   children: MenuItem[];
 }  
@@ -28,6 +30,61 @@ type IMenuPopup = {
 
 export type MenuItem = | IMenuItem | IMenuSeparator | IMenuPopup;
 
+export interface ICLoseablePopup {
+  doClosePopup: Function;
+}
+
+// ################## Popup Utils ##########################33
+
+let ACTIVE_POPUP: ICLoseablePopup = null;
+
+export function destroyActivePopup() {
+  console.log('globalWindowClick')
+  if (ACTIVE_POPUP != null) {
+    ACTIVE_POPUP.doClosePopup()
+  }
+  // ACTIVE_MENU_GROUP = ''
+  uninstallGlobalClickListener()
+}
+
+export function setActivePopup(popup: ICLoseablePopup) {
+  ACTIVE_POPUP = popup;
+  if(popup){
+    installGlobalClickListener()
+  } else {
+    uninstallGlobalClickListener()
+  }
+}
+
+/**
+ * if the active == popup => set null
+ * @param popup 
+ */
+export function deactivePopup(popup: ICLoseablePopup) {
+  if(popup == ACTIVE_POPUP){
+    setActivePopup(null)
+  }
+}
+
+let globalClickInstalled = false;
+function installGlobalClickListener() {
+  setTimeout(() => {  // using promise to prevent immediately executing of globalWindowClick 
+    if (!globalClickInstalled) {
+      installGlobalMouseDown(destroyActivePopup);  // call globalWindowClick on any GuiObj
+      document.addEventListener("mousedown", destroyActivePopup); // call globalWindowClick on document
+      globalClickInstalled = true;
+    }
+  }, 500);
+}
+
+function uninstallGlobalClickListener() {
+  if (globalClickInstalled) {
+    document.removeEventListener("mousedown", destroyActivePopup);
+    globalClickInstalled = false;
+    uninstallGlobalMouseDown(destroyActivePopup)
+  }
+
+}
 
 // ################## MenuItem Utils ##########################33
 

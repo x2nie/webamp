@@ -1,6 +1,6 @@
 import BaseObject from "./BaseObject";
 import { assume, px } from "../../utils";
-import { MenuItem, IPopupMenu, generatePopupDiv, extractCaption } from "./MenuItem";
+import { MenuItem, IPopupMenu, generatePopupDiv, extractCaption, ICLoseablePopup, destroyActivePopup, setActivePopup, deactivePopup } from "./MenuItem";
 import { UIRoot } from "../../UIRoot";
 // import { sleep } from 'deasync';
 // import { deasync } from '@kaciras/deasync';
@@ -47,7 +47,15 @@ import { UIRoot } from "../../UIRoot";
       div.style.top = px(y);
     }
     document.getElementById("web-amp").appendChild(div);
-    const closePopup = () => div.remove()
+    const closePopup = () => {
+      div.remove()
+      popup._successPromise = null
+    }
+    const outsideClick = (ret:number) => {
+      closePopup()
+      acc(ret);
+    }
+    popup._successPromise = outsideClick
 
     function handleClick() {
       document.removeEventListener('click', handleClick);
@@ -59,7 +67,7 @@ import { UIRoot } from "../../UIRoot";
   // return 1;
 }
 
-export default class PopupMenu extends BaseObject implements IPopupMenu {
+export default class PopupMenu extends BaseObject implements IPopupMenu, ICLoseablePopup {
   static GUID = "f4787af44ef7b2bb4be7fb9c8da8bea9";
   children: MenuItem[] = [];
   _uiRoot: UIRoot;
@@ -114,16 +122,39 @@ export default class PopupMenu extends BaseObject implements IPopupMenu {
       }
     }
   }
+
   async popatmouse(): Promise<number> {
     console.log('popAtMouse.start...:')
     const mousePos = this._uiRoot._mousePos;
-    const result = await waitPopup(this, mousePos.x, mousePos.y)
+    // const result = await waitPopup(this, mousePos.x, mousePos.y)
+    const result = await this.popatxy(mousePos.x, mousePos.y)
     console.log('popAtMouse.return:', result)
     return result;
   }
   async popatxy(x:number, y:number):Promise<number>{
-    return await waitPopup(this, x, y)
+    destroyActivePopup()
+    setActivePopup(this)
+    const ret = await waitPopup(this, x, y)
+    deactivePopup(this)
+    // setActivePopup(this)
+      // this._showButton(this._elDown);
+      // this._div.classList.add("open");
+
+      // ACTIVE_MENU = this;
+    return ret;
   }
+
+  /**
+   * called by such Menu to close this pupup in favour of 
+   * that Menu want to show their own popup (user click that Menu)
+   */
+  doClosePopup(){
+    if(this._successPromise){
+      this._successPromise(-1)
+    }
+  }
+  _successPromise: Function = null
+
 
   // popatmouse(): number {
   //   const message = this.children.map((item) => {

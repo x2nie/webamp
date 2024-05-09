@@ -6,13 +6,13 @@ import Group from "./Group";
 import Layer from "./Layer";
 import { getWa5Popup } from "./menuWa5";
 import PopupMenu from "./PopupMenu";
-import { generatePopupDiv } from "./MenuItem";
+import { ICLoseablePopup, destroyActivePopup, generatePopupDiv, setActivePopup } from "./MenuItem";
 import { findAction, updateActions } from "./menuWa5actions";
 
 let ACTIVE_MENU_GROUP: string = ''
-let ACTIVE_MENU: Menu = null;
+// let ACTIVE_MENU: Menu = null;
 
-function globalWindowClick() {
+/*function destroyActivePopup() {
   console.log('globalWindowClick')
   if (ACTIVE_MENU != null) {
     ACTIVE_MENU.doCloseMenu()
@@ -23,23 +23,23 @@ function globalWindowClick() {
 let globalClickInstalled = false;
 function installGlobalClickListener() {
   setTimeout(() => {  // using promise to prevent immediately executing of globalWindowClick 
-    installGlobalMouseDown(globalWindowClick);  // call globalWindowClick on any GuiObj
+    installGlobalMouseDown(destroyActivePopup);  // call globalWindowClick on any GuiObj
     if (!globalClickInstalled) {
-      document.addEventListener("mousedown", globalWindowClick); // call globalWindowClick on document
+      document.addEventListener("mousedown", destroyActivePopup); // call globalWindowClick on document
       globalClickInstalled = true;
     }
   }, 500);
 }
 function uninstallGlobalClickListener() {
   if (globalClickInstalled) {
-    document.removeEventListener("mousedown", globalWindowClick);
+    document.removeEventListener("mousedown", destroyActivePopup);
     globalClickInstalled = false;
   }
 
-  uninstallGlobalMouseDown(globalWindowClick)
-}
+  uninstallGlobalMouseDown(destroyActivePopup)
+}*/
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#?
-export default class Menu extends Group {
+export default class Menu extends Group implements ICLoseablePopup {
   static GUID = "73c00594401b961f24671b9b6541ac27";
   //static GUID "73C00594-961F-401B-9B1B-672427AC4165";
   _normalId: string;
@@ -132,13 +132,14 @@ export default class Menu extends Group {
     }
   }
 
-  doCloseMenu() {
+  doClosePopup() {
     this._showButton(this._elNormal);
     this._div.classList.remove("open");
-    ACTIVE_MENU = null;
+    // ACTIVE_MENU = null;
     // document.removeEventListener("mousedown", globalWindowClick);
     // uninstallGlobalMouseDown(globalWindowClick)
-    uninstallGlobalClickListener()
+    // uninstallGlobalClickListener()
+    // ACTIVE_MENU_GROUP = ''
   }
 
   onLeftButtonDown(x: number, y: number) {
@@ -147,29 +148,34 @@ export default class Menu extends Group {
     //? toggle dropdown visibility
     if (ACTIVE_MENU_GROUP != this._menuGroupId) {
       ACTIVE_MENU_GROUP = this._menuGroupId;
+      destroyActivePopup()
       // setTimeout(() => {
       //   installGlobalMouseDown(globalWindowClick);
       // }, 500);
-      installGlobalClickListener()
+      // installGlobalClickListener()
+      setActivePopup(this)
 
     } else {
       ACTIVE_MENU_GROUP = null;
-      if (ACTIVE_MENU != null) {
-        ACTIVE_MENU.doCloseMenu()
-      }
+      // if (ACTIVE_MENU != null) {
+      //   ACTIVE_MENU.doCloseMenu()
+      // }
+      destroyActivePopup()
     }
     this.onEnterArea()
   }
   onEnterArea() {
     // super.onEnterArea();
     if (ACTIVE_MENU_GROUP == this._menuGroupId) {
-      if (ACTIVE_MENU != null) {
-        ACTIVE_MENU.doCloseMenu()
-      }
+      // if (ACTIVE_MENU != null) {
+      //   ACTIVE_MENU.doCloseMenu()
+      // }
+      destroyActivePopup()
       this._showButton(this._elDown);
       this._div.classList.add("open");
 
-      ACTIVE_MENU = this;
+      // ACTIVE_MENU = this;
+      setActivePopup(this)
     } else {
       this._showButton(this._elHover);
     }
