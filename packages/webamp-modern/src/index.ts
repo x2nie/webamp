@@ -109,7 +109,7 @@ async function initializeSkinListMenu() {
   const internalSkins = [
     // MODERN
     { name: "[Winamp] default", url: DEFAULT_SKIN },
-    { name: "[Winamp] 5 (Live Editing)", url: "assets/skins/WinampModernThinger/" },
+    { name: "[Winamp] 5 (Live Editing)", url: "assets/skins/WinampModernThinger.zip" },
     { name: "[Winamp] MMD3", url: "assets/skins/MMD3.wal" },
     { name: "[Winamp] 3", url: "assets/skins/Default_winamp3_build499.wal" },
     // { name: "Paused after 3 seconds playing", url: "assets/skins/3sPaused/" },
