@@ -22,10 +22,10 @@ class WindowManager {
 
   add(type) {
     const Comp = WindowManager.Windows[type];
-    const left =
+    const x =
       50 +
       Math.round(Math.random() * (window.innerWidth - 50 - Comp.defaultWidth));
-    const top =
+    const y =
       50 +
       Math.round(
         Math.random() * (window.innerHeight - 100 - Comp.defaultHeight)
@@ -36,8 +36,8 @@ class WindowManager {
       title: Comp.defaultTitle,
       width: Comp.defaultWidth,
       height: Comp.defaultHeight,
-      left,
-      top,
+      x,
+      y,
       Component: Comp,
     };
   }
@@ -48,12 +48,38 @@ class WindowManager {
 
   updatePosition(id, left, top) {
     const w = this.windows[id];
-    w.left = left;
-    w.top = top;
+    w.x = left;
+    w.y = top;
   }
 
   getWindows() {
     return Object.values(this.windows);
+  }
+  handleMouseDown(id:string, ev: MouseEvent){
+    const current = this.windows[id];
+    const offsetX = current.x - ev.pageX;
+    const offsetY = current.y - ev.pageY;
+    let left, top;
+
+    window.addEventListener("mousemove", moveWindow);
+    window.addEventListener("mouseup", stopDnD, { once: true });
+
+    function moveWindow(ev) {
+      left = Math.max(offsetX + ev.pageX, 0);
+      top = Math.max(offsetY + ev.pageY, 0);
+      // el.style.left = `${left}px`;
+      // el.style.top = `${top}px`;
+      current.x = left;
+      current.y = top;
+    }
+    function stopDnD() {
+      window.removeEventListener("mousemove", moveWindow);
+      // el.classList.remove("dragging");
+
+      // if (top !== undefined && left !== undefined) {
+      //   self.windowService.updatePosition(current.id, left, top);
+      // }
+    }
   }
 }
 
@@ -79,6 +105,7 @@ class Window extends Component {
     <t t-slot="default"/>
     </div>`;
   static nextZIndex = 1;
+
   zIndex = 0;
   windowService: any;
   root: any;
@@ -90,16 +117,19 @@ class Window extends Component {
   }
 
   get style() {
-    let { width, height, top, left } = this.props.info;
-    return `width: ${width}px;height: ${height}px;top:${top}px;left:${left}px;z-index:${this.zIndex}`;
+    let { width, height, y, x } = this.props.info;
+    return `width: ${width}px;height: ${height}px;top:${y}px;left:${x}px;z-index:${this.zIndex}`;
   }
 
   close() {
     this.windowService.close(this.props.info.id);
   }
 
-  startDragAndDrop(ev) {
+  startDragAndDrop(ev: MouseEvent) {
     this.updateZIndex();
+    if(ev.button!=0) return;
+    this.windowService.handleMouseDown(this.props.info.id, ev)
+    return
     const self = this;
     const root = this.root;
 
