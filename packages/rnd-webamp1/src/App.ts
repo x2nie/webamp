@@ -30,7 +30,7 @@ function useWindowService():WindowManager {
 // -----------------------------------------------------------------------------
 
 class Window extends Component {
-  static template = xml`  <div t-att-id="props.info.id" t-name="Window" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
+  static template = xml`  <div t-name="Window" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
     <div class="header">
       <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/> #<t t-out="props.info.id"/></span>
       <span class="close" t-on-click.stop="close">×</span>
@@ -46,7 +46,10 @@ class Window extends Component {
   setup() {
     this.windowService = useWindowService();
     this.root = useRef("root");
-    onMounted(this.updateZIndex);
+    onMounted(()=> {
+      this.updateZIndex;
+      this.props.info.el = this.root.el;
+    });
   }
 
   get style() {

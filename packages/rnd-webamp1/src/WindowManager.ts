@@ -26,6 +26,15 @@ type DraggingState = {
   mouseStart: Point;
 };
 
+interface MovingWindow extends WindowInfo {
+  //? original pos
+  ox?: number;
+  oy?: number;
+  //? final pos
+  fx?: number;
+  fy?: number;
+}
+
 // -----------------------------------------------------------------------------
 // Window manager code
 // -----------------------------------------------------------------------------
@@ -58,6 +67,10 @@ export class WindowManager {
     };
   }
 
+  setElement(id:number, el: HTMLElement){
+    this.windows[id].el = el;
+  }
+
   close(id) {
     delete this.windows[id];
   }
@@ -76,7 +89,7 @@ export class WindowManager {
     // const windows = toRaw(this.getWindows().filter(
     //   (w) => w.id != null //&& !getWindowHidden(w.key)
     // ));
-    const windows = this.getWindows().map(w => toRaw(w))
+    const windows: MovingWindow[] = this.getWindows().map(w => toRaw(w))
     // const current = toRaw(this.windows[id]);
     const current = windows.filter(w => w.id == id)[0];
     if (current == null) {
@@ -91,7 +104,7 @@ export class WindowManager {
     }
     
     const stationary = windows.filter((w) => !movingSet.has(w));
-    console.log('stationary:', JSON.stringify(stationary))
+    // console.log('stationary:', JSON.stringify(stationary))
     const moving = Array.from(movingSet);
     
     moving.forEach(w => {
@@ -106,11 +119,11 @@ export class WindowManager {
     const x = Utils.getX(ev);
     const y = Utils.getY(ev);
     const mouseStart = { x, y };
-    console.log('mose-down!',JSON.stringify(moving))
+    // console.log('mose-down!',JSON.stringify(moving))
     
     const workingArea = document.querySelector('.window-manager')?.getBoundingClientRect()
     const browserWindowSize = {width: workingArea?.width || 0, height: workingArea?.height || 0};
-    console.log('browserWindowSize:',JSON.stringify(browserWindowSize))
+    // console.log('browserWindowSize:',JSON.stringify(browserWindowSize))
     
     // const updateWindowPositions0 = (newPositions: WindowPositions) =>{
     //   console.log('updated:',JSON.stringify(newPositions))
@@ -126,16 +139,18 @@ export class WindowManager {
       // debugger
       moving.forEach(w => {
         // const w = this.windows[win.id];
-        w.fx = p.x + w.ox;
-        w.fy = p.y + w.oy;
         // win.x = w.x;
         // win.y = w.y;
+        
+        const x = p.x + w.ox!;
+        const y = p.y + w.oy!;
 
-        const x = p.x + w.ox;
-        const y = p.y + w.oy;
+        w.fx = x;
+        w.fy = y;
         // let {id, width, height } = w;
         // document.getElementById(`${id}`)?.setAttribute('style', `width:${width}px; height:${height}px; top:${y}px; left:${x}px;`);
-        const el =  document.getElementById(`${w.id}`)!
+        // const el =  document.getElementById(`${w.id}`)!
+        const el =  w.el!;
         el.style.top = `${y}px`
         el.style.left = `${x}px`
         // const win = this.windows[w.id];
