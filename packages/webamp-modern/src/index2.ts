@@ -2,7 +2,7 @@ import { Component, xml, mount , useState, useEnv, onMounted, reactive, useRef, 
 // import './index2.css'
 
 // -----------------------------------------------------------------------------
-// Form manager code
+// Window manager code
 // -----------------------------------------------------------------------------
 
 class WindowManager {
@@ -53,11 +53,11 @@ function useWindowService() {
 
 
 // -----------------------------------------------------------------------------
-// Generic Form Component
+// Generic Window Component
 // -----------------------------------------------------------------------------
 
-class Form extends Component {
-    static template = xml`<div t-name="Form" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
+class Window extends Component {
+    static template = xml`<div t-name="Window" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
     <div class="header">
       <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/></span>
       <span class="close" t-on-click.stop="close">×</span>
@@ -117,13 +117,13 @@ class Form extends Component {
     }
 
     updateZIndex() {
-        this.zIndex = Form.nextZIndex++;
+        this.zIndex = Window.nextZIndex++;
         this.root.el.style['z-index'] = this.zIndex;
     }
 }
 
 // -----------------------------------------------------------------------------
-// Two concrete Form type implementations
+// Two concrete Window type implementations
 // -----------------------------------------------------------------------------
 
 class HelloWorld extends Component {
@@ -141,16 +141,16 @@ WindowManager.Windows['Hello'] = HelloWorld;
 
 
 // -----------------------------------------------------------------------------
-// Form Container
+// Window Container
 // -----------------------------------------------------------------------------
 
 class WindowContainer extends Component {
     static template = xml`<div class="window-manager">
-    <Form t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" info="w">
+    <Window t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" info="w">
       <t t-component="w.Component"/>
-    </Form>
+    </Window>
   </div>`;
-    static components = { Form };
+    static components = { Window };
   windowService: any;
     
     setup() {
