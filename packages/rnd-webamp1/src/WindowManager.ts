@@ -73,9 +73,10 @@ export class WindowManager {
     // return toRaw(Object.values(this.windows));
   }
   handleMouseDown(id:number, ev: MouseEvent){
-    const windows = toRaw(this.getWindows().filter(
-      (w) => w.id != null //&& !getWindowHidden(w.key)
-    ));
+    // const windows = toRaw(this.getWindows().filter(
+    //   (w) => w.id != null //&& !getWindowHidden(w.key)
+    // ));
+    const windows = this.getWindows().map(w => toRaw(w))
     // const current = toRaw(this.windows[id]);
     const current = windows.filter(w => w.id == id)[0];
     if (current == null) {
@@ -122,6 +123,7 @@ export class WindowManager {
     
     const updateWindowPositions = (p: Point) =>{
       // console.log('updated:',JSON.stringify(p))
+      // debugger
       moving.forEach(w => {
         // const w = this.windows[win.id];
         w.fx = p.x + w.ox;
@@ -129,13 +131,16 @@ export class WindowManager {
         // win.x = w.x;
         // win.y = w.y;
 
-        let x = p.x + w.ox;
-        let y = p.y + w.oy;
-        let {id, width, height } = w;
-        document.getElementById(`${id}`)?.setAttribute('style', `width:${width}px; height:${height}px; top:${y}px; left:${x}px;`);
-        // const w = this.windows[win.id];
-        // w.x = x;
-        // w.y = y;
+        const x = p.x + w.ox;
+        const y = p.y + w.oy;
+        // let {id, width, height } = w;
+        // document.getElementById(`${id}`)?.setAttribute('style', `width:${width}px; height:${height}px; top:${y}px; left:${x}px;`);
+        const el =  document.getElementById(`${w.id}`)!
+        el.style.top = `${y}px`
+        el.style.left = `${x}px`
+        // const win = this.windows[w.id];
+        // win.x = x;
+        // win.y = y;
       })
       // }
     }
@@ -149,7 +154,7 @@ export class WindowManager {
       };
       // console.log('mose-move!', proposedDiff)
 
-      //? wanna be
+      //? windows wanna be (position)
       const proposedWindows = moving.map((node) => ({
         ...node,
         ...SnapUtils.applyDiff(node, proposedDiff),
@@ -185,6 +190,8 @@ export class WindowManager {
       updateWindowPositions(finalDiff);
     };
 
+    // const debouncedMouseMove = Utils.debounce(handleMouseMove, 51);//.bind(this)
+    const debouncedMouseMove = handleMouseMove;
 
     // const offsetX = current.x - ev.pageX;
     // const offsetY = current.y - ev.pageY;
@@ -198,7 +205,7 @@ export class WindowManager {
     //   current.y = top;
     // }
     const stopDnD = () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", debouncedMouseMove);
       // el.classList.remove("dragging");
 
       // if (top !== undefined && left !== undefined) {
@@ -220,7 +227,7 @@ export class WindowManager {
         // w.y = y;
       })
     }
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", debouncedMouseMove);
     window.addEventListener("mouseup", stopDnD, { once: true });
   }
   

@@ -276,7 +276,7 @@ export function replaceAtIndex<T>(arr: T[], index: number, newValue: T): T[] {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
 }
 
-export function debounce(func: Function, delay: number): Function {
+export function debounce0(func: Function, delay: number): Function {
   let timeout: number;
   let callbackArgs: any[] = [];
 
@@ -289,6 +289,15 @@ export function debounce(func: Function, delay: number): Function {
     timeout = window.setTimeout(() => {
       func.apply(context, callbackArgs);
     }, delay);
+  };
+}
+export function debounce<Params extends any[]>(func: (...args: Params) => any, timeout: number): (...args: Params) => void {
+  let timer: NodeJS.Timeout;
+  return (...args: Params) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, timeout);
   };
 }
 
