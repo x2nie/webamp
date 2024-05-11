@@ -11,6 +11,9 @@ body {
   display: grid;
   grid-template-rows: auto 50px;
 }
+.app * {
+  user-select: none;
+}
 
 .window-manager {
   position: relative;
