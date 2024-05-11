@@ -9,85 +9,18 @@ import {
   useRef,
   useEffect,
 } from "@odoo/owl";
+import  { WindowManager } from "./WindowManager";
 
 // -----------------------------------------------------------------------------
 // Window manager code
 // -----------------------------------------------------------------------------
 
-class WindowManager {
-  // contains all components with metadata
-  static Windows = {};
-  windows = {}; // mapping id => info
-  nextId = 1;
 
-  add(type) {
-    const Comp = WindowManager.Windows[type];
-    const x =
-      50 +
-      Math.round(Math.random() * (window.innerWidth - 50 - Comp.defaultWidth));
-    const y =
-      50 +
-      Math.round(
-        Math.random() * (window.innerHeight - 100 - Comp.defaultHeight)
-      );
-    const id = this.nextId++;
-    this.windows[id] = {
-      id,
-      title: Comp.defaultTitle,
-      width: Comp.defaultWidth,
-      height: Comp.defaultHeight,
-      x,
-      y,
-      Component: Comp,
-    };
-  }
-
-  close(id) {
-    delete this.windows[id];
-  }
-
-  updatePosition(id, left, top) {
-    const w = this.windows[id];
-    w.x = left;
-    w.y = top;
-  }
-
-  getWindows() {
-    return Object.values(this.windows);
-  }
-  handleMouseDown(id:string, ev: MouseEvent){
-    const current = this.windows[id];
-    const offsetX = current.x - ev.pageX;
-    const offsetY = current.y - ev.pageY;
-    let left, top;
-
-    window.addEventListener("mousemove", moveWindow);
-    window.addEventListener("mouseup", stopDnD, { once: true });
-
-    function moveWindow(ev) {
-      left = Math.max(offsetX + ev.pageX, 0);
-      top = Math.max(offsetY + ev.pageY, 0);
-      // el.style.left = `${left}px`;
-      // el.style.top = `${top}px`;
-      current.x = left;
-      current.y = top;
-    }
-    function stopDnD() {
-      window.removeEventListener("mousemove", moveWindow);
-      // el.classList.remove("dragging");
-
-      // if (top !== undefined && left !== undefined) {
-      //   self.windowService.updatePosition(current.id, left, top);
-      // }
-    }
-  }
-}
-
-function createWindowService() {
+function createWindowService():WindowManager {
   return reactive(new WindowManager());
 }
 
-function useWindowService() {
+function useWindowService():WindowManager {
   const env = useEnv();
   return useState(env.windowService);
 }
@@ -99,7 +32,7 @@ function useWindowService() {
 class Window extends Component {
   static template = xml`  <div t-att-id="props.info.id" t-name="Window" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
     <div class="header">
-      <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/></span>
+      <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/> #<t t-out="props.info.id"/></span>
       <span class="close" t-on-click.stop="close">×</span>
     </div>
     <t t-slot="default"/>
@@ -118,7 +51,8 @@ class Window extends Component {
 
   get style() {
     let { width, height, y, x } = this.props.info;
-    return `width: ${width}px;height: ${height}px;top:${y}px;left:${x}px;z-index:${this.zIndex}`;
+    return `width:${width}px; height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
+    // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;
   }
 
   close() {
@@ -129,7 +63,7 @@ class Window extends Component {
     this.updateZIndex();
     if(ev.button!=0) return;
     this.windowService.handleMouseDown(this.props.info.id, ev)
-    return
+    return;
     const self = this;
     const root = this.root;
 
@@ -175,8 +109,8 @@ class HelloWorld extends Component {
     Some content here...
   </div>`;
   static defaultTitle = "Hello Owl!";
-  static defaultWidth = 200;
-  static defaultHeight = 100;
+  static defaultWidth = 16*10;
+  static defaultHeight = 16*4;
 }
 
 // class Counter extends Component {
@@ -231,10 +165,17 @@ export class App extends Component {
   <button t-on-click="() => this.addWindow('Counter')">Counter</button>
 </div>`;
   static components = { WindowContainer };
-  windowService: any;
+  windowService!: WindowManager;
 
   setup() {
     this.windowService = useWindowService();
+    onMounted(() => {
+      console.log(`${name}:mounted`);
+      for (let i = 0; i < 3; i++) {
+        this.addWindow('Hello')
+        
+      }
+    })
   }
 
   addWindow(type) {

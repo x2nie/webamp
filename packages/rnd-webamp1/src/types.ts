@@ -44,6 +44,12 @@ export interface Box extends Point {
 }
 
 export type WindowId = "main" | "playlist" | "equalizer" | "milkdrop";
+
 export interface WindowInfo extends Box {
-  key: WindowId;
+  // id: WindowId;
+  id: number;
 }
+
+export type WindowPositions = {
+  [windowId: string]: Point;
+};
