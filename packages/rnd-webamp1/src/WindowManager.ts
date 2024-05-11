@@ -189,6 +189,7 @@ export class WindowManager {
         proposedBox,
         browserWindowSize
       );
+      //? maybe multi-screen? https://stackoverflow.com/questions/18377996/get-monitor-count
 
       const finalDiff = SnapUtils.applyMultipleDiffs(
         proposedDiff,

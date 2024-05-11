@@ -173,7 +173,7 @@ export class App extends Component {
   setup() {
     this.windowService = useWindowService();
     onMounted(() => {
-      console.log(`${name}:mounted`);
+      // console.log(`${name}:mounted`);
       for (let i = 0; i < 3; i++) {
         this.addWindow('Hello')
         

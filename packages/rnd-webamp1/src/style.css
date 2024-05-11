@@ -41,7 +41,7 @@ body {
   border: 1px solid gray;
   background-color: white;
   position: absolute;
-  /* box-shadow: 1px 1px 2px 1px grey; */
+  box-shadow: 1px 1px 3px 1px grey;
 }
 
 .window.dragging {
