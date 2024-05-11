@@ -1,7 +1,7 @@
 {
   "name": "webamp-modern",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index2.js",
   "license": "MIT",
   "scripts": {
     "start": "snowpack dev",
@@ -39,6 +39,7 @@
   },
   "prettier": {},
   "dependencies": {
+    "@odoo/owl": "2.2.0",
     "@rgrove/parse-xml": "^3.0.0",
     "butterchurn": "^2.6.7",
     "butterchurn-presets": "^2.4.7",
