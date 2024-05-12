@@ -5,7 +5,7 @@ toTitleCase} from "./utils";
 
 export class SkinLoader {
   _path: string[] = [];
-  _containers: XmlElement[] = [];
+  _containers: string[] = [];
   fileExtractor: FileExtractor;
   async loadSkin(skinPath: string) {
     let response: Response;
@@ -14,6 +14,8 @@ export class SkinLoader {
     response = await fetch(skinPath);
     await this.fileExtractor.prepare(skinPath, response);
     await this.parseSkin();
+    const tpl = this._containers.join('\n')
+      console.log('FINAL-TPL---------------------------\n', tpl)
   }
 
   // async getFileAsString(path):string {
@@ -41,23 +43,34 @@ export class SkinLoader {
     //? But in the same time we need to reduce code complexity
     //? So, we do Promise.all only on resource loading phase.
 
+    if(!node.children) {
+      console.log('HAS-NO CHILD:travn', node.toJSON())
+      return
+    }
+    const elements = node.children.filter(el => el instanceof XmlElement)
+    node.children = elements;
+
+    // return await Promise.all(
+    //   elements.map((child) => this.traverseChild(child as XmlElement, parent, path))
+    // );
+
     // if (this._phase == RESOURCE_PHASE) {
-    return await Promise.all(
-      node.children.map((child) => {
-        if (child instanceof XmlElement) {
-          // console.log('traverse->', parent.name, child.name)
-          // this._scanRes(child);
-          return this.traverseChild(child, parent, path);
-        }
-      })
-    );
-    // } else {
-    //   for (const child of node.children) {
+    // return await Promise.all(
+    //   node.children.map((child) => {
     //     if (child instanceof XmlElement) {
-    //       this._scanRes(child);
-    //       await this.traverseChild(child, parent);
+    //       // console.log('traverse->', parent.name, child.name)
+    //       // this._scanRes(child);
+    //       return this.traverseChild(child, parent, path);
     //     }
-    //   }
+    //   })
+    // );
+    // } else {
+      for (const child of node.children) {
+        if (child instanceof XmlElement) {
+          // this._scanRes(child);
+          await this.traverseChild(child, parent, path);
+        }
+      }
     // }
   }
 
@@ -65,6 +78,7 @@ export class SkinLoader {
     const tag = node.name.toLowerCase();
     switch (tag) {
       case "wasabixml":
+      case "elements":
       case "winampabstractionlayer":
         return this.traverseChildren(node, parent, path);
       // case "albumart":
@@ -102,30 +116,67 @@ export class SkinLoader {
     //   return;
     // }
     const includedXml = await this.fileExtractor.getFileAsString(filepath);
-    console.log(filepath, ":", (includedXml || "").length, "chars");
+    // console.log(filepath, ":", (includedXml || "").length, "chars");
 
+    // console.log('include #2', fileName)
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
-    const parsed = parseXmlFragment(includedXml);
-
+    const parsed = parseXmlFragment(includedXml)//.children[0] as XmlElement;
+    // debugger
+    // console.log('include #3', fileName)
+    
+    
     await this.traverseChildren(parsed, parent, [...path, ...directories]);
+    // console.log('include #4', fileName)
+    
 
+    if(!parsed.children) {
+      console.log('parsed-HAS-NO CHILD:', parsed.toJSON())
+      return
+    }
+    // debugger
+    // let childrens = parsed  ? parsed.children : 
+    
+    let replaced = false;
+    parsed.children.forEach(child => {
+      // console.log('include #5~', fileName, child.name, '#', child.toJSON())
+      if(!replaced){
+        node.name = child.name
+        node.attributes = child.attributes;
+        node.children = child.children;
+        replaced = true;
+      } else {
+        if(parent.children)
+          parent.children.push(child)
+      }
+      child.parent = parent
+    });
     // for (const _dir of directories) {
     //   this._path.pop();
     // }
+    // return node
   }
 
   async container(node: XmlElement, parent: any, path: string[] = []) {
     node.name = toTitleCase(node.name)
-    this._containers.push(node);
-    await this.traverseChildren(node, node, path);
-    console.log(node.toJSON())
-  }
-
-  async layout(node: XmlElement, parent: any, path: string[] = []) {
-    node.name = toTitleCase(node.name)
     // this._containers.push(node);
-    // await this.traverseChildren(node, node, path);
+    await this.traverseChildren(node, node, path);
+    console.log(node.attributes.name,node.toJSON())
+    // return node
+    if(!node.children) 
+      console.log('HAS-NO CHILD:', node.toJSON())
+    const layouts = node.children.filter(el => el.name == 'layout').map(
+      l => `<${l.name} ${atts(l.attributes)}></${l.name}>`
+    )
+    const tpl = `<Container ${atts(node.attributes)}>\n${layouts.join('\n')}</Container>`
+    // console.log(node.attributes.name,tpl)
+    this._containers.push(tpl);
+  }
+  
+  async layout(node: XmlElement, parent: any, path: string[] = []) {
+    // node.name = toTitleCase(node.name)
+    await this.traverseChildren(node, node, path);
+    // return node;
   }
 }
 
@@ -133,4 +184,23 @@ function parseXmlFragment(xml: string): XmlElement {
   // Note: Included files don't have a single root node, so we add a synthetic one.
   // A different XML parser library might make this unnessesary.
   return parseXml(`<wrapper>${xml}</wrapper>`) as unknown as XmlElement;
+}
+
+function atts(attributes:{[attrName: string]: string}):string{
+  const def = {
+    id: attributes.id,
+    x: attributes['default_x'] || Math.round(Math.random() * (window.innerWidth - 50)),
+    y: attributes['default_y'] || Math.round(Math.random() * (window.innerWidth - 50)),
+    width: 150,
+    height: 50,
+  }
+  return `info="${JSON.stringify(def).replaceAll('"', "'")}"`
+  
+  return `id="'${attributes.id}'" info=`
+  const result:string[] = []
+  for(const [k,v] of Object.entries(attributes)){
+    if(k=='component') continue
+    result.push(`${k}="${v}"`)
+  }
+  return result.join(' ')
 }

@@ -45,20 +45,29 @@ const env = {
 const templates = "";
 
 export class App extends Component {
-  static template = xml`<WindowContainer/><div class="menubar">
+  static template = xml`<WindowContainer/>
+  <hr/>
+  <t t-call="{{ kanban_template }}"  />
+  <hr/>
+  <div class="menubar">
   <h1 t-on-click="() => this.addWindow('Hello')">Hellow </h1> 
   <button t-on-click="() => this.addWindow('Hello')">Say Hello</button>
   <button t-on-click="() => this.addWindow('Counter')">Counter</button>
 </div>`;
-  static components = { WindowContainer };
+  static components = { WindowContainer, Container };
   windowService!: WindowManager;
+  tpl = ''
 
   setup() {
     this.windowService = useWindowService();
 
     onWillStart( async () => {
       const loader = new SkinLoader()
-      loader.loadSkin('skins/WinampModern566.wal')
+      // debugger
+      await loader.loadSkin('skins/WinampModern566.wal')
+      const tpl = loader._containers.join('\n')
+      console.log('FINAL-TPL---------------------------\n', tpl)
+      this.tpl = xml`${tpl}`
     })
 
     onMounted(() => {
@@ -68,6 +77,12 @@ export class App extends Component {
         
       }
     })
+  }
+
+
+  get kanban_template() {
+    // return xml`<b>temporay terus boss</b>`
+    return this.tpl
   }
 
   addWindow(type) {
