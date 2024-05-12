@@ -3883,12 +3883,7 @@
   dependencies:
     "@octokit/openapi-types" "^12.11.0"
 
-"@odoo/owl@2.2.0":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@odoo/owl/-/owl-2.2.2.tgz#135964d8f5b671a2a04766d1d77102bedace0d5a"
-  integrity sha512-HL4oOmZREtbKk5kAn59dObcEOab8SKNvRoIBqJIFo5jO8Ffe34bGq5zVEtXxnVE1S/7qkJ+F33mF32a1lMu3Ww==
-
-"@odoo/owl@^2.2.10":
+"@odoo/owl@2.2.0", "@odoo/owl@^2.2.10":
   version "2.2.10"
   resolved "https://registry.yarnpkg.com/@odoo/owl/-/owl-2.2.10.tgz#465727c49099f171efae153e7c38ee8848722d6e"
   integrity sha512-93wrtl202UYVJMCrCZxi3AMcGyBslhVqxgldYEGxh+T6u6pt0Txi6uoBTY5hyXmGRB+zE1W15ZbYYlNWTE5MuQ==
@@ -4873,6 +4868,11 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-3.0.0.tgz#29d45eadeb6c9a701038cfb9fab2356a7bdc71d5"
   integrity sha512-GFGDywRwGbuGq9yeL8wTjjLOsZ5Ps4O5tQ71eDcAfaZrZeA7Oe8QJzrnmFgplWtnoaBIBaFBB3n5Ht9iU4jLLw==
+
+"@rgrove/parse-xml@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@rgrove/parse-xml/-/parse-xml-4.1.0.tgz#ff489b59c4794569fa1b798515eef6826daeeb5e"
+  integrity sha512-pBiltENdy8SfI0AeR1e5TRpS9/9Gl0eiOEt6ful2jQfzsgvZYWqsKiBWaOCLdocQuk0wS7KOHI37n0C1pnKqTw==
 
 "@rollup/plugin-babel@^5.2.0":
   version "5.3.1"

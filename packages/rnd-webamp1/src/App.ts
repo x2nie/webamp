@@ -8,9 +8,11 @@ import {
   reactive,
   useRef,
   useEffect,
+  onWillStart,
 } from "@odoo/owl";
 import  { WindowManager, createWindowService, useWindowService } from "./WindowManager";
 import { Container } from "./Container";
+import { SkinLoader } from "./SkinLoader";
 
 
 
@@ -53,6 +55,12 @@ export class App extends Component {
 
   setup() {
     this.windowService = useWindowService();
+
+    onWillStart( async () => {
+      const loader = new SkinLoader()
+      loader.loadSkin('skins/WinampModern566.wal')
+    })
+
     onMounted(() => {
       // console.log(`${name}:mounted`);
       for (let i = 0; i < 3; i++) {

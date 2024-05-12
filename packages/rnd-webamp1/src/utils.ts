@@ -14,6 +14,13 @@ interface IniData {
   };
 }
 
+export function assert(condition: boolean, message: string) {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
+
 export function imgFromUrl(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -62,6 +69,15 @@ export const getTimeObj = (time: number | null): Time => {
     secondsSecondDigit,
   };
 };
+
+export function toTitleCase(str) {
+  return str.replace(
+  /\w\S*/g,
+  function(txt) {
+  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  }
+  );
+}
 
 export const getTimeStr = (
   time: number | null,

@@ -126,6 +126,12 @@ export class Registry extends EventBus {
         this.trigger("UPDATE", payload);
     }
 
+    clear() {
+        this.content = {};
+        const payload = { operation: "clear" };
+        this.trigger("UPDATE", payload);
+    }
+
     /**
      * Open a sub registry (and create it if necessary)
      *
