@@ -9,100 +9,10 @@ import {
   useRef,
   useEffect,
 } from "@odoo/owl";
-import  { WindowManager } from "./WindowManager";
-
-// -----------------------------------------------------------------------------
-// Window manager code
-// -----------------------------------------------------------------------------
+import  { WindowManager, createWindowService, useWindowService } from "./WindowManager";
+import { Container } from "./Container";
 
 
-function createWindowService():WindowManager {
-  return reactive(new WindowManager());
-}
-
-function useWindowService():WindowManager {
-  const env = useEnv();
-  return useState(env.windowService);
-}
-
-// -----------------------------------------------------------------------------
-// Generic Window Component
-// -----------------------------------------------------------------------------
-
-class Window extends Component {
-  static template = xml`  <div t-name="Window" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
-    <div class="header">
-      <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/> #<t t-out="props.info.id"/></span>
-      <span class="close" t-on-click.stop="close">×</span>
-    </div>
-    <t t-slot="default"/>
-    </div>`;
-  static nextZIndex = 1;
-
-  zIndex = 0;
-  windowService: any;
-  root: any;
-
-  setup() {
-    this.windowService = useWindowService();
-    this.root = useRef("root");
-    onMounted(()=> {
-      this.updateZIndex;
-      this.props.info.el = this.root.el;
-    });
-  }
-
-  get style() {
-    let { width, height, y, x } = this.props.info;
-    return `width:${width}px; height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
-    // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;
-  }
-
-  close() {
-    this.windowService.close(this.props.info.id);
-  }
-
-  startDragAndDrop(ev: MouseEvent) {
-    this.updateZIndex();
-    if(ev.button!=0) return;
-    this.windowService.handleMouseDown(this.props.info.id, ev)
-  }
-
-  updateZIndex() {
-    this.zIndex = Window.nextZIndex++;
-    this.root.el.style["z-index"] = this.zIndex;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// Two concrete Window type implementations
-// -----------------------------------------------------------------------------
-
-class HelloWorld extends Component {
-  static template = xml`<div t-name="HelloWorld">
-    Some content here...
-  </div>`;
-  static defaultTitle = "Hello Owl!";
-  static defaultWidth = 16*10;
-  static defaultHeight = 16*4;
-}
-
-// class Counter extends Component {
-//     static template = "Counter";
-//     static defaultTitle = "Click Counter";
-//     static defaultWidth = 300;
-//     static defaultHeight = 120;
-
-//     state = useState({ value: 0 });
-
-//     inc() {
-//     this.state.value++;
-//     }
-// }
-
-// register window components
-WindowManager.Windows["Hello"] = HelloWorld;
-// WindowManager.Windows.Counter = Counter;
 
 // -----------------------------------------------------------------------------
 // Window Container
@@ -110,11 +20,11 @@ WindowManager.Windows["Hello"] = HelloWorld;
 
 class WindowContainer extends Component {
   static template = xml` <div t-name="WindowContainer" class="window-manager">
-    <Window t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" info="w">
+    <Container t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" info="w">
       <t t-component="w.Component"/>
-    </Window>
+    </Container>
   </div>`;
-  static components = { Window };
+  static components = { Container };
   windowService: any;
 
   setup() {

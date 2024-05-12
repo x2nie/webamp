@@ -17,8 +17,15 @@
     "esModuleInterop": true,
     "allowJs": true,
     "preserveWatchOutput": true,
-    "sourceMap": false,
-    "strictBindCallApply": true
+    "sourceMap": true,
+    "strictBindCallApply": true,
+
+    "baseUrl": ".",
+    "paths": {
+      // "@/*": ["src/*"],
+      "@web/*": ["src/x-odoo/web/*"],
+      "@web/core/*": ["src/x-odoo/web/core/*"],
+    }
   },
-  "include": ["src"]
+  "include": ["vite.config.ts", "src"]
 }
