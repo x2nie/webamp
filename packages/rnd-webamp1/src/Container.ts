@@ -12,6 +12,9 @@ export class Container extends Component {
         <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/> </span>
         <span class="close" t-on-click.stop="close">×</span>
       </div>
+      <div t-foreach="layouts()" t-as="l" t-key="l.id" t-attf-style="width:#{l.w}px; height:#{l.h}px; border:1px solid blue;">
+        <t t-out="l.id"/>
+      </div>
       <t t-slot="default"/>
       </div>`;
     static nextZIndex = 1;
@@ -30,6 +33,10 @@ export class Container extends Component {
           this.props.info.el = this.root.el;
         }
       });
+    }
+
+    layouts() {
+      return this.props.info.layouts || []
     }
   
     get style() {

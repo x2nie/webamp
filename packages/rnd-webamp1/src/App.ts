@@ -79,7 +79,8 @@ export class App extends Component {
           x,y,
           width: 100,
           height: 50,
-          childNodes: node.children,
+          // children: node.children,
+          layouts: node.layouts,
           // Component: Container,
         })
       })

@@ -201,12 +201,12 @@ export class SkinLoader {
     node.name = toTitleCase(node.name)
     // this._containers.push(node);
     await this.traverseChildren(node, node, path);
-    console.log(node.attributes.id, '/', node.attributes.name,node.toJSON())
     // return node
     // if(!node.children) 
-    //   console.log('HAS-NO CHILD:', node.toJSON())
+      //   console.log('HAS-NO CHILD:', node.toJSON())
     const layouts = node.children.filter(el => el.name == 'layout')
-    // node.attributes.layouts = layouts
+    console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
+    node.layouts = layouts.map(l => l.attributes)
     const elLayouts= layouts.map(
     // const layouts = getLayouts(node).map(
       l => `<${l.name} ${atts(l.attributes)}/>`
