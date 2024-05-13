@@ -83,7 +83,7 @@ export class WindowManager {
     const id = this.nextId++;
     this.windows[id] = {
       id,
-      title: Comp.defaultTitle,
+      title: `#${id}`,
       width: Comp.defaultWidth,
       height: Comp.defaultHeight,
       x,
@@ -116,6 +116,13 @@ export class WindowManager {
     //   (w) => w.id != null //&& !getWindowHidden(w.key)
     // ));
     const windows: MovingWindow[] = this.getWindows().map(w => toRaw(w))
+    windows.forEach(w =>{
+      if(w.el){
+        const bound = w.el.getBoundingClientRect()
+        w.width = bound.width
+        w.height = bound.height
+      }
+  })
     // const current = toRaw(this.windows[id]);
     const current = windows.filter(w => w.id == id)[0];
     if (current == null) {
