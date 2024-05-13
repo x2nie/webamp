@@ -7,9 +7,9 @@ import { registry } from '@web/core/registry';
 import { WindowManager, useWindowService } from "./WindowManager";
 
 export class Container extends Component {
-    static template = xml`  <div t-name="Container" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
+    static template = xml`  <div t-att-id="props.info.id" t-name="Container" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
       <div class="header">
-        <span t-on-mousedown="startDragAndDrop"> #<t t-out="zIndex"/></span>
+        <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/> </span>
         <span class="close" t-on-click.stop="close">×</span>
       </div>
       <t t-slot="default"/>
@@ -37,7 +37,7 @@ export class Container extends Component {
         return 'top:5px; left: 20px;'
       }
       let { width, height, y, x } = this.props.info;
-      return `width:${width}px; height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
+      return `min-width:${width}px; min-height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
       // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;
     }
   

@@ -2,10 +2,12 @@ import { XmlDocument, XmlElement, XmlNode, parseXml } from "@rgrove/parse-xml";
 import { FileExtractor, ZipFileExtractor } from "./FileExtractor";
 import { assert, /* , getCaseInsensitiveFile, assume */ 
 toTitleCase} from "./utils";
+import { WindowInfo } from "./types";
 
 export class SkinLoader {
   _path: string[] = [];
-  _containers: string[] = [];
+  _Containers: string[] = [];
+  _containers: XmlElement[] = [];
   fileExtractor: FileExtractor;
   async loadSkin(skinPath: string) {
     let response: Response;
@@ -199,18 +201,21 @@ export class SkinLoader {
     node.name = toTitleCase(node.name)
     // this._containers.push(node);
     await this.traverseChildren(node, node, path);
-    console.log(node.attributes.name,node.toJSON())
+    console.log(node.attributes.id, '/', node.attributes.name,node.toJSON())
     // return node
     // if(!node.children) 
     //   console.log('HAS-NO CHILD:', node.toJSON())
-    const layouts = node.children.filter(el => el.name == 'layout').map(
+    const layouts = node.children.filter(el => el.name == 'layout')
+    // node.attributes.layouts = layouts
+    const elLayouts= layouts.map(
     // const layouts = getLayouts(node).map(
       l => `<${l.name} ${atts(l.attributes)}/>`
       // l => `<${l.name} ${atts(l.attributes)}></${l.name}>`
     )
-    const tpl = `<Container ${info(node.attributes)}>\n\t${layouts.join('\n\t')}</Container>`
+    const tpl = `<Container ${info(node.attributes)}>\n\t${elLayouts.join('\n\t')}</Container>`
     // console.log(node.attributes.name,tpl)
-    this._containers.push(tpl);
+    this._Containers.push(tpl);
+    this._containers.push(node);
   }
   
   async layout(node: XmlElement, parent: any, path: string[] = []) {

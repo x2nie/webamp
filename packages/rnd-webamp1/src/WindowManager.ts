@@ -60,6 +60,14 @@ export class WindowManager {
   windows = {}; // mapping id => info
   nextId = 1;
 
+  append(node:any) {
+    const Comp = registry.category('containers').get('Hello');
+    const id = node.id
+    this.windows[id] = {
+      Component: Comp,
+      ...node
+    }
+  }
   add(type:string) {
     // console.log('ask registered C:',type)
     // const Comp = WindowManager.Windows[type];
@@ -103,6 +111,7 @@ export class WindowManager {
     // return toRaw(Object.values(this.windows));
   }
   handleMouseDown(id:number, ev: MouseEvent){
+    // debugger
     // const windows = toRaw(this.getWindows().filter(
     //   (w) => w.id != null //&& !getWindowHidden(w.key)
     // ));
