@@ -131,7 +131,7 @@ export class WindowManager {
     
     let movingSet = new Set([current]);
     // Only the main window brings other windows along.
-    if (id == 1) {
+    if (id == 1 || id == 'main') {
       const findAllConnected = SnapUtils.traceConnection<WindowInfo>(abuts);
       movingSet = findAllConnected(windows, current);
     }
