@@ -25,7 +25,7 @@ export class SkinLoader {
   /**
    * Process
    */
-  async parseSkin() {
+  private async parseSkin() {
     const includedXml = await this.fileExtractor.getFileAsString("skin.xml");
     console.log("skin.xml:", includedXml);
     // Note: Included files don't have a single root node, so we add a synthetic one.
@@ -65,17 +65,20 @@ export class SkinLoader {
     //   })
     // );
     // } else {
-      for (const child of node.children) {
-        if (child instanceof XmlElement) {
-          // this._scanRes(child);
-          await this.traverseChild(child, parent, path);
-        }
-      }
+      // for (const child of node.children) {
+      //   if (child instanceof XmlElement) {
+      //     // this._scanRes(child);
+      //     await this.traverseChild(child, parent, path);
+      //   }
+      // }
     // }
+    return await this.traverseChilds(node.children, parent, path);
   }
 
   async traverseChilds(nodes: XmlElement[], parent: any, path: string[] = []) {
-    const elements = nodes.filter(el => el instanceof XmlElement)
+    // const elements = nodes.filter(el => el instanceof XmlElement)
+    //? we need to copy the array, to avoid conflicting when they are added to parent
+    const elements = [...nodes.filter(el => el instanceof XmlElement)]
 
     // return await Promise.all(
     //   elements.map((child) => this.traverseChild(child as XmlElement, parent, path))
@@ -98,8 +101,8 @@ export class SkinLoader {
           await this.traverseChild(child, parent, path);
         // }
       }
-      return elements
     // }
+    return elements
   }
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
     const tag = node.name.toLowerCase();
@@ -107,15 +110,14 @@ export class SkinLoader {
       case "wasabixml":
       case "elements":
       case "winampabstractionlayer":
-        return this.traverseChildren(node, parent, path);
-      // case "albumart":
-      // return this.albumart(node, parent);
-      case "include":
-        return this.include(node, parent, path);
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
       case "wrapper":
         return this.traverseChildren(node, parent, path);
+      case "include":
+        return this.include(node, parent, path);
+      // case "albumart":
+      // return this.albumart(node, parent);
       case "container":
         return this.container(node, parent, path);
       case "layout":
@@ -171,19 +173,21 @@ export class SkinLoader {
     // debugger
     // let childrens = parsed  ? parsed.children : 
     
-    let replaced = false;
+    //? INCLUDE = attach children to parent from other xml file
+    let first = true;
     childs.forEach(child => {
       // console.log('include #5~', fileName, child.name, '#', child.toJSON())
-      if(!replaced){
+      //? replace the <include> with first child
+      if(first){
         node.name = child.name
         node.attributes = child.attributes;
         node.children = child.children;
-        replaced = true;
+        first = false;
       } else {
         if(parent.children)
           parent.children.push(child)
+        child.parent = parent
       }
-      child.parent = parent
     });
     // for (const _dir of directories) {
     //   this._path.pop();
