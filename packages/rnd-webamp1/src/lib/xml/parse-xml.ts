@@ -177,6 +177,7 @@ export class Parser {
         if (!attrName) {
           break;
         }
+        attrName = attrName.toLowerCase()
   
         let attrValue = this.consumeEqual() && this.consumeAttributeValue();
   
