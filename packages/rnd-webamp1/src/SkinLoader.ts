@@ -115,8 +115,10 @@ export class SkinLoader {
     const tag = node.tag;
     switch (tag) {
       case "wasabixml":
-      case "elements":
       case "winampabstractionlayer":
+        // return this.traverseChildren(node, parent.parent || parent, path);
+
+      case "elements":
       case "skininfo":
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
