@@ -53,8 +53,8 @@ export class SkinLoader {
       console.log('HAS-NO CHILD:travn', node.toJSON())
       return
     }
-    const elements = node.children.filter(el => el instanceof XmlElement)
-    node.children = elements;
+    // const elements = node.children.filter(el => el instanceof XmlElement)
+    // node.children = elements;
 
     // return await Promise.all(
     //   elements.map((child) => this.traverseChild(child as XmlElement, parent, path))
@@ -84,7 +84,8 @@ export class SkinLoader {
   async traverseChilds(nodes: XmlElement[], parent: any, path: string[] = []) {
     // const elements = nodes.filter(el => el instanceof XmlElement)
     //? we need to copy the array, to avoid conflicting when they are added to parent
-    const elements = [...nodes.filter(el => el instanceof XmlElement)]
+    const elements = [...nodes]
+    // const elements = [...nodes.filter(el => el instanceof XmlElement)]
 
     // return await Promise.all(
     //   elements.map((child) => this.traverseChild(child as XmlElement, parent, path))
@@ -111,10 +112,10 @@ export class SkinLoader {
     return elements.filter(e => !!e.parent)
   }
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
-    const tag = node.tag.toLowerCase();
+    const tag = node.tag;
     switch (tag) {
       case "wasabixml":
-      
+      case "elements":
       case "winampabstractionlayer":
       case "skininfo":
       // Note: Included files don't have a single root node, so we add a synthetic one.
@@ -133,7 +134,7 @@ export class SkinLoader {
       //   return this.groupdef(node, parent, path);
       case "groupdef":
       case "gammaset":
-      case "elements":
+      
         node.remove(); //? trial to cleanup, to see what the rest
         break
       case "email":
