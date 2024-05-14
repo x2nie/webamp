@@ -20,7 +20,7 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
   overflow: hidden;
 }
 
@@ -36,9 +36,9 @@ body {
 }
 
 .window {
-  display: grid;
-  grid-template-rows: 24px auto;
-  border: 1px solid gray;
+  /* display: grid; */
+  /* grid-template-rows: 24px auto; */
+  /* border: 1px solid gray; */
   background-color: white;
   position: absolute;
   box-shadow: 1px 1px 3px 1px grey;
@@ -79,9 +79,10 @@ body {
 .invisible {
   border: 2px solid red;
   opacity: 0.3;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
-layout {
+.layout {
   pointer-events: none;
+  box-shadow: inset 0 0 2px 1px blue;
 }

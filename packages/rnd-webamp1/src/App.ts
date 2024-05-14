@@ -23,10 +23,10 @@ import { XmlElement } from "@rgrove/parse-xml";
 
 class WindowContainer extends Component {
   // t-if="w.visible"
+  // <t t-component="w.Component"/>
   static template = xml` <div t-name="WindowContainer" class="window-manager">
     <t t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" >
       <Container info="w">
-        <t t-component="w.Component"/>
       </Container>
     </t>
   </div>`;
@@ -81,6 +81,7 @@ export class App extends Component {
           visible: Number(att.default_visible),
           // children: node.children,
           layouts: node.layouts,
+          layout_id: 'normal',
           // Component: Container,
         })
       })

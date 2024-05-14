@@ -9,28 +9,26 @@ import { WindowManager, useWindowService } from "./WindowManager";
 export class Container extends Component {
     static template = xml`
     <div t-att-id="props.info.id" t-name="Container" t-att-class="{window: true, invisible: !props.info.visible}" 
-      t-on-mousedown="startDragAndDrop"
+      t-on-mousedown="mouseDown"
       t-att-style="style" 
-      t-on-click="updateZIndex" t-ref="root">
-      <div class="header">
-        <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/> </span>
-        <span class="close" t-on-click.stop="close">×</span>
-      </div>
+      t-on-dblclick="toggleLayout" t-ref="root">
       <t t-foreach="layouts()" t-as="l" t-key="l.id">
-        <layout t-if="l.id == 'normal'" t-attf-style="width:#{l.w}px; height:#{l.h}px; border:1px solid blue;">
-          <t t-out="l.id"/>
-        </layout>
+        <div class="layout" t-if="l.id == props.info.layout_id" t-attf-style="width:#{l.w}px; height:#{l.h}px;">
+        <t t-esc="props.info.title"/> - <t t-out="l.id"/>
+        </div>
       </t>
       <t t-slot="default"/>
       </div>`;
     static nextZIndex = 1;
   
-    zIndex = 0;
+    zIndex = 1;
     windowService: any;
     root: any;
   
     setup() {
       this.windowService = useWindowService();
+
+      
       
       this.root = useRef("root");
       onMounted(()=> {
@@ -44,13 +42,24 @@ export class Container extends Component {
     layouts() {
       return this.props.info.layouts || []
     }
+    toggleLayout() {
+      console.log('toggling layout')
+      if(this.props.info.layouts.length <= 1) return
+      if(this.props.info.layouts[0].id == this.props.info.layout_id) {
+        this.props.info.layout_id = this.props.info.layouts[1].id
+      } else {
+        this.props.info.layout_id = this.props.info.layouts[0].id
+      }
+      
+    }
   
     get style() {
       if(!this.props.info){
         return 'top:5px; left: 20px;'
       }
       let { width, height, y, x } = this.props.info;
-      return `min-width:${width}px; min-height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
+      return `top:${y}px; left:${x}px; z-index:${this.zIndex * (this.props.info.visible || -1)}`;
+      // return `min-width:${width}px; min-height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
       // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;
     }
   
@@ -58,7 +67,7 @@ export class Container extends Component {
       this.windowService.close(this.props.info.id);
     }
   
-    startDragAndDrop(ev: MouseEvent) {
+    mouseDown(ev: MouseEvent) {
       this.updateZIndex();
       if(ev.button!=0) return;
       this.windowService.handleMouseDown(this.props.info.id, ev)
