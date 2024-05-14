@@ -1,4 +1,5 @@
-import { XmlDocument, XmlElement, XmlNode, parseXml } from "@rgrove/parse-xml";
+// import { XmlDocument, XmlElement, XmlNode, parseXml } from "@rgrove/parse-xml";
+import { XmlElement, parseXml } from "@xml/parse-xml";
 import { FileExtractor, ZipFileExtractor } from "./FileExtractor";
 import { assert, /* , getCaseInsensitiveFile, assume */ 
 toTitleCase} from "./utils";
@@ -30,10 +31,11 @@ export class SkinLoader {
    */
   private async parseSkin() {
     const includedXml = await this.fileExtractor.getFileAsString("skin.xml");
-    console.log("skin.xml:", includedXml);
+    // console.log("skin.xml:", includedXml);
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
-    const parsed = parseXml(includedXml) as unknown as XmlElement;
+    const parsed = parseXml(includedXml);
+    console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
   }
 
@@ -108,7 +110,7 @@ export class SkinLoader {
     return elements
   }
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
-    const tag = node.name.toLowerCase();
+    const tag = node.tag.toLowerCase();
     switch (tag) {
       case "wasabixml":
       case "elements":
@@ -188,7 +190,7 @@ export class SkinLoader {
       // console.log('include #5~', fileName, child.name, '#', child.toJSON())
       //? replace the <include> with first child
       if(first){
-        node.name = child.name
+        node.tag = child.tag
         node.attributes = child.attributes;
         node.children = child.children;
         first = false;
@@ -205,19 +207,19 @@ export class SkinLoader {
   }
 
   async container(node: XmlElement, parent: any, path: string[] = []) {
-    node.name = toTitleCase(node.name)
+    node.tag = toTitleCase(node.tag)
     // this._containers.push(node);
     await this.traverseChildren(node, node, path);
     // return node
     // if(!node.children) 
       //   console.log('HAS-NO CHILD:', node.toJSON())
-    const layouts = node.children.filter(el => el.name == 'layout')
+    const layouts = node.children.filter(el => el.tag == 'layout')
     console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
     node.layouts = layouts.map(l => l.attributes)
     const elLayouts= layouts.map(
     // const layouts = getLayouts(node).map(
-      l => `<${l.name} ${atts(l.attributes)}/>`
-      // l => `<${l.name} ${atts(l.attributes)}></${l.name}>`
+      l => `<${l.tag} ${atts(l.attributes)}/>`
+      // l => `<${l.tag} ${atts(l.attributes)}></${l.tag}>`
     )
     const tpl = `<Container ${info(node.attributes)}>\n\t${elLayouts.join('\n\t')}</Container>`
     // console.log(node.attributes.name,tpl)
@@ -236,7 +238,7 @@ export class SkinLoader {
     // await this.traverseChildren(node, node, path);
     const id = node.attributes.id
     if(this._groupdef.includes(id)) {
-      throw new Error("groupdef already registered:", id);
+      throw new Error("groupdef already registered:"+ id);
     }
     this._groupdef.push(id)
     // return node;
@@ -270,9 +272,9 @@ function atts(attributes:{[attrName: string]: string}):string{
 }
 
 function getLayouts(node:XmlElement): XmlElement[] {
-  const ret = []
+  const ret: XmlElement[] = []
   const recursive = (n:XmlElement) =>{
-    if(n.name=='layout') {
+    if(n.tag=='layout') {
       ret.push(n)
     } else if(n.children) {
       n.children.forEach(c => recursive(c))

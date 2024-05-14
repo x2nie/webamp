@@ -19,6 +19,7 @@ export default ({ mode }) => {
             // },
             alias: [
                 { find: '@web', replacement: path.resolve(__dirname, 'src/lib/odoo/web') },
+                { find: '@xml', replacement: path.resolve(__dirname, 'src/lib/xml') },
             ],
         },
         build: {
