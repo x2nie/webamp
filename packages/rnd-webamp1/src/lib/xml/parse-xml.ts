@@ -19,7 +19,7 @@ export class XmlElement {
      * Name of this element.
      */
     tag: string;
-    
+
     /**
      * Attributes on this element.
      */
@@ -51,9 +51,22 @@ export class XmlElement {
     ) {
       // super();
   
-      this.tag = tag;
+      this.tag = tag.toLowerCase();
       this.attributes = attributes;
       this.children = children;
+    }
+
+    /**
+     * delete this from parent
+     */
+    remove(){
+      if(this.parent){
+        const index = this.parent.children.indexOf(this);
+        if (index > -1) { // only splice array when item is found
+          this.parent.children.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        this.parent = null
+      }
     }
    
     toJSON(){

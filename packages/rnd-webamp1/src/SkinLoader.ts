@@ -37,6 +37,7 @@ export class SkinLoader {
     const parsed = parseXml(includedXml);
     console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
+    console.log('FINAL skin.xml=>', parsed)
   }
 
   async traverseChildren(
@@ -107,13 +108,13 @@ export class SkinLoader {
         // }
       }
     // }
-    return elements
+    return elements.filter(e => !!e.parent)
   }
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
     const tag = node.tag.toLowerCase();
     switch (tag) {
       case "wasabixml":
-      case "elements":
+      
       case "winampabstractionlayer":
       case "skininfo":
       // Note: Included files don't have a single root node, so we add a synthetic one.
@@ -128,8 +129,13 @@ export class SkinLoader {
         return this.container(node, parent, path);
       case "layout":
         return this.layout(node, parent, path);
+      // case "groupdef":
+      //   return this.groupdef(node, parent, path);
       case "groupdef":
-        return this.groupdef(node, parent, path);
+      case "gammaset":
+      case "elements":
+        node.remove(); //? trial to cleanup, to see what the rest
+        break
       case "email":
         // debugger;
         break;
@@ -185,8 +191,17 @@ export class SkinLoader {
     // let childrens = parsed  ? parsed.children : 
     
     //? INCLUDE = attach children to parent from other xml file
+    if(childs.length == 0) {
+      node.remove()
+      return;
+    };
     let first = true;
     childs.forEach(child => {
+      if(!child.parent ) return;//TODO: keep back this. 
+      if(child.tag=='include' && child.children.length==0) {
+        node.remove()
+        return;
+      }
       // console.log('include #5~', fileName, child.name, '#', child.toJSON())
       //? replace the <include> with first child
       if(first){
