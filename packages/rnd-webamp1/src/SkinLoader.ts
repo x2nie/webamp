@@ -6,6 +6,7 @@ import { WindowInfo } from "./types";
 
 export class SkinLoader {
   _path: string[] = [];
+  _groupdef: string[] = [];
   _Containers: string[] = [];
   _containers: XmlElement[] = [];
   fileExtractor: FileExtractor;
@@ -112,6 +113,7 @@ export class SkinLoader {
       case "wasabixml":
       case "elements":
       case "winampabstractionlayer":
+      case "skininfo":
       // Note: Included files don't have a single root node, so we add a synthetic one.
       // A different XML parser library might make this unnessesary.
       case "wrapper":
@@ -124,6 +126,11 @@ export class SkinLoader {
         return this.container(node, parent, path);
       case "layout":
         return this.layout(node, parent, path);
+      case "groupdef":
+        return this.groupdef(node, parent, path);
+      case "email":
+        // debugger;
+        break;
     }
   }
 
@@ -221,6 +228,17 @@ export class SkinLoader {
   async layout(node: XmlElement, parent: any, path: string[] = []) {
     // node.name = toTitleCase(node.name)
     await this.traverseChildren(node, node, path);
+    // return node;
+  }
+  
+  async groupdef(node: XmlElement, parent: any, path: string[] = []) {
+    // node.name = toTitleCase(node.name)
+    // await this.traverseChildren(node, node, path);
+    const id = node.attributes.id
+    if(this._groupdef.includes(id)) {
+      throw new Error("groupdef already registered:", id);
+    }
+    this._groupdef.push(id)
     // return node;
   }
 }

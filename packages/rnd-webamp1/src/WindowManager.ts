@@ -115,7 +115,7 @@ export class WindowManager {
     // const windows = toRaw(this.getWindows().filter(
     //   (w) => w.id != null //&& !getWindowHidden(w.key)
     // ));
-    const windows: MovingWindow[] = this.getWindows().map(w => toRaw(w))
+    const windows: MovingWindow[] = this.getWindows().filter(w=>w.visible).map(w => toRaw(w))
     windows.forEach(w =>{
       if(w.el){
         const bound = w.el.getBoundingClientRect()

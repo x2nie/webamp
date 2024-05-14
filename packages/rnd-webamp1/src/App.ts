@@ -22,10 +22,13 @@ import { XmlElement } from "@rgrove/parse-xml";
 // -----------------------------------------------------------------------------
 
 class WindowContainer extends Component {
+  // t-if="w.visible"
   static template = xml` <div t-name="WindowContainer" class="window-manager">
-    <Container t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" info="w">
-      <t t-component="w.Component"/>
-    </Container>
+    <t t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" >
+      <Container info="w">
+        <t t-component="w.Component"/>
+      </Container>
+    </t>
   </div>`;
   static components = { Container };
   windowService: any;
@@ -48,12 +51,7 @@ const templates = "";
 export class App extends Component {
 
   // <t t-call="{{ kanban_template }}"  />
-  static template = xml`<WindowContainer/>
-  <div class="menubar">
-  <h1 t-on-click="() => this.addWindow('Hello')">Hellow </h1> 
-  <button t-on-click="() => this.addWindow('Hello')">Say Hello</button>
-  <button t-on-click="() => this.addWindow('Counter')">Counter</button>
-</div>`;
+  static template = xml`<WindowContainer/>`;
   static components = { WindowContainer, Container };
   windowService!: WindowManager;
   tpl = xml`<span>tpl-goes-here</span>`
@@ -65,20 +63,22 @@ export class App extends Component {
       const loader = new SkinLoader()
       // debugger
       await loader.loadSkin('skins/WinampModern566.wal')
+      // await loader.loadSkin('skins/MMD3.wal')
       // const tpl = loader._Containers.join('\n')
       // console.log('FINAL-TPL---------------------------\n', tpl)
       // this.tpl = xml`${tpl}`
 
       loader._containers.forEach(node => {
         const att = node.attributes
-        const x = Number( att['default_x'] || Math.round(Math.random() * (window.innerWidth - 50)));
-        const y = Number( att['default_y'] || Math.round(Math.random() * (window.innerWidth - 50)));
+        const x = att['default_x'] ? Number( att['default_x']) : Math.round(Math.random() * (window.innerWidth - 50));
+        const y = att['default_y'] ? Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
         this.windowService.append({
           id: att.id,
           title: att.name,
           x,y,
           width: 100,
           height: 50,
+          visible: Number(att.default_visible),
           // children: node.children,
           layouts: node.layouts,
           // Component: Container,
@@ -100,9 +100,6 @@ export class App extends Component {
     return this.tpl
   }
 
-  addWindow(type) {
-    this.windowService.add(type);
-  }
 
   static mount1(parent) {
     owlMount(App, parent, { env, dev: true });

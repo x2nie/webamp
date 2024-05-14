@@ -7,14 +7,20 @@ import { registry } from '@web/core/registry';
 import { WindowManager, useWindowService } from "./WindowManager";
 
 export class Container extends Component {
-    static template = xml`  <div t-att-id="props.info.id" t-name="Container" class="window" t-att-style="style" t-on-click="updateZIndex" t-ref="root">
+    static template = xml`
+    <div t-att-id="props.info.id" t-name="Container" t-att-class="{window: true, invisible: !props.info.visible}" 
+      t-on-mousedown="startDragAndDrop"
+      t-att-style="style" 
+      t-on-click="updateZIndex" t-ref="root">
       <div class="header">
         <span t-on-mousedown="startDragAndDrop"><t t-esc="props.info.title"/> </span>
         <span class="close" t-on-click.stop="close">×</span>
       </div>
-      <div t-foreach="layouts()" t-as="l" t-key="l.id" t-attf-style="width:#{l.w}px; height:#{l.h}px; border:1px solid blue;">
-        <t t-out="l.id"/>
-      </div>
+      <t t-foreach="layouts()" t-as="l" t-key="l.id">
+        <layout t-if="l.id == 'normal'" t-attf-style="width:#{l.w}px; height:#{l.h}px; border:1px solid blue;">
+          <t t-out="l.id"/>
+        </layout>
+      </t>
       <t t-slot="default"/>
       </div>`;
     static nextZIndex = 1;
