@@ -13,7 +13,6 @@ import {
 import  { WindowManager, createWindowService, useWindowService } from "./WindowManager";
 import { Container } from "./Container";
 import { SkinLoader } from "./SkinLoader";
-import { XmlElement } from "@rgrove/parse-xml";
 
 
 

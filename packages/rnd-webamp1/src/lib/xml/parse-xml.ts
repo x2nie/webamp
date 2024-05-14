@@ -3,7 +3,6 @@
  * Reason: simplify the later parsing of skin xml(s).
  */
 
-// import { Parser as GroveXmlParser } from "@rgrove/parse-xml/dist/lib/Parser";
 import { StringScanner } from "@rgrove/parse-xml/dist/lib/StringScanner";
 import * as syntax from "@rgrove/parse-xml/dist/lib/syntax";
 import { XmlError } from "@rgrove/parse-xml/dist/lib/XmlError";
