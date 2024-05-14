@@ -39,10 +39,10 @@ export class XmlElement {
     // get text(): string{
     //   return 
     // }
-    text: string;
+    // text: string;
 
   
-    // [key: string]: any;
+    [key: string]: any;
 
     constructor(
       tag: string = '',
