@@ -18,7 +18,7 @@ export default ({ mode }) => {
             //     // '@components': path.resolve(__dirname, './src/components'),
             // },
             alias: [
-                { find: '@web', replacement: path.resolve(__dirname, 'src/x-odoo/web') },
+                { find: '@web', replacement: path.resolve(__dirname, 'src/lib/odoo/web') },
             ],
         },
         build: {

@@ -23,8 +23,8 @@
     "baseUrl": ".",
     "paths": {
       // "@/*": ["src/*"],
-      "@web/*": ["src/x-odoo/web/*"],
-      "@web/core/*": ["src/x-odoo/web/core/*"],
+      "@web/*": ["src/lib/odoo/web/*"],
+      // "@web/core/*": ["src/lib/odoo/web/core/*"],
     }
   },
   "include": ["vite.config.ts", "src"]
