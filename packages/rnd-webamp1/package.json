@@ -13,7 +13,7 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
-    "@odoo/owl": "^2.2.10",
+    "@odoo/owl": "2.2.10",
     "@rgrove/parse-xml": "^4.1.0"
   }
 }
