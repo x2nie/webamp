@@ -24,7 +24,7 @@ const value2lower = [
 
 const value2number = [
   'x', 'y', 'w','h', 'relatex','relaty','relatw', 'relath','bg',
-  'default_x', 'default_y', 'minimum_w','minimum_h',
+  'default_x', 'default_y', 'minimum_w','minimum_h', 'maximum_w','maximum_h',
   'shadowx', 'shadowy', 'fontsize','altfontsize', 'timecolonwidth',
   'sysregion', 'snapadjustbottom',
   'activealpha','inactivealpha',
@@ -40,6 +40,9 @@ const value_kept = [
   'color', 'colorband0~16',
 ]
 
+const forbidden_keys = {
+  'component': 'identifier'
+}
 
 let DEBUG =0
 const temp_att: string[] = []
@@ -88,7 +91,10 @@ export class XmlElement {
     ) {
       //transform, as needed
       this.attributes = {}
-      for(const [k,v] of Object.entries(attributes)){
+      for(let [k,v] of Object.entries(attributes)){
+        if (k in forbidden_keys){
+          k = forbidden_keys[k]
+        }
         if(value2lower.includes(k)){
           this.attributes[k] = v.toLowerCase()
         } 

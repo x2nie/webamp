@@ -65,8 +65,8 @@ export class App extends Component {
       // debugger
       loader._bitmap = this.env.bitmaps
       // await loader.loadSkin('skins/WinampModern566.wal')
-      // await loader.loadSkin('skins/MMD3.wal')
-      await loader.loadSkin('skins/SimpleTutorial.wal')
+      await loader.loadSkin('skins/MMD3.wal')
+      // await loader.loadSkin('skins/SimpleTutorial.wal')
       // this.env.bitmaps = loader._bitmap;
       // const tpl = loader._Containers.join('\n')
       // console.log('FINAL-TPL---------------------------\n', tpl)
