@@ -8,6 +8,7 @@ export class SkinLoader {
   _path: string[] = [];
   _groupdef: {[key:string]: XmlElement} = {};
   _xuidef: {[key:string]: XmlElement} = {};
+  _bitmap: {[key:string]: XmlElement} = {};
   _containers: XmlElement[] = [];
   fileExtractor: FileExtractor;
   async loadSkin(skinPath: string) {
@@ -34,9 +35,18 @@ export class SkinLoader {
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
     const parsed = parseXml(includedXml);
-    console.log('skin.xml=>', parsed)
+    // console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
     console.log('FINAL skin.xml=>', parsed)
+  }
+
+  async loadBitmaps(){
+    // const loadBitmap = async (bitmap:XmlElement) =>{
+
+    // }
+    // return await Promise.all(
+    //   Object.values(this._bitmap).map((child) => this.traverseChild(child as XmlElement, parent, path))
+    // );
   }
 
   async traverseChildren(
@@ -133,9 +143,15 @@ export class SkinLoader {
         return this.container(node, parent, path);
       case "layout":
         return this.layout(node, parent, path);
-      // case "groupdef":
-      //   return this.groupdef(node, parent, path);
+        // case "groupdef":
+        //   return this.groupdef(node, parent, path);
       case "groupdef":
+        return this.groupdef(node, parent, path);
+      case "group":
+        return this.group(node, parent, path);
+
+      case "bitmap":
+        return this.bitmap(node, parent, path);
       case "gammaset":
       
         node.detach(); //? trial to cleanup, to see what the rest
@@ -234,7 +250,8 @@ export class SkinLoader {
       //   console.log('HAS-NO CHILD:', node.toJSON())
     const layouts = node.children.filter(el => el.tag == 'layout')
     console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
-    node.layouts = layouts.map(l => l.attributes)
+    node.layouts = layouts
+    // node.layouts = layouts.map(l => l.attributes)
     // const elLayouts= layouts.map(
     // // const layouts = getLayouts(node).map(
     //   l => `<${l.tag} ${atts(l.attributes)}/>`
@@ -247,9 +264,11 @@ export class SkinLoader {
   }
   
   async layout(node: XmlElement, parent: any, path: string[] = []) {
-    // node.name = toTitleCase(node.name)
     await this.traverseChildren(node, node, path);
-    // return node;
+  }
+  
+  async bitmap(node: XmlElement, parent: any, path: string[] = []) {
+    this._bitmap[node.id] = node.detach()
   }
   
   async groupdef(node: XmlElement, parent: any, path: string[] = []) {

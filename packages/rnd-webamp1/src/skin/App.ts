@@ -25,7 +25,7 @@ class WindowContainer extends Component {
   // <t t-component="w.Component"/>
   static template = xml` <div t-name="WindowContainer" class="window-manager">
     <t t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" >
-      <Container info="w">
+      <Container node="w">
       </Container>
     </t>
   </div>`;
@@ -61,8 +61,8 @@ export class App extends Component {
     onWillStart( async () => {
       const loader = new SkinLoader()
       // debugger
-      await loader.loadSkin('skins/WinampModern566.wal')
-      // await loader.loadSkin('skins/MMD3.wal')
+      // await loader.loadSkin('skins/WinampModern566.wal')
+      await loader.loadSkin('skins/MMD3.wal')
       // const tpl = loader._Containers.join('\n')
       // console.log('FINAL-TPL---------------------------\n', tpl)
       // this.tpl = xml`${tpl}`

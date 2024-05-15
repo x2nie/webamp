@@ -107,7 +107,7 @@ export class XmlElement {
     /**
      * delete this from parent
      */
-    detach(){
+    detach(): XmlElement{
       if(this.parent){
         const index = this.parent.children.indexOf(this);
         if (index > -1) { // only splice array when item is found
@@ -115,6 +115,7 @@ export class XmlElement {
         }
         this.parent = null
       }
+      return this;
     }
 
     clone() {
