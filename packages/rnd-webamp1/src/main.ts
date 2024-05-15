@@ -1,5 +1,5 @@
 // import { loadFile, mount, App as OwlApp } from '@odoo/owl';
-import { App } from './App';
+import { App } from './skin/App';
 import './style.css'
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'

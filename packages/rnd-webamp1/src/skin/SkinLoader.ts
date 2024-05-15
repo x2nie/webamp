@@ -138,7 +138,7 @@ export class SkinLoader {
       case "groupdef":
       case "gammaset":
       
-        node.remove(); //? trial to cleanup, to see what the rest
+        node.detach(); //? trial to cleanup, to see what the rest
         break
       case "email":
         // debugger;
@@ -152,7 +152,7 @@ export class SkinLoader {
     assert(file != null, "Include element missing `file` attribute");
 
     // debugger
-    const directories = file.split("/");
+    const directories = (file as String).split("/");
     const fileName = directories.pop();
 
     // for (const dir of directories) {
@@ -196,14 +196,14 @@ export class SkinLoader {
     
     //? INCLUDE = attach children to parent from other xml file
     if(childs.length == 0) {
-      node.remove()
+      node.detach()
       return;
     };
     let first = true;
     childs.forEach(child => {
       if(!child.parent ) return;//TODO: keep back this. 
       if(child.tag=='include' && child.children.length==0) {
-        node.remove()
+        node.detach()
         return;
       }
       // console.log('include #5~', fileName, child.name, '#', child.toJSON())
@@ -263,13 +263,13 @@ export class SkinLoader {
     if (node.attributes.xuitag) {
       this._xuidef[node.attributes.xuitag] = node;
     }
-    node.remove()
+    node.detach()
     // return node;
   }
 
   async group(node: XmlElement, parent: any, path: string[] = []) {
     const groupdef = this._groupdef[node.id]
-    node.rebase(groupdef.clone())
+    node.merge(groupdef.clone())
   }
 }
 

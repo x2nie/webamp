@@ -107,7 +107,7 @@ export class XmlElement {
     /**
      * delete this from parent
      */
-    remove(){
+    detach(){
       if(this.parent){
         const index = this.parent.children.indexOf(this);
         if (index > -1) { // only splice array when item is found
@@ -121,10 +121,14 @@ export class XmlElement {
       return structuredClone(this)
     }
 
-    rebase(base: XmlElement) {
+    /**
+     * Merge with rebase strategy.
+     * @param base 
+     */
+    merge(base: XmlElement) {
       this.children = base.children
       this.children.forEach(c => c.parent = this)
-      this.attributes = {...base.attributes, ...this.attributes}
+      this.attributes = {...base.attributes, ...this.attributes} // similar to git merge rebase.
     }
    
     toJSON(){

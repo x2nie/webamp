@@ -47,7 +47,8 @@ export type WindowId = "main" | "playlist" | "equalizer" | "milkdrop";
 
 export interface WindowInfo extends Box {
   // id: WindowId;
-  id: number;
+  id: string;
+  visible?: boolean;
   el?: HTMLElement;
 }
 

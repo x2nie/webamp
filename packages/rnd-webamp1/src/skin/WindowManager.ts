@@ -1,7 +1,7 @@
 // import { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { reactive, useState, useEnv, toRaw } from "@odoo/owl";
-import { registry } from '@web/core/registry';
+import { registry } from "@web/core/registry";
 import * as SnapUtils from "./snapUtils";
 // import * as Selectors from "../selectors";
 // import * as Actions from "../actionCreators";
@@ -13,12 +13,11 @@ import * as Utils from "./utils";
 // Window manager code
 // -----------------------------------------------------------------------------
 
-
-export function createWindowService():WindowManager {
+export function createWindowService(): WindowManager {
   return reactive(new WindowManager());
 }
 
-export function useWindowService():WindowManager {
+export function useWindowService(): WindowManager {
   const env = useEnv();
   return useState(env.windowService);
 }
@@ -60,18 +59,18 @@ export class WindowManager {
   windows = {}; // mapping id => info
   nextId = 1;
 
-  append(node:any) {
-    const Comp = registry.category('containers').get('Hello');
-    const id = node.id
+  append(node: any) {
+    const Comp = registry.category("containers").get("Hello");
+    const id = node.id;
     this.windows[id] = {
       Component: Comp,
-      ...node
-    }
+      ...node,
+    };
   }
-  add(type:string) {
+  add(type: string) {
     // console.log('ask registered C:',type)
     // const Comp = WindowManager.Windows[type];
-    const Comp = registry.category('containers').get(type);
+    const Comp = registry.category("containers").get(type);
     const x =
       50 +
       Math.round(Math.random() * (window.innerWidth - 50 - Comp.defaultWidth));
@@ -92,7 +91,7 @@ export class WindowManager {
     };
   }
 
-  setElement(id:number, el: HTMLElement){
+  setElement(id: number, el: HTMLElement) {
     this.windows[id].el = el;
   }
 
@@ -110,54 +109,60 @@ export class WindowManager {
     return Object.values(this.windows);
     // return toRaw(Object.values(this.windows));
   }
-  handleMouseDown(id:number, ev: MouseEvent){
+  handleMouseDown(id: string, ev: MouseEvent) {
     // debugger
     // const windows = toRaw(this.getWindows().filter(
     //   (w) => w.id != null //&& !getWindowHidden(w.key)
     // ));
-    const windows: MovingWindow[] = this.getWindows().filter(w=>w.visible).map(w => toRaw(w))
-    windows.forEach(w =>{
-      if(w.el){
-        const bound = w.el.getBoundingClientRect()
-        w.width = bound.width
-        w.height = bound.height
+    const windows: MovingWindow[] = this.getWindows()
+      .filter((w) => w.visible)
+      .map((w) => toRaw(w));
+    windows.forEach((w) => {
+      if (w.el) {
+        const bound = w.el.getBoundingClientRect();
+        w.width = bound.width;
+        w.height = bound.height;
       }
-  })
+    });
     // const current = toRaw(this.windows[id]);
-    const current = windows.filter(w => w.id == id)[0];
+    const current = windows.filter((w) => w.id == id)[0];
     if (current == null) {
       throw new Error(`Tried to move a node that does not exist: ${id}`);
     }
-    
+
     let movingSet = new Set([current]);
     // Only the main window brings other windows along.
-    if (id == 1 || id == 'main') {
+    if (id == "main") {
       const findAllConnected = SnapUtils.traceConnection<WindowInfo>(abuts);
       movingSet = findAllConnected(windows, current);
     }
-    
+
     const stationary = windows.filter((w) => !movingSet.has(w));
     // console.log('stationary:', JSON.stringify(stationary))
     const moving = Array.from(movingSet);
-    
-    moving.forEach(w => {
+
+    moving.forEach((w) => {
       // const w = this.windows[win.id];
       w.ox = w.x;
       w.oy = w.y;
       w.fx = w.x;
       w.fy = w.y;
-    })
-
+    });
 
     const x = Utils.getX(ev);
     const y = Utils.getY(ev);
     const mouseStart = { x, y };
     // console.log('mose-down!',JSON.stringify(moving))
-    
-    const workingArea = document.querySelector('.window-manager')?.getBoundingClientRect()
-    const browserWindowSize = {width: workingArea?.width || 0, height: workingArea?.height || 0};
+
+    const workingArea = document
+      .querySelector(".window-manager")
+      ?.getBoundingClientRect();
+    const browserWindowSize = {
+      width: workingArea?.width || 0,
+      height: workingArea?.height || 0,
+    };
     // console.log('browserWindowSize:',JSON.stringify(browserWindowSize))
-    
+
     // const updateWindowPositions0 = (newPositions: WindowPositions) =>{
     //   console.log('updated:',JSON.stringify(newPositions))
     //   for(const [id,att] of Object.entries(newPositions)){
@@ -166,15 +171,15 @@ export class WindowManager {
     //     w.y = (att.y - mouseStart.y) + w.oy;
     //   }
     // }
-    
-    const updateWindowPositions = (p: Point) =>{
+
+    const updateWindowPositions = (p: Point) => {
       // console.log('updated:',JSON.stringify(p))
       // debugger
-      moving.forEach(w => {
+      moving.forEach((w) => {
         // const w = this.windows[win.id];
         // win.x = w.x;
         // win.y = w.y;
-        
+
         const x = p.x + w.ox!;
         const y = p.y + w.oy!;
 
@@ -183,19 +188,18 @@ export class WindowManager {
         // let {id, width, height } = w;
         // document.getElementById(`${id}`)?.setAttribute('style', `width:${width}px; height:${height}px; top:${y}px; left:${x}px;`);
         // const el =  document.getElementById(`${w.id}`)!
-        const el =  w.el!;
-        el.style.top = `${y}px`
-        el.style.left = `${x}px`
+        const el = w.el!;
+        el.style.top = `${y}px`;
+        el.style.left = `${x}px`;
         // const win = this.windows[w.id];
         // win.x = x;
         // win.y = y;
-      })
+      });
       // }
-    }
-    
+    };
+
     const boundingBox = SnapUtils.boundingBox(moving);
     const handleMouseMove = (ee: MouseEvent | TouchEvent) => {
-
       const proposedDiff = {
         x: Utils.getX(ee) - mouseStart.x,
         y: Utils.getY(ee) - mouseStart.y,
@@ -239,12 +243,10 @@ export class WindowManager {
       updateWindowPositions(finalDiff);
     };
 
-
     // const offsetX = current.x - ev.pageX;
     // const offsetY = current.y - ev.pageY;
     // let left, top;
 
-    
     // function moveWindow(ev) {
     //   left = Math.max(offsetX + ev.pageX, 0);
     //   top = Math.max(offsetY + ev.pageY, 0);
@@ -258,7 +260,7 @@ export class WindowManager {
       // if (top !== undefined && left !== undefined) {
       //   self.windowService.updatePosition(current.id, left, top);
       // }
-      moving.forEach(w => {
+      moving.forEach((w) => {
         const win = this.windows[w.id];
         // w.fx = p.x + w.ox;
         // w.fy = p.y + w.oy;
@@ -272,10 +274,9 @@ export class WindowManager {
         // const w = this.windows[win.id];
         // w.x = x;
         // w.y = y;
-      })
-    }
+      });
+    };
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", stopDnD, { once: true });
   }
-  
 }
