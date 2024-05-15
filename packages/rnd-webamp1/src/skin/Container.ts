@@ -5,6 +5,7 @@
 import { Component, xml, onMounted, useRef } from "@odoo/owl";
 import { registry } from '@web/core/registry';
 import { WindowManager, useWindowService } from "./WindowManager";
+import { Layout } from "./Layout";
 
 export class Container extends Component {
     static template = xml`
@@ -13,12 +14,13 @@ export class Container extends Component {
       t-att-style="style" 
       t-on-dblclick="toggleLayout" t-ref="root">
       <t t-foreach="layouts()" t-as="l" t-key="l.id">
-        <div class="layout" t-if="l.id == props.info.layout_id" t-attf-style="width:#{l.w}px; height:#{l.h}px;">
-        <t t-esc="props.info.title"/> - <t t-out="l.id"/>
-        </div>
+        <Layout t-if="l.id == props.info.layout_id" info="l">
+        <t t-esc="props.info.title"/> - 
+        </Layout>
       </t>
       <t t-slot="default"/>
       </div>`;
+    static components = {Layout}
     static nextZIndex = 1;
   
     zIndex = 1;
