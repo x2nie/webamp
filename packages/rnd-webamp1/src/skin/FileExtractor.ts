@@ -32,23 +32,23 @@ export class ZipFileExtractor {
   }
 
   async getFileAsString(filePath: string): Promise<string> {
-    if (!filePath) return null;
+    if (!filePath) return '';
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
+    if (!zipObj) return '';
     return await zipObj.async("text");
   }
 
   async getFileAsBytes(filePath: string): Promise<ArrayBuffer> {
-    if (!filePath) return null;
+    if (!filePath) return new ArrayBuffer(0);;
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
+    if (!zipObj) return new ArrayBuffer(0);;
     return await zipObj.async("arraybuffer");
   }
 
   async getFileAsBlob(filePath: string): Promise<Blob> {
-    if (!filePath) return null;
+    if (!filePath) return new Blob();;
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
+    if (!zipObj) return new Blob();;
     return await zipObj.async("blob");
   }
 }
@@ -89,9 +89,9 @@ export function getCaseInsensitiveFile(
   const files = zip.file(new RegExp(normalized, "i"));
   if (files && files.length > 1) {
     // console.log('asking',filePath,'got files:', files);
-    const requestName = filePath.split("/").pop().toLowerCase();
+    const requestName = filePath.split("/").pop()?.toLowerCase();
     for (let i = 0; i < files.length; i++) {
-      const responseName = files[i].name.split("/").pop().toLowerCase();
+      const responseName = files[i].name.split("/").pop()?.toLowerCase();
       if (responseName == requestName) {
         return files[i];
       }

@@ -20,7 +20,6 @@ export function assert(condition: boolean, message: string) {
   }
 }
 
-
 export function imgFromUrl(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -31,6 +30,84 @@ export function imgFromUrl(url: string): Promise<HTMLImageElement> {
     img.src = url;
   });
 }
+
+export async function getPngSize(
+  blob: Blob
+): Promise<{ w: number; h: number }> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = function (event: ProgressEvent<FileReader>) {
+      if (event.target) {
+        const view = new DataView(event.target.result as ArrayBuffer);
+
+        // Mendapatkan lebar dan tinggi dari header PNG
+        if (
+          view.getUint32(0, false) === 0x89504e47 &&
+          view.getUint32(4, false) === 0x0d0a1a0a
+        ) {
+          const w = view.getUint32(16, false);
+          const h = view.getUint32(20, false);
+          resolve({ w, h });
+        } else {
+          reject(new Error("File is not a valid PNG image"));
+        }
+      } else {
+        reject(new Error('Event target is null'));
+      }
+    };
+
+    reader.onerror = function () {
+      reject(new Error("Error reading the file"));
+    };
+
+    reader.readAsArrayBuffer(blob);
+  });
+  // return new Promise((resolve, reject) => {
+  //   // Cari indeks di mana base64 string dimulai
+  //   const base64Index = dataURL.indexOf('base64,') + 'base64,'.length;
+  //   const base64 = dataURL.substring(base64Index);
+  //   const binaryString = atob(base64);
+  //   const bytes = new Uint8Array(binaryString.length);
+
+  //   // Konversi string binary ke array of bytes
+  //   for (let i = 0; i < binaryString.length; i++) {
+  //     bytes[i] = binaryString.charCodeAt(i);
+  //   }
+
+  //   // Buat DataView dari array of bytes
+  //   const view = new DataView(bytes.buffer);
+
+  //   // Mendapatkan lebar dan tinggi dari header PNG
+  //   if (view.getUint32(0, false) === 0x89504e47 &&
+  //       view.getUint32(4, false) === 0x0d0a1a0a) {
+  //     const w = view.getUint32(16, false);
+  //     const h = view.getUint32(20, false);
+  //     resolve({w, h });
+  //   } else {
+  //     reject(new Error('Data URL is not a valid PNG image'));
+  //   }
+  // });
+}
+// function getBlobFromURL(url) {
+//   return fetch(url).then((response) => {
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch blob");
+//     }
+//     return response.blob();
+//   });
+// }
+// export async function getPngSize(blobURL:string): Promise<{w:number, h:number}> {
+//   return await getBlobFromURL(blobURL)
+//   .then(blob => getPngSize(URL.createObjectURL(blob)))
+//   // .then(size => {
+//   //   console.log('Width:', size.width);
+//   //   console.log('Height:', size.height);
+//   // })
+//   // .catch(error => {
+//   //   console.error('Error:', error.message);
+//   // });
+// }
 
 export const getTimeObj = (time: number | null): Time => {
   if (time == null) {
@@ -71,12 +148,9 @@ export const getTimeObj = (time: number | null): Time => {
 };
 
 export function toTitleCase(str) {
-  return str.replace(
-  /\w\S*/g,
-  function(txt) {
-  return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-  }
-  );
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
 }
 
 export const getTimeStr = (
@@ -307,7 +381,10 @@ export function debounce0(func: Function, delay: number): Function {
     }, delay);
   };
 }
-export function debounce<Params extends any[]>(func: (...args: Params) => any, timeout: number): (...args: Params) => void {
+export function debounce<Params extends any[]>(
+  func: (...args: Params) => any,
+  timeout: number
+): (...args: Params) => void {
   let timer: NodeJS.Timeout;
   return (...args: Params) => {
     clearTimeout(timer);

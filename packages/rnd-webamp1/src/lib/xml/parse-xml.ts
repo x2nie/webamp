@@ -93,6 +93,7 @@ export class XmlElement {
           this.attributes[k] = v.toLowerCase()
         } 
         else if(value2number.includes(k)){
+          //@ts-ignore
           this.attributes[k] = Number(v)
         }
         else {

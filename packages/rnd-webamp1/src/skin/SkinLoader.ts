@@ -1,6 +1,6 @@
 import { XmlElement, parseXml } from "@xml/parse-xml";
 import { FileExtractor, ZipFileExtractor } from "./FileExtractor";
-import { assert, /* , getCaseInsensitiveFile, assume */ 
+import { assert, getPngSize, /* , getCaseInsensitiveFile, assume */ 
 toTitleCase} from "./utils";
 import { WindowInfo } from "./types";
 
@@ -47,6 +47,11 @@ export class SkinLoader {
       const imgBlob = await this.fileExtractor.getFileAsBlob(filepath);
       const imgUrl = URL.createObjectURL(imgBlob);
       bitmap.url = imgUrl;
+      if(!bitmap.attributes.w || !bitmap.attributes.h){
+        const {w,h} = await getPngSize(imgBlob)
+        //@ts-ignore
+        bitmap.attributes.w = w; bitmap.attributes.h = h;
+      }
     }
     return await Promise.all(
       Object.values(this._bitmap).map(loadBitmap)

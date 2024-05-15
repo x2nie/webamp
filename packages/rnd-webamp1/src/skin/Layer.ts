@@ -37,3 +37,4 @@ export class Layer extends Component {
 }
 
 registry.category('component').add('layer', Layer)
+registry.category('component').add('button', Layer)
