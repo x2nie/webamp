@@ -13,6 +13,7 @@ import {
 import  { WindowManager, createWindowService, useWindowService } from "./WindowManager";
 import { Container } from "./Container";
 import { SkinLoader } from "./SkinLoader";
+import { XmlElement } from "@xml/parse-xml";
 
 
 
@@ -43,6 +44,7 @@ class WindowContainer extends Component {
 
 const env = {
   windowService: createWindowService(),
+  bitmaps: {} ,
 };
 
 const templates = "";
@@ -62,7 +64,9 @@ export class App extends Component {
       const loader = new SkinLoader()
       // debugger
       // await loader.loadSkin('skins/WinampModern566.wal')
+      loader._bitmap = this.env.bitmaps
       await loader.loadSkin('skins/MMD3.wal')
+      // this.env.bitmaps = loader._bitmap;
       // const tpl = loader._Containers.join('\n')
       // console.log('FINAL-TPL---------------------------\n', tpl)
       // this.tpl = xml`${tpl}`

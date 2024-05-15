@@ -38,15 +38,19 @@ export class SkinLoader {
     // console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
     console.log('FINAL skin.xml=>', parsed)
+    await this.loadBitmaps()
   }
 
   async loadBitmaps(){
-    // const loadBitmap = async (bitmap:XmlElement) =>{
-
-    // }
-    // return await Promise.all(
-    //   Object.values(this._bitmap).map((child) => this.traverseChild(child as XmlElement, parent, path))
-    // );
+    const loadBitmap = async (bitmap:XmlElement) =>{
+      const filepath = bitmap.attributes.file;
+      const imgBlob = await this.fileExtractor.getFileAsBlob(filepath);
+      const imgUrl = URL.createObjectURL(imgBlob);
+      bitmap.url = imgUrl;
+    }
+    return await Promise.all(
+      Object.values(this._bitmap).map(loadBitmap)
+    );
   }
 
   async traverseChildren(

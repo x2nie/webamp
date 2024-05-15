@@ -56,7 +56,8 @@ export class XmlElement {
     /**
      * Attributes on this element.
      */
-    attributes: {[attrName: string]: string | number};
+    // attributes: {[attrName: string]: string | number};
+    attributes: {[attrName: string]: string};
   
     /**
      * Child nodes of this element.
