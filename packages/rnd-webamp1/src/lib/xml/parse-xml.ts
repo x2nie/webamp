@@ -9,6 +9,40 @@ import { XmlError } from "@rgrove/parse-xml/dist/lib/XmlError";
 
 const emptyString = '';
 
+const value2lower = [
+  // identity
+  'id', 'xuitag', 'instanceid', 'group', 'content','linkwidth', 'shade', 
+  'inherit_group',
+  'action', 'action_target', 'droptarget', 'color',
+  // event
+  'dblclickaction', 
+  // enum
+  'resize', 'scale',
+  'background','image','downimage','activeimage','thumb','downthumb',
+  'notfoundImage', // ALbumArt
+]
+
+const value2number = [
+  'x', 'y', 'w','h', 'relatex','relaty','relatw', 'relath','bg',
+  'default_x', 'default_y', 'minimum_w','minimum_h',
+  'shadowx', 'shadowy', 'fontsize','altfontsize', 'timecolonwidth',
+  'sysregion', 'snapadjustbottom',
+  'activealpha','inactivealpha',
+  //bool
+  'ghost','visible', 'forceuppercase', 'altbolt', 'rectrgn'
+]
+
+const value_kept = [
+  'default', //send: parame, default
+  'tooltip',
+  'font','altfont',
+  //colors
+  'color', 'colorband0~16',
+]
+
+
+let DEBUG =1
+const temp_att: string[] = []
 
 /**
  * Element in an XML document.
@@ -22,7 +56,7 @@ export class XmlElement {
     /**
      * Attributes on this element.
      */
-    attributes: {[attrName: string]: string};
+    attributes: {[attrName: string]: string | number};
   
     /**
      * Child nodes of this element.
@@ -34,7 +68,10 @@ export class XmlElement {
      */
     parent: XmlElement | null;
   
-    
+    get id() : string {
+      return String(this.attributes.id || '')
+    }
+
     // get text(): string{
     //   return 
     // }
@@ -48,10 +85,21 @@ export class XmlElement {
       attributes: {[attrName: string]: string} = Object.create(null),
       children: Array<XmlElement> = [],
     ) {
-      // super();
+      //transform, as needed
+      for(const [k,v] of Object.entries(attributes)){
+        if(value2lower.includes(k)){
+          this.attributes[k] = v.toLowerCase()
+        } 
+        else if(value2number.includes(k)){
+          this.attributes[k] = Number(v)
+        }
+        else {
+          this.attributes[k] = v
+        }
+      }
   
       this.tag = tag.toLowerCase();
-      this.attributes = attributes;
+      // this.attributes = attributes;
       this.children = children;
     }
 
@@ -108,6 +156,10 @@ export class Parser {
   
       if (!scanner.isEnd) {
         throw this.error('Extra content at the end of the document');
+      }
+
+      if(DEBUG){
+        console.log('KNOWN-ATTs:', temp_att.sort())
       }
     }
   
@@ -177,6 +229,10 @@ export class Parser {
           break;
         }
         attrName = attrName.toLowerCase()
+        if(DEBUG){
+          if(!temp_att.includes(attrName))
+            temp_att.push(attrName)
+        }
   
         let attrValue = this.consumeEqual() && this.consumeAttributeValue();
   
