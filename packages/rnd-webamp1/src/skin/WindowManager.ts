@@ -122,6 +122,7 @@ export class WindowManager {
         const bound = w.el.getBoundingClientRect();
         w.width = bound.width;
         w.height = bound.height;
+        console.log(w.id, bound)
       }
     });
     // const current = toRaw(this.windows[id]);
@@ -157,6 +158,7 @@ export class WindowManager {
     const workingArea = document
       .querySelector(".window-manager")
       ?.getBoundingClientRect();
+    console.log('workingArea', workingArea)
     const browserWindowSize = {
       width: workingArea?.width || 0,
       height: workingArea?.height || 0,
