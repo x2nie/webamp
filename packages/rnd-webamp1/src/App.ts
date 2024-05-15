@@ -69,8 +69,8 @@ export class App extends Component {
 
       loader._containers.forEach(node => {
         const att = node.attributes
-        const x = att['default_x'] ? Number( att['default_x']) : Math.round(Math.random() * (window.innerWidth - 50));
-        const y = att['default_y'] ? Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
+        const x = att['default_x'] || 0; // Number( att['default_x']) : Math.round(Math.random() * (window.innerWidth - 50));
+        const y = att['default_y'] || 0; // Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
         this.windowService.append({
           id: att.id,
           title: att.name,

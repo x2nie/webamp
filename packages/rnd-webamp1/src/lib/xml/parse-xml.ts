@@ -41,7 +41,7 @@ const value_kept = [
 ]
 
 
-let DEBUG =1
+let DEBUG =0
 const temp_att: string[] = []
 
 /**
@@ -86,6 +86,7 @@ export class XmlElement {
       children: Array<XmlElement> = [],
     ) {
       //transform, as needed
+      this.attributes = {}
       for(const [k,v] of Object.entries(attributes)){
         if(value2lower.includes(k)){
           this.attributes[k] = v.toLowerCase()
@@ -114,6 +115,16 @@ export class XmlElement {
         }
         this.parent = null
       }
+    }
+
+    clone() {
+      return structuredClone(this)
+    }
+
+    rebase(base: XmlElement) {
+      this.children = base.children
+      this.children.forEach(c => c.parent = this)
+      this.attributes = {...base.attributes, ...this.attributes}
     }
    
     toJSON(){

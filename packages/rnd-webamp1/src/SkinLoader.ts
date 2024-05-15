@@ -1,4 +1,3 @@
-// import { XmlDocument, XmlElement, XmlNode, parseXml } from "@rgrove/parse-xml";
 import { XmlElement, parseXml } from "@xml/parse-xml";
 import { FileExtractor, ZipFileExtractor } from "./FileExtractor";
 import { assert, /* , getCaseInsensitiveFile, assume */ 
@@ -7,8 +6,8 @@ import { WindowInfo } from "./types";
 
 export class SkinLoader {
   _path: string[] = [];
-  _groupdef: string[] = [];
-  _Containers: string[] = [];
+  _groupdef: {[key:string]: XmlElement} = {};
+  _xuidef: {[key:string]: XmlElement} = {};
   _containers: XmlElement[] = [];
   fileExtractor: FileExtractor;
   async loadSkin(skinPath: string) {
@@ -124,6 +123,8 @@ export class SkinLoader {
       // A different XML parser library might make this unnessesary.
       case "wrapper":
         return this.traverseChildren(node, parent, path);
+      // case "script":
+      //   return node
       case "include":
         return this.include(node, parent, path);
       // case "albumart":
@@ -234,14 +235,14 @@ export class SkinLoader {
     const layouts = node.children.filter(el => el.tag == 'layout')
     console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
     node.layouts = layouts.map(l => l.attributes)
-    const elLayouts= layouts.map(
-    // const layouts = getLayouts(node).map(
-      l => `<${l.tag} ${atts(l.attributes)}/>`
-      // l => `<${l.tag} ${atts(l.attributes)}></${l.tag}>`
-    )
-    const tpl = `<Container ${info(node.attributes)}>\n\t${elLayouts.join('\n\t')}</Container>`
+    // const elLayouts= layouts.map(
+    // // const layouts = getLayouts(node).map(
+    //   l => `<${l.tag} ${atts(l.attributes)}/>`
+    //   // l => `<${l.tag} ${atts(l.attributes)}></${l.tag}>`
+    // )
+    // const tpl = `<Container ${info(node.attributes)}>\n\t${elLayouts.join('\n\t')}</Container>`
     // console.log(node.attributes.name,tpl)
-    this._Containers.push(tpl);
+    // this._Containers.push(tpl);
     this._containers.push(node);
   }
   
@@ -254,12 +255,21 @@ export class SkinLoader {
   async groupdef(node: XmlElement, parent: any, path: string[] = []) {
     // node.name = toTitleCase(node.name)
     // await this.traverseChildren(node, node, path);
-    const id = node.attributes.id
-    if(this._groupdef.includes(id)) {
-      throw new Error("groupdef already registered:"+ id);
+    const id = node.id
+    // if(this._groupdef.includes(id)) {
+    //   throw new Error("groupdef already registered:"+ id);
+    // }
+    this._groupdef[id] = node
+    if (node.attributes.xuitag) {
+      this._xuidef[node.attributes.xuitag] = node;
     }
-    this._groupdef.push(id)
+    node.remove()
     // return node;
+  }
+
+  async group(node: XmlElement, parent: any, path: string[] = []) {
+    const groupdef = this._groupdef[node.id]
+    node.rebase(groupdef.clone())
   }
 }
 
