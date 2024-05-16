@@ -13,6 +13,7 @@ export class Layout extends Component {
 
     setup() {
         this.env = useEnv()
+        console.log(`Layout ${this.att.id} has parent: ${this.props.node.parent.id}`)
     }
     get att(){
         return this.props.node.attributes

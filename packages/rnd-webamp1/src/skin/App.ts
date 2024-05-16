@@ -65,8 +65,8 @@ export class App extends Component {
       // debugger
       loader._bitmap = this.env.bitmaps
       // await loader.loadSkin('skins/WinampModern566.wal')
-      await loader.loadSkin('skins/MMD3.wal')
-      // await loader.loadSkin('skins/SimpleTutorial.wal')
+      // await loader.loadSkin('skins/MMD3.wal')
+      await loader.loadSkin('skins/SimpleTutorial.wal')
       // this.env.bitmaps = loader._bitmap;
       // const tpl = loader._Containers.join('\n')
       // console.log('FINAL-TPL---------------------------\n', tpl)
@@ -80,11 +80,11 @@ export class App extends Component {
           id: att.id,
           title: att.name,
           x,y,
-          width: 100,
-          height: 50,
+          // width: 100,
+          // height: 50,
           visible: Number(att.default_visible),
-          // children: node.children,
-          layouts: node.layouts,
+          children: node.children,
+          // layouts: node.layouts,
           layout_id: 'normal',
           // Component: Container,
         })

@@ -259,7 +259,7 @@ export class SkinLoader {
       //   console.log('HAS-NO CHILD:', node.toJSON())
     const layouts = node.children.filter(el => el.tag == 'layout')
     console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
-    node.layouts = layouts
+    // node.layouts = layouts
     // node.layouts = layouts.map(l => l.attributes)
     // const elLayouts= layouts.map(
     // // const layouts = getLayouts(node).map(

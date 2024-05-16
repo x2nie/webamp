@@ -40,6 +40,7 @@ export class Container extends Component {
     }
 
     layouts() {
+      return this.props.node.children || []
       return this.props.node.layouts || []
     }
     toggleLayout() {
