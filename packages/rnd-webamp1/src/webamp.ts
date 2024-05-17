@@ -12,6 +12,18 @@ export class Webamp {
         this.options = {...webampDefaultOptions, ...options}
         this.mount(htmlNode)
     }
+
+    switchSkin(skinPath:string){
+
+    }
+
+    addSong(path:string, name:string=''): number {
+        return 0
+    }
+
+    playSong(index:number){
+        
+    }
     
     private async mount(htmlNode:HTMLElement){
         //TODO: check if this function will be called more than one by switch skin?
