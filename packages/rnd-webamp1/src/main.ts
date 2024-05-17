@@ -1,6 +1,6 @@
 // import { loadFile, mount, App as OwlApp } from '@odoo/owl';
-import { App } from './skin/App';
-import './style.css'
+// import { App } from './skin/App';
+// import './style.css'
 import { Webamp } from './webamp';
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'
@@ -20,10 +20,14 @@ import { Webamp } from './webamp';
 
 // setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
-async function  main(){
+// async function  main(){
   // App.mount1(document.getElementById('app'))
-}
+// }
 
-main()
+// main()
 
 const webamp = new Webamp(document.getElementById('app') || document.body)
+
+setTimeout(() => {
+  webamp.app.say('helloBoss')
+}, 3000);

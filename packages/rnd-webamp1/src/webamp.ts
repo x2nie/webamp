@@ -4,21 +4,24 @@ import './style.css'
 import { createWindowService } from "./skin/WindowManager";
 
 export class Webamp {
-    owlApp: OwlApp<any, App, any>;
-    app: App;
+    private owlApp: OwlApp<any, App, any>;
+    private app: App;
 
     constructor(htmlNode:HTMLElement, options:{[key:string]:any}={}){
+        this.mount(htmlNode, options)
+    }
+    
+    private async mount(htmlNode:HTMLElement, options:{[key:string]:any}){
+        if(this.owlApp) {
+            // https://github.com/odoo/owl/blob/master/doc/reference/app.md#api
+            this.owlApp.destroy()
+        }
         const env = {
             windowService: createWindowService(),
             bitmaps: {} ,
         };
         options = {...options, env, dev:true}
-        this.mount(htmlNode, options)
-    }
-    
-    private async mount(htmlNode:HTMLElement, options:{[key:string]:any}){
         this.owlApp = new OwlApp(App, options) 
         this.app = await this.owlApp.mount(htmlNode)
-
     }
 }

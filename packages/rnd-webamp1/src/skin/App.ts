@@ -99,6 +99,10 @@ export class App extends Component {
     })
   }
 
+  say(hello:string){
+    document.title = hello
+  }
+
 
   get kanban_template() {
     // return xml`<b>temporay terus boss</b>`
