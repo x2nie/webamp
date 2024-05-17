@@ -26,7 +26,9 @@ import { Webamp } from './webamp';
 
 // main()
 
-const webamp = new Webamp(document.getElementById('app') || document.body)
+const webamp = new Webamp(document.getElementById('app') || document.body, {
+  // skin: .../,,,,
+})
 
 setTimeout(() => {
   webamp.app.say('helloBoss')

@@ -9,6 +9,7 @@ import {
   useRef,
   useEffect,
   onWillStart,
+  useSubEnv,
 } from "@odoo/owl";
 import  { WindowManager, createWindowService, useWindowService } from "./WindowManager";
 import { Container } from "./Container";
@@ -58,6 +59,11 @@ export class App extends Component {
   tpl = xml`<span>tpl-goes-here</span>`
 
   setup() {
+    const env = useEnv()
+    useSubEnv({ 
+      windowService: createWindowService(),
+      bitmaps: {}, 
+    });
     this.windowService = useWindowService();
 
     onWillStart( async () => {
@@ -66,11 +72,12 @@ export class App extends Component {
       loader._bitmap = this.env.bitmaps
       // await loader.loadSkin('skins/WinampModern566.wal')
       // await loader.loadSkin('skins/MMD3.wal')
-      await loader.loadSkin('skins/SimpleTutorial.wal')
+      // await loader.loadSkin('skins/SimpleTutorial.wal')
       // this.env.bitmaps = loader._bitmap;
       // const tpl = loader._Containers.join('\n')
       // console.log('FINAL-TPL---------------------------\n', tpl)
       // this.tpl = xml`${tpl}`
+      await loader.loadSkin(env.options.skin)
 
       loader._containers.forEach(node => {
         const att = node.attributes
