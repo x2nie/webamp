@@ -30,6 +30,6 @@ const webamp = new Webamp(document.getElementById('app') || document.body, {
   // skin: .../,,,,
 })
 
-setTimeout(() => {
-  webamp.app.say('helloBoss')
-}, 3000);
+// setTimeout(() => {
+//   webamp.app.say('helloBoss')
+// }, 3000);
