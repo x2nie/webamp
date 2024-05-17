@@ -13,7 +13,7 @@ import {
 } from "@odoo/owl";
 import  { WindowManager, createWindowService, useWindowService } from "./WindowManager";
 import { Container } from "./Container";
-import { SkinLoader } from "./SkinLoader";
+// import { SkinLoader } from "./SkinLoader";
 import { XmlElement } from "@xml/parse-xml";
 import { createSkinEngineFor } from "./SkinEngine";
 

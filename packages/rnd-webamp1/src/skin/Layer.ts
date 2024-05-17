@@ -2,11 +2,11 @@ import { Component, xml, onMounted, useEnv, useRef } from "@odoo/owl";
 import { registry } from '@web/core/registry';
 
 export class Layer extends Component {
+    // @<t t-out="att.tag"/> :
+    //   <t t-out="att.id"/>
+    // <t t-slot="default"/>
     static template = xml`
     <div class="layer" t-att-id="att.id" t-att-style="style">
-    @<t t-out="att.tag"/> :
-      <t t-out="att.id"/>
-    <t t-slot="default"/>
     </div>`;
 
     setup() {

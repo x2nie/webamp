@@ -22,7 +22,7 @@ const value2lower = [
   'notfoundImage', // ALbumArt
 ]
 
-const value2number = [
+export const value2number = [
   'x', 'y', 'w','h', 'relatex','relaty','relatw', 'relath','bg',
   'default_x', 'default_y', 'minimum_w','minimum_h', 'maximum_w','maximum_h',
   'shadowx', 'shadowy', 'fontsize','altfontsize', 'timecolonwidth',
