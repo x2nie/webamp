@@ -25,7 +25,7 @@ export class Layout extends Component {
         let style = ''
         if(this.att.background){
             // const url = this.env.bitmaps[this.att.image].url
-            const bitmap = this.env.bitmaps[this.att.background]
+            const bitmap = this.env.ui.bitmaps[this.att.background]
             const url = bitmap.url
             style += `background:url(${url});`
             if(!w && bitmap.attributes.w)

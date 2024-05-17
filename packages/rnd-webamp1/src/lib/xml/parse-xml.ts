@@ -959,3 +959,9 @@ export class Parser {
 export function parseXml(xml: string) {
   return (new Parser(xml)).document;
 }
+
+export function parseXmlFragment(xml: string): XmlElement {
+  // Note: Included files don't have a single root node, so we add a synthetic one.
+  // A different XML parser library might make this unnessesary.
+  return parseXml(`<wrapper>${xml}</wrapper>`) as unknown as XmlElement;
+}

@@ -5,18 +5,18 @@ toTitleCase} from "./utils";
 import { WindowInfo } from "./types";
 
 export class SkinLoader {
-  _path: string[] = [];
+  // _path: string[] = [];
   _groupdef: {[key:string]: XmlElement} = {};
   _xuidef: {[key:string]: XmlElement} = {};
   _bitmap: {[key:string]: XmlElement} = {};
   _containers: XmlElement[] = [];
   fileExtractor: FileExtractor;
   async loadSkin(skinPath: string) {
-    let response: Response;
+    // let response: Response;
     this.fileExtractor = new ZipFileExtractor();
 
-    response = await fetch(skinPath);
-    await this.fileExtractor.prepare(skinPath, response);
+    // response = await fetch(skinPath);
+    await this.fileExtractor.prepare(skinPath);
     await this.parseSkin();
     // const tpl = this._containers.join('\n')
     //   console.log('FINAL-TPL---------------------------\n', tpl)
@@ -127,7 +127,7 @@ export class SkinLoader {
         // }
       }
     // }
-    return elements.filter(e => !!e.parent)
+    // return elements.filter(e => !!e.parent)
   }
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
     const tag = node.tag;
@@ -196,7 +196,7 @@ export class SkinLoader {
     // console.log('include #2', fileName)
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
-    const parsed = parseXmlFragment(includedXml)//.children[0] as XmlElement;
+    const parsed = parseXmlFragment(includedXml).children[0]//.children[0] as XmlElement;
     // debugger
     // console.log('include #3', fileName)
     
@@ -204,7 +204,9 @@ export class SkinLoader {
     // await this.traverseChildren(parsed, parent, [...path, ...directories]);
     // console.log('include #4>', fileName, parsed)
     // debugger
-    const childs = await this.traverseChilds(parsed.children[0].children, parent, [...path, ...directories]);
+    // const childs = await this.traverseChilds(parsed.children, parent, [...path, ...directories]);
+    await this.traverseChilds(parsed.children, parent, [...path, ...directories]);
+    const childs = parsed.children.filter(e => !!e.parent)
     // console.log('include #4<', fileName, parsed)
     
     // if(!parsed.children) {

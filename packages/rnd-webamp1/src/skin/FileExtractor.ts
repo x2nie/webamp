@@ -13,7 +13,7 @@ import JSZip, { JSZipObject } from "jszip";
 export abstract class FileExtractor {
   //
 
-  abstract prepare(skinPath: string, response: Response): Promise<void>;
+  abstract prepare(skinPath: string): Promise<void>;
 
   abstract getFileAsString(filePath: string): Promise<string>;
   abstract getFileAsBytes(filePath: string): Promise<ArrayBuffer>;
@@ -26,7 +26,8 @@ export abstract class FileExtractor {
 export class ZipFileExtractor {
   _zip: JSZip;
 
-  async prepare(skinPath: string, response: Response) {
+  async prepare(skinPath: string) {
+    const response = await fetch(skinPath);
     const skinZipBlob = await response.blob();
     this._zip = await JSZip.loadAsync(skinZipBlob);
   }
@@ -60,7 +61,7 @@ export class ZipFileExtractor {
 export class PathFileExtractor {
   _skinDir: string;
 
-  async prepare(skinPath: string, response: Response) {
+  async prepare(skinPath: string) {
     if (!skinPath.endsWith("/")) skinPath += "/";
     this._skinDir = skinPath;
   }

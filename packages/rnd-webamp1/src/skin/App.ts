@@ -15,6 +15,7 @@ import  { WindowManager, createWindowService, useWindowService } from "./WindowM
 import { Container } from "./Container";
 import { SkinLoader } from "./SkinLoader";
 import { XmlElement } from "@xml/parse-xml";
+import { createSkinEngineFor } from "./SkinEngine";
 
 
 
@@ -56,6 +57,43 @@ export class App extends Component {
   }
 
   async switchSkin(skinPath:string){
+    const loader = await createSkinEngineFor(skinPath)
+
+      // debugger
+      // loader._bitmap = this.env.bitmaps
+      // await loader.loadSkin('skins/WinampModern566.wal')
+    // await loader.loadSkin('skins/MMD3.wal')
+    // await loader.loadSkin('skins/SimpleTutorial.wal')
+    // this.env.bitmaps = loader._bitmap;
+    // const tpl = loader._Containers.join('\n')
+    // console.log('FINAL-TPL---------------------------\n', tpl)
+    // this.tpl = xml`${tpl}`
+    await loader.parseSkin()
+
+    this.env.ui.bitmaps = loader.bitmaps()
+
+    
+    loader.containers().forEach(node => {
+      const att = node.attributes
+      const x = att['default_x'] || 0; // Number( att['default_x']) : Math.round(Math.random() * (window.innerWidth - 50));
+      const y = att['default_y'] || 0; // Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
+      this.windowService.append({
+        id: att.id,
+        title: att.name,
+        x,y,
+        // width: 100,
+        // height: 50,
+        visible: Number(att.default_visible),
+        children: node.children,
+        // layouts: node.layouts,
+        layout_id: 'normal',
+        // Component: Container,
+      })
+    })
+  }
+
+
+  /* async switchSkin0(skinPath:string){
     const loader = new SkinLoader()
     // debugger
     loader._bitmap = this.env.bitmaps
@@ -85,7 +123,7 @@ export class App extends Component {
         // Component: Container,
       })
     })
-  }
+  } */
 
 
   say(hello:string){

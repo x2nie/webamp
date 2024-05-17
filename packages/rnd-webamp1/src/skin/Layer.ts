@@ -21,7 +21,7 @@ export class Layer extends Component {
         let style = `top:${y}px; left:${x}px; color:fuchsia;`;
         if(this.att.image){
             // const url = this.env.bitmaps[this.att.image].url
-            const bitmap = this.env.bitmaps[this.att.image]
+            const bitmap = this.env.ui.bitmaps[this.att.image]
             const url = bitmap.url
             style += `background:url(${url});`
             if(bitmap.attributes.w)
