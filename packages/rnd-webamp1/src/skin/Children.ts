@@ -9,12 +9,12 @@ export class Children extends Component {
   // @<t t-out="child.tag"/> : <t t-out="child.id"/>
 
   lookup(tag: string): typeof Component {
-    console.log('finding component for tag:', tag)
+    // console.log('finding component for tag:', tag)
     try{
       //@ts-ignore
       return registry.category("component").get(tag, Nothing) || Dummy;
     } catch {
-      console.log('failed to get component:', tag)
+      // console.log('failed to get component:', tag)
     }
     return Nothing
   }

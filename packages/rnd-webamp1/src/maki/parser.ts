@@ -195,6 +195,7 @@ function readVariables({ makiFile, classes }) {
         value: object,
         global,
         guid: variable.guid,
+        offset: count,
       });
     } else if (object) {
       const klass = classes[typeOffset];

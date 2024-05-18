@@ -31,7 +31,7 @@ export class Group extends GuiObject {
     findObject(objectId: string): GuiObject | null {
         const lower = objectId.toLowerCase();
         for (const obj of this.children) {
-          if (obj.id === lower) {
+          if (obj.attributes.id === lower) {
             return obj.el;
           }
           if (obj.el instanceof Group) {

@@ -234,7 +234,7 @@ class Interpreter {
           const guid = this.classes[classesOffset];
           const klass = this.classResolver(guid);
           if (!klass) {
-            throw new Error("Need to add a missing class to runtime");
+            throw new Error(`Need to add a missing class: #${classesOffset} GUID:${guid} to runtime`);
           }
           // This is a bit awkward. Because the variables are stored on the stack
           // before the object, we have to find the number of arguments without
@@ -590,7 +590,8 @@ class Interpreter {
           const classesOffset = command.arg;
           const guid = this.classes[classesOffset];
           const Klass = this.classResolver(guid);
-          const klassInst = new Klass();
+          const system = this.variables[0].value
+          const klassInst = new Klass(system);
           this.stack.push({ type: "OBJECT", value: klassInst });
           break;
         }
