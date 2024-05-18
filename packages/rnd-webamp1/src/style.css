@@ -93,8 +93,8 @@ body {
   pointer-events: all;
 }
 .group {
-  background-color: yellow;
+  /* background-color: yellow; */
 }
 .layer {
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
 }

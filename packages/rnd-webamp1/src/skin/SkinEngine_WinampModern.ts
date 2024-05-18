@@ -77,7 +77,7 @@ export class WinampModern extends SkinEngine {
           case "wasabixml":
           case "winampabstractionlayer":
           case "scripts":
-            // return this.traverseChildren(node, parent.parent || parent, path);
+            return this.traverseChilds_Detach(node, parent.parent || parent, path);
     
           case "elements":
           case "skininfo":
@@ -197,6 +197,51 @@ export class WinampModern extends SkinEngine {
     // return node
   }
 
+  async traverseChilds_Detach(node: XmlElement, parent: any, path: string[] = []) {
+    await this.traverseChilds(node.children, parent, path);
+    const childs = node.children.filter(e => !!e.parent)
+    // console.log('include #4<', fileName, parsed)
+    
+    // if(!parsed.children) {
+    //   console.log('parsed-HAS-NO CHILD:', parsed.toJSON())
+    //   return
+    // }
+    // console.log('include #4 ==>>', fileName, childs)
+    if(!parent || !parent.children) {
+      console.log('parent-HAS-NO CHILD:', parent.toJSON())
+      return
+    }
+    // debugger
+    // let childrens = parsed  ? parsed.children : 
+    
+    //? INCLUDE = attach children to parent from other xml file
+    if(childs.length == 0) {
+      node.detach()
+      return;
+    };
+    let first = true;
+    childs.forEach(child => {
+      if(!child.parent ) return;//TODO: keep back this. 
+      if(child.tag=='include' && child.children.length==0) {
+        node.detach()
+        return;
+      }
+      // console.log('include #5~', fileName, child.name, '#', child.toJSON())
+      //? replace the <include> with first child
+      if(first){
+        node.tag = child.tag
+        node.attributes = child.attributes;
+        node.children = child.children;
+        first = false;
+      } else {
+        if(parent.children)
+          parent.children.push(child)
+        child.parent = parent
+      }
+    });
+  }
+  
+
   async container(node: XmlElement, parent: any, path: string[] = []) {
     node.tag = toTitleCase(node.tag)
     // this._containers.push(node);
@@ -205,7 +250,7 @@ export class WinampModern extends SkinEngine {
     // if(!node.children) 
       //   console.log('HAS-NO CHILD:', node.toJSON())
     const layouts = node.children.filter(el => el.tag == 'layout')
-    console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
+    // console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
     // node.layouts = layouts
     // node.layouts = layouts.map(l => l.attributes)
     // const elLayouts= layouts.map(

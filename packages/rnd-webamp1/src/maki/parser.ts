@@ -171,7 +171,7 @@ function readMethods(makiFile: MakiFile, classes: string[]): Method[] {
 
 function readVariables({ makiFile, classes }) {
   let count = makiFile.readUInt32LE();
-  const variables = [];
+  const variables: Variable[] = [];
   while (count--) {
     const typeOffset = makiFile.readUInt8();
     const object = makiFile.readUInt8();
@@ -208,7 +208,7 @@ function readVariables({ makiFile, classes }) {
       if (typeName == null) {
         throw new Error("Invalid type");
       }
-      let value = null;
+      let value:any = null;
 
       switch (typeName) {
         // BOOLEAN
@@ -256,7 +256,7 @@ function readConstants({ makiFile, variables }) {
 
 function readBindings(makiFile: MakiFile, variables: Variable[]): Binding[] {
   let count = makiFile.readUInt32LE();
-  const bindings = [];
+  const bindings:Binding[] = [];
   while (count--) {
     const variableOffset = makiFile.readUInt32LE();
     const methodOffset = makiFile.readUInt32LE();

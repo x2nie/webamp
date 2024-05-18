@@ -2,7 +2,7 @@ import BaseObject from "../skin/BaseObject";
 
 export type Variable =
   | {
-      type: "BOOL";
+      type: "BOOLEAN";
       value: boolean;
     }
   | {

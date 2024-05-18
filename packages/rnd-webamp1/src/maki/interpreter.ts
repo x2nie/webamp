@@ -74,12 +74,12 @@ class Interpreter {
         }
         // pop
         case 2: {
-          this.stack.pop();
+          this.stack.pop()!;
           break;
         }
         // popTo
         case 3: {
-          const aValue = this.stack.pop();
+          const aValue = this.stack.pop()!;
           const offsetIntoVariables = command.arg;
           const current = this.variables[offsetIntoVariables];
           assume(
@@ -92,8 +92,8 @@ class Interpreter {
         }
         // ==
         case 8: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           assume(
             typeof a.value == typeof b.value,
             `Tried to compare a ${a.type} to a ${b.type}.`
@@ -104,8 +104,8 @@ class Interpreter {
         }
         // !=
         case 9: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           /* It's fine to compare objects to null
           assume(
             a.type == b.type,
@@ -118,19 +118,19 @@ class Interpreter {
         }
         // >
         case 10: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -147,19 +147,19 @@ class Interpreter {
         }
         // <
         case 12: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -172,19 +172,19 @@ class Interpreter {
         }
         // <=
         case 13: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -197,7 +197,7 @@ class Interpreter {
         }
         // jumpIf
         case 16: {
-          const value = this.stack.pop();
+          const value = this.stack.pop()!;
           // This seems backwards. Seems like we're doing a "jump if not"
           if (value.value) {
             break;
@@ -207,7 +207,7 @@ class Interpreter {
         }
         // jumpIfNot
         case 17: {
-          const value = this.stack.pop();
+          const value = this.stack.pop()!;
           // This seems backwards. Same as above
           if (!value.value) {
             break;
@@ -252,12 +252,12 @@ class Interpreter {
             "Arg count mismatch"
           );
 
-          const methodArgs = [];
+          const methodArgs:any[] = [];
           while (argCount--) {
-            const a = this.stack.pop();
+            const a = this.stack.pop()!;
             methodArgs.push(a.value);
           }
-          const obj = this.stack.pop();
+          const obj = this.stack.pop()!;
           assert(
             obj.type === "OBJECT",
             "Tried to call a method on a primitive."
@@ -273,8 +273,8 @@ class Interpreter {
             // variables[1] holds global NULL value
             value = this.variables[1];
           }
-          if (returnType === "BOOL") {
-            assert(typeof value === "boolean", "BOOL should return a boolean");
+          if (returnType === "BOOLEAN") {
+            assert(typeof value === "boolean", "BOOLEAN should return a boolean");
             value = value ? 1 : 0;
           }
           if (this.debug) {
@@ -293,7 +293,7 @@ class Interpreter {
         }
         // return
         case 33: {
-          ip = this.callStack.pop();
+          ip = this.callStack.pop()!;
           // TODO: Stack protection?
           break;
         }
@@ -305,8 +305,8 @@ class Interpreter {
         }
         // mov
         case 48: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           /*
           assume(
             a.type === b.type,
@@ -319,11 +319,11 @@ class Interpreter {
         }
         // postinc
         case 56: {
-          const a = this.stack.pop();
+          const a = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to increment a non-number.");
           }
@@ -334,11 +334,11 @@ class Interpreter {
         }
         // postdec
         case 57: {
-          const a = this.stack.pop();
+          const a = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to decrement a non-number.");
           }
@@ -349,11 +349,11 @@ class Interpreter {
         }
         // preinc
         case 58: {
-          const a = this.stack.pop();
+          const a = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to increment a non-number.");
           }
@@ -363,11 +363,11 @@ class Interpreter {
         }
         // predec
         case 59: {
-          const a = this.stack.pop();
+          const a = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to increment a non-number.");
           }
@@ -377,40 +377,40 @@ class Interpreter {
         }
         // + (add)
         case 64: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
               throw new Error("Tried to add non-numbers.");
           }
           // TODO: Do we need to round the value if INT?
-          this.stack.push({ type: a.type, value: b.value + a.value });
+          this.stack.push({ type: a.type, value: b.value! + a.value });
           break;
         }
         // - (subtract)
         case 65: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -420,19 +420,19 @@ class Interpreter {
         }
         // * (multiply)
         case 66: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -442,40 +442,40 @@ class Interpreter {
         }
         // / (divide)
         case 67: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
               throw new Error("Tried to add non-numbers.");
           }
           // TODO: Do we need to round the value if INT?
-          this.stack.push({ type: a.type, value: b.value / a.value });
+          this.stack.push({ type: a.type, value: b.value! / a.value });
           break;
         }
         // % (mod)
         case 68: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
               throw new Error("Tried to add non-numbers.");
             // Need to coerce LHS if not int, RHS is always int (enforced by compiler)
             case "FLOAT":
@@ -499,9 +499,9 @@ class Interpreter {
           assume(false, "Unimplimented | operator");
           break;
         }
-        // ! (not)
+        // `!` (not)
         case 74: {
-          const a = this.stack.pop();
+          const a = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
@@ -512,11 +512,11 @@ class Interpreter {
         }
         // - (negative)
         case 76: {
-          const a = this.stack.pop();
+          const a = this.stack.pop()!;
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -525,20 +525,20 @@ class Interpreter {
         }
         // logAnd (&&)
         case 80: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           // Some of these are probably valid, but we'll enable them once we see usage.
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -551,20 +551,20 @@ class Interpreter {
         }
         // logOr ||
         case 81: {
-          const a = this.stack.pop();
-          const b = this.stack.pop();
+          const a = this.stack.pop()!;
+          const b = this.stack.pop()!;
           // Some of these are probably valid, but we'll enable them once we see usage.
           switch (a.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
           switch (b.type) {
             case "STRING":
             case "OBJECT":
-            case "BOOL":
+            case "BOOLEAN":
             case "NULL":
               throw new Error("Tried to add non-numbers.");
           }
@@ -597,7 +597,7 @@ class Interpreter {
         }
         // delete
         case 97: {
-          const aValue = this.stack.pop();
+          const aValue = this.stack.pop()!;
           // TODO: Cleanup the object?
           break;
         }

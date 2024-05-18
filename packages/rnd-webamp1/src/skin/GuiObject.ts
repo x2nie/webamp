@@ -77,6 +77,7 @@ export class GuiObject extends Object_ {
    * @param  alpha   The alpha value.
    */
   setAlpha(alpha: number) {
+    console.log('setAlpha!', alpha)
     this.att.alpha = alpha;
     // this._renderAlpha();
   }
