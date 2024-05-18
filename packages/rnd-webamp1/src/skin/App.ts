@@ -58,8 +58,8 @@ export class App extends Component {
 
   async switchSkin(skinPath:string){
     const loader = await createSkinEngineFor(skinPath)
+    loader.setStorage(this.env.ui)
 
-      // debugger
       // loader._bitmap = this.env.bitmaps
       // await loader.loadSkin('skins/WinampModern566.wal')
     // await loader.loadSkin('skins/MMD3.wal')
@@ -70,7 +70,8 @@ export class App extends Component {
     // this.tpl = xml`${tpl}`
     await loader.parseSkin()
 
-    this.env.ui.bitmaps = loader.bitmaps()
+    // loader.setEnv()
+    // this.env.ui.bitmaps = loader.bitmaps()
 
     
     loader.containers().forEach(node => {

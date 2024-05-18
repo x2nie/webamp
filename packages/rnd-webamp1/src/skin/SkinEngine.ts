@@ -25,22 +25,6 @@ export class SkinEngine {
    */
   static uniqueByFile = "";
 
-
-  /**
-   * Provide your custom (binary-file) skin format extractor.
-   * * keep it to return null if your skin is zip-like file.
-   * @returns An instance of custom FileExtractor
-   */
-  // getFileExtractor(skinPath: string): FileExtractor {
-  //   //@ts-ignore
-  //   return null;
-  //   // if(skinPath.endsWith('/')){
-  //   //   this.zip = new PathFileExtractor()
-  //   // } else {
-  //   //   this.zip = new ZipFileExtractor()
-  //   // }
-  // }
-
   constructor(protected skinPath: string) {}
   protected zip : FileExtractor;
 
@@ -57,6 +41,9 @@ export class SkinEngine {
       (!mustExistFileName ||
         !!(await this.zip.getFileAsBytes(mustExistFileName)).byteLength)
     );
+  }
+
+  setStorage(env:{[key:string]: XmlElement}){
   }
 
   async initSkinExtractor(): Promise<FileExtractor> {

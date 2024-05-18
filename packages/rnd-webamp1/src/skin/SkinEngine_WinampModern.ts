@@ -1,5 +1,6 @@
 import { XmlElement, parseXml, parseXmlFragment } from "@xml/parse-xml";
-import { FileExtractor, PathFileExtractor, ZipFileExtractor } from "./FileExtractor";
+//import { FileExtractor, PathFileExtractor, ZipFileExtractor } from "./FileExtractor";
+import { ParsedMaki, parse as parseMaki } from "../maki/parser";
 import { assert, getPngSize, /* assume */ 
     toTitleCase} from "./utils";
 import { SkinEngine, registerSkinEngine } from "./SkinEngine";
@@ -16,18 +17,26 @@ export class WinampModern extends SkinEngine {
     //       return new ZipFileExtractor()
     //     }
     // }
+    _env:{[key:string]: any};
     _groupdef: {[key:string]: XmlElement} = {};
     _xuidef: {[key:string]: XmlElement} = {};
     _bitmap: {[key:string]: XmlElement} = {};
+    _script: {[file:string]: ParsedMaki} = {};
     _containers: XmlElement[] = [];
 
+    setStorage(env:{[key:string]: XmlElement}){
+        this._env = env;
+    }
     containers(): XmlElement[] {
         return this._containers
     }
 
-    bitmaps(): {[key:string]: XmlElement} {
-        return this._bitmap
-    }
+    // bitmaps(): {[key:string]: XmlElement} {
+    //     return this._bitmap
+    // }
+    // scripts(): {[key:string]: XmlElement} {
+    //     return this._bitmap
+    // }
   
 
     async parseSkin() {
@@ -40,6 +49,9 @@ export class WinampModern extends SkinEngine {
         await this.traverseChildren(parsed, parsed);
         console.log('FINAL skin.xml=>', parsed)
         await this.loadBitmaps()
+
+        this._env.bitmaps = this._bitmap
+        this._env.scripts = this._script
     }
 
     async loadBitmaps(){
@@ -64,6 +76,7 @@ export class WinampModern extends SkinEngine {
         switch (tag) {
           case "wasabixml":
           case "winampabstractionlayer":
+          case "scripts":
             // return this.traverseChildren(node, parent.parent || parent, path);
     
           case "elements":
@@ -88,6 +101,8 @@ export class WinampModern extends SkinEngine {
             return this.groupdef(node, parent, path);
           case "group":
             return this.group(node, parent, path);
+          case "script":
+            return this.script(node, parent, path);
     
           case "bitmap":
             return this.bitmap(node, parent, path);
@@ -211,7 +226,22 @@ export class WinampModern extends SkinEngine {
   async bitmap(node: XmlElement, parent: any, path: string[] = []) {
     this._bitmap[node.id] = node.detach()
   }
-  
+
+  async script(node: XmlElement, parent: any, path: string[] = []) {
+    const { file, id } = node.attributes;
+    assert(file != null, "Script element missing `file` attribute");
+    if(!this._script[file]){
+        // assert(id != null, "Script element missing `id` attribute");
+        const scriptContents = await this.zip.getFileAsBytes(file);
+        assert(scriptContents.byteLength > 0, `ScriptFile file not found at path ${file}`);
+        // TODO: Try catch?
+        const parsedScript = parseMaki(scriptContents);
+        this._script[file] = parsedScript
+        // console.log('SCRIPT:',file, JSON.stringify(parsedScript))
+        console.log('SCRIPT:',file, parsedScript)
+    }
+
+  }  
   async groupdef(node: XmlElement, parent: any, path: string[] = []) {
     // node.name = toTitleCase(node.name)
     // await this.traverseChildren(node, node, path);
@@ -224,13 +254,16 @@ export class WinampModern extends SkinEngine {
       this._xuidef[node.attributes.xuitag] = node;
     }
     node.detach()
-    // return node;
+
+    //? find script, etc
+    await this.traverseChildren(node, node, path);
   }
 
   async group(node: XmlElement, parent: any, path: string[] = []) {
     const groupdef = this._groupdef[node.id]
     node.merge(groupdef.clone())
   }
+
 }
 
 registerSkinEngine(WinampModern);

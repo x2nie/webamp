@@ -1,28 +1,25 @@
 import { Component, xml, onMounted, useEnv, useRef } from "@odoo/owl";
 import { registry } from '@web/core/registry';
 import { Children } from "./Children";
-import './Group'
 import './Layer'
+import { Group } from "./Group";
 
-export class Layout extends Component {
+export class Layout extends Group {
     static template = xml`
-    <div class="layout" t-att-style="style">
+    <div class="layout" t-att-style="style()">
     <Children children="props.node.children" />
     </div>`;
-    static components = {Children}
+    // static components = {Children}
 
     setup() {
-        this.env = useEnv()
-        console.log(`Layout ${this.att.id} has parent: ${this.props.node.parent.id}`)
-    }
-    get att(){
-        return this.props.node.attributes
+        super.setup()
+        // console.log(`Layout ${this.att.id} has parent: ${this.props.node.parent.id}`)
     }
 
-    get style() {
+    style() {
         let {  w, h } = this.att;
         // debugger
-        let style = ''
+        let style = super.style()
         if(this.att.background){
             // const url = this.env.bitmaps[this.att.image].url
             const bitmap = this.env.ui.bitmaps[this.att.background]

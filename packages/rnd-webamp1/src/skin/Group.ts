@@ -2,6 +2,8 @@ import { Component, xml, onMounted, useRef } from "@odoo/owl";
 import { registry } from '@web/core/registry';
 import { Children } from "./Children";
 import { GuiObject } from "./GuiObject";
+import { Script } from "./Script";
+import { Text } from "./Text";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export class Group extends GuiObject {
@@ -13,7 +15,7 @@ export class Group extends GuiObject {
     // @<t t-out="att.tag"/> :
     //   <t t-out="att.id"/>
     // <t t-slot="default"/>
-    static components = { Children}
+    static components = { Children, Script, Text}
 
     // get att(){
     //     return this.props.node.attributes
