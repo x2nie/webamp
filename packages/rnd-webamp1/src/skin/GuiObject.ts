@@ -29,7 +29,9 @@ export class GuiObject extends Object_ {
 
   style(){
     let {x,y, alpha, visible } = this.att;
-    let style = `top:${y}px; left:${x}px; color:fuchsia;`;
+    let style = '';//`top:${y}px; left:${x}px; color:fuchsia;`;
+    if(x!=null) style += `left:${x}px;`
+    if(y!=null) style += `top:${y}px;`
     if(alpha!=null && alpha < 255) style += `opacity:${alpha / 255};`
     if(visible!=null && !visible) style += `display:none;`
     return style

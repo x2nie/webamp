@@ -29,6 +29,10 @@ export class Layer extends GuiObject {
                 style += `width:${bitmap.attributes.w}px;`;
             if(bitmap.attributes.h)
                 style += `height:${bitmap.attributes.h}px;`;
+            if(bitmap.attributes.x)
+                style += `background-position-x:${bitmap.attributes.x}px;`;
+            if(bitmap.attributes.y)
+                style += `background-position-y:${bitmap.attributes.y}px;`;
             
         }
         return style
