@@ -266,7 +266,11 @@ export class WinampModern extends SkinEngine {
 
   async group(node: XmlElement, parent: any, path: string[] = []) {
     const groupdef = this._groupdef[node.id]
-    node.merge(groupdef.clone())
+    if(!groupdef){
+        console.log('failed to get groupdef:', node.id)
+    } else {
+        node.merge(groupdef.clone())
+    }
   }
 
 }
