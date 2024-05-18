@@ -60,10 +60,10 @@ export class WindowManager {
   nextId = 1;
 
   append(node: any) {
-    const Comp = registry.category("containers").get("Hello");
+    // const Comp = registry.category("containers").get("Hello");
     const id = node.id;
     this.windows[id] = {
-      Component: Comp,
+      // Component: Comp,
       ...node,
     };
   }
@@ -87,7 +87,7 @@ export class WindowManager {
       height: Comp.defaultHeight,
       x,
       y,
-      Component: Comp,
+      // Component: Comp,
     };
   }
 

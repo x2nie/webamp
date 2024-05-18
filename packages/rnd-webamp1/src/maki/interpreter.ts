@@ -262,6 +262,7 @@ class Interpreter {
             obj.type === "OBJECT",
             "Tried to call a method on a primitive."
           );
+          console.log('trial to call:',methodName, '@', obj.value)
           let value = obj.value[methodName](...methodArgs);
 
           if (value === undefined && returnType !== "NULL") {

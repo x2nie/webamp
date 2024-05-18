@@ -28,8 +28,8 @@ import { Webamp } from './webamp';
 
 const webamp = new Webamp(document.getElementById('app') || document.body, {
   // skin: .../,,,,
-  // skin: '/skins/SimpleTutorial/'
-  skin: 'skins/MMD3.wal'
+  skin: '/skins/SimpleTutorial/'
+  // skin: 'skins/MMD3.wal'
   // skin: 'skins/WinampModern566.wal'
 })
 

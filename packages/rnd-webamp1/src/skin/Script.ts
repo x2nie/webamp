@@ -18,6 +18,8 @@ import { Object_ } from "./Object";
 import { Variable } from "src/maki/v";
 import { interpret } from "../maki/interpreter";
 import "./Timer";
+import { Container } from "./Container";
+import { XmlElement } from "@xml/parse-xml";
 
 export class Script extends Component {
   static GUID = "d6f50f6449b793fa66baf193983eaeef";
@@ -35,8 +37,8 @@ export class Script extends Component {
     this.script.variables[0].value = this;
     console.log("BINDING:", this.script.bindings);
     const self = this;
-    onWillStart(() => {
-      // onMounted(() => {
+    // onWillStart(() => {
+      onMounted(() => {
       // debugger
       this.dispatch(this, "onScriptLoaded", []);
     });
@@ -44,7 +46,7 @@ export class Script extends Component {
         //simulate play
         console.log(`sys.onPlay()`);
         self.dispatch(this, "onPlay", []);
-    }, 3000);
+    }, 6000);
   }
 
   dispatch(object: Object_, event: string, args: Variable[] = []) {
@@ -92,6 +94,18 @@ export class Script extends Component {
   }
   findObject(id: string): GuiObject {
     return this.group.findObject(id);
+  }
+
+  getContainer(container_id: string): Container{
+    debugger
+    const containers = this.env.root.getContainers() as XmlElement[]
+    for(const c of containers){
+      if(c.attributes.id == container_id){
+        return c.el as Container
+      }
+    }
+    //@ts-ignore
+    return null
   }
   pause (){
     // this.dispatch(this, 'onPaused')

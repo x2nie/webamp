@@ -52,6 +52,7 @@ export class WinampModern extends SkinEngine {
 
         this._env.bitmaps = this._bitmap
         this._env.scripts = this._script
+        return parsed
     }
 
     async loadBitmaps(){
@@ -243,13 +244,13 @@ export class WinampModern extends SkinEngine {
   
 
   async container(node: XmlElement, parent: any, path: string[] = []) {
-    node.tag = toTitleCase(node.tag)
+    // node.tag = toTitleCase(node.tag)
     // this._containers.push(node);
     await this.traverseChildren(node, node, path);
     // return node
     // if(!node.children) 
       //   console.log('HAS-NO CHILD:', node.toJSON())
-    const layouts = node.children.filter(el => el.tag == 'layout')
+    // const layouts = node.children.filter(el => el.tag == 'layout')
     // console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
     // node.layouts = layouts
     // node.layouts = layouts.map(l => l.attributes)
