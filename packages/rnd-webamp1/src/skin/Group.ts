@@ -27,6 +27,22 @@ export class Group extends GuiObject {
     //     // return `min-width:${width}px; min-height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
     //     // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;
     // }
+
+    findObject(objectId: string): GuiObject | null {
+        const lower = objectId.toLowerCase();
+        for (const obj of this.children) {
+          if (obj.id === lower) {
+            return obj.el;
+          }
+          if (obj.el instanceof Group) {
+            const found = obj.el.findobject(objectId);
+            if (found != null) {
+              return found;
+            }
+          }
+        }
+        return null;
+    }
 }
 
 registry.category('component').add('group', Group)

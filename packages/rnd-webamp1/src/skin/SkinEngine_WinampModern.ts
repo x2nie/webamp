@@ -239,9 +239,14 @@ export class WinampModern extends SkinEngine {
         this._script[file] = parsedScript
         // console.log('SCRIPT:',file, JSON.stringify(parsedScript))
         console.log('SCRIPT:',file, parsedScript)
+        node.parsedScript = parsedScript
+    } else {
+        const parsedScript = this._script[file];
+        node.parsedScript = structuredClone(parsedScript)
     }
 
   }  
+
   async groupdef(node: XmlElement, parent: any, path: string[] = []) {
     // node.name = toTitleCase(node.name)
     // await this.traverseChildren(node, node, path);

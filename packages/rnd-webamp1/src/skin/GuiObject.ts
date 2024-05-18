@@ -10,8 +10,16 @@ export class GuiObject extends Object_ {
     this.env = useEnv();
     this.props.node.el = this
   }
+
+  getId(): string {
+    return this.att.id || "";
+  }
+
   get att() {
     return this.props.node.attributes;
+  }
+  get children() {
+    return this.props.node.children;
   }
   setXmlParam(param: string, value: string) {
     if (value2number.includes(param)) {
@@ -22,10 +30,6 @@ export class GuiObject extends Object_ {
   }
   getXmlParam(param: string): string {
     return String(this.att[param]);
-  }
-
-  getId(): string {
-    return this.att.id || "";
   }
 
   style(){
