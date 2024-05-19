@@ -54,7 +54,7 @@ def build_methods(klass, o, docstrings):
     o['methods'] = ''
     o['bindings'] = ''
     for fn in o['functions']:
-        doc = docstrings[klass][fn['name']]
+        doc = docstrings[klass][fn['name']]['doc']
         if doc:
             doc = tpl_doc.format(doc)
         r=fn['result']
