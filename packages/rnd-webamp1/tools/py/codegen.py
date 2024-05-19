@@ -18,15 +18,20 @@ export class {name} extends {parent} {{
 def gen(std):
     klass = 'Container'
 
+    # #? json
+    # jsonpath = f'src/maki/objectData/{std}.byname.json'
+    # # print(os.path.exists(jsonpath))
+    # with open(jsonpath, 'r') as f:
+    #     c = json.load(f)
+
+    # o = c[klass]
+
+    #? docstring 
     mifile = f'resources/maki_compiler/v1.2.0 (Winamp 5.66)/lib/{std}.mi'
     docstrings = scan_docstring(mifile)
     # print('using:', docstrings.get(klass))
-    jsonpath = f'src/maki/objectData/{std}.byname.json'
-    # print(os.path.exists(jsonpath))
-    with open(jsonpath, 'r') as f:
-        c = json.load(f)
-
-    o = c[klass]
+    o = docstrings['_CLASS'][klass]
+    o['name'] = klass
     build_methods(klass, o, docstrings)
     # pprint(o)
     print('='*20)
@@ -50,13 +55,17 @@ tpl_doc = '''{}
   '''
 
 def build_methods(klass, o, docstrings):
+    
+    functions = docstrings[klass]
 
     o['methods'] = ''
     o['bindings'] = ''
-    for fn in o['functions']:
-        doc = docstrings[klass][fn['name']]['doc']
+    for name,fn in functions.items():
+        print()
+        # doc = docstrings[klass][fn['name']]['doc']
+        doc = fn['doc']
         if doc:
-            doc = tpl_doc.format(doc)
+            fn['doc'] = tpl_doc.format(doc)
         r=fn['result']
         r = type_conversion.get(r.lower(), r)
         ret = f': {r}' if r else ''
@@ -65,9 +74,9 @@ def build_methods(klass, o, docstrings):
             t = type_conversion.get(t.lower(), t)
             params.append(f'{p}: {t}')
         dep = ' //! deprecated' if fn['deprecated'] else ''
-        binding = fn['name'].startswith('on')
+        binding = name.startswith('on')
         tpl = tpl_binding if binding else tpl_method
-        method = tpl.format(**fn, ret=ret, params=', '.join(params), obsolete=dep, doc=doc)
+        method = tpl.format(**fn, name=name, ret=ret, params=', '.join(params), obsolete=dep)
 
         if binding:
             o['bindings'] += method

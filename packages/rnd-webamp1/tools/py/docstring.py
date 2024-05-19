@@ -4,8 +4,7 @@
 import re
 
 # regex = r"(\/\*\*[\s\S]*?\*\/\s*)?\s*extern(\s+.*)?\s+(.*)\.(.*)\((.*)\);\s*(\/\/.*$)?"
-regex = r"(\/\*\*[\s\S]*?\*\/)?\s*(deprecated )?extern\s+(\w+\s+)?(\w+)\.(\w+).*;\s*(\/\/.*$)?"
-regex = r"(\/\*\*\s[\s\S]*?\*\/)?\s*(deprecated )?extern\s+(\w+\s+)?(\w+)\.(\w+)\s*\((.*)\);\s*(\/\/.*$)?"
+# regex = r"(\/\*\*[\s\S]*?\*\/)?\s*(deprecated )?extern\s+(\w+\s+)?(\w+)\.(\w+).*;\s*(\/\/.*$)?"
 
 from collections import defaultdict
 
@@ -17,11 +16,40 @@ def scan_docstring(filepath):
 def grab_docsring(s):
     founds = defaultdict(lambda: defaultdict(dict))
 
-    #? real grab docstring
+    #? classs definition
+    regex = r"\s*(deprecated )?extern\s+class\s*\@\{(........\s?-\s?....\s?-\s?....\s?-\s?....\s?-\s?............)\}\s*\@\s*(.*?)\s+(_predecl )?(&)?(.*?);"
     matches = re.finditer(regex, s, re.MULTILINE)
 
     for matchNum, match in enumerate(matches, start=1):
-        print ("\n\n==========Match {matchNum} was found at {start}-{end}: match".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
+        deprecated = (match.group(1) or '').strip()
+        deprecated = True if deprecated else False
+        GUID = match.group(2) 
+        guid = getFormattedId(GUID)
+        parent = match.group(3) 
+        klass = match.group(6) 
+
+        for k in 'GUID guid deprecated parent'.split(' '):
+            # founds[klass]['_CLASS'][k] = locals()[k]
+            founds['_CLASS'][klass][k] = locals()[k]
+    
+        # print ("\n\n===Match {matchNum} was found at {start}-{end}: {match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
+        # for k in 'GUID deprecated parent klass'.split(' '):
+        #     print ("----------{key} {value}".format(key=k, value=repr(locals()[k])))
+
+        # for groupNum in range(0, len(match.groups())):
+        #     groupNum = groupNum + 1
+            
+        #     print ("---Group {groupNum} found at {start}-{end}: <{group}>".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
+
+    # return founds
+
+
+    #? real grab docstring
+    regex = r"(\/\*\*\s[\s\S]*?\*\/)?\s*(deprecated )?extern\s+(\w+\s+)?(\w+)\.(\w+)\s*\((.*)\);\s*(\/\/.*$)?"
+    matches = re.finditer(regex, s, re.MULTILINE)
+
+    for matchNum, match in enumerate(matches, start=1):
+        # print ("\n\n==========Match {matchNum} was found at {start}-{end}: match".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
         # docstring = match.group(1) or match.group(6) or ''
         if match.group(1): 
             comments = match.group(1).strip().split('\n')
@@ -31,31 +59,51 @@ def grab_docsring(s):
         else:
             docstring = match.group(7) or ''
             docstring = docstring.replace('//', '// ').replace('  ',' ')
+        doc = docstring
         deprecated = (match.group(2) or '').strip() 
         deprecated = True if deprecated else False
-        ret = (match.group(3) or '').strip()
+        result = (match.group(3) or '').strip()
         klass = match.group(4)
         method = match.group(5)
         params = match.group(6)
         args = [i.strip() for i in params.split(',') if i.strip()]
-        kwargs = [k.split(' ') for k in args]
+        parameters = [k.split(' ') for k in args]
         
+        for k in 'doc deprecated method parameters result'.split(' '):
+            founds[klass][method][k] = locals()[k]
         # print(klass,method,docstring)
-        founds[klass][method]['doc'] = docstring
+        # founds[klass][method]['doc'] = docstring
         
         for groupNum in range(0, len(match.groups())):
             groupNum = groupNum + 1
             
             # print ("----------Group {groupNum} found at {start}-{end}: <{group}>".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
-        for k in 'docstring deprecated klass method kwargs'.split(' '):
-            print ("----------{key} {value}".format(key=k, value=repr(locals()[k])))
+        # for k in 'docstring deprecated klass method kwargs'.split(' '):
+        #     print ("----------{key} {value}".format(key=k, value=repr(locals()[k])))
 
     return founds
+
+def getFormattedId(GUID):
+    regex = r"(........)-(....)-(....)-(..)(..)-(..)(..)(..)(..)(..)(..)"
+    subst = "\\1\\3\\2\\7\\6\\5\\4\\11\\10\\9\\8"
+    subst = r"\1\3\2\7\6\5\4\11\10\9\8"
+
+    # You can manually specify the number of replacements by changing the 4th argument
+    return re.sub(regex, subst, GUID, 0)
 
 # Note: for Python 2.7 compatibility, use ur"" to prefix the regex and u"" to prefix the test string and substitution.
 
 if __name__ == '__main__':
-    test_str = '''extern String System.2floatToString(float value, int ndigits);
+    test_str = '''#define deprecated //
+
+// GUIDS
+extern class @{51654971-0D87-4a51-91E3-A6B53235F3E7}@ @{00000000-0000-0000-0000-000000000000}@ Object;
+extern class @{D6F50F64-93FA-49b7-93F1-BA66EFAE3E98}@ Object _predecl System;
+extern class @{E90DC47B-840D-4ae7-B02C-040BD275F7FC}@ Object Container;
+deprecated extern class @{00C074A0-FEA2-49a0-BE8D-FABBDB161640}@ Object Wac; 
+deprecated extern class @{2D2D1376-BE0A-4CB9-BC0C-57E6E4C999F5}@ GuiObject &Form;
+extern class @{73C00594-961F-401B-9B1B-672427AC4165}@ GuiObject	&Menu;	// Winamp 5.52
+extern String System.2floatToString(float value, int ndigits);
 
 deprecated extern String System.3integerToLongTime(Int value);
 /** 4stringToFloat()*/
