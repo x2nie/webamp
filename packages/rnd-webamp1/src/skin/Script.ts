@@ -8,6 +8,7 @@ import {
   onWillStart,
   markRaw,
   toRaw,
+  onRendered,
 } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useSystem } from "./System";
@@ -23,11 +24,12 @@ import { XmlElement } from "@xml/parse-xml";
 
 export class Script extends Component {
   static GUID = "d6f50f6449b793fa66baf193983eaeef";
-  static template = xml`<t t-out="html()" />`;
+  static template = xml`<t t-out="commented()" />`;
   script: ParsedMaki;
 
-  html() {
-    return markup(`<!-- script:${this.props.node.attributes.file} -->`);
+  commented() {
+    return markup(`<!-- script -->`);
+    // return markup(`<!-- script:${this.props.node.attributes.file} -->`);
   }
 
   setup() {
@@ -38,18 +40,20 @@ export class Script extends Component {
     console.log("BINDING:", this.script.bindings);
     const self = this;
     // onWillStart(() => {
-      onMounted(() => {
+      // onMounted(() => {
+      onRendered(() => {
       // debugger
-      this.dispatch(this, "onScriptLoaded", []);
+      setTimeout(() => {
+        self.dispatch(screenLeft, "onScriptLoaded", []);
+          //simulate play
+          console.log(`sys.onPlay()`);
+          // self.dispatch(self, "onPlay", []);
+      }, 3000);
     });
-    setTimeout(() => {
-        //simulate play
-        console.log(`sys.onPlay()`);
-        self.dispatch(this, "onPlay", []);
-    }, 6000);
   }
 
   dispatch(object: Object_, event: string, args: Variable[] = []) {
+    // debugger
     // markRaw(this.script)
     const script = this.script;
     for (const binding of script.bindings) {

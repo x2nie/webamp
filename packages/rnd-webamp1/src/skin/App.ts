@@ -42,7 +42,7 @@ export class App extends Component {
 
   setup() {
     const env = useEnv(); //? global env
-    this.state = useState({ node: new XmlElement() });
+    this.state = useState({ node: new XmlElement('') });
 
     useSubEnv({
       //? additional env, isolated for this instance and children
@@ -84,6 +84,7 @@ export class App extends Component {
     // console.log('FINAL-TPL---------------------------\n', tpl)
     // this.tpl = xml`${tpl}`
     this.state.node = await loader.parseSkin();
+    this.state.node.el = this;
 
     // loader.setEnv()
     // this.env.ui.bitmaps = loader.bitmaps()
@@ -100,19 +101,19 @@ export class App extends Component {
       const y = att["default_y"] || 0; // Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
       att.x = x;
       att.y = y;
-      this.windowService.append({
-        id: att.id,
-        title: att.name,
-        x,
-        y,
-        // width: 100,
-        // height: 50,
-        visible: Number(att.default_visible),
-        children: node.children,
-        // layouts: node.layouts,
-        layout_id: "normal",
-        // Component: Container,
-      });
+      // this.windowService.append({
+      //   id: att.id,
+      //   title: att.name,
+      //   x,
+      //   y,
+      //   // width: 100,
+      //   // height: 50,
+      //   visible: Number(att.default_visible),
+      //   children: node.children,
+      //   // layouts: node.layouts,
+      //   layout_id: "normal",
+      //   // Component: Container,
+      // });
     });
   }
 

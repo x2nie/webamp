@@ -4,27 +4,37 @@ import { registry } from "@web/core/registry";
 export class Children extends Component {
   static template = xml`
     <t t-foreach="props.children" t-as="child" t-key="child_index">
+      <div  >
+        <t t-out="child.tag"/>//<t t-out="lookup2(child.tag)"/>
+
+      </div>
       <t t-component="lookup(child.tag)" node="child"/>
-    </t>`;
+      </t>`;
   // @<t t-out="child.tag"/> : <t t-out="child.id"/>
 
+  lookup2(tag: string): string {
+    return registry.category("component").get(tag, Nothing).name;
+
+  }
   lookup(tag: string): typeof Component {
     // console.log('finding component for tag:', tag)
-    try{
+    // try{
       //@ts-ignore
-      return registry.category("component").get(tag, Nothing) || Dummy;
-    } catch {
-      // console.log('failed to get component:', tag)
-    }
-    return Nothing
+      return registry.category("component").get(tag, Nothing);
+    // } catch {
+    //   console.log('failed to get component:', tag)
+    // }
+    // return Nothing
   }
 }
 
 export class Nothing extends Component {
-  static template = xml`<t t-out="commented()" />`;
+  static template = xml`<span/>`;
+  // static template = xml`<t t-out="commented()" />`;
 
   commented() {
-    return markup(`<!-- @${this.props.node.tag}:${this.props.node.attributes.id} -->`)
+    return markup(`<!-- @${this.props.node.tag} -->`)
+    // return markup(`<!-- @${this.props.node.tag}:${this.props.node.attributes.id} -->`)
   }
 }
 
