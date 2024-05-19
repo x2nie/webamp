@@ -2,10 +2,12 @@ import json,os
 from pprint import pprint
 from docstring import scan_docstring
 
-tpl_file = '''import {{ registry }} from "@web/core/registry";
+tpl_file = '''import {{ xml }} from "@odoo/owl";
+import {{ registry }} from "@web/core/registry";
 
 export class {name} extends {parent} {{
   static GUID = "{guid}";
+  static ID = "{{{GUID}}}";
   static template = xml`<span c="{name}"/>`;
 
   {methods}
@@ -15,8 +17,8 @@ export class {name} extends {parent} {{
 }} // {name}
 '''
 
-def gen(std):
-    klass = 'Container'
+def gen(std, klass='Container'):
+    # klass = 'Container'
 
     # #? json
     # jsonpath = f'src/maki/objectData/{std}.byname.json'
@@ -29,13 +31,41 @@ def gen(std):
     #? docstring 
     mifile = f'resources/maki_compiler/v1.2.0 (Winamp 5.66)/lib/{std}.mi'
     docstrings = scan_docstring(mifile)
+    if std == 'std':
+        stdPatch(docstrings)
     # print('using:', docstrings.get(klass))
     o = docstrings['_CLASS'][klass]
     o['name'] = klass
     build_methods(klass, o, docstrings)
     # pprint(o)
     print('='*20)
-    print(tpl_file.format(**o))
+    code = tpl_file.format(**o)
+    print(code)
+    output = os.path.join(os.path.dirname(__file__), 'output', 'generated.ts')
+    with open(output, 'w') as f:
+        f.write(code)
+
+def stdPatch(getMethod):
+    #? copied from /src/maki/stdPatched.ts
+    
+    # * From object.js
+    # *
+    # * > The std.mi has this set as void, but we checked in Winamp and confirmed it
+    # * > returns 0/1
+    getMethod["Timer"]["isRunning"]['result'] = "boolean";
+
+    # * From Object.pm
+    # *
+    # * > note, std.mi does not have this parameter!
+    getMethod["ToggleButton"]["onToggle"]["parameters"][0][1] = "onoff";
+
+    # * Some methods are not compatible with the type signature of their parent class
+    getMethod["GuiTree"]["onChar"]["parameters"][0][0] = "string";
+    getMethod["GuiList"]["onSetVisible"]["parameters"][0][0] = "boolean";
+
+    # I'm not sure how to get these to match
+    getMethod["Wac"]["onNotify"]["parameters"] = getMethod["Object"]["onNotify"]["parameters"];
+    getMethod["Wac"]["onNotify"]["result"] = "int";
 
 type_conversion = {
     'int': 'number',
@@ -88,4 +118,5 @@ def build_methods(klass, o, docstrings):
 # gen('../../src/maki/objectData/std.json')
 # gen('.../../src/maki/objectData/std.json')
 # gen('src/maki/objectData/std.byname.json')
-gen('std')
+# gen('std')
+gen('std', 'Wac')

@@ -23,8 +23,8 @@ def grab_docsring(s):
     for matchNum, match in enumerate(matches, start=1):
         deprecated = (match.group(1) or '').strip()
         deprecated = True if deprecated else False
-        GUID = match.group(2) 
-        guid = getFormattedId(GUID)
+        GUID = match.group(2).upper()
+        guid = getFormattedId(GUID).lower()
         parent = match.group(3) 
         klass = match.group(6) 
 
@@ -51,20 +51,36 @@ def grab_docsring(s):
     for matchNum, match in enumerate(matches, start=1):
         # print ("\n\n==========Match {matchNum} was found at {start}-{end}: match".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
         # docstring = match.group(1) or match.group(6) or ''
+        method = match.group(5).strip()
+        deprecated = (match.group(2) or '').strip() 
+        deprecated = True if deprecated else False
         if match.group(1): 
             comments = match.group(1).strip().split('\n')
+            if len(comments) > 1 and comments[1].strip().startswith(method):
+                del comments[1]
+                if not comments[1].strip(): #empty line
+                    del comments[1]
+            if deprecated:
+                comments.insert(1, '@deprecated')
+
+            if len(comments) > 1 :
+                for i in range(1, len(comments)):
+                    comments[i] = ' * '+ comments[i].strip()
+                comments[-1] = ' */'
+
             docstring = '\n  '.join(comments)
             if docstring.count('/**') > 1:
                 docstring = docstring[docstring.find('/**', 3):]
+            
         else:
             docstring = match.group(7) or ''
             docstring = docstring.replace('//', '// ').replace('  ',' ')
+            if docstring.lower().startswith('// require'):
+                docstring = ''
         doc = docstring
-        deprecated = (match.group(2) or '').strip() 
-        deprecated = True if deprecated else False
         result = (match.group(3) or '').strip()
         klass = match.group(4)
-        method = match.group(5)
+        # method = match.group(5)
         params = match.group(6)
         args = [i.strip() for i in params.split(',') if i.strip()]
         parameters = [k.split(' ') for k in args]
