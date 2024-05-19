@@ -8,23 +8,25 @@ export class Children extends Component {
     </t>`;
   // @<t t-out="child.tag"/> : <t t-out="child.id"/>
 
-  mychilds(){
-    return this.props.children.filter(e => registry.category("component").contains(e.tag))
+  mychilds() {
+    return this.props.children.filter((e) =>
+      registry.category("component").contains(e.tag)
+    );
   }
 
-  setup(){
+  setup() {
     // console.log('children.props=', this.props.children)
     // console.log('children.drens=', this.mychilds())
   }
 
   lookup(tag: string): typeof Component {
     // console.log('finding component for tag:', tag)
-    try{
+    try {
       //@ts-ignore
       return registry.category("component").get(tag, Nothing) || Nothing;
     } catch {
-      console.log('failed to get component:', tag)
-      return Nothing
+      console.log("failed to get component:", tag);
+      return Nothing;
     }
   }
 }
@@ -33,8 +35,10 @@ export class Nothing extends Component {
   static template = xml`<t t-out="commented()" />`;
 
   commented() {
-    return markup(`<!-- @${this.props.node.tag} -->`)
-    return markup(`<!-- @${this.props.node.tag}:${this.props.node.attributes.id} -->`)
+    return markup(`<!-- @${this.props.node.tag} -->`);
+    return markup(
+      `<!-- @${this.props.node.tag}:${this.props.node.attributes.id} -->`
+    );
   }
 }
 

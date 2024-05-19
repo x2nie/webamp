@@ -34,8 +34,8 @@ export type MenuItem =
       checked: boolean;
       disabled?: boolean;
     }
-    | { type: "separator" }
-    | {
+  | { type: "separator" }
+  | {
       type: "popup";
       caption: string;
       popup: PopupMenu;
@@ -43,34 +43,37 @@ export type MenuItem =
       children?: MenuItem[];
     };
 
- function waitPopup(popup: PopupMenu): Promise<number> {
-   // const closePopup = () => div.remove();
-   
-   // https://stackoverflow.com/questions/54916739/wait-for-click-event-inside-a-for-loop-similar-to-prompt
-   return new Promise(acc => {
+function waitPopup(popup: PopupMenu): Promise<number> {
+  // const closePopup = () => div.remove();
+
+  // https://stackoverflow.com/questions/54916739/wait-for-click-event-inside-a-for-loop-similar-to-prompt
+  return new Promise((acc) => {
     // let result: number = -1;
     const itemClick = (id: number) => {
-      closePopup()
+      closePopup();
       // result = id;
       acc(id);
     };
     const div = generatePopupDiv(popup, itemClick);
     document.getElementById("web-amp").appendChild(div);
-    const closePopup = () => div.remove()
+    const closePopup = () => div.remove();
 
     function handleClick() {
-      document.removeEventListener('click', handleClick);
-      closePopup()
+      document.removeEventListener("click", handleClick);
+      closePopup();
       acc(-1);
     }
-    document.addEventListener('click', handleClick);
+    document.addEventListener("click", handleClick);
   });
   // return 1;
 }
 
-export function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElement {
+export function generatePopupDiv(
+  popup: PopupMenu,
+  callback: Function
+): HTMLElement {
   const root = document.createElement("ul");
-  root.className = 'popup-menu-container'
+  root.className = "popup-menu-container";
   // root.style.zIndex = "1000";
   // console.log('generating popup:', popup)
   for (const menu of popup._items) {
@@ -85,7 +88,7 @@ export function generatePopupDiv(popup: PopupMenu, callback: Function): HTMLElem
       case "popup":
         item = generatePopupItem(menu);
         const subMenu = generatePopupDiv(menu.popup, callback);
-        item.appendChild(subMenu)
+        item.appendChild(subMenu);
         break;
       case "separator":
         item = document.createElement("hr");
@@ -102,27 +105,27 @@ function generatePopupItem(menu: MenuItem): HTMLElement {
 
   //? checkmark
   const checkMark = document.createElement("span");
-  checkMark.classList.add('checkmark')
-  checkMark.textContent = menu.checked? '✓' : ' ';
-  item.appendChild(checkMark)
-  
+  checkMark.classList.add("checkmark");
+  checkMark.textContent = menu.checked ? "✓" : " ";
+  item.appendChild(checkMark);
+
   //? display text
-  const [caption, keystroke] = menu.caption.split('\t')  
+  const [caption, keystroke] = menu.caption.split("\t");
   const label = generateCaption(caption);
-  label.classList.add('caption')
-  item.appendChild(label)
+  label.classList.add("caption");
+  item.appendChild(label);
 
   //? keystroke
   const shortcut = document.createElement("span");
-  shortcut.classList.add('keystroke')
+  shortcut.classList.add("keystroke");
   shortcut.textContent = keystroke;
-  item.appendChild(shortcut)
+  item.appendChild(shortcut);
 
   //? sub-menu sign
   const chevron = document.createElement("span");
-  chevron.classList.add('chevron')
-  chevron.textContent = menu.type=='popup'? '⮀' : ' ';
-  item.appendChild(chevron)
+  chevron.classList.add("chevron");
+  chevron.textContent = menu.type == "popup" ? "⮀" : " ";
+  item.appendChild(chevron);
   // item.textContent = `${menu.checked? '✓' : ' '} ${menu.caption}`;
 
   return item;
@@ -136,9 +139,9 @@ function generateCaption(caption: string): HTMLElement {
   caption = caption.replace(regex, subst);
 
   const span = document.createElement("span");
-  span.classList.add('caption')
+  span.classList.add("caption");
   span.innerHTML = caption;
-  return span
+  return span;
 }
 
 export default class PopupMenu extends BaseObject {
@@ -185,13 +188,13 @@ export default class PopupMenu extends BaseObject {
     }
   }
   async popatmouse(): Promise<number> {
-    console.log('popAtMouse.start...:')
-    const result = await waitPopup(this)
-    console.log('popAtMouse.return:', result)
+    console.log("popAtMouse.start...:");
+    const result = await waitPopup(this);
+    console.log("popAtMouse.return:", result);
     return result;
   }
-  async popatxy(x:number, y:number):Promise<number>{
-    return await waitPopup(this)
+  async popatxy(x: number, y: number): Promise<number> {
+    return await waitPopup(this);
   }
 
   // popatmouse(): number {

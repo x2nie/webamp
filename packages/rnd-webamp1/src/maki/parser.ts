@@ -72,24 +72,20 @@ export function parse(data: ArrayBuffer): ParsedMaki {
     }
   });
 
-  const resolvedBindings = bindings.map(
-    (binding): Binding => {
-      return Object.assign({}, binding, {
-        commandOffset: offsetToCommand[binding.binaryOffset],
+  const resolvedBindings = bindings.map((binding): Binding => {
+    return Object.assign({}, binding, {
+      commandOffset: offsetToCommand[binding.binaryOffset],
+    });
+  });
+
+  const resolvedCommands = commands.map((command): Command => {
+    if (command.argType === "COMMAND_OFFSET") {
+      return Object.assign({}, command, {
+        arg: offsetToCommand[command.arg],
       });
     }
-  );
-
-  const resolvedCommands = commands.map(
-    (command): Command => {
-      if (command.argType === "COMMAND_OFFSET") {
-        return Object.assign({}, command, {
-          arg: offsetToCommand[command.arg],
-        });
-      }
-      return command;
-    }
-  );
+    return command;
+  });
   return {
     classes,
     methods,
@@ -158,7 +154,7 @@ function readMethods(makiFile: MakiFile, classes: string[]): Method[] {
     const typeOffset = classCode & 0xff;
     // This is probably the second half of a uint32
     makiFile.readUInt16LE();
-    const name = makiFile.readString()//x2nie .toLowerCase();
+    const name = makiFile.readString(); //x2nie .toLowerCase();
 
     const className = classes[typeOffset];
 
@@ -208,7 +204,7 @@ function readVariables({ makiFile, classes }) {
       if (typeName == null) {
         throw new Error("Invalid type");
       }
-      let value:any = null;
+      let value: any = null;
 
       switch (typeName) {
         // BOOLEAN
@@ -256,7 +252,7 @@ function readConstants({ makiFile, variables }) {
 
 function readBindings(makiFile: MakiFile, variables: Variable[]): Binding[] {
   let count = makiFile.readUInt32LE();
-  const bindings:Binding[] = [];
+  const bindings: Binding[] = [];
   while (count--) {
     const variableOffset = makiFile.readUInt32LE();
     const methodOffset = makiFile.readUInt32LE();

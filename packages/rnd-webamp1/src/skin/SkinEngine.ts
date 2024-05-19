@@ -26,7 +26,7 @@ export class SkinEngine {
   static uniqueByFile = "";
 
   constructor(protected skinPath: string) {}
-  protected zip : FileExtractor;
+  protected zip: FileExtractor;
 
   /**
    * Check Wether this skin-engine can continue working with skin/filePath
@@ -43,8 +43,7 @@ export class SkinEngine {
     );
   }
 
-  setStorage(env:{[key:string]: XmlElement}){
-  }
+  setStorage(env: { [key: string]: XmlElement }) {}
 
   async initSkinExtractor(): Promise<FileExtractor> {
     let zip: FileExtractor;
@@ -64,10 +63,9 @@ export class SkinEngine {
   public containers(): XmlElement[] {
     return [];
   }
-  bitmaps(): {[key:string]: XmlElement} {
-    return {}
-}
-
+  bitmaps(): { [key: string]: XmlElement } {
+    return {};
+  }
 
   async traverseChildren(
     node: XmlElement,
@@ -78,9 +76,9 @@ export class SkinEngine {
     //? But in the same time we need to reduce code complexity
     //? So, we do Promise.all only on resource loading phase.
 
-    if(!node.children) {
-      console.log('HAS-NO CHILD:travn', node.toJSON())
-      return
+    if (!node.children) {
+      console.log("HAS-NO CHILD:travn", node.toJSON());
+      return;
     }
     return await this.traverseChilds(node.children, parent, path);
   }
@@ -88,7 +86,7 @@ export class SkinEngine {
   async traverseChilds(nodes: XmlElement[], parent: any, path: string[] = []) {
     // const elements = nodes.filter(el => el instanceof XmlElement)
     //? we need to copy the array, to avoid conflicting when they are added to parent
-    const elements = [...nodes]
+    const elements = [...nodes];
     // const elements = [...nodes.filter(el => el instanceof XmlElement)]
 
     // return await Promise.all(
@@ -106,12 +104,12 @@ export class SkinEngine {
     //   })
     // );
     // } else {
-      for (const child of elements) {
-        // if (child instanceof XmlElement) {
-          // this._scanRes(child);
-          await this.traverseChild(child, parent, path);
-        // }
-      }
+    for (const child of elements) {
+      // if (child instanceof XmlElement) {
+      // this._scanRes(child);
+      await this.traverseChild(child, parent, path);
+      // }
+    }
     // }
     // return elements.filter(e => !!e.parent)
   }
@@ -124,7 +122,6 @@ export class SkinEngine {
         break;
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------

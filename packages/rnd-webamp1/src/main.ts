@@ -1,7 +1,7 @@
 // import { loadFile, mount, App as OwlApp } from '@odoo/owl';
 // import { App } from './skin/App';
 // import './style.css'
-import { Webamp } from './webamp';
+import { Webamp } from "./webamp";
 // import typescriptLogo from './typescript.svg'
 // import viteLogo from '/vite.svg'
 // import { setupCounter } from './counter.ts'
@@ -21,17 +21,17 @@ import { Webamp } from './webamp';
 // setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
 // async function  main(){
-  // App.mount1(document.getElementById('app'))
+// App.mount1(document.getElementById('app'))
 // }
 
 // main()
 
-const webamp = new Webamp(document.getElementById('app') || document.body, {
+const webamp = new Webamp(document.getElementById("app") || document.body, {
   // skin: .../,,,,
-  // skin: '/skins/SimpleTutorial/'
-  skin: 'skins/MMD3.wal'
+  skin: "/skins/SimpleTutorial/",
+  // skin: 'skins/MMD3.wal'
   // skin: 'skins/WinampModern566.wal'
-})
+});
 
 // setTimeout(() => {
 //   webamp.app.say('helloBoss')

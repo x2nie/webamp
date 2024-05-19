@@ -43,7 +43,7 @@ export class App extends Component {
 
   setup() {
     this.env = useEnv(); //? global env
-    console.log('APP.drens=', this.env.ui.root.children)
+    console.log("APP.drens=", this.env.ui.root.children);
     // this.state = useState({ node: env.ui.root });
     // this.env.ui.root.el = this;
 
@@ -57,15 +57,15 @@ export class App extends Component {
     // this.windowService = useWindowService();
 
     // onWillStart(async () => {
-      // onMounted( async () => {
-      // if (env.options.skin) await this.switchSkin(env.options.skin);
+    // onMounted( async () => {
+    // if (env.options.skin) await this.switchSkin(env.options.skin);
     // });
 
     // onMounted(() => {
-      // console.log(`${name}:mounted`);
-      // for (let i = 0; i < 3; i++) {
-      //   this.addWindow('Hello')
-      // }
+    // console.log(`${name}:mounted`);
+    // for (let i = 0; i < 3; i++) {
+    //   this.addWindow('Hello')
+    // }
     // });
   }
 

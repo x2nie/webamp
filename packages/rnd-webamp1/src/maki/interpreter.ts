@@ -4,7 +4,10 @@ import { ParsedMaki, Command, Method } from "./parser";
 import { getClass, getMethod } from "./objects";
 // import { classResolver } from "../skin/resolver";
 
-function validateMaki(program: ParsedMaki, classResolver: (guid: string) => any) {
+function validateMaki(
+  program: ParsedMaki,
+  classResolver: (guid: string) => any
+) {
   for (const method of program.methods) {
     if (method.name.startsWith("on")) {
       continue;
@@ -234,7 +237,9 @@ class Interpreter {
           const guid = this.classes[classesOffset];
           const klass = this.classResolver(guid);
           if (!klass) {
-            throw new Error("Need to add a missing class to runtime guid:"+guid);
+            throw new Error(
+              "Need to add a missing class to runtime guid:" + guid
+            );
           }
           // This is a bit awkward. Because the variables are stored on the stack
           // before the object, we have to find the number of arguments without
@@ -258,7 +263,7 @@ class Interpreter {
             );
           }
 
-          const methodArgs:any[] = [];
+          const methodArgs: any[] = [];
           while (argCount--) {
             const a = this.stack.pop()!;
             methodArgs.push(a.value);
@@ -272,9 +277,9 @@ class Interpreter {
           );
 
           // let value = obj.value[methodName](...methodArgs);
-          let result:any = null;
+          let result: any = null;
           try {
-            console.log(methodName, 'with args:',methodArgs);
+            console.log(methodName, "with args:", methodArgs);
             // result = obj.value[methodName](...methodArgs);
             let afunction = obj.value![methodName];
             if (afunction.constructor.name === "AsyncFunction") {
@@ -349,7 +354,9 @@ class Interpreter {
           const guid = this.classes[classesOffset];
           const klass = this.classResolver(guid);
           if (!klass) {
-            throw new Error(`Need to add a missing class: #${classesOffset} GUID:${guid} to runtime`);
+            throw new Error(
+              `Need to add a missing class: #${classesOffset} GUID:${guid} to runtime`
+            );
           }
           // This is a bit awkward. Because the variables are stored on the stack
           // before the object, we have to find the number of arguments without
@@ -367,7 +374,7 @@ class Interpreter {
             "Arg count mismatch"
           );
 
-          const methodArgs:any[] = [];
+          const methodArgs: any[] = [];
           while (argCount--) {
             const a = this.stack.pop()!;
             methodArgs.push(a.value);
@@ -377,7 +384,7 @@ class Interpreter {
             obj.type === "OBJECT",
             "Tried to call a method on a primitive."
           );
-          console.log('trial to call:',methodName, '@', obj.value)
+          console.log("trial to call:", methodName, "@", obj.value);
           let value = obj.value![methodName](...methodArgs);
 
           if (value === undefined && returnType !== "NULL") {
@@ -390,7 +397,10 @@ class Interpreter {
             value = this.variables[1];
           }
           if (returnType === "BOOLEAN") {
-            assert(typeof value === "boolean", "BOOLEAN should return a boolean");
+            assert(
+              typeof value === "boolean",
+              "BOOLEAN should return a boolean"
+            );
             value = value ? 1 : 0;
           }
           if (this.debug) {
@@ -706,7 +716,7 @@ class Interpreter {
           const classesOffset = command.arg;
           const guid = this.classes[classesOffset];
           const Klass = this.classResolver(guid);
-          const system = this.variables[0].value
+          const system = this.variables[0].value;
           const klassInst = new Klass(system);
           this.stack.push({ type: "OBJECT", value: klassInst });
           break;

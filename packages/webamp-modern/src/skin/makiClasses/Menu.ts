@@ -157,14 +157,15 @@ export default class Menu extends Group {
     //   this._div.classList.remove("vertical");
     // }
 
-   
-    if(this._menuId.startsWith('WA5:')){
-      const [,popupId] = this._menuId.split(':')
-      const popupMenu = getWa5Popup(popupId)
+    if (this._menuId.startsWith("WA5:")) {
+      const [, popupId] = this._menuId.split(":");
+      const popupMenu = getWa5Popup(popupId);
       // function menuClick(id:number){
       //   console.log('menu clicked:', id)
       // }
-      this._popup = generatePopupDiv(popupMenu, (id:number) => console.log('menu clicked:', id))
+      this._popup = generatePopupDiv(popupMenu, (id: number) =>
+        console.log("menu clicked:", id)
+      );
     } else {
       this._popup = document.createElement("div");
       this._popup.classList.add("fake-popup");

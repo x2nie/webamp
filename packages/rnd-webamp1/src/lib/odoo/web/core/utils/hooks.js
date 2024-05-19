@@ -2,7 +2,13 @@
 
 import { SERVICES_METADATA } from "@web/env";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/owl";
+import {
+  status,
+  useComponent,
+  useEffect,
+  useRef,
+  onWillUnmount,
+} from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -33,30 +39,33 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
  * @returns {Object} the element reference
  */
 export function useAutofocus({ refName, selectAll } = {}) {
-    const comp = useComponent();
-    const ref = useRef(refName || "autofocus");
-    // Prevent autofocus in mobile
-    if (comp.env.isSmall) {
-        return ref;
-    }
-    // LEGACY
-    if (comp.env.device && comp.env.device.isMobileDevice) {
-        return ref;
-    }
-    // LEGACY
-    useEffect(
-        (el) => {
-            if (el) {
-                el.focus();
-                if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
-                    el.selectionEnd = el.value.length;
-                    el.selectionStart = selectAll ? 0 : el.value.length;
-                }
-            }
-        },
-        () => [ref.el]
-    );
+  const comp = useComponent();
+  const ref = useRef(refName || "autofocus");
+  // Prevent autofocus in mobile
+  if (comp.env.isSmall) {
     return ref;
+  }
+  // LEGACY
+  if (comp.env.device && comp.env.device.isMobileDevice) {
+    return ref;
+  }
+  // LEGACY
+  useEffect(
+    (el) => {
+      if (el) {
+        el.focus();
+        if (
+          ["INPUT", "TEXTAREA"].includes(el.tagName) &&
+          el.type !== "number"
+        ) {
+          el.selectionEnd = el.value.length;
+          el.selectionStart = selectAll ? 0 : el.value.length;
+        }
+      }
+    },
+    () => [ref.el]
+  );
+  return ref;
 }
 
 // -----------------------------------------------------------------------------
@@ -71,15 +80,15 @@ export function useAutofocus({ refName, selectAll } = {}) {
  * @param {Callback} callback
  */
 export function useBus(bus, eventName, callback) {
-    const component = useComponent();
-    useEffect(
-        () => {
-            const listener = callback.bind(component);
-            bus.addEventListener(eventName, listener);
-            return () => bus.removeEventListener(eventName, listener);
-        },
-        () => []
-    );
+  const component = useComponent();
+  useEffect(
+    () => {
+      const listener = callback.bind(component);
+      bus.addEventListener(eventName, listener);
+      return () => bus.removeEventListener(eventName, listener);
+    },
+    () => []
+  );
 }
 
 // -----------------------------------------------------------------------------
@@ -119,46 +128,46 @@ export function useBus(bus, eventName, callback) {
  *   Useful for listening in the capture phase
  */
 export function useListener(eventName, querySelector, handler, options = {}) {
-    if (typeof arguments[1] !== "string") {
-        querySelector = null;
-        handler = arguments[1];
-        options = arguments[2] || {};
-    }
-    if (typeof handler !== "function") {
-        throw new Error("The handler must be a function");
-    }
+  if (typeof arguments[1] !== "string") {
+    querySelector = null;
+    handler = arguments[1];
+    options = arguments[2] || {};
+  }
+  if (typeof handler !== "function") {
+    throw new Error("The handler must be a function");
+  }
 
-    const comp = useComponent();
-    let boundHandler;
-    if (querySelector) {
-        boundHandler = function (ev) {
-            let el = ev.target;
-            let target;
-            while (el && !target) {
-                if (el.matches(querySelector)) {
-                    target = el;
-                } else if (el === comp.el) {
-                    el = null;
-                } else {
-                    el = el.parentElement;
-                }
-            }
-            if (el) {
-                handler.call(comp, ev);
-            }
-        };
-    } else {
-        boundHandler = handler.bind(comp);
-    }
-    useEffect(
-        () => {
-            comp.el.addEventListener(eventName, boundHandler, options);
-            return () => {
-                comp.el.removeEventListener(eventName, boundHandler, options);
-            };
-        },
-        () => []
-    );
+  const comp = useComponent();
+  let boundHandler;
+  if (querySelector) {
+    boundHandler = function (ev) {
+      let el = ev.target;
+      let target;
+      while (el && !target) {
+        if (el.matches(querySelector)) {
+          target = el;
+        } else if (el === comp.el) {
+          el = null;
+        } else {
+          el = el.parentElement;
+        }
+      }
+      if (el) {
+        handler.call(comp, ev);
+      }
+    };
+  } else {
+    boundHandler = handler.bind(comp);
+  }
+  useEffect(
+    () => {
+      comp.el.addEventListener(eventName, boundHandler, options);
+      return () => {
+        comp.el.removeEventListener(eventName, boundHandler, options);
+      };
+    },
+    () => []
+  );
 }
 
 // -----------------------------------------------------------------------------
@@ -166,13 +175,13 @@ export function useListener(eventName, querySelector, handler, options = {}) {
 // -----------------------------------------------------------------------------
 
 function _protectMethod(component, fn) {
-    return async function (...args) {
-        if (status(component) === "destroyed") {
-            throw new Error("Component is destroyed");
-        }
-        const result = await fn.call(this, ...args);
-        return status(component) === "destroyed" ? new Promise(() => {}) : result;
-    };
+  return async function (...args) {
+    if (status(component) === "destroyed") {
+      throw new Error("Component is destroyed");
+    }
+    const result = await fn.call(this, ...args);
+    return status(component) === "destroyed" ? new Promise(() => {}) : result;
+  };
 }
 
 /**
@@ -182,25 +191,25 @@ function _protectMethod(component, fn) {
  * @returns {any}
  */
 export function useService(serviceName) {
-    const component = useComponent();
-    const { services } = component.env;
-    if (!(serviceName in services)) {
-        throw new Error(`Service ${serviceName} is not available`);
+  const component = useComponent();
+  const { services } = component.env;
+  if (!(serviceName in services)) {
+    throw new Error(`Service ${serviceName} is not available`);
+  }
+  const service = services[serviceName];
+  if (serviceName in SERVICES_METADATA) {
+    if (service instanceof Function) {
+      return _protectMethod(component, service);
+    } else {
+      const methods = SERVICES_METADATA[serviceName];
+      const result = Object.create(service);
+      for (const method of methods) {
+        result[method] = _protectMethod(component, service[method]);
+      }
+      return result;
     }
-    const service = services[serviceName];
-    if (serviceName in SERVICES_METADATA) {
-        if (service instanceof Function) {
-            return _protectMethod(component, service);
-        } else {
-            const methods = SERVICES_METADATA[serviceName];
-            const result = Object.create(service);
-            for (const method of methods) {
-                result[method] = _protectMethod(component, service[method]);
-            }
-            return result;
-        }
-    }
-    return service;
+  }
+  return service;
 }
 
 /**
@@ -215,20 +224,20 @@ export function useService(serviceName) {
  *  child ref, but can otherwise be used as a normal ref object
  */
 export function useChildRef() {
-    let defined = false;
-    let value;
-    return function ref(v) {
-        value = v;
-        if (defined) {
-            return;
-        }
-        Object.defineProperty(ref, "el", {
-            get() {
-                return value.el;
-            },
-        });
-        defined = true;
-    };
+  let defined = false;
+  let value;
+  return function ref(v) {
+    value = v;
+    if (defined) {
+      return;
+    }
+    Object.defineProperty(ref, "el", {
+      get() {
+        return value.el;
+      },
+    });
+    defined = true;
+  };
 }
 /**
  * Forwards the given refName to the parent by calling the corresponding
@@ -239,27 +248,27 @@ export function useChildRef() {
  *  parent
  */
 export function useForwardRefToParent(refName) {
-    const component = useComponent();
-    const ref = useRef(refName);
-    if (component.props[refName]) {
-        component.props[refName](ref);
-    }
-    return ref;
+  const component = useComponent();
+  const ref = useRef(refName);
+  if (component.props[refName]) {
+    component.props[refName](ref);
+  }
+  return ref;
 }
 /**
  * Use the dialog service while also automatically closing the dialogs opened
  * by the current component when it is unmounted.
  */
 export function useOwnedDialogs() {
-    const dialogService = useService("dialog");
-    const cbs = [];
-    onWillUnmount(() => {
-        cbs.forEach((cb) => cb());
-    });
-    const addDialog = (...args) => {
-        const close = dialogService.add(...args);
-        cbs.push(close);
-        return close;
-    };
-    return addDialog;
+  const dialogService = useService("dialog");
+  const cbs = [];
+  onWillUnmount(() => {
+    cbs.forEach((cb) => cb());
+  });
+  const addDialog = (...args) => {
+    const close = dialogService.add(...args);
+    cbs.push(close);
+    return close;
+  };
+  return addDialog;
 }

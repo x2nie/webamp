@@ -61,7 +61,7 @@ export async function getPngSize(
           reject(new Error("File is not a valid PNG image"));
         }
       } else {
-        reject(new Error('Event target is null'));
+        reject(new Error("Event target is null"));
       }
     };
 
@@ -509,11 +509,9 @@ export function getScreenSize(): { width: number; height: number } {
   };
 }
 
-type PosEvent =
-  | MouseEvent
-  | TouchEvent
-  // | React.MouseEvent<HTMLElement>
-  // | React.TouchEvent<HTMLElement>;
+type PosEvent = MouseEvent | TouchEvent;
+// | React.MouseEvent<HTMLElement>
+// | React.TouchEvent<HTMLElement>;
 
 function getPos(e: PosEvent): { clientX: number; clientY: number } {
   switch (e.type) {

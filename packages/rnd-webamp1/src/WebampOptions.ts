@@ -1,11 +1,9 @@
-
 export type WebampOptions = {
-    skin: string;
-    skins: string[];
-    
-}
+  skin: string;
+  skins: string[];
+};
 
 export const webampDefaultOptions = {
-    skin: 'skins/SimpleTutorial.wal',
-    skins: [],
-}
+  skin: "skins/SimpleTutorial.wal",
+  skins: [],
+};

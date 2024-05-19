@@ -1,14 +1,17 @@
 import { XmlElement, parseXml } from "@xml/parse-xml";
 import { FileExtractor, ZipFileExtractor } from "./FileExtractor";
-import { assert, getPngSize, /* , getCaseInsensitiveFile, assume */ 
-toTitleCase} from "./utils";
+import {
+  assert,
+  getPngSize /* , getCaseInsensitiveFile, assume */,
+  toTitleCase,
+} from "./utils";
 import { WindowInfo } from "./types";
 
 export class SkinLoader {
   // _path: string[] = [];
-  _groupdef: {[key:string]: XmlElement} = {};
-  _xuidef: {[key:string]: XmlElement} = {};
-  _bitmap: {[key:string]: XmlElement} = {};
+  _groupdef: { [key: string]: XmlElement } = {};
+  _xuidef: { [key: string]: XmlElement } = {};
+  _bitmap: { [key: string]: XmlElement } = {};
   _containers: XmlElement[] = [];
   fileExtractor: FileExtractor;
   async loadSkin(skinPath: string) {
@@ -37,25 +40,24 @@ export class SkinLoader {
     const parsed = parseXml(includedXml);
     // console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
-    console.log('FINAL skin.xml=>', parsed)
-    await this.loadBitmaps()
+    console.log("FINAL skin.xml=>", parsed);
+    await this.loadBitmaps();
   }
 
-  async loadBitmaps(){
-    const loadBitmap = async (bitmap:XmlElement) =>{
+  async loadBitmaps() {
+    const loadBitmap = async (bitmap: XmlElement) => {
       const filepath = bitmap.attributes.file;
       const imgBlob = await this.fileExtractor.getFileAsBlob(filepath);
       const imgUrl = URL.createObjectURL(imgBlob);
       bitmap.url = imgUrl;
-      if(!bitmap.attributes.w || !bitmap.attributes.h){
-        const {w,h} = await getPngSize(imgBlob)
+      if (!bitmap.attributes.w || !bitmap.attributes.h) {
+        const { w, h } = await getPngSize(imgBlob);
         //@ts-ignore
-        bitmap.attributes.w = w; bitmap.attributes.h = h;
+        bitmap.attributes.w = w;
+        bitmap.attributes.h = h;
       }
-    }
-    return await Promise.all(
-      Object.values(this._bitmap).map(loadBitmap)
-    );
+    };
+    return await Promise.all(Object.values(this._bitmap).map(loadBitmap));
   }
 
   async traverseChildren(
@@ -67,9 +69,9 @@ export class SkinLoader {
     //? But in the same time we need to reduce code complexity
     //? So, we do Promise.all only on resource loading phase.
 
-    if(!node.children) {
-      console.log('HAS-NO CHILD:travn', node.toJSON())
-      return
+    if (!node.children) {
+      console.log("HAS-NO CHILD:travn", node.toJSON());
+      return;
     }
     // const elements = node.children.filter(el => el instanceof XmlElement)
     // node.children = elements;
@@ -89,12 +91,12 @@ export class SkinLoader {
     //   })
     // );
     // } else {
-      // for (const child of node.children) {
-      //   if (child instanceof XmlElement) {
-      //     // this._scanRes(child);
-      //     await this.traverseChild(child, parent, path);
-      //   }
-      // }
+    // for (const child of node.children) {
+    //   if (child instanceof XmlElement) {
+    //     // this._scanRes(child);
+    //     await this.traverseChild(child, parent, path);
+    //   }
+    // }
     // }
     return await this.traverseChilds(node.children, parent, path);
   }
@@ -102,7 +104,7 @@ export class SkinLoader {
   async traverseChilds(nodes: XmlElement[], parent: any, path: string[] = []) {
     // const elements = nodes.filter(el => el instanceof XmlElement)
     //? we need to copy the array, to avoid conflicting when they are added to parent
-    const elements = [...nodes]
+    const elements = [...nodes];
     // const elements = [...nodes.filter(el => el instanceof XmlElement)]
 
     // return await Promise.all(
@@ -120,12 +122,12 @@ export class SkinLoader {
     //   })
     // );
     // } else {
-      for (const child of elements) {
-        // if (child instanceof XmlElement) {
-          // this._scanRes(child);
-          await this.traverseChild(child, parent, path);
-        // }
-      }
+    for (const child of elements) {
+      // if (child instanceof XmlElement) {
+      // this._scanRes(child);
+      await this.traverseChild(child, parent, path);
+      // }
+    }
     // }
     // return elements.filter(e => !!e.parent)
   }
@@ -134,7 +136,7 @@ export class SkinLoader {
     switch (tag) {
       case "wasabixml":
       case "winampabstractionlayer":
-        // return this.traverseChildren(node, parent.parent || parent, path);
+      // return this.traverseChildren(node, parent.parent || parent, path);
 
       case "elements":
       case "skininfo":
@@ -152,8 +154,8 @@ export class SkinLoader {
         return this.container(node, parent, path);
       case "layout":
         return this.layout(node, parent, path);
-        // case "groupdef":
-        //   return this.groupdef(node, parent, path);
+      // case "groupdef":
+      //   return this.groupdef(node, parent, path);
       case "groupdef":
         return this.groupdef(node, parent, path);
       case "group":
@@ -162,9 +164,8 @@ export class SkinLoader {
       case "bitmap":
         return this.bitmap(node, parent, path);
       case "gammaset":
-      
         node.detach(); //? trial to cleanup, to see what the rest
-        break
+        break;
       case "email":
         // debugger;
         break;
@@ -196,54 +197,55 @@ export class SkinLoader {
     // console.log('include #2', fileName)
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
-    const parsed = parseXmlFragment(includedXml).children[0]//.children[0] as XmlElement;
+    const parsed = parseXmlFragment(includedXml).children[0]; //.children[0] as XmlElement;
     // debugger
     // console.log('include #3', fileName)
-    
-    
+
     // await this.traverseChildren(parsed, parent, [...path, ...directories]);
     // console.log('include #4>', fileName, parsed)
     // debugger
     // const childs = await this.traverseChilds(parsed.children, parent, [...path, ...directories]);
-    await this.traverseChilds(parsed.children, parent, [...path, ...directories]);
-    const childs = parsed.children.filter(e => !!e.parent)
+    await this.traverseChilds(parsed.children, parent, [
+      ...path,
+      ...directories,
+    ]);
+    const childs = parsed.children.filter((e) => !!e.parent);
     // console.log('include #4<', fileName, parsed)
-    
+
     // if(!parsed.children) {
     //   console.log('parsed-HAS-NO CHILD:', parsed.toJSON())
     //   return
     // }
     // console.log('include #4 ==>>', fileName, childs)
-    if(!parent || !parent.children) {
-      console.log('parent-HAS-NO CHILD:', parent.toJSON())
-      return
+    if (!parent || !parent.children) {
+      console.log("parent-HAS-NO CHILD:", parent.toJSON());
+      return;
     }
     // debugger
-    // let childrens = parsed  ? parsed.children : 
-    
+    // let childrens = parsed  ? parsed.children :
+
     //? INCLUDE = attach children to parent from other xml file
-    if(childs.length == 0) {
-      node.detach()
+    if (childs.length == 0) {
+      node.detach();
       return;
-    };
+    }
     let first = true;
-    childs.forEach(child => {
-      if(!child.parent ) return;//TODO: keep back this. 
-      if(child.tag=='include' && child.children.length==0) {
-        node.detach()
+    childs.forEach((child) => {
+      if (!child.parent) return; //TODO: keep back this.
+      if (child.tag == "include" && child.children.length == 0) {
+        node.detach();
         return;
       }
       // console.log('include #5~', fileName, child.name, '#', child.toJSON())
       //? replace the <include> with first child
-      if(first){
-        node.tag = child.tag
+      if (first) {
+        node.tag = child.tag;
         node.attributes = child.attributes;
         node.children = child.children;
         first = false;
       } else {
-        if(parent.children)
-          parent.children.push(child)
-        child.parent = parent
+        if (parent.children) parent.children.push(child);
+        child.parent = parent;
       }
     });
     // for (const _dir of directories) {
@@ -253,14 +255,20 @@ export class SkinLoader {
   }
 
   async container(node: XmlElement, parent: any, path: string[] = []) {
-    node.tag = toTitleCase(node.tag)
+    node.tag = toTitleCase(node.tag);
     // this._containers.push(node);
     await this.traverseChildren(node, node, path);
     // return node
-    // if(!node.children) 
-      //   console.log('HAS-NO CHILD:', node.toJSON())
-    const layouts = node.children.filter(el => el.tag == 'layout')
-    console.log(node.attributes.id, '/', node.attributes.name,node.toJSON(), layouts)
+    // if(!node.children)
+    //   console.log('HAS-NO CHILD:', node.toJSON())
+    const layouts = node.children.filter((el) => el.tag == "layout");
+    console.log(
+      node.attributes.id,
+      "/",
+      node.attributes.name,
+      node.toJSON(),
+      layouts
+    );
     // node.layouts = layouts
     // node.layouts = layouts.map(l => l.attributes)
     // const elLayouts= layouts.map(
@@ -273,33 +281,33 @@ export class SkinLoader {
     // this._Containers.push(tpl);
     this._containers.push(node);
   }
-  
+
   async layout(node: XmlElement, parent: any, path: string[] = []) {
     await this.traverseChildren(node, node, path);
   }
-  
+
   async bitmap(node: XmlElement, parent: any, path: string[] = []) {
-    this._bitmap[node.id] = node.detach()
+    this._bitmap[node.id] = node.detach();
   }
-  
+
   async groupdef(node: XmlElement, parent: any, path: string[] = []) {
     // node.name = toTitleCase(node.name)
     // await this.traverseChildren(node, node, path);
-    const id = node.id
+    const id = node.id;
     // if(this._groupdef.includes(id)) {
     //   throw new Error("groupdef already registered:"+ id);
     // }
-    this._groupdef[id] = node
+    this._groupdef[id] = node;
     if (node.attributes.xuitag) {
       this._xuidef[node.attributes.xuitag] = node;
     }
-    node.detach()
+    node.detach();
     // return node;
   }
 
   async group(node: XmlElement, parent: any, path: string[] = []) {
-    const groupdef = this._groupdef[node.id]
-    node.merge(groupdef.clone())
+    const groupdef = this._groupdef[node.id];
+    node.merge(groupdef.clone());
   }
 }
 
@@ -309,35 +317,39 @@ function parseXmlFragment(xml: string): XmlElement {
   return parseXml(`<wrapper>${xml}</wrapper>`) as unknown as XmlElement;
 }
 
-function info(attributes:{[attrName: string]: string}):string{
+function info(attributes: { [attrName: string]: string }): string {
   const def = {
     id: attributes.id,
-    x: attributes['default_x'] || Math.round(Math.random() * (window.innerWidth - 50)),
-    y: attributes['default_y'] || Math.round(Math.random() * (window.innerWidth - 50)),
+    x:
+      attributes["default_x"] ||
+      Math.round(Math.random() * (window.innerWidth - 50)),
+    y:
+      attributes["default_y"] ||
+      Math.round(Math.random() * (window.innerWidth - 50)),
     width: 150,
     height: 50,
-  }
-  return `info="${JSON.stringify(def).replaceAll('"', "'")}"`
+  };
+  return `info="${JSON.stringify(def).replaceAll('"', "'")}"`;
 }
-function atts(attributes:{[attrName: string]: string}):string{
+function atts(attributes: { [attrName: string]: string }): string {
   // return `id="'${attributes.id}'" info=`
-  const result:string[] = []
-  for(const [k,v] of Object.entries(attributes)){
-    if(k=='component') continue
-    result.push(`${k}="${v}"`)
+  const result: string[] = [];
+  for (const [k, v] of Object.entries(attributes)) {
+    if (k == "component") continue;
+    result.push(`${k}="${v}"`);
   }
-  return result.join(' ')
+  return result.join(" ");
 }
 
-function getLayouts(node:XmlElement): XmlElement[] {
-  const ret: XmlElement[] = []
-  const recursive = (n:XmlElement) =>{
-    if(n.tag=='layout') {
-      ret.push(n)
-    } else if(n.children) {
-      n.children.forEach(c => recursive(c))
+function getLayouts(node: XmlElement): XmlElement[] {
+  const ret: XmlElement[] = [];
+  const recursive = (n: XmlElement) => {
+    if (n.tag == "layout") {
+      ret.push(n);
+    } else if (n.children) {
+      n.children.forEach((c) => recursive(c));
     }
-  }
-  recursive(node)
-  return ret
+  };
+  recursive(node);
+  return ret;
 }

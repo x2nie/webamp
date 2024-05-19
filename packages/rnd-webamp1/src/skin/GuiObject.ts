@@ -8,7 +8,7 @@ export class GuiObject extends Object_ {
 
   setup() {
     this.env = useEnv();
-    this.props.node.el = this
+    this.props.node.el = this;
   }
 
   getId(): string {
@@ -32,16 +32,16 @@ export class GuiObject extends Object_ {
     return String(this.att[param]);
   }
 
-  style(){
-    let {x,y,w,h, alpha, visible } = this.att;
-    let style = '';//`top:${y}px; left:${x}px; color:fuchsia;`;
-    if(x!=null) style += `left:${x}px;`
-    if(y!=null) style += `top:${y}px;`
-    if(w!=null) style += `width:${w}px;`
-    if(h!=null) style += `height:${h}px;`
-    if(alpha!=null && alpha < 255) style += `opacity:${alpha / 255};`
-    if(visible!=null && !visible) style += `display:none;`
-    return style
+  style() {
+    let { x, y, w, h, alpha, visible } = this.att;
+    let style = ""; //`top:${y}px; left:${x}px; color:fuchsia;`;
+    if (x != null) style += `left:${x}px;`;
+    if (y != null) style += `top:${y}px;`;
+    if (w != null) style += `width:${w}px;`;
+    if (h != null) style += `height:${h}px;`;
+    if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
+    if (visible != null && !visible) style += `display:none;`;
+    return style;
   }
   /**
    * Trigger the show event.
@@ -65,9 +65,8 @@ export class GuiObject extends Object_ {
     return this.att.visible;
   }
   set visible(showing: boolean) {
-    this.att.visible = showing
+    this.att.visible = showing;
   }
-
 
   /**
    * Set the alphablending value of the object.
@@ -77,7 +76,7 @@ export class GuiObject extends Object_ {
    * @param  alpha   The alpha value.
    */
   setAlpha(alpha: number) {
-    console.log('setAlpha!', alpha)
+    console.log("setAlpha!", alpha);
     this.att.alpha = alpha;
     // this._renderAlpha();
   }
@@ -90,7 +89,7 @@ export class GuiObject extends Object_ {
    * @ret The alpha value.
    */
   getAlpha(): number {
-    const alpha = this.att.alpha
-    return alpha!==null ? alpha : 255;
+    const alpha = this.att.alpha;
+    return alpha !== null ? alpha : 255;
   }
 }

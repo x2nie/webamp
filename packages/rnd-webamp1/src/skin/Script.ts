@@ -39,20 +39,22 @@ export class Script extends Component {
     // const self = this;
     onWillStart(() => {
       // onMounted(() => {
-        this.script = (structuredClone(this.env.ui.scripts[this.props.node.attributes.file]))
-        // this.script = toRaw(this.props.node.parsedScript);
-        // debugger
-        this.script.variables[0].value = this;
+      this.script = structuredClone(
+        this.env.ui.scripts[this.props.node.attributes.file]
+      );
+      // this.script = toRaw(this.props.node.parsedScript);
+      // debugger
+      this.script.variables[0].value = this;
       // debugger
     });
-    onMounted(()=>{
+    onMounted(() => {
       this.dispatch(this, "onScriptLoaded", []);
       setTimeout(() => {
-          //simulate play
-          console.log(`sys.onPlay()`);
-          self.dispatch(this, "onPlay", []);
+        //simulate play
+        console.log(`sys.onPlay()`);
+        self.dispatch(this, "onPlay", []);
       }, 6000);
-    })
+    });
   }
 
   dispatch(object: Object_, event: string, args: Variable[] = []) {
@@ -102,26 +104,26 @@ export class Script extends Component {
   //   return this.group.findObject(id);
   // }
 
-  getContainer(container_id: string): Container{
-    container_id = container_id.toLowerCase()
-    const containers = this.env.root.getContainers() as XmlElement[]
-    for(const c of containers){
-      if(c.attributes.id == container_id && c.el){
-        return c.el as Container
+  getContainer(container_id: string): Container {
+    container_id = container_id.toLowerCase();
+    const containers = this.env.root.getContainers() as XmlElement[];
+    for (const c of containers) {
+      if (c.attributes.id == container_id && c.el) {
+        return c.el as Container;
       }
     }
-    console.log('failed to get container:',container_id)
+    console.log("failed to get container:", container_id);
     //@ts-ignore
-    return null
+    return null;
   }
-  pause (){
+  pause() {
     // this.dispatch(this, 'onPaused')
   }
-  getPosition():number {
-    return 3.1
+  getPosition(): number {
+    return 3.1;
   }
-  integerToString(i:number):string {
-    return String(i)
+  integerToString(i: number): string {
+    return String(i);
   }
 }
 registry.category("component").add("script", Script);

@@ -22,129 +22,135 @@ export class DuplicatedKeyError extends Error {}
  * 3. it provides a chained API to add items to the registry.
  */
 export class Registry extends EventBus {
-    constructor() {
-        super();
-        this.content = {};
-        this.subRegistries = {};
-        this.elements = null;
-        this.entries = null;
+  constructor() {
+    super();
+    this.content = {};
+    this.subRegistries = {};
+    this.elements = null;
+    this.entries = null;
 
-        this.addEventListener("UPDATE", () => {
-            this.elements = null;
-            this.entries = null;
-        });
-    }
+    this.addEventListener("UPDATE", () => {
+      this.elements = null;
+      this.entries = null;
+    });
+  }
 
-    /**
-     * Add an entry (key, value) to the registry if key is not already used. If
-     * the parameter force is set to true, an entry with same key (if any) is replaced.
-     *
-     * Note that this also returns the registry, so another add method call can
-     * be chained
-     *
-     * @param {string} key
-     * @param {any} value
-     * @param {{force?: boolean, sequence?: number}} [options]
-     * @returns {Registry}
-     */
-    add(key, value, { force, sequence } = {}) {
-        if (!force && key in this.content) {
-            throw new DuplicatedKeyError(`Cannot add '${key}' in this registry: it already exists`);
-        }
-        let previousSequence;
-        if (force) {
-            const elem = this.content[key];
-            previousSequence = elem && elem[0];
-        }
-        sequence = sequence === undefined ? previousSequence || 50 : sequence;
-        this.content[key] = [sequence, value];
-        const payload = { operation: "add", key, value };
-        this.trigger("UPDATE", payload);
-        return this;
+  /**
+   * Add an entry (key, value) to the registry if key is not already used. If
+   * the parameter force is set to true, an entry with same key (if any) is replaced.
+   *
+   * Note that this also returns the registry, so another add method call can
+   * be chained
+   *
+   * @param {string} key
+   * @param {any} value
+   * @param {{force?: boolean, sequence?: number}} [options]
+   * @returns {Registry}
+   */
+  add(key, value, { force, sequence } = {}) {
+    if (!force && key in this.content) {
+      throw new DuplicatedKeyError(
+        `Cannot add '${key}' in this registry: it already exists`
+      );
     }
+    let previousSequence;
+    if (force) {
+      const elem = this.content[key];
+      previousSequence = elem && elem[0];
+    }
+    sequence = sequence === undefined ? previousSequence || 50 : sequence;
+    this.content[key] = [sequence, value];
+    const payload = { operation: "add", key, value };
+    this.trigger("UPDATE", payload);
+    return this;
+  }
 
-    /**
-     * Get an item from the registry
-     *
-     * @param {string} key
-     * @returns {any}
-     */
-    get(key, defaultValue=undefined) {
-        if (arguments.length < 2 && !(key in this.content)) {
-            throw new KeyNotFoundError(`Cannot find ${key} in this registry!`);
-        }
-        const info = this.content[key];
-        return info ? info[1] : defaultValue;
+  /**
+   * Get an item from the registry
+   *
+   * @param {string} key
+   * @returns {any}
+   */
+  get(key, defaultValue = undefined) {
+    if (arguments.length < 2 && !(key in this.content)) {
+      throw new KeyNotFoundError(`Cannot find ${key} in this registry!`);
     }
+    const info = this.content[key];
+    return info ? info[1] : defaultValue;
+  }
 
-    /**
-     * Check the presence of a key in the registry
-     *
-     * @param {string} key
-     * @returns {boolean}
-     */
-    contains(key) {
-        // console.log('registry.contains:',key, '=', key in this.content)
-        return key in this.content;
-    }
+  /**
+   * Check the presence of a key in the registry
+   *
+   * @param {string} key
+   * @returns {boolean}
+   */
+  contains(key) {
+    // console.log('registry.contains:',key, '=', key in this.content)
+    return key in this.content;
+  }
 
-    /**
-     * Get a list of all elements in the registry. Note that it is ordered
-     * according to the sequence numbers.
-     *
-     * @returns {any[]}
-     */
-    getAll() {
-        if (!this.elements) {
-            const content = Object.values(this.content).sort((el1, el2) => el1[0] - el2[0]);
-            this.elements = content.map((elem) => elem[1]);
-        }
-        return this.elements.slice();
+  /**
+   * Get a list of all elements in the registry. Note that it is ordered
+   * according to the sequence numbers.
+   *
+   * @returns {any[]}
+   */
+  getAll() {
+    if (!this.elements) {
+      const content = Object.values(this.content).sort(
+        (el1, el2) => el1[0] - el2[0]
+      );
+      this.elements = content.map((elem) => elem[1]);
     }
+    return this.elements.slice();
+  }
 
-    /**
-     * Return a list of all entries, ordered by sequence numbers.
-     *
-     * @returns {[string, any][]}
-     */
-    getEntries() {
-        if (!this.entries) {
-            const entries = Object.entries(this.content).sort((el1, el2) => el1[1][0] - el2[1][0]);
-            this.entries = entries.map(([str, elem]) => [str, elem[1]]);
-        }
-        return this.entries.slice();
+  /**
+   * Return a list of all entries, ordered by sequence numbers.
+   *
+   * @returns {[string, any][]}
+   */
+  getEntries() {
+    if (!this.entries) {
+      const entries = Object.entries(this.content).sort(
+        (el1, el2) => el1[1][0] - el2[1][0]
+      );
+      this.entries = entries.map(([str, elem]) => [str, elem[1]]);
     }
+    return this.entries.slice();
+  }
 
-    /**
-     * Remove an item from the registry
-     *
-     * @param {string} key
-     */
-    remove(key) {
-        const value = this.content[key];
-        delete this.content[key];
-        const payload = { operation: "delete", key, value };
-        this.trigger("UPDATE", payload);
-    }
+  /**
+   * Remove an item from the registry
+   *
+   * @param {string} key
+   */
+  remove(key) {
+    const value = this.content[key];
+    delete this.content[key];
+    const payload = { operation: "delete", key, value };
+    this.trigger("UPDATE", payload);
+  }
 
-    clear() {
-        this.content = {};
-        const payload = { operation: "clear" };
-        this.trigger("UPDATE", payload);
-    }
+  clear() {
+    this.content = {};
+    const payload = { operation: "clear" };
+    this.trigger("UPDATE", payload);
+  }
 
-    /**
-     * Open a sub registry (and create it if necessary)
-     *
-     * @param {string} subcategory
-     * @returns {Registry}
-     */
-    category(subcategory) {
-        if (!(subcategory in this.subRegistries)) {
-            this.subRegistries[subcategory] = new Registry();
-        }
-        return this.subRegistries[subcategory];
+  /**
+   * Open a sub registry (and create it if necessary)
+   *
+   * @param {string} subcategory
+   * @returns {Registry}
+   */
+  category(subcategory) {
+    if (!(subcategory in this.subRegistries)) {
+      this.subRegistries[subcategory] = new Registry();
     }
+    return this.subRegistries[subcategory];
+  }
 }
 
 export const registry = new Registry();
