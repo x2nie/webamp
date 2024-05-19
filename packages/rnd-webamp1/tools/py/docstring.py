@@ -18,8 +18,14 @@ def grab_docsring(s):
     matches = re.finditer(regex, s, re.MULTILINE)
 
     for matchNum, match in enumerate(matches, start=1):
-        print ("\n\n==========Match {matchNum} was found at {start}-{end}: match".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
-        docstring = match.group(1) or match.group(6) or ''
+        # print ("\n\n==========Match {matchNum} was found at {start}-{end}: match".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
+        # docstring = match.group(1) or match.group(6) or ''
+        if match.group(1): 
+            comments = match.group(1).strip().split('\n')
+            docstring = '\n  '.join(comments)
+        else:
+            docstring = match.group(6) or ''
+            docstring = docstring.replace('//', '// ').replace('  ',' ')
         klass = match.group(4)
         method = match.group(5)
         # print(klass,method,docstring)
