@@ -52,8 +52,8 @@ export class Script extends Component {
       setTimeout(() => {
         //simulate play
         console.log(`sys.onPlay()`);
-        self.dispatch(this, "onPlay", []);
-      }, 6000);
+        this.dispatch(this, "onPlay", []);
+      }, 3000);
     });
   }
 
@@ -126,5 +126,5 @@ export class Script extends Component {
     return String(i);
   }
 }
-registry.category("component").add("script", Script);
+// registry.category("component").add("script", Script);
 // registry.category("component").add("SystemObject", Script);

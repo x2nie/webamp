@@ -20,7 +20,7 @@ Object.keys(files).forEach((name) => {
   const types = parser.parseFile(sourcePath);
   const destinationPath = path.join(
     __dirname,
-    `../src/maki/objectData/${name}.json`
+    `../src/maki/objectData/${name}.byname.json`
   );
 
   fs.writeFileSync(

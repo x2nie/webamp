@@ -7,7 +7,7 @@ import { Text } from "./Text";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export class Group extends GuiObject {
-  static GUID = "d6f50f6449b793fa66baf193983eaeef";
+  static GUID = "45be95e5419120725fbb5c93fd17f1f9";
   static template = xml`
     <div class="group" t-att-id="att.id" t-att-style="style()">
         <Children children="props.node.children" />
@@ -28,6 +28,10 @@ export class Group extends GuiObject {
   //     // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;
   // }
 
+  getObject(object_id: string): GuiObject {
+    return this.findObject(object_id)!
+  }
+
   findObject(objectId: string): GuiObject | null {
     const lower = objectId.toLowerCase();
     for (const obj of this.children) {
@@ -35,7 +39,7 @@ export class Group extends GuiObject {
         return obj.el;
       }
       if (obj.el instanceof Group) {
-        const found = obj.el.findobject(objectId);
+        const found = obj.el.findObject(objectId);
         if (found != null) {
           return found;
         }

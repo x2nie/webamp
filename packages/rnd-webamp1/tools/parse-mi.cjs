@@ -34,14 +34,21 @@ function parseFile(filePath) {
       };
     }
 
-    const methodMatch = /\s*extern(\s+.*)?\s+(.*)\.(.*)\((.*)\);/.exec(line);
+    // const methodMatch = /\s*extern(\s+.*)?\s+(.*)\.(.*)\((.*)\);/.exec(line);
+    // const methodMatch = /(?:\/\*\*[\s\S]*?\*\/\s*)?\s*extern(\s+.*)?\s+(.*)\.(.*)\((.*)\);/.exec(line);
+    const methodMatch = /(\/\*\*[\s\S]*?\*\/\s*)?\s*extern(\s+.*)?\s+(.*)\.(.*)\((.*)\);\s*(\/\/.*$)?/.exec(line);
+
 
     if (methodMatch) {
+      // const docstring = methodMatch[0].match(/\/\*\*[\s\S]*?\*\//) ? methodMatch[0].match(/\/\*\*[\s\S]*?\*\//)[0] : "";
+      const docstring = methodMatch[1] || methodMatch[6];
+      console.log(methodMatch[1], '//', methodMatch[6])
+   
       const methodDeprecated = /^deprecated\s/.test(line);
-      const result = methodMatch[1] == null ? "" : methodMatch[1].trim();
-      const className = methodMatch[2].toLowerCase();
-      const name = methodMatch[3].trim();
-      const rawArgs = methodMatch[4].split(/\s*,\s*/);
+      const result = methodMatch[2] == null ? "" : methodMatch[2].trim();
+      const className = methodMatch[3].toLowerCase();
+      const name = methodMatch[4].trim();
+      const rawArgs = methodMatch[5].split(/\s*,\s*/);
       const parameters = rawArgs.filter(Boolean).map((rawArg) => {
         const argMatch = /^\s*(.*\s+)?(.*)\s*/.exec(rawArg);
         if (argMatch == null) {
@@ -66,6 +73,7 @@ function parseFile(filePath) {
         parameters,
         result,
         deprecated: methodDeprecated,
+        docstring,
       });
     }
   });
@@ -74,7 +82,7 @@ function parseFile(filePath) {
   Object.keys(objects).forEach((normalizedName) => {
     const { id, GUID, parent, functions, name, deprecated } = objects[normalizedName];
     const guid = getFormattedId(id)
-    objectIds[name] = { parent, GUID, guid, deprecated, functions };
+    objectIds[name] = { name, parent, GUID, guid, deprecated, functions };
   });
 /* 
   Object.keys(objects).forEach((normalizedName) => {

@@ -1,7 +1,9 @@
 {
-  "516549710D874a5191E3A6B53235F3E7": {
-    "parent": "@{00000000-0000-0000-0000-000000000000}@",
+  "Object": {
     "name": "Object",
+    "parent": "@{00000000-0000-0000-0000-000000000000}@",
+    "GUID": "51654971-0D87-4a51-91E3-A6B53235F3E7",
+    "guid": "516549714a510d87b5a6e391e7f33532",
     "deprecated": false,
     "functions": [
       {
@@ -41,9 +43,11 @@
       }
     ]
   },
-  "D6F50F6493FA49b793F1BA66EFAE3E98": {
-    "parent": "Object",
+  "System": {
     "name": "System",
+    "parent": "Object",
+    "GUID": "D6F50F64-93FA-49b7-93F1-BA66EFAE3E98",
+    "guid": "d6f50f6449b793fa66baf193983eaeef",
     "deprecated": false,
     "functions": [
       {
@@ -2362,9 +2366,11 @@
       }
     ]
   },
-  "E90DC47B840D4ae7B02C040BD275F7FC": {
-    "parent": "Object",
+  "Container": {
     "name": "Container",
+    "parent": "Object",
+    "GUID": "E90DC47B-840D-4ae7-B02C-040BD275F7FC",
+    "guid": "e90dc47b4ae7840d0b042cb0fcf775d2",
     "deprecated": false,
     "functions": [
       {
@@ -2549,9 +2555,11 @@
       }
     ]
   },
-  "00C074A0FEA249a0BE8DFABBDB161640": {
-    "parent": "Object",
+  "Wac": {
     "name": "Wac",
+    "parent": "Object",
+    "GUID": "00C074A0-FEA2-49a0-BE8D-FABBDB161640",
+    "guid": "00c074a049a0fea2bbfa8dbe401616db",
     "deprecated": true,
     "functions": [
       {
@@ -2657,9 +2665,11 @@
       }
     ]
   },
-  "B2023AB5434D4ba1BEAE59637503F3C6": {
-    "parent": "Object",
+  "List": {
     "name": "List",
+    "parent": "Object",
+    "GUID": "B2023AB5-434D-4ba1-BEAE-59637503F3C6",
+    "guid": "b2023ab54ba1434d6359aebec6f30375",
     "deprecated": false,
     "functions": [
       {
@@ -2735,9 +2745,11 @@
       }
     ]
   },
-  "87C65778E74349fe85F909CC532AFD56": {
-    "parent": "Object",
+  "BitList": {
     "name": "BitList",
+    "parent": "Object",
+    "GUID": "87C65778-E743-49fe-85F9-09CC532AFD56",
+    "guid": "87c6577849fee743cc09f98556fd2a53",
     "deprecated": false,
     "functions": [
       {
@@ -2785,9 +2797,11 @@
       }
     ]
   },
-  "38603665461B42a7AA75D83F6667BF73": {
-    "parent": "Object",
+  "Map": {
     "name": "Map",
+    "parent": "Object",
+    "GUID": "38603665-461B-42a7-AA75-D83F6667BF73",
+    "guid": "3860366542a7461b3fd875aa73bf6766",
     "deprecated": false,
     "functions": [
       {
@@ -2870,9 +2884,11 @@
       }
     ]
   },
-  "F4787AF4B2BB4ef79CFBE74BA9BEA88D": {
-    "parent": "Object",
+  "PopupMenu": {
     "name": "PopupMenu",
+    "parent": "Object",
+    "GUID": "F4787AF4-B2BB-4ef7-9CFB-E74BA9BEA88D",
+    "guid": "f4787af44ef7b2bb4be7fb9c8da8bea9",
     "deprecated": false,
     "functions": [
       {
@@ -2978,9 +2994,11 @@
       }
     ]
   },
-  "3A370C023CBF439f84F186885BCF1E36": {
-    "parent": "Object",
+  "Region": {
     "name": "Region",
+    "parent": "Object",
+    "GUID": "3A370C02-3CBF-439f-84F1-86885BCF1E36",
+    "guid": "3a370c02439f3cbf8886f184361ecf5b",
     "deprecated": false,
     "functions": [
       {
@@ -3098,9 +3116,11 @@
       }
     ]
   },
-  "5D0C5BB67DE14b1fA70F8D1659941941": {
-    "parent": "Object",
+  "Timer": {
     "name": "Timer",
+    "parent": "Object",
+    "GUID": "5D0C5BB6-7DE1-4b1f-A70F-8D1659941941",
+    "guid": "5d0c5bb64b1f7de1168d0fa741199459",
     "deprecated": false,
     "functions": [
       {
@@ -3152,9 +3172,11 @@
       }
     ]
   },
-  "A5376FA14E94411a83F605EC5EEA5F0A": {
-    "parent": "Object",
+  "FeedWatcher": {
     "name": "FeedWatcher",
+    "parent": "Object",
+    "GUID": "A5376FA1-4E94-411a-83F6-05EC5EEA5F0A",
+    "guid": "a5376fa1411a4e94ec05f6830a5fea5e",
     "deprecated": true,
     "functions": [
       {
@@ -3187,9 +3209,11 @@
       }
     ]
   },
-  "4EE3E199C6364bec97CD78BC9C8628B0": {
-    "parent": "Object",
+  "GuiObject": {
     "name": "GuiObject",
+    "parent": "Object",
+    "GUID": "4EE3E199-C636-4bec-97CD-78BC9C8628B0",
+    "guid": "4ee3e1994becc636bc78cd97b028869c",
     "deprecated": false,
     "functions": [
       {
@@ -4071,9 +4095,11 @@
       }
     ]
   },
-  "45BE95E520724191935CBB5FF9F117FD": {
-    "parent": "GuiObject",
+  "Group": {
     "name": "Group",
+    "parent": "GuiObject",
+    "GUID": "45BE95E5-2072-4191-935C-BB5FF9F117FD",
+    "guid": "45be95e5419120725fbb5c93fd17f1f9",
     "deprecated": false,
     "functions": [
       {
@@ -4135,9 +4161,11 @@
       }
     ]
   },
-  "60906D4E537E482eB004CC9461885672": {
-    "parent": "Group",
+  "Layout": {
     "name": "Layout",
+    "parent": "Group",
+    "GUID": "60906D4E-537E-482e-B004-CC9461885672",
+    "guid": "60906d4e482e537e94cc04b072568861",
     "deprecated": false,
     "functions": [
       {
@@ -4351,9 +4379,11 @@
       }
     ]
   },
-  "403ABCC06F224bd68BA410C829932547": {
-    "parent": "GuiObject",
+  "WindowHolder": {
     "name": "WindowHolder",
+    "parent": "GuiObject",
+    "GUID": "403ABCC0-6F22-4bd6-8BA4-10C829932547",
+    "guid": "403abcc04bd66f22c810a48b47259329",
     "deprecated": false,
     "functions": [
       {
@@ -4445,9 +4475,11 @@
       }
     ]
   },
-  "97AA3E4DF4D04fa8817B0AF22A454983": {
-    "parent": "GuiObject",
+  "ComponentBucket": {
     "name": "ComponentBucket",
+    "parent": "GuiObject",
+    "GUID": "97AA3E4D-F4D0-4fa8-817B-0AF22A454983",
+    "guid": "97aa3e4d4fa8f4d0f20a7b818349452a",
     "deprecated": false,
     "functions": [
       {
@@ -4498,9 +4530,11 @@
       }
     ]
   },
-  "64E4BBFA81F449d9B0C0A85B2EC3BCFD": {
-    "parent": "GuiObject",
+  "Edit": {
     "name": "Edit",
+    "parent": "GuiObject",
+    "GUID": "64E4BBFA-81F4-49d9-B0C0-A85B2EC3BCFD",
+    "guid": "64e4bbfa49d981f45ba8c0b0fdbcc32e",
     "deprecated": false,
     "functions": [
       {
@@ -4592,9 +4626,11 @@
       }
     ]
   },
-  "62B65E3F375E408d8DEA76814AB91B77": {
-    "parent": "GuiObject",
+  "Slider": {
     "name": "Slider",
+    "parent": "GuiObject",
+    "GUID": "62B65E3F-375E-408d-8DEA-76814AB91B77",
+    "guid": "62b65e3f408d375e8176ea8d771bb94a",
     "deprecated": false,
     "functions": [
       {
@@ -4661,9 +4697,11 @@
       }
     ]
   },
-  "CE4F97BE77B04e199956D49833C96C27": {
-    "parent": "GuiObject",
+  "Vis": {
     "name": "Vis",
+    "parent": "GuiObject",
+    "GUID": "CE4F97BE-77B0-4e19-9956-D49833C96C27",
+    "guid": "ce4f97be4e1977b098d45699276cc933",
     "deprecated": false,
     "functions": [
       {
@@ -4714,9 +4752,11 @@
       }
     ]
   },
-  "A8C2200D51EB4b2aBA7F5D4BC65D4C71": {
-    "parent": "GuiObject",
+  "Browser": {
     "name": "Browser",
+    "parent": "GuiObject",
+    "GUID": "A8C2200D-51EB-4b2a-BA7F-5D4BC65D4C71",
+    "guid": "a8c2200d4b2a51eb4b5d7fba714c5dc6",
     "deprecated": false,
     "functions": [
       {
@@ -4863,21 +4903,27 @@
       }
     ]
   },
-  "8D1EBA38489E483eB9608D1F43C5C405": {
-    "parent": "GuiObject",
+  "EqVis": {
     "name": "EqVis",
+    "parent": "GuiObject",
+    "GUID": "8D1EBA38-489E-483e-B960-8D1F43C5C405",
+    "guid": "8d1eba38483e489e1f8d60b905c4c543",
     "deprecated": false,
     "functions": []
   },
-  "0F08C940AF394b2380F3B8C48F7EBB59": {
-    "parent": "GuiObject",
+  "Status": {
     "name": "Status",
+    "parent": "GuiObject",
+    "GUID": "0F08C940-AF39-4b23-80F3-B8C48F7EBB59",
+    "guid": "0f08c9404b23af39c4b8f38059bb7e8f",
     "deprecated": false,
     "functions": []
   },
-  "EFAA8672310E41faB7DC85A9525BCB4B": {
-    "parent": "GuiObject",
+  "Text": {
     "name": "Text",
+    "parent": "GuiObject",
+    "GUID": "EFAA8672-310E-41fa-B7DC-85A9525BCB4B",
+    "guid": "efaa867241fa310ea985dcb74bcb5b52",
     "deprecated": false,
     "functions": [
       {
@@ -4927,15 +4973,19 @@
       }
     ]
   },
-  "7DFD324437514e7cBF4082AE5F3ADC33": {
-    "parent": "GuiObject",
+  "Title": {
     "name": "Title",
+    "parent": "GuiObject",
+    "GUID": "7DFD3244-3751-4e7c-BF40-82AE5F3ADC33",
+    "guid": "7dfd32444e7c3751ae8240bf33dc3a5f",
     "deprecated": false,
     "functions": []
   },
-  "5AB9FA159A7D4557ABC86557A6C67CA9": {
-    "parent": "GuiObject",
+  "Layer": {
     "name": "Layer",
+    "parent": "GuiObject",
+    "GUID": "5AB9FA15-9A7D-4557-ABC8-6557A6C67CA9",
+    "guid": "5ab9fa1545579a7d5765c8aba97cc6a6",
     "deprecated": false,
     "functions": [
       {
@@ -5346,9 +5396,11 @@
       }
     ]
   },
-  "698EDDCD8F1E4fec9B12F944F909FF45": {
-    "parent": "GuiObject",
+  "Button": {
     "name": "Button",
+    "parent": "GuiObject",
+    "GUID": "698EDDCD-8F1E-4fec-9B12-F944F909FF45",
+    "guid": "698eddcd4fec8f1e44f9129b45ff09f9",
     "deprecated": false,
     "functions": [
       {
@@ -5416,9 +5468,11 @@
       }
     ]
   },
-  "6B64CD275A264c4b8C59E6A70CF6493A": {
-    "parent": "Layer",
+  "AnimatedLayer": {
     "name": "AnimatedLayer",
+    "parent": "Layer",
+    "GUID": "6B64CD27-5A26-4c4b-8C59-E6A70CF6493A",
+    "guid": "6b64cd274c4b5a26a7e6598c3a49f60c",
     "deprecated": false,
     "functions": [
       {
@@ -5596,9 +5650,11 @@
       }
     ]
   },
-  "6DCB05E48AC448c2B19349F0910EF54A": {
-    "parent": "Layer",
+  "AlbumArtLayer": {
     "name": "AlbumArtLayer",
+    "parent": "Layer",
+    "GUID": "6DCB05E4-8AC4-48c2-B193-49F0910EF54A",
+    "guid": "6dcb05e448c28ac4f04993b14af50e91",
     "deprecated": false,
     "functions": [
       {
@@ -5626,9 +5682,11 @@
       }
     ]
   },
-  "B4DCCFFF81FE4bcc961B720FD5BE0FFF": {
-    "parent": "Button",
+  "ToggleButton": {
     "name": "ToggleButton",
+    "parent": "Button",
+    "GUID": "B4DCCFFF-81FE-4bcc-961B-720FD5BE0FFF",
+    "guid": "b4dccfff4bcc81fe0f721b96ff0fbed5",
     "deprecated": false,
     "functions": [
       {
@@ -5650,9 +5708,11 @@
       }
     ]
   },
-  "01E28CE1B05911d5979FE4DE6F51760A": {
-    "parent": "GuiObject",
+  "GroupList": {
     "name": "GroupList",
+    "parent": "GuiObject",
+    "GUID": "01E28CE1-B059-11d5-979F-E4DE6F51760A",
+    "guid": "01e28ce111d5b059dee49f970a76516f",
     "deprecated": false,
     "functions": [
       {
@@ -5717,9 +5777,11 @@
       }
     ]
   },
-  "80F0F8BD1BA542a6A0933236A00C8D4A": {
-    "parent": "Group",
+  "CfgGroup": {
     "name": "CfgGroup",
+    "parent": "Group",
+    "GUID": "80F0F8BD-1BA5-42a6-A093-3236A00C8D4A",
+    "guid": "80f0f8bd42a61ba5363293a04a8d0ca0",
     "deprecated": false,
     "functions": [
       {
@@ -5793,9 +5855,11 @@
       }
     ]
   },
-  "CDCB785D81F242538F0561B872283CFA": {
-    "parent": "GuiObject",
+  "QueryList": {
     "name": "QueryList",
+    "parent": "GuiObject",
+    "GUID": "CDCB785D-81F2-4253-8F05-61B872283CFA",
+    "guid": "cdcb785d425381f2b861058ffa3c2872",
     "deprecated": true,
     "functions": [
       {
@@ -5806,9 +5870,11 @@
       }
     ]
   },
-  "9B2E341B6C9840fa8B850C1B6EE89405": {
-    "parent": "GuiObject",
+  "MouseRedir": {
     "name": "MouseRedir",
+    "parent": "GuiObject",
+    "GUID": "9B2E341B-6C98-40fa-8B85-0C1B6EE89405",
+    "guid": "9b2e341b40fa6c981b0c858b0594e86e",
     "deprecated": false,
     "functions": [
       {
@@ -5860,9 +5926,11 @@
       }
     ]
   },
-  "36D59B7103FD4af897950502B7DB267A": {
-    "parent": "GuiObject",
+  "DropDownList": {
     "name": "DropDownList",
+    "parent": "GuiObject",
+    "GUID": "36D59B71-03FD-4af8-9795-0502B7DB267A",
+    "guid": "36d59b714af803fd020595977a26dbb7",
     "deprecated": false,
     "functions": [
       {
@@ -6022,9 +6090,11 @@
       }
     ]
   },
-  "7FD5F210ACC448dfA6A05451576CDC76": {
-    "parent": "GuiObject",
+  "LayoutStatus": {
     "name": "LayoutStatus",
+    "parent": "GuiObject",
+    "GUID": "7FD5F210-ACC4-48df-A6A0-5451576CDC76",
+    "guid": "7fd5f21048dfacc45154a0a676dc6c57",
     "deprecated": false,
     "functions": [
       {
@@ -6040,9 +6110,11 @@
       }
     ]
   },
-  "B5BAA53505B34dcbADC1E618D28F6896": {
-    "parent": "GuiObject",
+  "TabSheet": {
     "name": "TabSheet",
+    "parent": "GuiObject",
+    "GUID": "B5BAA535-05B3-4dcb-ADC1-E618D28F6896",
+    "guid": "b5baa5354dcb05b318e6c1ad96688fd2",
     "deprecated": false,
     "functions": [
       {
@@ -6064,9 +6136,11 @@
       }
     ]
   },
-  "6129FEC1DAB74d51916501CA0C1B70DB": {
-    "parent": "GuiObject",
+  "GuiList": {
     "name": "GuiList",
+    "parent": "GuiObject",
+    "GUID": "6129FEC1-DAB7-4d51-9165-01CA0C1B70DB",
+    "guid": "6129fec14d51dab7ca016591db701b0c",
     "deprecated": false,
     "functions": [
       {
@@ -6968,9 +7042,11 @@
       }
     ]
   },
-  "D59514F7ED3645e8980F3F4EA0522CD9": {
-    "parent": "GuiObject",
+  "GuiTree": {
     "name": "GuiTree",
+    "parent": "GuiObject",
+    "GUID": "D59514F7-ED36-45e8-980F-3F4EA0522CD9",
+    "guid": "d59514f745e8ed364e3f0f98d92c52a0",
     "deprecated": false,
     "functions": [
       {
@@ -7536,9 +7612,11 @@
       }
     ]
   },
-  "9B3B4B82667A420e8FFC794115809C02": {
-    "parent": "Object",
+  "TreeItem": {
     "name": "TreeItem",
+    "parent": "Object",
+    "GUID": "9B3B4B82-667A-420e-8FFC-794115809C02",
+    "guid": "9b3b4b82420e667a4179fc8f029c8015",
     "deprecated": false,
     "functions": [
       {
@@ -7802,9 +7880,11 @@
       }
     ]
   },
-  "1D8631C880D047929F98BD5D36B49136": {
-    "parent": "GuiObject",
+  "MenuButton": {
     "name": "MenuButton",
+    "parent": "GuiObject",
+    "GUID": "1D8631C8-80D0-4792-9F98-BD5D36B49136",
+    "guid": "1d8631c8479280d05dbd989f3691b436",
     "deprecated": true,
     "functions": [
       {
@@ -7844,9 +7924,11 @@
       }
     ]
   },
-  "C7ED319953194798986360B15A298CAA": {
-    "parent": "GuiObject",
+  "CheckBox": {
     "name": "CheckBox",
+    "parent": "GuiObject",
+    "GUID": "C7ED3199-5319-4798-9863-60B15A298CAA",
+    "guid": "c7ed319947985319b1606398aa8c295a",
     "deprecated": false,
     "functions": [
       {
@@ -7896,9 +7978,11 @@
       }
     ]
   },
-  "2D2D1376BE0A4CB9BC0C57E6E4C999F5": {
-    "parent": "GuiObject",
+  "Form": {
     "name": "Form",
+    "parent": "GuiObject",
+    "GUID": "2D2D1376-BE0A-4CB9-BC0C-57E6E4C999F5",
+    "guid": "2d2d13764cb9be0ae6570cbcf599c9e4",
     "deprecated": true,
     "functions": [
       {
@@ -7932,9 +8016,11 @@
       }
     ]
   },
-  "E2BBC14D84F64173BDB3B2EB2F665550": {
-    "parent": "GuiObject",
+  "Frame": {
     "name": "Frame",
+    "parent": "GuiObject",
+    "GUID": "E2BBC14D-84F6-4173-BDB3-B2EB2F665550",
+    "guid": "e2bbc14d417384f6ebb2b3bd5055662f",
     "deprecated": false,
     "functions": [
       {
@@ -7967,9 +8053,11 @@
       }
     ]
   },
-  "73C00594961F401B9B1B672427AC4165": {
-    "parent": "GuiObject",
+  "Menu": {
     "name": "Menu",
+    "parent": "GuiObject",
+    "GUID": "73C00594-961F-401B-9B1B-672427AC4165",
+    "guid": "73c00594401b961f24671b9b6541ac27",
     "deprecated": false,
     "functions": [
       {

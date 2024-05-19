@@ -9,6 +9,13 @@ export class Children extends Component {
   // @<t t-out="child.tag"/> : <t t-out="child.id"/>
 
   mychilds() {
+    const notFound = this.props.children.filter((e) =>
+      !registry.category("component").contains(e.tag)
+    ).map(e => e.tag);
+    if(notFound.length){
+      console.log('TAG NOT FOUND:::', ...(new Set(notFound)))
+
+    }
     return this.props.children.filter((e) =>
       registry.category("component").contains(e.tag)
     );

@@ -29,8 +29,9 @@ import { Children } from "./Children";
 
 export class App extends Component {
   static template = xml` <div class="window-manager">
-    <Children children="env.ui.root.children" />
-  </div>`;
+    <Children children="state.node.children" />
+    </div>`;
+    // <Children children="env.ui.root.children" />
 
   // static old_template = xml` <div class="window-manager">
   //   <t t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" >
@@ -38,13 +39,14 @@ export class App extends Component {
   //   </t>
   // </div>`;
   static components = { Children };
+  state: any;
   // windowService!: WindowManager;
   // state: { node: XmlElement };
 
   setup() {
     this.env = useEnv(); //? global env
     console.log("APP.drens=", this.env.ui.root.children);
-    // this.state = useState({ node: env.ui.root });
+    this.state = useState({ node: this.env.ui.root });
     // this.env.ui.root.el = this;
 
     useSubEnv({

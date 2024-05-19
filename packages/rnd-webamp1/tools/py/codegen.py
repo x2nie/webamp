@@ -41,7 +41,8 @@ def gen(std, klass='Container'):
     print('='*20)
     code = tpl_file.format(**o)
     print(code)
-    output = os.path.join(os.path.dirname(__file__), 'output', 'generated.ts')
+    # output = os.path.join(os.path.dirname(__file__), 'output', 'generated.ts')
+    output = os.path.join(os.path.dirname(__file__), 'output', klass+'.ts')
     with open(output, 'w') as f:
         f.write(code)
 
@@ -119,4 +120,7 @@ def build_methods(klass, o, docstrings):
 # gen('.../../src/maki/objectData/std.json')
 # gen('src/maki/objectData/std.byname.json')
 # gen('std')
-gen('std', 'Wac')
+# gen('std', 'Text')
+# gen('std', 'Layout')F
+# gen('std', 'Layer')
+gen('std', 'Group')
