@@ -2,6 +2,10 @@ import { Component, xml, onMounted, useEnv, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Children } from "./Children";
 import "./Layer";
+import "./AnimatedLayer";
+import "./Slider";
+import "./Vis";
+import "./Status";
 import { Group } from "./Group";
 
 export class Layout extends Group {

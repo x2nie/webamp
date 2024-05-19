@@ -22,7 +22,7 @@ import { Container } from "./Container";
 import { XmlElement } from "@xml/parse-xml";
 
 export class Script extends Component {
-  static GUID = "d6f50f6449b793fa66baf193983eaeef";
+  static GUID = "d6f50f6449b793fa66baf193983eaeef"; //System
   // static template = xml`<t t-out="html()" />`;
   static template = xml`<span/>`;
   script: ParsedMaki;
@@ -49,11 +49,11 @@ export class Script extends Component {
     });
     onMounted(() => {
       this.dispatch(this, "onScriptLoaded", []);
-      setTimeout(() => {
-        //simulate play
-        console.log(`sys.onPlay()`);
-        this.dispatch(this, "onPlay", []);
-      }, 3000);
+      // setTimeout(() => {
+      //   //simulate play
+      //   console.log(`sys.onPlay()`);
+      //   this.dispatch(this, "onPlay", []);
+      // }, 3000);
     });
   }
 
@@ -126,5 +126,5 @@ export class Script extends Component {
     return String(i);
   }
 }
-// registry.category("component").add("script", Script);
+registry.category("component").add("script", Script);
 // registry.category("component").add("SystemObject", Script);

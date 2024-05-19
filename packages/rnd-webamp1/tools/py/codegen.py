@@ -4,17 +4,20 @@ from docstring import scan_docstring
 
 tpl_file = '''import {{ xml }} from "@odoo/owl";
 import {{ registry }} from "@web/core/registry";
+import {{ {parent} }} from "./{parent}";
 
-export class {name} extends {parent} {{
+export class {Name} extends {parent} {{
   static GUID = "{guid}";
   static ID = "{{{GUID}}}";
-  static template = xml`<span c="{name}"/>`;
+  static template = xml`<div class="{name} layer dummy" tag="{name}" style="style()"/>`;
 
   {methods}
   // events binding ---------------
   {bindings}
 
 }} // {name}
+
+registry.category("component").add("{name}", {Name});
 '''
 
 def gen(std, klass='Container'):
@@ -35,13 +38,14 @@ def gen(std, klass='Container'):
         stdPatch(docstrings)
     # print('using:', docstrings.get(klass))
     o = docstrings['_CLASS'][klass]
-    o['name'] = klass
+    o['Name'] = klass
+    o['name'] = klass.lower()
     build_methods(klass, o, docstrings)
     # pprint(o)
     print('='*20)
     code = tpl_file.format(**o)
     print(code)
-    # output = os.path.join(os.path.dirname(__file__), 'output', 'generated.ts')
+    output = os.path.join(os.path.dirname(__file__), 'output', 'generated.ts')
     output = os.path.join(os.path.dirname(__file__), 'output', klass+'.ts')
     with open(output, 'w') as f:
         f.write(code)
@@ -77,7 +81,7 @@ type_conversion = {
 }
 
 tpl_method = '''
-  {doc}{name}({params}){ret} {{}}{obsolete}
+  {doc}public {name}({params}){ret} {{}}{obsolete}
 '''
 tpl_binding = '''
   {doc}// {name}({params}){ret} {{}}{obsolete}
@@ -123,4 +127,8 @@ def build_methods(klass, o, docstrings):
 # gen('std', 'Text')
 # gen('std', 'Layout')F
 # gen('std', 'Layer')
-gen('std', 'Group')
+# gen('std', 'Group')
+gen('std', 'Slider')
+gen('std', 'AnimatedLayer')
+gen('std', 'Status')
+gen('std', 'Vis')

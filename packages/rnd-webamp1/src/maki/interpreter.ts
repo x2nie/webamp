@@ -34,7 +34,11 @@ export function interpret(
   // validateMaki(program, classResolver);
   const interpreter = new Interpreter(program, classResolver);
   interpreter.stack = stack;
-  return interpreter.interpret(start);
+  try{
+    return interpreter.interpret(start);
+  } catch (error) {
+    console.warn('error while interpret', program.file, error)
+  }
 }
 
 class Interpreter {

@@ -16,6 +16,7 @@ export type Method = {
 };
 
 export type ParsedMaki = {
+  file: string;
   commands: Command[];
   methods: Method[];
   variables: Variable[];
