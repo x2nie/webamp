@@ -6,14 +6,16 @@ import { Component, xml, onMounted, useRef, useSubEnv } from "@odoo/owl";
 import { registry } from '@web/core/registry';
 import { WindowManager, useWindowService } from "./WindowManager";
 import { Layout } from "./Layout";
+import { Object_ } from "./Object";
 
-export class Container extends Component {
+export class Container extends Object_ {
+  static GUID = "e90dc47b4ae7840d0b042cb0fcf775d2";
     static template = xml`
     <div t-att-id="att.id" t-name="Container" t-att-class="{window: true, invisible: !att.visible}" 
       t-on-mousedown="mouseDown"
       t-att-style="style" 
       t-on-dblclick="toggleLayout" t-ref="root">
-      <t t-foreach="layouts()" t-as="l" t-key="l.id">
+      <t t-foreach="layouts()" t-as="l" t-key="l.attributes.id">
         <Layout t-if="l.attributes.id == att.layout_id" node="l"/>
       </t>
     </div>`;
@@ -22,11 +24,13 @@ export class Container extends Component {
     static nextZIndex = 1;
   
     zIndex = 1;
-    windowService: any;
+    // windowService: any;
     root: any;
   
     setup() {
-      this.windowService = useWindowService();
+      // console.log('container.node==', this.props.node)
+      // this.windowService = useWindowService();
+      this.props.node.el = this
 
       useSubEnv({ //? additional env, isolated for this instance and children
         container: this, //? usefull for later System calls
@@ -56,7 +60,14 @@ export class Container extends Component {
       } else {
         this.props.node.layout_id = this.props.node.layouts[0].id
       }
-      
+    }
+    getLayout(layout_id: string) : Layout {
+      layout_id = layout_id.toLowerCase()
+      for(const l of this.layouts()){
+        if(l.attributes.id == layout_id && l.el){
+          return l.el
+        }
+      }
     }
   
     get style() {
@@ -76,12 +87,12 @@ export class Container extends Component {
     mouseDown(ev: MouseEvent) {
       this.updateZIndex();
       if(ev.button!=0) return;
-      this.windowService.handleMouseDown(this.att.id, ev)
+      // this.windowService.handleMouseDown(this.att.id, ev)
     }
   
     updateZIndex() {
       this.zIndex = Container.nextZIndex++;
-      this.root.el.style["z-index"] = this.zIndex;
+      // this.root.el.style["z-index"] = this.zIndex;
     }
 }
 registry.category('component').add('container', Container);

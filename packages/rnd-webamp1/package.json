@@ -9,11 +9,13 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/node": "^20.12.12",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   },
   "dependencies": {
     "@odoo/owl": "2.2.10",
-    "@rgrove/parse-xml": "^4.1.0"
+    "@rgrove/parse-xml": "^4.1.0",
+    "jszip": "^3.10.1"
   }
 }

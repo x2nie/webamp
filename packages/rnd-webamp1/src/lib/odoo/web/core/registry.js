@@ -84,6 +84,7 @@ export class Registry extends EventBus {
      * @returns {boolean}
      */
     contains(key) {
+        // console.log('registry.contains:',key, '=', key in this.content)
         return key in this.content;
     }
 

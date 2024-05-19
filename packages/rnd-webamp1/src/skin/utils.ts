@@ -512,8 +512,8 @@ export function getScreenSize(): { width: number; height: number } {
 type PosEvent =
   | MouseEvent
   | TouchEvent
-  | React.MouseEvent<HTMLElement>
-  | React.TouchEvent<HTMLElement>;
+  // | React.MouseEvent<HTMLElement>
+  // | React.TouchEvent<HTMLElement>;
 
 function getPos(e: PosEvent): { clientX: number; clientY: number } {
   switch (e.type) {

@@ -3,6 +3,7 @@ import { registry } from '@web/core/registry';
 import { GuiObject } from "./GuiObject";
 
 export class Layer extends GuiObject {
+    static GUID = "5ab9fa1545579a7d5765c8aba97cc6a6";
     // @<t t-out="att.tag"/> :
     //   <t t-out="att.id"/>
     // <t t-slot="default"/>

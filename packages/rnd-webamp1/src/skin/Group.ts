@@ -7,7 +7,7 @@ import { Text } from "./Text";
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export class Group extends GuiObject {
-    static GUID = "45be95e5419120725fbb5c93fd17f1f9";
+    static GUID = "d6f50f6449b793fa66baf193983eaeef";
     static template = xml`
     <div class="group" t-att-id="att.id" t-att-style="style()">
         <Children children="props.node.children" />

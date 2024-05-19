@@ -1,4 +1,5 @@
-import BaseObject from "../skin/BaseObject";
+// import BaseObject from "../skin/BaseObject";
+import { Object_ as BaseObject } from "src/skin/Object";
 
 export type Variable =
   | {

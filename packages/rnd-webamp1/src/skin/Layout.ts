@@ -5,14 +5,16 @@ import './Layer'
 import { Group } from "./Group";
 
 export class Layout extends Group {
+    static GUID = "60906d4e482e537e94cc04b072568861";
     static template = xml`
     <div class="layout" t-att-style="style()">
-    <Children children="props.node.children" />
+     <Children children="props.node.children" />
     </div>`;
     // static components = {Children}
 
     setup() {
         super.setup()
+        this.props.node.el = this
         // console.log(`Layout ${this.att.id} has parent: ${this.props.node.parent.id}`)
     }
 
@@ -36,3 +38,4 @@ export class Layout extends Group {
         // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;
     }
 }
+registry.category('component').add('layout', Layout)

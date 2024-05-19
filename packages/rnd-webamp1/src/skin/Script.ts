@@ -8,10 +8,9 @@ import {
   onWillStart,
   markRaw,
   toRaw,
-  onRendered,
 } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { useSystem } from "./System";
+// import { useSystem } from "./System";
 import { ParsedMaki } from "src/maki/parser";
 import { Group } from "./Group";
 import { GuiObject } from "./GuiObject";
@@ -24,36 +23,39 @@ import { XmlElement } from "@xml/parse-xml";
 
 export class Script extends Component {
   static GUID = "d6f50f6449b793fa66baf193983eaeef";
-  static template = xml`<t t-out="commented()" />`;
+  // static template = xml`<t t-out="html()" />`;
+  static template = xml`<span/>`;
   script: ParsedMaki;
 
-  commented() {
-    return markup(`<!-- script -->`);
-    // return markup(`<!-- script:${this.props.node.attributes.file} -->`);
+  html() {
+    return markup(`<!-- script${this.props.node.attributes.file} -->`);
   }
 
   setup() {
+    // console.log('SCRIPT.props=', this.props8.node)
     // const script = useSystem()
     this.env = useEnv();
-    this.script = toRaw(this.props.node.parsedScript);
-    this.script.variables[0].value = this;
-    console.log("BINDING:", this.script.bindings);
-    const self = this;
-    // onWillStart(() => {
+    // console.log("BINDING:", this.script.bindings);
+    // const self = this;
+    onWillStart(() => {
       // onMounted(() => {
-      onRendered(() => {
+        this.script = (structuredClone(this.env.ui.scripts[this.props.node.attributes.file]))
+        // this.script = toRaw(this.props.node.parsedScript);
+        // debugger
+        this.script.variables[0].value = this;
       // debugger
+    });
+    onMounted(()=>{
+      this.dispatch(this, "onScriptLoaded", []);
       setTimeout(() => {
-        self.dispatch(screenLeft, "onScriptLoaded", []);
           //simulate play
           console.log(`sys.onPlay()`);
-          // self.dispatch(self, "onPlay", []);
-      }, 3000);
-    });
+          self.dispatch(this, "onPlay", []);
+      }, 6000);
+    })
   }
 
   dispatch(object: Object_, event: string, args: Variable[] = []) {
-    // debugger
     // markRaw(this.script)
     const script = this.script;
     for (const binding of script.bindings) {
@@ -96,18 +98,19 @@ export class Script extends Component {
   getScriptGroup() {
     return this.group;
   }
-  findObject(id: string): GuiObject {
-    return this.group.findObject(id);
-  }
+  // findObject(id: string): GuiObject {
+  //   return this.group.findObject(id);
+  // }
 
   getContainer(container_id: string): Container{
-    debugger
+    container_id = container_id.toLowerCase()
     const containers = this.env.root.getContainers() as XmlElement[]
     for(const c of containers){
-      if(c.attributes.id == container_id){
+      if(c.attributes.id == container_id && c.el){
         return c.el as Container
       }
     }
+    console.log('failed to get container:',container_id)
     //@ts-ignore
     return null
   }

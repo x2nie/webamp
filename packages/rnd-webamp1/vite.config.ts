@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import path from 'path';
 // import xmlHMR from './tools/vite-plugins/xml-hmr';
 // import FullReload from 'vite-plugin-full-reload';
@@ -8,7 +8,7 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-    process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+    // process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
     return defineConfig({
         resolve: {
             // alias: {
@@ -44,7 +44,7 @@ export default ({ mode }) => {
 
         define: {
             // 'process.env': {...process.env, ...loadEnv(mode, process.cwd()) }
-            'process.env': process.env,
+            // 'process.env': process.env,
         },
     });
     // console.log('ENV:', result)

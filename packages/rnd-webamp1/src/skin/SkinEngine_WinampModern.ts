@@ -4,6 +4,7 @@ import { ParsedMaki, parse as parseMaki } from "../maki/parser";
 import { assert, getPngSize, /* assume */ 
     toTitleCase} from "./utils";
 import { SkinEngine, registerSkinEngine } from "./SkinEngine";
+import { markRaw } from "@odoo/owl";
 
 
 export class WinampModern extends SkinEngine {
@@ -51,8 +52,9 @@ export class WinampModern extends SkinEngine {
         await this.loadBitmaps()
 
         this._env.bitmaps = this._bitmap
-        this._env.scripts = this._script
-        return parsed
+        this._env.scripts = markRaw(this._script)
+        this._env.root = parsed
+        // return parsed
     }
 
     async loadBitmaps(){
@@ -285,10 +287,10 @@ export class WinampModern extends SkinEngine {
         this._script[file] = parsedScript
         // console.log('SCRIPT:',file, JSON.stringify(parsedScript))
         console.log('SCRIPT:',file, parsedScript)
-        node.parsedScript = parsedScript
+        // node.parsedScript = parsedScript
     } else {
-        const parsedScript = this._script[file];
-        node.parsedScript = structuredClone(parsedScript)
+        // const parsedScript = this._script[file];
+        // node.parsedScript = structuredClone(parsedScript)
     }
 
   }  

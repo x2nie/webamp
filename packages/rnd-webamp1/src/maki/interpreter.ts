@@ -220,10 +220,125 @@ class Interpreter {
           ip = command.arg - 1;
           break;
         }
-        // call
-        // strangeCall (seems to behave just like regular call)
+        // call 0x18
+        // strangeCall (seems to behave just like regular call)  0x70
         case 24:
         case 112: {
+          const methodOffset = command.arg;
+          const method = this.methods[methodOffset];
+          let methodName = method.name;
+          const returnType = method.returnType;
+          const classesOffset = method.typeOffset;
+          // methodName = methodName.toLowerCase();
+
+          const guid = this.classes[classesOffset];
+          const klass = this.classResolver(guid);
+          if (!klass) {
+            throw new Error("Need to add a missing class to runtime guid:"+guid);
+          }
+          // This is a bit awkward. Because the variables are stored on the stack
+          // before the object, we have to find the number of arguments without
+          // actually having access to the object instance.
+          if (!klass.prototype[methodName]) {
+            throw new Error(
+              `Need to add missing method: ${klass.name}.${methodName}: ${returnType}`
+            );
+          }
+          let argCount: number = klass.prototype[methodName].length;
+
+          const methodDefinition = getMethod(guid, methodName);
+          if (methodName.toLowerCase() != "init") {
+            assert(
+              argCount === (methodDefinition.parameters.length ?? 0),
+              `Arg count mismatch. Expected ${
+                methodDefinition.parameters.length ?? 0
+              } arguments, but found ${argCount} for ${
+                klass.name
+              }.${methodName}`
+            );
+          }
+
+          const methodArgs:any[] = [];
+          while (argCount--) {
+            const a = this.stack.pop()!;
+            methodArgs.push(a.value);
+          }
+          const obj = this.stack.pop()!;
+
+          assert(
+            (obj.type === "OBJECT" && typeof obj.value) === "object" &&
+              obj.value != null,
+            `Guru Meditation: Tried to call method ${klass.name}.${methodName} on null object. #${this.maki_id}`
+          );
+
+          // let value = obj.value[methodName](...methodArgs);
+          let result:any = null;
+          try {
+            console.log(methodName, 'with args:',methodArgs);
+            // result = obj.value[methodName](...methodArgs);
+            let afunction = obj.value![methodName];
+            if (afunction.constructor.name === "AsyncFunction") {
+              console.log(
+                "calling fun type:",
+                afunction.constructor.name,
+                `@${klass.name}.${methodName}`
+              );
+              // result = await afunction(...methodArgs);
+              // result = await obj.value[methodName](...methodArgs);
+              result = obj.value![methodName](...methodArgs);
+            } else {
+              // afunction = afunction.bind(obj)
+              // result = afunction(...methodArgs);
+              result = obj.value![methodName](...methodArgs);
+            }
+          } catch (err) {
+            const args = JSON.stringify(methodArgs)
+              .replace("[", "")
+              .replace("]", "");
+            console.warn(
+              `error call: ${klass.name}.${methodName}(${args})`,
+              `err: ${err.message} obj:`,
+              obj
+            );
+            result = null;
+          }
+
+          if (result === undefined && returnType !== "NULL") {
+            throw new Error(
+              `Did not expect ${klass.name}.${methodName}: ${returnType} to return undefined`
+            );
+          }
+          if (result === null) {
+            // variables[1] holds global NULL value
+            result = this.variables[1];
+          }
+          if (returnType === "BOOLEAN") {
+            assert(
+              typeof result === "boolean",
+              `${
+                klass.name
+              }.${methodName} should return a boolean, but "${JSON.stringify(
+                result
+              )}"`
+            );
+            result = result ? 1 : 0;
+          }
+          if (returnType === "OBJECT") {
+            assert(
+              typeof result === "object",
+              `Expected the returned value of ${klass.name}.${methodName} to be an object, but it was "${result}"`
+            );
+          }
+          if (this.debug) {
+            console.log(`Calling method ${methodName}`);
+          }
+          this.stack.push({ type: returnType, value: result } as any);
+          break;
+        }
+        // call
+        // strangeCall (seems to behave just like regular call)
+        case 2400:
+        case 11200: {
           const methodOffset = command.arg;
           const method = this.methods[methodOffset];
           let methodName = method.name;
@@ -263,7 +378,7 @@ class Interpreter {
             "Tried to call a method on a primitive."
           );
           console.log('trial to call:',methodName, '@', obj.value)
-          let value = obj.value[methodName](...methodArgs);
+          let value = obj.value![methodName](...methodArgs);
 
           if (value === undefined && returnType !== "NULL") {
             throw new Error(

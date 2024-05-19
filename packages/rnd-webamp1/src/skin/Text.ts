@@ -3,8 +3,8 @@ import { registry } from "@web/core/registry";
 import { GuiObject } from "./GuiObject";
 
 export class Text extends GuiObject {
-    static GUID = "efaa867241fa310ea985dcb74bcb5b52";
-  static template = xml`<span t-out="text" t-att-style="style()" />`;
+    static GUID = "0f08c9404b23af39c4b8f38059bb7e8f";
+  static template = xml`<span t-out="att.text" t-att-style="style()" />`;
 
   style() {
     // let {  w, h } = this.att;
@@ -16,6 +16,7 @@ export class Text extends GuiObject {
   }
 
   get text() {
+    debugger
     return this.att.text;
   }
 

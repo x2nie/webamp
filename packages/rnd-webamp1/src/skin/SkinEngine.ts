@@ -57,8 +57,8 @@ export class SkinEngine {
     return zip;
   }
 
-  public async parseSkin(): Promise<XmlElement> {
-    return new XmlElement();
+  public async parseSkin() {
+    // return new XmlElement();
   }
 
   public containers(): XmlElement[] {

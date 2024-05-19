@@ -17,6 +17,7 @@ import {
   useWindowService,
 } from "./WindowManager";
 import { Container } from "./Container";
+import "./Container";
 // import { SkinLoader } from "./SkinLoader";
 import { XmlElement } from "@xml/parse-xml";
 import { createSkinEngineFor } from "./SkinEngine";
@@ -28,46 +29,49 @@ import { Children } from "./Children";
 
 export class App extends Component {
   static template = xml` <div class="window-manager">
-    <Children children="state.node.children" />
+    <Children children="env.ui.root.children" />
   </div>`;
 
-  static old_template = xml` <div class="window-manager">
-    <t t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" >
-      <Container node="w"/>
-    </t>
-  </div>`;
-  static components = { Container, Children };
-  windowService!: WindowManager;
-  state: { node: XmlElement };
+  // static old_template = xml` <div class="window-manager">
+  //   <t t-foreach="windowService.getWindows()" t-as="w" t-key="w.id" >
+  //     <Container node="w"/>
+  //   </t>
+  // </div>`;
+  static components = { Children };
+  // windowService!: WindowManager;
+  // state: { node: XmlElement };
 
   setup() {
-    const env = useEnv(); //? global env
-    this.state = useState({ node: new XmlElement('') });
+    this.env = useEnv(); //? global env
+    console.log('APP.drens=', this.env.ui.root.children)
+    // this.state = useState({ node: env.ui.root });
+    // this.env.ui.root.el = this;
 
     useSubEnv({
       //? additional env, isolated for this instance and children
       windowService: createWindowService(),
-      bitmaps: {},
-      ui: {},
+      // bitmaps: {},
+      // ui: {},
       root: this, //? usefull for later System calls
     });
-    this.windowService = useWindowService();
+    // this.windowService = useWindowService();
 
-    onWillStart(async () => {
+    // onWillStart(async () => {
       // onMounted( async () => {
-      if (env.options.skin) await this.switchSkin(env.options.skin);
-    });
+      // if (env.options.skin) await this.switchSkin(env.options.skin);
+    // });
 
-    onMounted(() => {
+    // onMounted(() => {
       // console.log(`${name}:mounted`);
       // for (let i = 0; i < 3; i++) {
       //   this.addWindow('Hello')
       // }
-    });
+    // });
   }
 
   getContainers(): XmlElement[] {
-    return this.state.node.children.filter((c) => c.tag == "container");
+    return this.env.ui.root.children.filter((c) => c.tag == "container");
+    // return this.state.node.children.filter((c) => c.tag == "container");
     // return this.state.node.children.filter(c => c.tag == 'container').map(c => c.el as Container)
   }
 
@@ -84,7 +88,6 @@ export class App extends Component {
     // console.log('FINAL-TPL---------------------------\n', tpl)
     // this.tpl = xml`${tpl}`
     this.state.node = await loader.parseSkin();
-    this.state.node.el = this;
 
     // loader.setEnv()
     // this.env.ui.bitmaps = loader.bitmaps()
@@ -101,19 +104,19 @@ export class App extends Component {
       const y = att["default_y"] || 0; // Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
       att.x = x;
       att.y = y;
-      // this.windowService.append({
-      //   id: att.id,
-      //   title: att.name,
-      //   x,
-      //   y,
-      //   // width: 100,
-      //   // height: 50,
-      //   visible: Number(att.default_visible),
-      //   children: node.children,
-      //   // layouts: node.layouts,
-      //   layout_id: "normal",
-      //   // Component: Container,
-      // });
+      this.windowService.append({
+        id: att.id,
+        title: att.name,
+        x,
+        y,
+        // width: 100,
+        // height: 50,
+        visible: Number(att.default_visible),
+        children: node.children,
+        // layouts: node.layouts,
+        layout_id: "normal",
+        // Component: Container,
+      });
     });
   }
 
