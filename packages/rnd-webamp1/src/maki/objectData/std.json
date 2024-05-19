@@ -1,19 +1,23 @@
 {
-  "516549710D874a5191E3A6B53235F3E7": {
+  "Object": {
     "parent": "@{00000000-0000-0000-0000-000000000000}@",
+    "GUID": "51654971-0D87-4a51-91E3-A6B53235F3E7",
+    "guid": "516549714a510d87b5a6e391e7f33532",
+    "deprecated": false,
     "functions": [
       {
-        "result": "String",
         "name": "getClassName",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "String",
-        "name": "getId",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Int",
+        "name": "getId",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "onNotify",
         "parameters": [
           [
@@ -32,31 +36,37 @@
             "int",
             "b"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       }
-    ],
-    "name": "Object"
+    ]
   },
-  "D6F50F6493FA49b793F1BA66EFAE3E98": {
+  "System": {
     "parent": "Object",
+    "GUID": "D6F50F64-93FA-49b7-93F1-BA66EFAE3E98",
+    "guid": "d6f50f6449b793fa66baf193983eaeef",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onScriptLoaded",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onScriptUnloading",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onQuit",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSetXuiParam",
         "parameters": [
           [
@@ -67,20 +77,22 @@
             "String",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onKeyDown",
         "parameters": [
           [
             "String",
             "key"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onAccelerator",
         "parameters": [
           [
@@ -95,40 +107,44 @@
             "String",
             "key"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onCreateLayout",
         "parameters": [
           [
             "Layout",
             "_layout"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onShowLayout",
         "parameters": [
           [
             "Layout",
             "_layout"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onHideLayout",
         "parameters": [
           [
             "Layout",
             "_layout"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onViewPortChanged",
         "parameters": [
           [
@@ -139,80 +155,90 @@
             "int",
             "height"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onStop",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onPlay",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onPause",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onResume",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onTitleChange",
         "parameters": [
           [
             "String",
             "newtitle"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onTitle2Change",
         "parameters": [
           [
             "String",
             "newtitle2"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onUrlChange",
         "parameters": [
           [
             "String",
             "url"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onInfoChange",
         "parameters": [
           [
             "String",
             "info"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onStatusMsg",
         "parameters": [
           [
             "String",
             "msg"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEqBandChanged",
         "parameters": [
           [
@@ -223,135 +249,149 @@
             "int",
             "newvalue"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEqPreampChanged",
         "parameters": [
           [
             "int",
             "newvalue"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEqChanged",
         "parameters": [
           [
             "int",
             "newstatus"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEqFreqChanged",
         "parameters": [
           [
             "int",
             "isiso"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onVolumeChanged",
         "parameters": [
           [
             "int",
             "newvol"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSeek",
         "parameters": [
           [
             "int",
             "newpos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Container",
         "name": "getContainer",
         "parameters": [
           [
             "String",
             "container_id"
           ]
-        ]
+        ],
+        "result": "Container",
+        "deprecated": false
       },
       {
-        "result": "Container",
         "name": "newDynamicContainer",
         "parameters": [
           [
             "String",
             "container_id"
           ]
-        ]
+        ],
+        "result": "Container",
+        "deprecated": false
       },
       {
-        "result": "Group",
         "name": "newGroup",
         "parameters": [
           [
             "String",
             "group_id"
           ]
-        ]
+        ],
+        "result": "Group",
+        "deprecated": false
       },
       {
-        "result": "Layout",
         "name": "newGroupAsLayout",
         "parameters": [
           [
             "String",
             "group_id"
           ]
-        ]
+        ],
+        "result": "Layout",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getNumContainers",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Container",
         "name": "enumContainer",
         "parameters": [
           [
             "Int",
             "num"
           ]
-        ]
+        ],
+        "result": "Container",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "enumEmbedGUID",
         "parameters": [
           [
             "int",
             "num"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Wac",
         "name": "getWac",
         "parameters": [
           [
             "String",
             "wac_guid"
           ]
-        ]
+        ],
+        "result": "Wac",
+        "deprecated": true
       },
       {
-        "result": "Int",
         "name": "messageBox",
         "parameters": [
           [
@@ -370,30 +410,34 @@
             "String",
             "notanymore_id"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getPlayItemString",
-        "parameters": []
-      },
-      {
+        ],
         "result": "Int",
-        "name": "getPlayItemLength",
-        "parameters": []
+        "deprecated": false
       },
       {
+        "name": "getPlayItemString",
+        "parameters": [],
         "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "getPlayItemLength",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "getPlayItemMetaDataString",
         "parameters": [
           [
             "String",
             "metadataname"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getMetaDataString",
         "parameters": [
           [
@@ -404,80 +448,89 @@
             "String",
             "metadataname"
           ]
-        ]
-      },
-      {
+        ],
         "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "getPlayItemDisplayTitle",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getCurrentTrackRating",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onCurrentTrackRated",
         "parameters": [
           [
             "int",
             "rating"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setCurrentTrackRating",
         "parameters": [
           [
             "int",
             "rating"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getExtFamily",
         "parameters": [
           [
             "String",
             "ext"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getDecoderName",
         "parameters": [
           [
             "string",
             "playitem"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "playFile",
         "parameters": [
           [
             "String",
             "playitem"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getAlbumArt",
         "parameters": [
           [
             "String",
             "playitem"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "downloadMedia",
         "parameters": [
           [
@@ -496,10 +549,11 @@
             "boolean",
             "notifyDownloadsList"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "downloadURL",
         "parameters": [
           [
@@ -514,10 +568,11 @@
             "String",
             "progress_dialog_title"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "onDownloadFinished",
         "parameters": [
           [
@@ -532,105 +587,121 @@
             "String",
             "filename"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getDownloadPath",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getDownloadPath",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "setDownloadPath",
         "parameters": [
           [
             "String",
             "new_path"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "enqueueFile",
         "parameters": [
           [
             "String",
             "playitem"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getLeftVuMeter",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getRightVuMeter",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getVolume",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getLeftVuMeter",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getRightVuMeter",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getVolume",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setVolume",
         "parameters": [
           [
             "Int",
             "vol"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "play",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "stop",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "pause",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "next",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "previous",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "eject",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "seekTo",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getPosition",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getPosition",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setEqBand",
         "parameters": [
           [
@@ -641,80 +712,90 @@
             "Int",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setEqPreamp",
         "parameters": [
           [
             "Int",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setEq",
         "parameters": [
           [
             "Int",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getEqBand",
         "parameters": [
           [
             "int",
             "band"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getEqPreamp",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getEq",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getMousePosX",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "int",
-        "name": "getMousePosY",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "String",
+        "name": "getMousePosY",
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
+      },
+      {
         "name": "integerToString",
         "parameters": [
           [
             "Int",
             "value"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "StringToInteger",
         "parameters": [
           [
             "String",
             "str"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "floatToString",
         "parameters": [
           [
@@ -725,175 +806,193 @@
             "int",
             "ndigits"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Float",
         "name": "stringToFloat",
         "parameters": [
           [
             "String",
             "str"
           ]
-        ]
+        ],
+        "result": "Float",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "integerToLongTime",
         "parameters": [
           [
             "Int",
             "value"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "integerToTime",
         "parameters": [
           [
             "Int",
             "value"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "dateToTime",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "dateToLongTime",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "formatDate",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "formatLongDate",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateYear",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateMonth",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateDay",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateDow",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateDoy",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateHour",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateMin",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateSec",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDateDst",
         "parameters": [
           [
             "Int",
             "datetime"
           ]
-        ]
-      },
-      {
+        ],
         "result": "Int",
-        "name": "getDate",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "String",
+        "name": "getDate",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "strmid",
         "parameters": [
           [
@@ -908,10 +1007,11 @@
             "Int",
             "len"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "strleft",
         "parameters": [
           [
@@ -922,10 +1022,11 @@
             "int",
             "nchars"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "strright",
         "parameters": [
           [
@@ -936,10 +1037,11 @@
             "int",
             "nchars"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "strsearch",
         "parameters": [
           [
@@ -950,100 +1052,110 @@
             "string",
             "substr"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "strlen",
         "parameters": [
           [
             "string",
             "str"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "strupper",
         "parameters": [
           [
             "string",
             "str"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "strlower",
         "parameters": [
           [
             "string",
             "str"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "urlEncode",
         "parameters": [
           [
             "string",
             "url"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "urlDecode",
         "parameters": [
           [
             "string",
             "url"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "parseATF",
         "parameters": [
           [
             "string",
             "topass"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "removePath",
         "parameters": [
           [
             "string",
             "str"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "getPath",
         "parameters": [
           [
             "string",
             "str"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "getExtension",
         "parameters": [
           [
             "string",
             "str"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "string",
         "name": "getToken",
         "parameters": [
           [
@@ -1058,70 +1170,77 @@
             "int",
             "tokennum"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "sin",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "cos",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "tan",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "asin",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "acos",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "atan",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "atan2",
         "parameters": [
           [
@@ -1132,10 +1251,11 @@
             "double",
             "x"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "pow",
         "parameters": [
           [
@@ -1146,60 +1266,66 @@
             "double",
             "pvalue"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "sqr",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "log10",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "ln",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "double",
         "name": "sqrt",
         "parameters": [
           [
             "double",
             "value"
           ]
-        ]
+        ],
+        "result": "double",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "random",
         "parameters": [
           [
             "int",
             "max"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setPrivateString",
         "parameters": [
           [
@@ -1214,10 +1340,11 @@
             "string",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setPrivateInt",
         "parameters": [
           [
@@ -1232,10 +1359,11 @@
             "int",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getPrivateString",
         "parameters": [
           [
@@ -1250,10 +1378,11 @@
             "String",
             "defvalue"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getPrivateInt",
         "parameters": [
           [
@@ -1268,10 +1397,11 @@
             "Int",
             "defvalue"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setPublicString",
         "parameters": [
           [
@@ -1282,10 +1412,11 @@
             "String",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setPublicInt",
         "parameters": [
           [
@@ -1296,10 +1427,11 @@
             "Int",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getPublicString",
         "parameters": [
           [
@@ -1310,10 +1442,11 @@
             "String",
             "defvalue"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getPublicInt",
         "parameters": [
           [
@@ -1324,35 +1457,40 @@
             "Int",
             "defvalue"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getParam",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Group",
         "name": "getScriptGroup",
-        "parameters": []
+        "parameters": [],
+        "result": "Group",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportWidth",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportWidthFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportWidthFromPoint",
         "parameters": [
           [
@@ -1363,15 +1501,17 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorWidth",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorWidthFromPoint",
         "parameters": [
           [
@@ -1382,20 +1522,22 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorWidthFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onMouseMove",
         "parameters": [
           [
@@ -1406,25 +1548,28 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportHeightFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportHeightFromPoint",
         "parameters": [
           [
@@ -1435,15 +1580,17 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorHeightFromPoint",
         "parameters": [
           [
@@ -1454,35 +1601,39 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorHeightFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorLeft",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorLeftFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorLeftFromPoint",
         "parameters": [
           [
@@ -1493,25 +1644,28 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorTop",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorTopFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMonitorTopFromPoint",
         "parameters": [
           [
@@ -1522,25 +1676,28 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportLeft",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportLeftFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportLeftFromPoint",
         "parameters": [
           [
@@ -1551,25 +1708,28 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportTop",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportTopFromGuiObject",
         "parameters": [
           [
             "GuiObject",
             "g"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getViewportTopFromPoint",
         "parameters": [
           [
@@ -1580,10 +1740,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "debugString",
         "parameters": [
           [
@@ -1594,10 +1755,11 @@
             "Int",
             "severity"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "ddeSend",
         "parameters": [
           [
@@ -1612,160 +1774,182 @@
             "Int",
             "mininterval"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "WindowHolder",
         "name": "onLookForComponent",
         "parameters": [
           [
             "String",
             "guid"
           ]
-        ]
+        ],
+        "result": "WindowHolder",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getCurAppLeft",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getCurAppTop",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getCurAppWidth",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "getCurAppHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "isAppActive",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getSkinName",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "switchSkin",
         "parameters": [
           [
             "String",
             "skinname"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isLoadingSkin",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "lockUI",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "unlockUI",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Browser",
         "name": "getMainBrowser",
-        "parameters": []
+        "parameters": [],
+        "result": "Browser",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "popMainBrowser",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "navigateUrl",
         "parameters": [
           [
             "String",
             "url"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "navigateUrlBrowser",
         "parameters": [
           [
             "String",
             "url"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "onOpenURL",
         "parameters": [
           [
             "string",
             "url"
           ]
-        ]
+        ],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "isObjectValid",
         "parameters": [
           [
             "Object",
             "o"
           ]
-        ]
+        ],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "integer",
         "parameters": [
           [
             "Double",
             "d"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Double",
         "name": "frac",
         "parameters": [
           [
             "Double",
             "d"
           ]
-        ]
+        ],
+        "result": "Double",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getTimeOfDay",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setMenuTransparency",
         "parameters": [
           [
             "int",
             "alphavalue"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "onGetCancelComponent",
         "parameters": [
           [
@@ -1776,55 +1960,61 @@
             "boolean",
             "goingvisible"
           ]
-        ]
+        ],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getStatus",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isKeyDown",
         "parameters": [
           [
             "int",
             "vk_code"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setClipboardText",
         "parameters": [
           [
             "String",
             "_text"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "Chr",
         "parameters": [
           [
             "Int",
             "charnum"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "translate",
         "parameters": [
           [
             "String",
             "str"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getString",
         "parameters": [
           [
@@ -1835,15 +2025,17 @@
             "int",
             "id"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getLanguageId",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "selectFile",
         "parameters": [
           [
@@ -1858,10 +2050,11 @@
             "String",
             "prev_filename"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": true
       },
       {
-        "result": "String",
         "name": "selectFolder",
         "parameters": [
           [
@@ -1876,20 +2069,23 @@
             "String",
             "default_path"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "systemMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "windowMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "triggerAction",
         "parameters": [
           [
@@ -1904,10 +2100,11 @@
             "String",
             "actionparam"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "GuiObject",
         "name": "showWindow",
         "parameters": [
           [
@@ -1922,40 +2119,44 @@
             "Boolean",
             "transient"
           ]
-        ]
+        ],
+        "result": "GuiObject",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "hideWindow",
         "parameters": [
           [
             "GuiObject",
             "hw"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "hideNamedWindow",
         "parameters": [
           [
             "String",
             "guidorgroup"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "isNamedWindowVisible",
         "parameters": [
           [
             "String",
             "guidorgroup"
           ]
-        ]
+        ],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAtom",
         "parameters": [
           [
@@ -1966,110 +2167,130 @@
             "Object",
             "object"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Object",
         "name": "getAtom",
         "parameters": [
           [
             "String",
             "atomname"
           ]
-        ]
+        ],
+        "result": "Object",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "invokeDebugger",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "hasVideoSupport",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isVideo",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isVideoFullscreen",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getIdealVideoWidth",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getIdealVideoHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isMinimized",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "minimizeApplication",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "restoreApplication",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "activateApplication",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getPlaylistLength",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getPlaylistIndex",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getPlaylistLength",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getPlaylistIndex",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "clearPlaylist",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "isDesktopAlphaAvailable",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "isTransparencyAvailable",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onShowNotification",
-        "parameters": []
-      },
-      {
-        "result": "String",
-        "name": "getSongInfoText",
-        "parameters": []
-      },
-      {
-        "result": "String",
-        "name": "getSongInfoTextTranslated",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getSongInfoText",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "getSongInfoTextTranslated",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "getVisBand",
         "parameters": [
           [
@@ -2080,76 +2301,87 @@
             "int",
             "band"
           ]
-        ]
-      },
-      {
-        "result": "Double",
-        "name": "getRuntimeVersion",
-        "parameters": []
-      },
-      {
+        ],
         "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getRuntimeVersion",
+        "parameters": [],
+        "result": "Double",
+        "deprecated": false
+      },
+      {
         "name": "isWa2ComponentVisible",
         "parameters": [
           [
             "String",
             "guid"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "hideWa2Component",
         "parameters": [
           [
             "String",
             "guid"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "boolean",
         "name": "isProVersion",
-        "parameters": []
+        "parameters": [],
+        "result": "boolean",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getWinampVersion",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getBuildNumber",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getFileSize",
         "parameters": [
           [
             "String",
             "fullfilename"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       }
-    ],
-    "name": "System"
+    ]
   },
-  "E90DC47B840D4ae7B02C040BD275F7FC": {
+  "Container": {
     "parent": "Object",
+    "GUID": "E90DC47B-840D-4ae7-B02C-040BD275F7FC",
+    "guid": "e90dc47b4ae7840d0b042cb0fcf775d2",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onSwitchToLayout",
         "parameters": [
           [
             "Layout",
             "newlayout"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onBeforeSwitchToLayout",
         "parameters": [
           [
@@ -2160,10 +2392,11 @@
             "Layout",
             "newlayout"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setXmlParam",
         "parameters": [
           [
@@ -2174,115 +2407,131 @@
             "String",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onHideLayout",
         "parameters": [
           [
             "Layout",
             "_layout"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onShowLayout",
         "parameters": [
           [
             "Layout",
             "_layout"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Layout",
         "name": "getLayout",
         "parameters": [
           [
             "String",
             "layout_id"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getNumLayouts",
-        "parameters": []
-      },
-      {
+        ],
         "result": "Layout",
+        "deprecated": false
+      },
+      {
+        "name": "getNumLayouts",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "enumLayout",
         "parameters": [
           [
             "Int",
             "num"
           ]
-        ]
+        ],
+        "result": "Layout",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "switchToLayout",
         "parameters": [
           [
             "String",
             "layout_id"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "show",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "hide",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "close",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "toggle",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "isDynamic",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "isDynamic",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setName",
         "parameters": [
           [
             "String",
             "name"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getName",
-        "parameters": []
-      },
-      {
-        "result": "String",
-        "name": "getGuid",
-        "parameters": []
-      },
-      {
-        "result": "Layout",
-        "name": "getCurLayout",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getName",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "getGuid",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "getCurLayout",
+        "parameters": [],
+        "result": "Layout",
+        "deprecated": false
+      },
+      {
         "name": "onAddContent",
         "parameters": [
           [
@@ -2297,26 +2546,31 @@
             "String",
             "guid"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Container"
+    ]
   },
-  "00C074A0FEA249a0BE8DFABBDB161640": {
+  "Wac": {
     "parent": "Object",
+    "GUID": "00C074A0-FEA2-49a0-BE8D-FABBDB161640",
+    "guid": "00c074a049a0fea2bbfa8dbe401616db",
+    "deprecated": true,
     "functions": [
       {
-        "result": "String",
         "name": "getGuid",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "String",
-        "name": "getName",
-        "parameters": []
+        "deprecated": true
       },
       {
-        "result": "Int",
+        "name": "getName",
+        "parameters": [],
+        "result": "String",
+        "deprecated": true
+      },
+      {
         "name": "sendCommand",
         "parameters": [
           [
@@ -2335,25 +2589,29 @@
             "String",
             "param3"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "show",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "hide",
-        "parameters": []
-      },
-      {
-        "result": "Boolean",
-        "name": "isVisible",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": true
+      },
+      {
+        "name": "isVisible",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": true
+      },
+      {
         "name": "onNotify",
         "parameters": [
           [
@@ -2368,81 +2626,92 @@
             "Int",
             "b"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "onShow",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "onHide",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "setStatusBar",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "Boolean",
         "name": "getStatusBar",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": true
       }
-    ],
-    "name": "Wac"
+    ]
   },
-  "B2023AB5434D4ba1BEAE59637503F3C6": {
+  "List": {
     "parent": "Object",
+    "GUID": "B2023AB5-434D-4ba1-BEAE-59637503F3C6",
+    "guid": "b2023ab54ba1434d6359aebec6f30375",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "addItem",
         "parameters": [
           [
             "Any",
             "_object"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "removeItem",
         "parameters": [
           [
             "int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Any",
         "name": "enumItem",
         "parameters": [
           [
             "int",
             "pos"
           ]
-        ]
+        ],
+        "result": "Any",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "findItem",
         "parameters": [
           [
             "Any",
             "_object"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "findItem2",
         "parameters": [
           [
@@ -2453,36 +2722,42 @@
             "int",
             "startItem"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getNumItems",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "removeAll",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "List"
+    ]
   },
-  "87C65778E74349fe85F909CC532AFD56": {
+  "BitList": {
     "parent": "Object",
+    "GUID": "87C65778-E743-49fe-85F9-09CC532AFD56",
+    "guid": "87c6577849fee743cc09f98556fd2a53",
+    "deprecated": false,
     "functions": [
       {
-        "result": "boolean",
         "name": "getItem",
         "parameters": [
           [
             "int",
             "n"
           ]
-        ]
+        ],
+        "result": "boolean",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setItem",
         "parameters": [
           [
@@ -2493,31 +2768,36 @@
             "boolean",
             "val"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setSize",
         "parameters": [
           [
             "int",
             "s"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getSize",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       }
-    ],
-    "name": "BitList"
+    ]
   },
-  "38603665461B42a7AA75D83F6667BF73": {
+  "Map": {
     "parent": "Object",
+    "GUID": "38603665-461B-42a7-AA75-D83F6667BF73",
+    "guid": "3860366542a7461b3fd875aa73bf6766",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "getValue",
         "parameters": [
           [
@@ -2528,10 +2808,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getARGBValue",
         "parameters": [
           [
@@ -2546,10 +2827,11 @@
             "int",
             "channel"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "inRegion",
         "parameters": [
           [
@@ -2560,41 +2842,48 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "loadMap",
         "parameters": [
           [
             "String",
             "bitmapid"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getWidth",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
-        "name": "getHeight",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Region",
+        "name": "getHeight",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "getRegion",
-        "parameters": []
+        "parameters": [],
+        "result": "Region",
+        "deprecated": false
       }
-    ],
-    "name": "Map"
+    ]
   },
-  "F4787AF4B2BB4ef79CFBE74BA9BEA88D": {
+  "PopupMenu": {
     "parent": "Object",
+    "GUID": "F4787AF4-B2BB-4ef7-9CFB-E74BA9BEA88D",
+    "guid": "f4787af44ef7b2bb4be7fb9c8da8bea9",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "addSubMenu",
         "parameters": [
           [
@@ -2605,10 +2894,11 @@
             "String",
             "submenutext"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "addCommand",
         "parameters": [
           [
@@ -2627,15 +2917,17 @@
             "Boolean",
             "disabled"
           ]
-        ]
-      },
-      {
+        ],
         "result": "",
-        "name": "addSeparator",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Int",
+        "name": "addSeparator",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "popAtXY",
         "parameters": [
           [
@@ -2646,20 +2938,23 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "popAtMouse",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
-        "name": "getNumCommands",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "",
+        "name": "getNumCommands",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "checkCommand",
         "parameters": [
           [
@@ -2670,10 +2965,11 @@
             "boolean",
             "check"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "disableCommand",
         "parameters": [
           [
@@ -2684,36 +2980,41 @@
             "boolean",
             "disable"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "PopupMenu"
+    ]
   },
-  "3A370C023CBF439f84F186885BCF1E36": {
+  "Region": {
     "parent": "Object",
+    "GUID": "3A370C02-3CBF-439f-84F1-86885BCF1E36",
+    "guid": "3a370c02439f3cbf8886f184361ecf5b",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "add",
         "parameters": [
           [
             "Region",
             "reg"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "sub",
         "parameters": [
           [
             "Region",
             "reg"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "offset",
         "parameters": [
           [
@@ -2724,30 +3025,33 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "stretch",
         "parameters": [
           [
             "double",
             "r"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "copy",
         "parameters": [
           [
             "Region",
             "reg"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "loadFromMap",
         "parameters": [
           [
@@ -2762,163 +3066,191 @@
             "Boolean",
             "reversed"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "loadFromBitmap",
         "parameters": [
           [
             "String",
             "bitmapid"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getBoundingBoxX",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getBoundingBoxY",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getBoundingBoxW",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getBoundingBoxH",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       }
-    ],
-    "name": "Region"
+    ]
   },
-  "5D0C5BB67DE14b1fA70F8D1659941941": {
+  "Timer": {
     "parent": "Object",
+    "GUID": "5D0C5BB6-7DE1-4b1f-A70F-8D1659941941",
+    "guid": "5d0c5bb64b1f7de1168d0fa741199459",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onTimer",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setDelay",
         "parameters": [
           [
             "int",
             "millisec"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getDelay",
-        "parameters": []
-      },
-      {
-        "result": "",
-        "name": "start",
-        "parameters": []
-      },
-      {
-        "result": "",
-        "name": "stop",
-        "parameters": []
-      },
-      {
-        "result": "",
-        "name": "isRunning",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "start",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "stop",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "isRunning",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "getSkipped",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       }
-    ],
-    "name": "Timer"
+    ]
   },
-  "A5376FA14E94411a83F605EC5EEA5F0A": {
+  "FeedWatcher": {
     "parent": "Object",
+    "GUID": "A5376FA1-4E94-411a-83F6-05EC5EEA5F0A",
+    "guid": "a5376fa1411a4e94ec05f6830a5fea5e",
+    "deprecated": true,
     "functions": [
       {
-        "result": "Int",
         "name": "setFeed",
         "parameters": [
           [
             "String",
             "feed_id"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "releaseFeed",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "onFeedChange",
         "parameters": [
           [
             "String",
             "new_feeddata"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       }
-    ],
-    "name": "FeedWatcher"
+    ]
   },
-  "4EE3E199C6364bec97CD78BC9C8628B0": {
+  "GuiObject": {
     "parent": "Object",
+    "GUID": "4EE3E199-C636-4bec-97CD-78BC9C8628B0",
+    "guid": "4ee3e1994becc636bc78cd97b028869c",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "show",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "hide",
-        "parameters": []
-      },
-      {
-        "result": "int",
-        "name": "isVisible",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "isVisible",
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
+      },
+      {
         "name": "onSetVisible",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAlpha",
         "parameters": [
           [
             "int",
             "alpha"
           ]
-        ]
-      },
-      {
-        "result": "int",
-        "name": "getAlpha",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getAlpha",
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
+      },
+      {
         "name": "onLeftButtonUp",
         "parameters": [
           [
@@ -2929,10 +3261,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onLeftButtonDown",
         "parameters": [
           [
@@ -2943,10 +3276,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onRightButtonUp",
         "parameters": [
           [
@@ -2957,10 +3291,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onRightButtonDown",
         "parameters": [
           [
@@ -2971,10 +3306,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onRightButtonDblClk",
         "parameters": [
           [
@@ -2985,10 +3321,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onLeftButtonDblClk",
         "parameters": [
           [
@@ -2999,10 +3336,11 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "onMouseWheelUp",
         "parameters": [
           [
@@ -3013,10 +3351,11 @@
             "int",
             "lines"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "onMouseWheelDown",
         "parameters": [
           [
@@ -3027,10 +3366,11 @@
             "int",
             "lines"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onMouseMove",
         "parameters": [
           [
@@ -3041,45 +3381,51 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEnterArea",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onLeaveArea",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setEnabled",
         "parameters": [
           [
             "boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "boolean",
-        "name": "getEnabled",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getEnabled",
+        "parameters": [],
+        "result": "boolean",
+        "deprecated": false
+      },
+      {
         "name": "onEnable",
         "parameters": [
           [
             "boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "resize",
         "parameters": [
           [
@@ -3098,10 +3444,11 @@
             "int",
             "h"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onResize",
         "parameters": [
           [
@@ -3120,10 +3467,11 @@
             "int",
             "h"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "boolean",
         "name": "isMouseOver",
         "parameters": [
           [
@@ -3134,125 +3482,142 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "boolean",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getLeft",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getTop",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getWidth",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "int",
-        "name": "getHeight",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "",
+        "name": "getHeight",
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
+      },
+      {
         "name": "setTargetX",
         "parameters": [
           [
             "int",
             "x"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setTargetY",
         "parameters": [
           [
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setTargetW",
         "parameters": [
           [
             "int",
             "w"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setTargetH",
         "parameters": [
           [
             "int",
             "r"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setTargetA",
         "parameters": [
           [
             "int",
             "alpha"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setTargetSpeed",
         "parameters": [
           [
             "float",
             "insecond"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "gotoTarget",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onTargetReached",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "cancelTarget",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "reverseTarget",
         "parameters": [
           [
             "int",
             "reverse"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onStartup",
-        "parameters": []
-      },
-      {
-        "result": "boolean",
-        "name": "isGoingToTarget",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "isGoingToTarget",
+        "parameters": [],
+        "result": "boolean",
+        "deprecated": false
+      },
+      {
         "name": "setXmlParam",
         "parameters": [
           [
@@ -3263,145 +3628,167 @@
             "String",
             "value"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getXmlParam",
         "parameters": [
           [
             "String",
             "param"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "init",
         "parameters": [
           [
             "Group",
             "parent"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "bringToFront",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "bringToBack",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "bringAbove",
         "parameters": [
           [
             "GuiObject",
             "guiobj"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "bringBelow",
         "parameters": [
           [
             "GuiObject",
             "guiobj"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getGuiX",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getGuiY",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getGuiW",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getGuiH",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getGuiRelatX",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getGuiRelatY",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getGuiRelatW",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getGuiRelatH",
-        "parameters": []
-      },
-      {
-        "result": "Boolean",
-        "name": "isActive",
-        "parameters": []
-      },
-      {
-        "result": "GuiObject",
-        "name": "getParent",
-        "parameters": []
-      },
-      {
-        "result": "Layout",
-        "name": "getParentLayout",
-        "parameters": []
-      },
-      {
-        "result": "GuiObject",
-        "name": "getTopParent",
-        "parameters": []
-      },
-      {
-        "result": "int",
-        "name": "runModal",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiX",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiY",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiW",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiH",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiRelatX",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiRelatY",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiRelatW",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getGuiRelatH",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "isActive",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
+        "name": "getParent",
+        "parameters": [],
+        "result": "GuiObject",
+        "deprecated": false
+      },
+      {
+        "name": "getParentLayout",
+        "parameters": [],
+        "result": "Layout",
+        "deprecated": false
+      },
+      {
+        "name": "getTopParent",
+        "parameters": [],
+        "result": "GuiObject",
+        "deprecated": false
+      },
+      {
+        "name": "runModal",
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
+      },
+      {
         "name": "endModal",
         "parameters": [
           [
             "int",
             "retcode"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "GuiObject",
         "name": "findObject",
         "parameters": [
           [
             "String",
             "id"
           ]
-        ]
+        ],
+        "result": "GuiObject",
+        "deprecated": false
       },
       {
-        "result": "GuiObject",
         "name": "findObjectXY",
         "parameters": [
           [
@@ -3412,150 +3799,168 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "GuiObject",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getName",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "clientToScreenX",
         "parameters": [
           [
             "int",
             "x"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "clientToScreenY",
         "parameters": [
           [
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "clientToScreenW",
         "parameters": [
           [
             "int",
             "w"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "clientToScreenH",
         "parameters": [
           [
             "int",
             "h"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "screenToClientX",
         "parameters": [
           [
             "int",
             "x"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "screenToClientY",
         "parameters": [
           [
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "screenToClientW",
         "parameters": [
           [
             "int",
             "w"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "screenToClientH",
         "parameters": [
           [
             "int",
             "h"
           ]
-        ]
+        ],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getAutoWidth",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "int",
+        "deprecated": false
+      },
+      {
         "name": "getAutoHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setFocus",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onChar",
         "parameters": [
           [
             "String",
             "c"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onAccelerator",
         "parameters": [
           [
             "String",
             "accel"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "isMouseOverRect",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "Object",
         "name": "getInterface",
         "parameters": [
           [
             "String",
             "interface_guid"
           ]
-        ]
+        ],
+        "result": "Object",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onDragEnter",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onDragOver",
         "parameters": [
           [
@@ -3566,45 +3971,51 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onDragLeave",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onKeyDown",
         "parameters": [
           [
             "int",
             "vk_code"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onKeyUp",
         "parameters": [
           [
             "int",
             "vk_code"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onGetFocus",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
-        "name": "onKillFocus",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Int",
+        "name": "onKillFocus",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "sendAction",
         "parameters": [
           [
@@ -3631,10 +4042,11 @@
             "int",
             "p2"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onAction",
         "parameters": [
           [
@@ -3665,147 +4077,170 @@
             "GuiObject",
             "source"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       }
-    ],
-    "name": "GuiObject"
+    ]
   },
-  "45BE95E520724191935CBB5FF9F117FD": {
+  "Group": {
     "parent": "GuiObject",
+    "GUID": "45BE95E5-2072-4191-935C-BB5FF9F117FD",
+    "guid": "45be95e5419120725fbb5c93fd17f1f9",
+    "deprecated": false,
     "functions": [
       {
-        "result": "GuiObject",
         "name": "getObject",
         "parameters": [
           [
             "String",
             "object_id"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getNumObjects",
-        "parameters": []
-      },
-      {
+        ],
         "result": "GuiObject",
+        "deprecated": false
+      },
+      {
+        "name": "getNumObjects",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "enumObject",
         "parameters": [
           [
             "Int",
             "num"
           ]
-        ]
+        ],
+        "result": "GuiObject",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onCreateObject",
         "parameters": [
           [
             "GuiObject",
             "newobj"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMousePosX",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
-        "name": "getMousePosY",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Boolean",
+        "name": "getMousePosY",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "isLayout",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       }
-    ],
-    "name": "Group"
+    ]
   },
-  "60906D4E537E482eB004CC9461885672": {
+  "Layout": {
     "parent": "Group",
+    "GUID": "60906D4E-537E-482e-B004-CC9461885672",
+    "guid": "60906d4e482e537e94cc04b072568861",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onDock",
         "parameters": [
           [
             "int",
             "side"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onUndock",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onScale",
         "parameters": [
           [
             "Double",
             "newscalevalue"
           ]
-        ]
-      },
-      {
-        "result": "Double",
-        "name": "getScale",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getScale",
+        "parameters": [],
+        "result": "Double",
+        "deprecated": false
+      },
+      {
         "name": "setScale",
         "parameters": [
           [
             "Double",
             "scalevalue"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setDesktopAlpha",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "getDesktopAlpha",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "Container",
         "name": "getContainer",
-        "parameters": []
+        "parameters": [],
+        "result": "Container",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "center",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onMove",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEndMove",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onUserResize",
         "parameters": [
           [
@@ -3824,10 +4259,11 @@
             "int",
             "h"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "snapAdjust",
         "parameters": [
           [
@@ -3846,81 +4282,96 @@
             "int",
             "bottom"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getSnapAdjustTop",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getSnapAdjustRight",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getSnapAdjustLeft",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getSnapAdjustBottom",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getSnapAdjustTop",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getSnapAdjustRight",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getSnapAdjustLeft",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getSnapAdjustBottom",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setRedrawOnResize",
         "parameters": [
           [
             "int",
             "wantredrawonresize"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "beforeRedock",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "redock",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "isTransparencySafe",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "isLayoutAnimationSafe",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onMouseEnterLayout",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onMouseLeaveLayout",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSnapAdjustChanged",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Layout"
+    ]
   },
-  "403ABCC06F224bd68BA410C829932547": {
+  "WindowHolder": {
     "parent": "GuiObject",
+    "GUID": "403ABCC0-6F22-4bd6-8BA4-10C829932547",
+    "guid": "403abcc04bd66f22c810a48b47259329",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "setRegionFromMap",
         "parameters": [
           [
@@ -3935,355 +4386,412 @@
             "Boolean",
             "reverse"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setRegion",
         "parameters": [
           [
             "Region",
             "reg"
           ]
-        ]
-      },
-      {
-        "result": "GuiObject",
-        "name": "getContent",
-        "parameters": []
-      },
-      {
-        "result": "String",
-        "name": "getGuid",
-        "parameters": []
-      },
-      {
-        "result": "String",
-        "name": "getComponentName",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getContent",
+        "parameters": [],
+        "result": "GuiObject",
+        "deprecated": false
+      },
+      {
+        "name": "getGuid",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "getComponentName",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "onGetWac",
         "parameters": [
           [
             "Wac",
             "wacobj"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "onGiveUpWac",
         "parameters": [
           [
             "Wac",
             "wacobj"
           ]
-        ]
-      },
-      {
-        "result": "Wac",
-        "name": "getWac",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": true
+      },
+      {
+        "name": "getWac",
+        "parameters": [],
+        "result": "Wac",
+        "deprecated": true
+      },
+      {
         "name": "setAcceptWac",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       }
-    ],
-    "name": "WindowHolder"
+    ]
   },
-  "97AA3E4DF4D04fa8817B0AF22A454983": {
+  "ComponentBucket": {
     "parent": "GuiObject",
+    "GUID": "97AA3E4D-F4D0-4fa8-817B-0AF22A454983",
+    "guid": "97aa3e4d4fa8f4d0f20a7b818349452a",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "getMaxHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getMaxWidth",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "setScroll",
         "parameters": [
           [
             "int",
             "x"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getScroll",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
-        "name": "getNumChildren",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "GuiObject",
+        "name": "getNumChildren",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "enumChildren",
         "parameters": [
           [
             "int",
             "n"
           ]
-        ]
+        ],
+        "result": "GuiObject",
+        "deprecated": false
       }
-    ],
-    "name": "ComponentBucket"
+    ]
   },
-  "64E4BBFA81F449d9B0C0A85B2EC3BCFD": {
+  "Edit": {
     "parent": "GuiObject",
+    "GUID": "64E4BBFA-81F4-49d9-B0C0-A85B2EC3BCFD",
+    "guid": "64e4bbfa49d981f45ba8c0b0fdbcc32e",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onEnter",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onAbort",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onIdleEditUpdate",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEditUpdate",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setText",
         "parameters": [
           [
             "String",
             "txt"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAutoEnter",
         "parameters": [
           [
             "boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getAutoEnter",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getText",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "selectAll",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "enter",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setIdleEnabled",
         "parameters": [
           [
             "boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getIdleEnabled",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       }
-    ],
-    "name": "Edit"
+    ]
   },
-  "62B65E3F375E408d8DEA76814AB91B77": {
+  "Slider": {
     "parent": "GuiObject",
+    "GUID": "62B65E3F-375E-408d-8DEA-76814AB91B77",
+    "guid": "62b65e3f408d375e8176ea8d771bb94a",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onSetPosition",
         "parameters": [
           [
             "int",
             "newpos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onPostedPosition",
         "parameters": [
           [
             "int",
             "newpos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSetFinalPosition",
         "parameters": [
           [
             "int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setPosition",
         "parameters": [
           [
             "int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getPosition",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "lock",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "unlock",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Slider"
+    ]
   },
-  "CE4F97BE77B04e199956D49833C96C27": {
+  "Vis": {
     "parent": "GuiObject",
+    "GUID": "CE4F97BE-77B0-4e19-9956-D49833C96C27",
+    "guid": "ce4f97be4e1977b098d45699276cc933",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onFrame",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setRealtime",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "getRealtime",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getMode",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getRealtime",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
+        "name": "getMode",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setMode",
         "parameters": [
           [
             "Int",
             "mode"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "nextMode",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Vis"
+    ]
   },
-  "A8C2200D51EB4b2aBA7F5D4BC65D4C71": {
+  "Browser": {
     "parent": "GuiObject",
+    "GUID": "A8C2200D-51EB-4b2a-BA7F-5D4BC65D4C71",
+    "guid": "a8c2200d4b2a51eb4b5d7fba714c5dc6",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "navigateUrl",
         "parameters": [
           [
             "String",
             "url"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "back",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "forward",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "stop",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "refresh",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "home",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setTargetName",
         "parameters": [
           [
             "String",
             "targetname"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "onBeforeNavigate",
         "parameters": [
           [
@@ -4298,35 +4806,39 @@
             "String",
             "targetframename"
           ]
-        ]
+        ],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onDocumentComplete",
         "parameters": [
           [
             "String",
             "url"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onDocumentReady",
         "parameters": [
           [
             "String",
             "url"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getDocumentTitle",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getDocumentTitle",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "onNavigateError",
         "parameters": [
           [
@@ -4337,102 +4849,121 @@
             "int",
             "code"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setCancelIEErrorPage",
         "parameters": [
           [
             "boolean",
             "cancel"
           ]
-        ]
-      },
-      {
+        ],
         "result": "",
-        "name": "scrape",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "string",
+        "name": "scrape",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "onMediaLink",
         "parameters": [
           [
             "string",
             "url"
           ]
-        ]
+        ],
+        "result": "string",
+        "deprecated": false
       }
-    ],
-    "name": "Browser"
+    ]
   },
-  "8D1EBA38489E483eB9608D1F43C5C405": {
+  "EqVis": {
     "parent": "GuiObject",
-    "functions": [],
-    "name": "EqVis"
+    "GUID": "8D1EBA38-489E-483e-B960-8D1F43C5C405",
+    "guid": "8d1eba38483e489e1f8d60b905c4c543",
+    "deprecated": false,
+    "functions": []
   },
-  "0F08C940AF394b2380F3B8C48F7EBB59": {
+  "Status": {
     "parent": "GuiObject",
-    "functions": [],
-    "name": "Status"
+    "GUID": "0F08C940-AF39-4b23-80F3-B8C48F7EBB59",
+    "guid": "0f08c9404b23af39c4b8f38059bb7e8f",
+    "deprecated": false,
+    "functions": []
   },
-  "EFAA8672310E41faB7DC85A9525BCB4B": {
+  "Text": {
     "parent": "GuiObject",
+    "GUID": "EFAA8672-310E-41fa-B7DC-85A9525BCB4B",
+    "guid": "efaa867241fa310ea985dcb74bcb5b52",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "setText",
         "parameters": [
           [
             "String",
             "txt"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAlternateText",
         "parameters": [
           [
             "String",
             "txt"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getText",
-        "parameters": []
-      },
-      {
-        "result": "int",
-        "name": "getTextWidth",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getText",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "getTextWidth",
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
+      },
+      {
         "name": "onTextChanged",
         "parameters": [
           [
             "String",
             "newtxt"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Text"
+    ]
   },
-  "7DFD324437514e7cBF4082AE5F3ADC33": {
+  "Title": {
     "parent": "GuiObject",
-    "functions": [],
-    "name": "Title"
+    "GUID": "7DFD3244-3751-4e7c-BF40-82AE5F3ADC33",
+    "guid": "7dfd32444e7c3751ae8240bf33dc3a5f",
+    "deprecated": false,
+    "functions": []
   },
-  "5AB9FA159A7D4557ABC86557A6C67CA9": {
+  "Layer": {
     "parent": "GuiObject",
+    "GUID": "5AB9FA15-9A7D-4557-ABC8-6557A6C67CA9",
+    "guid": "5ab9fa1545579a7d5765c8aba97cc6a6",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onBeginResize",
         "parameters": [
           [
@@ -4451,10 +4982,11 @@
             "int",
             "h"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onEndResize",
         "parameters": [
           [
@@ -4473,20 +5005,23 @@
             "int",
             "h"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "fx_onInit",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
-        "name": "fx_onFrame",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Double",
+        "name": "fx_onFrame",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "fx_onGetPixelR",
         "parameters": [
           [
@@ -4505,10 +5040,11 @@
             "double",
             "y"
           ]
-        ]
+        ],
+        "result": "Double",
+        "deprecated": false
       },
       {
-        "result": "Double",
         "name": "fx_onGetPixelD",
         "parameters": [
           [
@@ -4527,10 +5063,11 @@
             "double",
             "y"
           ]
-        ]
+        ],
+        "result": "Double",
+        "deprecated": false
       },
       {
-        "result": "Double",
         "name": "fx_onGetPixelX",
         "parameters": [
           [
@@ -4549,10 +5086,11 @@
             "double",
             "y"
           ]
-        ]
+        ],
+        "result": "Double",
+        "deprecated": false
       },
       {
-        "result": "Double",
         "name": "fx_onGetPixelY",
         "parameters": [
           [
@@ -4571,10 +5109,11 @@
             "double",
             "y"
           ]
-        ]
+        ],
+        "result": "Double",
+        "deprecated": false
       },
       {
-        "result": "Double",
         "name": "fx_onGetPixelA",
         "parameters": [
           [
@@ -4593,10 +5132,11 @@
             "double",
             "y"
           ]
-        ]
+        ],
+        "result": "Double",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setRegionFromMap",
         "parameters": [
           [
@@ -4611,170 +5151,192 @@
             "boolean",
             "reverse"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setRegion",
         "parameters": [
           [
             "Region",
             "reg"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "fx_setEnabled",
         "parameters": [
           [
             "boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getEnabled",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getEnabled",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setWrap",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getWrap",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getWrap",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setRect",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getRect",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getRect",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setBgFx",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getBgFx",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getBgFx",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setClear",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getClear",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getClear",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setSpeed",
         "parameters": [
           [
             "Int",
             "msperframe"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "fx_getSpeed",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getSpeed",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "fx_setRealtime",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getRealtime",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getRealtime",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setLocalized",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getLocalized",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getLocalized",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setBilinear",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getBilinear",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getBilinear",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setAlphaMode",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
-      },
-      {
-        "result": "Boolean",
-        "name": "fx_getAlphaMode",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "fx_getAlphaMode",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
         "name": "fx_setGridSize",
         "parameters": [
           [
@@ -4785,295 +5347,345 @@
             "Int",
             "y"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "fx_update",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
-        "name": "fx_restart",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Boolean",
+        "name": "fx_restart",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "isInvalid",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       }
-    ],
-    "name": "Layer"
+    ]
   },
-  "698EDDCD8F1E4fec9B12F944F909FF45": {
+  "Button": {
     "parent": "GuiObject",
+    "GUID": "698EDDCD-8F1E-4fec-9B12-F944F909FF45",
+    "guid": "698eddcd4fec8f1e44f9129b45ff09f9",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onActivate",
         "parameters": [
           [
             "int",
             "activated"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onLeftClick",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onRightClick",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setActivated",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setActivatedNoCallback",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Boolean",
         "name": "getActivated",
-        "parameters": []
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "leftClick",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "rightClick",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Button"
+    ]
   },
-  "6B64CD275A264c4b8C59E6A70CF6493A": {
+  "AnimatedLayer": {
     "parent": "Layer",
+    "GUID": "6B64CD27-5A26-4c4b-8C59-E6A70CF6493A",
+    "guid": "6b64cd274c4b5a26a7e6598c3a49f60c",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onPlay",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onPause",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onResume",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onStop",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onFrame",
         "parameters": [
           [
             "Int",
             "framenum"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setSpeed",
         "parameters": [
           [
             "Int",
             "msperframe"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "gotoFrame",
         "parameters": [
           [
             "int",
             "framenum"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setStartFrame",
         "parameters": [
           [
             "Int",
             "framenum"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setEndFrame",
         "parameters": [
           [
             "int",
             "framenum"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAutoReplay",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "play",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "stop",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "pause",
-        "parameters": []
-      },
-      {
-        "result": "Boolean",
-        "name": "isPlaying",
-        "parameters": []
-      },
-      {
-        "result": "Boolean",
-        "name": "isPaused",
-        "parameters": []
-      },
-      {
-        "result": "Boolean",
-        "name": "isStopped",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getStartFrame",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getEndFrame",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getLength",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getDirection",
-        "parameters": []
-      },
-      {
-        "result": "Boolean",
-        "name": "getAutoReplay",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getCurFrame",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "isPlaying",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
+        "name": "isPaused",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
+        "name": "isStopped",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
+        "name": "getStartFrame",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getEndFrame",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getLength",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getDirection",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getAutoReplay",
+        "parameters": [],
+        "result": "Boolean",
+        "deprecated": false
+      },
+      {
+        "name": "getCurFrame",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setRealtime",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "AnimatedLayer"
+    ]
   },
-  "6DCB05E48AC448c2B19349F0910EF54A": {
+  "AlbumArtLayer": {
     "parent": "Layer",
+    "GUID": "6DCB05E4-8AC4-48c2-B193-49F0910EF54A",
+    "guid": "6dcb05e448c28ac4f04993b14af50e91",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "refresh",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "isLoading",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onAlbumArtLoaded",
         "parameters": [
           [
             "boolean",
             "success"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "AlbumArtLayer"
+    ]
   },
-  "B4DCCFFF81FE4bcc961B720FD5BE0FFF": {
+  "ToggleButton": {
     "parent": "Button",
+    "GUID": "B4DCCFFF-81FE-4bcc-961B-720FD5BE0FFF",
+    "guid": "b4dccfff4bcc81fe0f721b96ff0fbed5",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onToggle",
         "parameters": [
           [
             "Boolean",
             "onoff"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "int",
         "name": "getCurCfgVal",
-        "parameters": []
+        "parameters": [],
+        "result": "int",
+        "deprecated": false
       }
-    ],
-    "name": "ToggleButton"
+    ]
   },
-  "01E28CE1B05911d5979FE4DE6F51760A": {
+  "GroupList": {
     "parent": "GuiObject",
+    "GUID": "01E28CE1-B059-11d5-979F-E4DE6F51760A",
+    "guid": "01e28ce111d5b059dee49f970a76516f",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Group",
         "name": "instantiate",
         "parameters": [
           [
@@ -5084,148 +5696,172 @@
             "int",
             "num_groups"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getNumItems",
-        "parameters": []
-      },
-      {
+        ],
         "result": "Group",
+        "deprecated": false
+      },
+      {
+        "name": "getNumItems",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "enumItem",
         "parameters": [
           [
             "int",
             "num"
           ]
-        ]
+        ],
+        "result": "Group",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "removeAll",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "scrollToPercent",
         "parameters": [
           [
             "Int",
             "percent"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setRedraw",
         "parameters": [
           [
             "int",
             "redraw"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "GroupList"
+    ]
   },
-  "80F0F8BD1BA542a6A0933236A00C8D4A": {
+  "CfgGroup": {
     "parent": "Group",
+    "GUID": "80F0F8BD-1BA5-42a6-A093-3236A00C8D4A",
+    "guid": "80f0f8bd42a61ba5363293a04a8d0ca0",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "cfgGetInt",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "cfgSetInt",
         "parameters": [
           [
             "Int",
             "intvalue"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "cfgGetString",
-        "parameters": []
-      },
-      {
-        "result": "Float",
-        "name": "cfgGetFloat",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "cfgGetString",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "cfgGetFloat",
+        "parameters": [],
+        "result": "Float",
+        "deprecated": false
+      },
+      {
         "name": "cfgSetFloat",
         "parameters": [
           [
             "Float",
             "floatvalue"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "cfgSetString",
         "parameters": [
           [
             "String",
             "strvalue"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onCfgChanged",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "cfgGetGuid",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "cfgGetName",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       }
-    ],
-    "name": "CfgGroup"
+    ]
   },
-  "CDCB785D81F242538F0561B872283CFA": {
+  "QueryList": {
     "parent": "GuiObject",
+    "GUID": "CDCB785D-81F2-4253-8F05-61B872283CFA",
+    "guid": "cdcb785d425381f2b861058ffa3c2872",
+    "deprecated": true,
     "functions": [
       {
-        "result": "",
         "name": "onResetQuery",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       }
-    ],
-    "name": "QueryList"
+    ]
   },
-  "9B2E341B6C9840fa8B850C1B6EE89405": {
+  "MouseRedir": {
     "parent": "GuiObject",
+    "GUID": "9B2E341B-6C98-40fa-8B85-0C1B6EE89405",
+    "guid": "9b2e341b40fa6c981b0c858b0594e86e",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "setRedirection",
         "parameters": [
           [
             "GuiObject",
             "o"
           ]
-        ]
-      },
-      {
-        "result": "GuiObject",
-        "name": "getRedirection",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getRedirection",
+        "parameters": [],
+        "result": "GuiObject",
+        "deprecated": false
+      },
+      {
         "name": "setRegionFromMap",
         "parameters": [
           [
@@ -5240,31 +5876,36 @@
             "Boolean",
             "reverse"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setRegion",
         "parameters": [
           [
             "Region",
             "reg"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "MouseRedir"
+    ]
   },
-  "36D59B7103FD4af897950502B7DB267A": {
+  "DropDownList": {
     "parent": "GuiObject",
+    "GUID": "36D59B71-03FD-4af8-9795-0502B7DB267A",
+    "guid": "36d59b714af803fd020595977a26dbb7",
+    "deprecated": false,
     "functions": [
       {
-        "result": "String",
         "name": "getItemSelected",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSelect",
         "parameters": [
           [
@@ -5275,75 +5916,84 @@
             "Int",
             "hover"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setListHeight",
         "parameters": [
           [
             "Int",
             "h"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "openList",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "closeList",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setItems",
         "parameters": [
           [
             "String",
             "lotsofitems"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "addItem",
         "parameters": [
           [
             "String",
             "_text"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "delItem",
         "parameters": [
           [
             "Int",
             "id"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "findItem",
         "parameters": [
           [
             "String",
             "_text"
           ]
-        ]
-      },
-      {
+        ],
         "result": "Int",
-        "name": "getNumItems",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "",
+        "name": "getNumItems",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "selectItem",
         "parameters": [
           [
@@ -5354,93 +6004,109 @@
             "Int",
             "hover"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getItemText",
         "parameters": [
           [
             "Int",
             "id"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getSelected",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getSelectedText",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "getCustomText",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "deleteAllItems",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setNoItemText",
         "parameters": [
           [
             "String",
             "txt"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "DropDownList"
+    ]
   },
-  "7FD5F210ACC448dfA6A05451576CDC76": {
+  "LayoutStatus": {
     "parent": "GuiObject",
+    "GUID": "7FD5F210-ACC4-48df-A6A0-5451576CDC76",
+    "guid": "7fd5f21048dfacc45154a0a676dc6c57",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "callme",
         "parameters": [
           [
             "String",
             "str"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "LayoutStatus"
+    ]
   },
-  "B5BAA53505B34dcbADC1E618D28F6896": {
+  "TabSheet": {
     "parent": "GuiObject",
+    "GUID": "B5BAA535-05B3-4dcb-ADC1-E618D28F6896",
+    "guid": "b5baa5354dcb05b318e6c1ad96688fd2",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "getCurPage",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setCurPage",
         "parameters": [
           [
             "Int",
             "a"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "TabSheet"
+    ]
   },
-  "6129FEC1DAB74d51916501CA0C1B70DB": {
+  "GuiList": {
     "parent": "GuiObject",
+    "GUID": "6129FEC1-DAB7-4d51-9165-01CA0C1B70DB",
+    "guid": "6129fec14d51dab7ca016591db701b0c",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "addColumn",
         "parameters": [
           [
@@ -5455,25 +6121,28 @@
             "Int",
             "numeric"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getNumColumns",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getColumnWidth",
         "parameters": [
           [
             "Int",
             "column"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setColumnWidth",
         "parameters": [
           [
@@ -5484,20 +6153,22 @@
             "Int",
             "newwidth"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getColumnLabel",
         "parameters": [
           [
             "Int",
             "column"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setColumnLabel",
         "parameters": [
           [
@@ -5508,20 +6179,22 @@
             "String",
             "newlabel"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getColumnNumeric",
         "parameters": [
           [
             "Int",
             "column"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setColumnDynamic",
         "parameters": [
           [
@@ -5532,45 +6205,51 @@
             "Int",
             "isdynamic"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isColumnDynamic",
         "parameters": [
           [
             "Int",
             "column"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "invalidateColumns",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getNumItems",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getItemCount",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "addItem",
         "parameters": [
           [
             "String",
             "label"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "insertItem",
         "parameters": [
           [
@@ -5581,15 +6260,17 @@
             "String",
             "label"
           ]
-        ]
-      },
-      {
+        ],
         "result": "Int",
-        "name": "getLastAddedItemPos",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "",
+        "name": "getLastAddedItemPos",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setSubItem",
         "parameters": [
           [
@@ -5604,25 +6285,28 @@
             "String",
             "txt"
           ]
-        ]
-      },
-      {
+        ],
         "result": "",
-        "name": "deleteAllItems",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Int",
+        "name": "deleteAllItems",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "deleteByPos",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getItemLabel",
         "parameters": [
           [
@@ -5633,10 +6317,11 @@
             "Int",
             "subpos"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getSubitemText",
         "parameters": [
           [
@@ -5647,10 +6332,11 @@
             "Int",
             "subpos"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setItemLabel",
         "parameters": [
           [
@@ -5661,30 +6347,34 @@
             "String",
             "_text"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "invalidateItem",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getFirstItemVisible",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
-        "name": "getLastItemVisible",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "",
+        "name": "getLastItemVisible",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setItemIcon",
         "parameters": [
           [
@@ -5695,365 +6385,412 @@
             "String",
             "bitmapId"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getItemIcon",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "String",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setMinimumSize",
         "parameters": [
           [
             "Int",
             "size"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getWantAutoDeselect",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getWantAutoDeselect",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setWantAutoDeselect",
         "parameters": [
           [
             "Int",
             "want"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSetVisible",
         "parameters": [
           [
             "Int",
             "show"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAutoSort",
         "parameters": [
           [
             "Int",
             "dosort"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "setFontSize",
         "parameters": [
           [
             "Int",
             "size"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getFontSize",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getHeaderHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getPreventMultipleSelection",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "setPreventMultipleSelection",
         "parameters": [
           [
             "Int",
             "val"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setShowIcons",
         "parameters": [
           [
             "int",
             "showThem"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getShowIcons",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "setIconWidth",
         "parameters": [
           [
             "int",
             "width"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "setIconHeight",
         "parameters": [
           [
             "int",
             "width"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "getIconWidth",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "getIconHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "next",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "previous",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "pagedown",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "pageup",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "home",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "end",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "reset",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "ensureItemVisible",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "scrollAbsolute",
         "parameters": [
           [
             "Int",
             "x"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "scrollRelative",
         "parameters": [
           [
             "Int",
             "x"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "scrollLeft",
         "parameters": [
           [
             "Int",
             "lines"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "scrollRight",
         "parameters": [
           [
             "Int",
             "lines"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "scrollUp",
         "parameters": [
           [
             "Int",
             "lines"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "scrollDown",
         "parameters": [
           [
             "Int",
             "lines"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "jumpToNext",
         "parameters": [
           [
             "Int",
             "c"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "scrollToItem",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "selectCurrent",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
-        "name": "selectFirstEntry",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Int",
+        "name": "selectFirstEntry",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "getItemSelected",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isItemFocused",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
-      },
-      {
+        ],
         "result": "Int",
-        "name": "getItemFocused",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "",
+        "name": "getItemFocused",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setItemFocused",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getFirstItemSelected",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getNextItemSelected",
         "parameters": [
           [
             "Int",
             "lastpos"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "selectAll",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "deselectAll",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
-        "name": "invertSelection",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "",
+        "name": "invertSelection",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setSelectionStart",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setSelectionEnd",
         "parameters": [
           [
             "Int",
             "pos"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setSelected",
         "parameters": [
           [
@@ -6064,10 +6801,11 @@
             "Int",
             "selected"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "toggleSelection",
         "parameters": [
           [
@@ -6078,45 +6816,51 @@
             "Int",
             "setfocus"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "resort",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getSortDirection",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "getSortColumn",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getSortDirection",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "getSortColumn",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setSortColumn",
         "parameters": [
           [
             "Int",
             "col"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setSortDirection",
         "parameters": [
           [
             "Int",
             "dir"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "moveItem",
         "parameters": [
           [
@@ -6127,60 +6871,67 @@
             "Int",
             "to"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSelectAll",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onDelete",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onDoubleClick",
         "parameters": [
           [
             "Int",
             "itemnum"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onLeftClick",
         "parameters": [
           [
             "Int",
             "itemnum"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSecondLeftClick",
         "parameters": [
           [
             "Int",
             "itemnum"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onRightClick",
         "parameters": [
           [
             "Int",
             "itemnum"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onColumnDblClick",
         "parameters": [
           [
@@ -6195,10 +6946,11 @@
             "Int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onColumnLabelClick",
         "parameters": [
           [
@@ -6213,10 +6965,11 @@
             "Int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onItemSelection",
         "parameters": [
           [
@@ -6227,10 +6980,11 @@
             "Int",
             "selected"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onIconLeftClick",
         "parameters": [
           [
@@ -6245,21 +6999,25 @@
             "int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       }
-    ],
-    "name": "GuiList"
+    ]
   },
-  "D59514F7ED3645e8980F3F4EA0522CD9": {
+  "GuiTree": {
     "parent": "GuiObject",
+    "GUID": "D59514F7-ED36-45e8-980F-3F4EA0522CD9",
+    "guid": "d59514f745e8ed364e3f0f98d92c52a0",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "onWantAutoContextMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onMouseWheelUp",
         "parameters": [
           [
@@ -6270,10 +7028,11 @@
             "Int",
             "lines"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onMouseWheelDown",
         "parameters": [
           [
@@ -6284,10 +7043,11 @@
             "Int",
             "lines"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onContextMenu",
         "parameters": [
           [
@@ -6298,105 +7058,117 @@
             "Int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onChar",
         "parameters": [
           [
             "Int",
             "c"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onItemRecvDrop",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onLabelChange",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onItemSelected",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onItemDeselected",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getNumRootItems",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "enumRootItem",
         "parameters": [
           [
             "Int",
             "which"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "jumpToNext",
         "parameters": [
           [
             "Int",
             "c"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "ensureItemVisible",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getContentsWidth",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "Int",
-        "name": "getContentsHeight",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
+        "name": "getContentsHeight",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "addTreeItem",
         "parameters": [
           [
@@ -6415,20 +7187,22 @@
             "Int",
             "haschildtab"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "removeTreeItem",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "moveTreeItem",
         "parameters": [
           [
@@ -6439,110 +7213,122 @@
             "TreeItem",
             "newparent"
           ]
-        ]
-      },
-      {
+        ],
         "result": "",
-        "name": "deleteAllItems",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "Int",
+        "name": "deleteAllItems",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "expandItem",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "expandItemDeferred",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "collapseItem",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "collapseItemDeferred",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "selectItem",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "selectItemDeferred",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "delItemDeferred",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "hiliteItem",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "unhiliteItem",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "getCurItem",
-        "parameters": []
+        "parameters": [],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "hitTest",
         "parameters": [
           [
@@ -6553,45 +7339,50 @@
             "Int",
             "y"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "editItemLabel",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "cancelEditLabel",
         "parameters": [
           [
             "Int",
             "destroyit"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAutoEdit",
         "parameters": [
           [
             "Int",
             "ae"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getAutoEdit",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "getByLabel",
         "parameters": [
           [
@@ -6602,90 +7393,101 @@
             "String",
             "name"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setSorted",
         "parameters": [
           [
             "Int",
             "dosort"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "getSorted",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
-        "name": "sortTreeItems",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
+        "name": "getSorted",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "sortTreeItems",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "getSibling",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setAutoCollapse",
         "parameters": [
           [
             "Int",
             "doautocollapse"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "setFontSize",
         "parameters": [
           [
             "Int",
             "newsize"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getFontSize",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getNumVisibleChildItems",
         "parameters": [
           [
             "TreeItem",
             "c"
           ]
-        ]
-      },
-      {
+        ],
         "result": "Int",
-        "name": "getNumVisibleItems",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
+        "name": "getNumVisibleItems",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "enumVisibleItems",
         "parameters": [
           [
             "Int",
             "n"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "enumVisibleChildItems",
         "parameters": [
           [
@@ -6696,60 +7498,66 @@
             "Int",
             "n"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "enumAllItems",
         "parameters": [
           [
             "Int",
             "n"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getItemRectX",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getItemRectY",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getItemRectW",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "getItemRectH",
         "parameters": [
           [
             "TreeItem",
             "item"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "getItemFromPoint",
         "parameters": [
           [
@@ -6760,226 +7568,263 @@
             "Int",
             "y"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       }
-    ],
-    "name": "GuiTree"
+    ]
   },
-  "9B3B4B82667A420e8FFC794115809C02": {
+  "TreeItem": {
     "parent": "Object",
+    "GUID": "9B3B4B82-667A-420e-8FFC-794115809C02",
+    "guid": "9b3b4b82420e667a4179fc8f029c8015",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "getNumChildren",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setLabel",
         "parameters": [
           [
             "String",
             "label"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getLabel",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
-        "name": "ensureVisible",
-        "parameters": []
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
+        "name": "getLabel",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
+        "name": "ensureVisible",
+        "parameters": [],
+        "result": "",
+        "deprecated": false
+      },
+      {
         "name": "getNthChild",
         "parameters": [
           [
             "Int",
             "nth"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "getChild",
-        "parameters": []
+        "parameters": [],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "getChildSibling",
         "parameters": [
           [
             "TreeItem",
             "_item"
           ]
-        ]
+        ],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "TreeItem",
         "name": "getSibling",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "TreeItem",
+        "deprecated": false
+      },
+      {
         "name": "getParent",
-        "parameters": []
+        "parameters": [],
+        "result": "TreeItem",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "editLabel",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "hasSubItems",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "hasSubItems",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setSorted",
         "parameters": [
           [
             "Int",
             "issorted"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setChildTab",
         "parameters": [
           [
             "Int",
             "haschildtab"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isSorted",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isCollapsed",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "isExpanded",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "invalidate",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "isSelected",
-        "parameters": []
-      },
-      {
-        "result": "Int",
-        "name": "isHilited",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "isSelected",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
+        "name": "isHilited",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setHilited",
         "parameters": [
           [
             "Int",
             "ishilited"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "collapse",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "expand",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "GuiTree",
         "name": "getTree",
-        "parameters": []
+        "parameters": [],
+        "result": "GuiTree",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onTreeAdd",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onTreeRemove",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSelect",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
         "name": "onDeselect",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onLeftDoubleClick",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onRightDoubleClick",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onChar",
         "parameters": [
           [
             "Int",
             "key"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onExpand",
-        "parameters": []
-      },
-      {
+        "parameters": [],
         "result": "",
+        "deprecated": false
+      },
+      {
         "name": "onCollapse",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onBeginLabelEdit",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onEndLabelEdit",
         "parameters": [
           [
             "String",
             "newlabel"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "Int",
         "name": "onContextMenu",
         "parameters": [
           [
@@ -6990,254 +7835,295 @@
             "Int",
             "y"
           ]
-        ]
+        ],
+        "result": "Int",
+        "deprecated": false
       }
-    ],
-    "name": "TreeItem"
+    ]
   },
-  "1D8631C880D047929F98BD5D36B49136": {
+  "MenuButton": {
     "parent": "GuiObject",
+    "GUID": "1D8631C8-80D0-4792-9F98-BD5D36B49136",
+    "guid": "1d8631c8479280d05dbd989f3691b436",
+    "deprecated": true,
     "functions": [
       {
-        "result": "",
         "name": "onOpenMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "onCloseMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "onSelectItem",
         "parameters": [
           [
             "String",
             "item"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "openMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "closeMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       }
-    ],
-    "name": "MenuButton"
+    ]
   },
-  "C7ED319953194798986360B15A298CAA": {
+  "CheckBox": {
     "parent": "GuiObject",
+    "GUID": "C7ED3199-5319-4798-9863-60B15A298CAA",
+    "guid": "c7ed319947985319b1606398aa8c295a",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "onToggle",
         "parameters": [
           [
             "int",
             "newstate"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setChecked",
         "parameters": [
           [
             "int",
             "checked"
           ]
-        ]
-      },
-      {
-        "result": "Int",
-        "name": "isChecked",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "isChecked",
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
+      },
+      {
         "name": "setText",
         "parameters": [
           [
             "String",
             "txt"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "String",
         "name": "getText",
-        "parameters": []
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
       }
-    ],
-    "name": "CheckBox"
+    ]
   },
-  "2D2D1376BE0A4CB9BC0C57E6E4C999F5": {
+  "Form": {
     "parent": "GuiObject",
+    "GUID": "2D2D1376-BE0A-4CB9-BC0C-57E6E4C999F5",
+    "guid": "2d2d13764cb9be0ae6570cbcf599c9e4",
+    "deprecated": true,
     "functions": [
       {
-        "result": "Int",
         "name": "getContentsHeight",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "newCell",
         "parameters": [
           [
             "String",
             "groupname"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "nextRow",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       },
       {
-        "result": "",
         "name": "deleteAll",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": true
       }
-    ],
-    "name": "Form"
+    ]
   },
-  "E2BBC14D84F64173BDB3B2EB2F665550": {
+  "Frame": {
     "parent": "GuiObject",
+    "GUID": "E2BBC14D-84F6-4173-BDB3-B2EB2F665550",
+    "guid": "e2bbc14d417384f6ebb2b3bd5055662f",
+    "deprecated": false,
     "functions": [
       {
-        "result": "Int",
         "name": "getPosition",
-        "parameters": []
+        "parameters": [],
+        "result": "Int",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setPosition",
         "parameters": [
           [
             "Int",
             "position"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onSetPosition",
         "parameters": [
           [
             "Int",
             "position"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Frame"
+    ]
   },
-  "73C00594961F401B9B1B672427AC4165": {
+  "Menu": {
     "parent": "GuiObject",
+    "GUID": "73C00594-961F-401B-9B1B-672427AC4165",
+    "guid": "73c00594401b961f24671b9b6541ac27",
+    "deprecated": false,
     "functions": [
       {
-        "result": "",
         "name": "setMenuGroup",
         "parameters": [
           [
             "String",
             "groupId"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getMenuGroup",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getMenuGroup",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "setMenu",
         "parameters": [
           [
             "String",
             "menuId"
           ]
-        ]
-      },
-      {
-        "result": "String",
-        "name": "getMenu",
-        "parameters": []
-      },
-      {
+        ],
         "result": "",
+        "deprecated": false
+      },
+      {
+        "name": "getMenu",
+        "parameters": [],
+        "result": "String",
+        "deprecated": false
+      },
+      {
         "name": "spawnMenu",
         "parameters": [
           [
             "int",
             "monitor"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "cancelMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setNormalId",
         "parameters": [
           [
             "String",
             "id"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setDownId",
         "parameters": [
           [
             "String",
             "id"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "setHoverId",
         "parameters": [
           [
             "String",
             "id"
           ]
-        ]
+        ],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onOpenMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "onCloseMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "nextMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       },
       {
-        "result": "",
         "name": "previousMenu",
-        "parameters": []
+        "parameters": [],
+        "result": "",
+        "deprecated": false
       }
-    ],
-    "name": "Menu"
+    ]
   }
 }

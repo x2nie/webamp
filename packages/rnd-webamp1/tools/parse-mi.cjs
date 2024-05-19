@@ -17,6 +17,7 @@ function parseFile(filePath) {
         line
       );
     if (classDefinitionMatch) {
+      const GUID = classDefinitionMatch[1];
       const id = classDefinitionMatch[1].replace(/[-\s]/g, "");
       const parent = classDefinitionMatch[2];
       const name = classDefinitionMatch[3]
@@ -25,6 +26,7 @@ function parseFile(filePath) {
       const deprecated = /^deprecated\s/.test(line);
       objects[name.toLowerCase()] = {
         id,
+        GUID,
         name,
         parent,
         deprecated,
@@ -70,11 +72,25 @@ function parseFile(filePath) {
 
   const objectIds = {};
   Object.keys(objects).forEach((normalizedName) => {
+    const { id, GUID, parent, functions, name, deprecated } = objects[normalizedName];
+    const guid = getFormattedId(id)
+    objectIds[name] = { parent, GUID, guid, deprecated, functions };
+  });
+/* 
+  Object.keys(objects).forEach((normalizedName) => {
     const { id, parent, functions, name, deprecated } = objects[normalizedName];
     objectIds[id] = { parent, name, deprecated, functions };
   });
-
+ */
   return objectIds;
 }
 
+function getFormattedId(id) {
+  // https://en.wikipedia.org/wiki/Universally_unique_identifier#Encoding
+  const formattedId = id.replace(
+    /(........)(....)(....)(..)(..)(..)(..)(..)(..)(..)(..)/,
+    "$1$3$2$7$6$5$4$11$10$9$8"
+  );
+  return formattedId.toLowerCase();
+}
 module.exports = { parseFile };
