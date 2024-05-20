@@ -3,6 +3,14 @@
     "esModuleInterop": true,
     "allowJs": true,
     "resolveJsonModule": true,
-    "target": "es5"
+    "target": "es5",
+    "baseUrl": ".",
+    "paths": {
+      // "@/*": ["src/*"],
+      // "@web/*": ["src/lib/odoo/web/*"],
+      "@lib/*": ["src/lib/*"],
+      // "@xml/*": ["src/lib/xml/*"],
+      // "@web/core/*": ["src/lib/odoo/web/core/*"],
+    }
   }
 }

@@ -4,8 +4,8 @@
  * but we made it like this to support more wider range of skins file format.
  */
 
-import JSZip from "jszip";
-import { getCaseInsensitiveFile } from "../utils";
+import JSZip, { JSZipObject } from "jszip";
+// import { getCaseInsensitiveFile } from "../utils";
 
 /**
  * Special class that do only extract files from a skin file
@@ -13,7 +13,7 @@ import { getCaseInsensitiveFile } from "../utils";
 export abstract class FileExtractor {
   //
 
-  abstract prepare(skinPath: string, response: Response): Promise<void>;
+  abstract prepare(skinPath: string): Promise<void>;
 
   abstract getFileAsString(filePath: string): Promise<string>;
   abstract getFileAsBytes(filePath: string): Promise<ArrayBuffer>;
@@ -26,29 +26,30 @@ export abstract class FileExtractor {
 export class ZipFileExtractor {
   _zip: JSZip;
 
-  async prepare(skinPath: string, response: Response) {
+  async prepare(skinPath: string) {
+    const response = await fetch(skinPath);
     const skinZipBlob = await response.blob();
     this._zip = await JSZip.loadAsync(skinZipBlob);
   }
 
   async getFileAsString(filePath: string): Promise<string> {
-    if (!filePath) return null;
+    if (!filePath) return "";
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
+    if (!zipObj) return "";
     return await zipObj.async("text");
   }
 
   async getFileAsBytes(filePath: string): Promise<ArrayBuffer> {
-    if (!filePath) return null;
+    if (!filePath) return new ArrayBuffer(0);
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
+    if (!zipObj) return new ArrayBuffer(0);
     return await zipObj.async("arraybuffer");
   }
 
   async getFileAsBlob(filePath: string): Promise<Blob> {
-    if (!filePath) return null;
+    if (!filePath) return new Blob();
     const zipObj = getCaseInsensitiveFile(this._zip, filePath);
-    if (!zipObj) return null;
+    if (!zipObj) return new Blob();
     return await zipObj.async("blob");
   }
 }
@@ -60,7 +61,7 @@ export class ZipFileExtractor {
 export class PathFileExtractor {
   _skinDir: string;
 
-  async prepare(skinPath: string, response: Response) {
+  async prepare(skinPath: string) {
     if (!skinPath.endsWith("/")) skinPath += "/";
     this._skinDir = skinPath;
   }
@@ -79,4 +80,24 @@ export class PathFileExtractor {
     const response = await fetch(this._skinDir + filePath);
     return await response.blob();
   }
+}
+
+export function getCaseInsensitiveFile(
+  zip: JSZip,
+  filePath: string
+): JSZipObject | null {
+  const normalized = filePath.replace(/[\/\\]/g, `[/\\\\]`);
+  const files = zip.file(new RegExp(normalized, "i"));
+  if (files && files.length > 1) {
+    // console.log('asking',filePath,'got files:', files);
+    const requestName = filePath.split("/").pop()?.toLowerCase();
+    for (let i = 0; i < files.length; i++) {
+      const responseName = files[i].name.split("/").pop()?.toLowerCase();
+      if (responseName == requestName) {
+        return files[i];
+      }
+    }
+    return zip.file(new RegExp(`^${normalized}$`, "i"))[0] ?? null;
+  }
+  return files[0] ?? null;
 }

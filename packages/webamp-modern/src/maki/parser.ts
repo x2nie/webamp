@@ -16,6 +16,7 @@ export type Method = {
 };
 
 export type ParsedMaki = {
+  file: string;
   commands: Command[];
   methods: Method[];
   variables: Variable[];
@@ -42,7 +43,7 @@ const PRIMITIVE_TYPES = {
   6: "STRING",
 };
 
-export function parse(data: ArrayBuffer, maki_id: string): ParsedMaki {
+export function parse(data: ArrayBuffer): ParsedMaki {
   const makiFile = new MakiFile(data);
 
   const magic = readMagic(makiFile);
@@ -151,7 +152,7 @@ export function parse(data: ArrayBuffer, maki_id: string): ParsedMaki {
     bindings: resolvedBindings,
     commands: resolvedCommands,
     version,
-    maki_id,
+    // maki_id,
   };
 }
 

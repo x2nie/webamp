@@ -39,7 +39,8 @@
   },
   "prettier": {},
   "dependencies": {
-    "@rgrove/parse-xml": "^3.0.0",
+    "@odoo/owl": "^2.2.10",
+    "@rgrove/parse-xml": "^4.1.0",
     "butterchurn": "^2.6.7",
     "butterchurn-presets": "^2.4.7",
     "id3-parser": "^2.0.0",

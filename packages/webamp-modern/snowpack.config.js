@@ -21,6 +21,10 @@ module.exports = {
   packageOptions: {
     /* ... */
   },
+  alias: {
+    // "@xml": "./src/lib/xml/index.js",
+    "@lib": "./src/lib",
+  },
   devOptions: {
     /* ... */
     port: 3001,
