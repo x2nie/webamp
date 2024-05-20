@@ -313,8 +313,11 @@ class Interpreter {
           }
 
           if (result === undefined && returnType !== "NULL") {
+            const args = JSON.stringify(methodArgs)
+              .replace("[", "")
+              .replace("]", "");
             throw new Error(
-              `Did not expect ${klass.name}.${methodName}: ${returnType} to return undefined`
+              `Did not expect ${klass.name}.${methodName}(${args}): ${returnType} to return undefined`
             );
           }
           if (result === null) {
