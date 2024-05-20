@@ -67,10 +67,10 @@ export class Script extends Component {
       ) {
         // debugger
         return interpret(
-          binding.commandOffset,
-          this.script,
-          args,
-          this.classResolver
+          binding.commandOffset,  //? start
+          this.script,            //? program
+          args,                   //? stack: Variable[]
+          this.classResolver      //? (guid) => Object_
         );
       }
     }

@@ -37,7 +37,8 @@ export function interpret(
   try{
     return interpreter.interpret(start);
   } catch (error) {
-    console.warn('error while interpret', program.file, error)
+    // console.warn('error while interpret', program.file, error)
+    console.warn(`Stopped executing ${program.file}.\n`, error )
   }
 }
 
@@ -283,7 +284,7 @@ class Interpreter {
           // let value = obj.value[methodName](...methodArgs);
           let result: any = null;
           try {
-            console.log(methodName, "with args:", methodArgs);
+            // console.log(methodName, "with args:", methodArgs);
             // result = obj.value[methodName](...methodArgs);
             let afunction = obj.value![methodName];
             if (afunction.constructor.name === "AsyncFunction") {
@@ -316,8 +317,9 @@ class Interpreter {
             const args = JSON.stringify(methodArgs)
               .replace("[", "")
               .replace("]", "");
+            const methodResult = methodDefinition.result
             throw new Error(
-              `Did not expect ${klass.name}.${methodName}(${args}): ${returnType} to return undefined`
+              `Did not expect ${klass.name}.${methodName}(${args}): ${methodResult} to return undefined`
             );
           }
           if (result === null) {
@@ -723,6 +725,12 @@ class Interpreter {
           const classesOffset = command.arg;
           const guid = this.classes[classesOffset];
           const Klass = this.classResolver(guid);
+          if (!Klass) {
+            const klassName = getClass(guid).name
+            throw new Error(
+              `Failed to "new ${klassName}()". Class not found: ${klassName}, guid:${guid}.`
+            );
+          }
           const system = this.variables[0].value;
           const klassInst = new Klass(system);
           this.stack.push({ type: "OBJECT", value: klassInst });

@@ -13,7 +13,7 @@ export class Children extends Component {
       !registry.category("component").contains(e.tag)
     ).map(e => e.tag);
     if(notFound.length){
-      console.log('TAG NOT FOUND:::', ...(new Set(notFound)))
+      console.log('TAG NOT FOUND:::', [...(new Set(notFound))].join(', '))
 
     }
     return this.props.children.filter((e) =>
