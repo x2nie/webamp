@@ -73,7 +73,6 @@ const forbidden_keys = {
   component: "identifier",
 };
 
-
 /**
  * Element in an XML document.
  */
@@ -108,13 +107,15 @@ export class XmlElement {
   // }
   // text: string;
 
-  [key: string]: any;
+  //? support custom property
+  // [key: string]: any;
 
   constructor(
     tag: string = "",
     attributes: { [attrName: string]: string | any } = Object.create(null),
     children: Array<XmlElement> = []
   ) {
+    this.tag = tag.toLowerCase();
     //transform, as needed
     this.attributes = {};
     for (let [k, v] of Object.entries(attributes)) {
@@ -131,9 +132,11 @@ export class XmlElement {
       }
     }
 
-    this.tag = tag.toLowerCase();
     // this.attributes = attributes;
-    this.children = children;
+    this.children = children.map((c) => {
+      c.detach().parent = this;
+      return c;
+    });
   }
 
   /**
@@ -152,7 +155,17 @@ export class XmlElement {
   }
 
   clone() {
-    return structuredClone(this);
+    // return structuredClone(this); //* this will transform XMLElement class into an Object
+    // Mengkloning atribut secara mendalam
+    const attributesClone = { ...this.attributes };
+    // Mengkloning anak-anak secara rekursif jika mereka juga merupakan instansi dari XMLElement
+    const childrenClone : XmlElement[] = this.children.map(child => child.clone() );
+
+
+    // return new XmlElement(this.name, attributesClone, childrenClone);
+    // Membuat instance baru dari constructor yang sama dengan yang asli
+    const Klass = this.constructor as typeof XmlElement;
+    return new Klass(this.tag, attributesClone, childrenClone);
   }
 
   /**
@@ -161,17 +174,39 @@ export class XmlElement {
    */
   merge(base: XmlElement) {
     this.children = base.children;
-    this.children.forEach((c) => (c.parent = this));
+    try {
+      this.children.forEach((c) => (c.detach().parent = this));
+    } catch (error) {
+      debugger;
+    }
     this.attributes = { ...base.attributes, ...this.attributes }; // similar to git merge rebase.
   }
 
+  /**
+   * Change the type of this class
+   * @param klass XMLElement class
+   */
+  cast(klass: typeof XmlElement) {
+    const x = new klass(this.tag, this.attributes, this.children);
+    if (this.parent) {
+      const index = this.parent.children.indexOf(this);
+      if (index > -1) {
+        this.parent[index] = x;
+        x.parent = this.parent;
+      }
+      this.parent = null;
+    }
+    this.children = []
+    this.attributes = {}
+  }
+
   /** @returns {{[key: string]: any}} */
-  toJSON(): { [key: string]: any; } {
-    let {parent, children, ...json} = this;
+  toJSON(): { [key: string]: any } {
+    let { parent, children, ...json } = this;
     return Object.assign(json, {
       // name: this.name,
       // attributes: this.attributes,
-      children: children.map(child => child.toJSON()),
+      children: children.map((child) => child.toJSON()),
     });
   }
 }
