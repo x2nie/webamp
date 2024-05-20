@@ -9,12 +9,15 @@ export class Webamp {
   private app: App;
   options: WebampOptions;
 
-  constructor(htmlNode: HTMLElement, options: Partial<WebampOptions> = {}) {
+  constructor(private htmlNode: HTMLElement, options: Partial<WebampOptions> = {}) {
     this.options = { ...webampDefaultOptions, ...options };
     this.mount(htmlNode);
   }
-
-  switchSkin(skinPath: string) {}
+  
+  switchSkin(skinPath: string) {
+    this.options.skin = skinPath;
+    this.mount(this.htmlNode);
+  }
 
   addSong(path: string, name: string = ""): number {
     return 0;
@@ -54,7 +57,7 @@ export class Webamp {
 
     const options = { env, dev: true };
     this.owlApp = new OwlApp(App, options);
-    // this.app = await this.owlApp.mount(htmlNode)
-    this.owlApp.mount(htmlNode);
+    this.app = await this.owlApp.mount(htmlNode)
+    // this.owlApp.mount(htmlNode);
   }
 }

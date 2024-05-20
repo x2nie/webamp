@@ -32,6 +32,12 @@ const webamp = new Webamp(document.getElementById("app") || document.body, {
   skin: 'skins/MMD3.wal'
   // skin: 'skins/WinampModern566.wal'
 });
+document.getElementById('mmd3')?.addEventListener('click', ()=>{
+  webamp.switchSkin('skins/MMD3.wal')
+})
+document.getElementById('tutorial')?.addEventListener('click', ()=>{
+  webamp.switchSkin('/skins/SimpleTutorial/')
+})
 
 // setTimeout(() => {
 //   webamp.app.say('helloBoss')
