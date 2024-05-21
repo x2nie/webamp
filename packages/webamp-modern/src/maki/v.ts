@@ -7,6 +7,7 @@ export type VariableObject = {
   guid?: string;
   members?: number[];
   isClass?: boolean;
+  events?: number[];
   // }
   // | {
   //   type: "CLASS";

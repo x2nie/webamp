@@ -286,8 +286,7 @@ export class WinampModern extends SkinEngine {
         `ScriptFile file not found at path ${file}`
       );
       // TODO: Try catch?
-      const parsedScript = parseMaki(scriptContents);
-      parsedScript.file = file;
+      const parsedScript = parseMaki(scriptContents, file);
       this._script[file] = parsedScript;
       // console.log('SCRIPT:',file, JSON.stringify(parsedScript))
       console.log("SCRIPT:", file, parsedScript);
