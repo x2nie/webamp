@@ -20,6 +20,12 @@ export class {Name} extends {parent} {{
 registry.category("component").add("{name}", {Name});
 '''
 
+classes_rename = {
+    'Object': 'BaseObject',
+    'GuiObject': 'GuiObj',
+    'Map': 'MakiMap',
+}
+
 def gen(std, klass='Container'):
     # klass = 'Container'
 
@@ -128,7 +134,9 @@ def build_methods(klass, o, docstrings):
 # gen('std', 'Layout')F
 # gen('std', 'Layer')
 # gen('std', 'Group')
-gen('std', 'Slider')
-gen('std', 'AnimatedLayer')
-gen('std', 'Status')
-gen('std', 'Vis')
+# gen('std', 'Slider')
+# gen('std', 'AnimatedLayer')
+# gen('std', 'Status')
+# gen('std', 'Vis')
+gen('std', 'Map')
+# gen('std', 'Vis')

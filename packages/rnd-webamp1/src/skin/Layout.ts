@@ -23,18 +23,21 @@ export class Layout extends Group {
   }
 
   style() {
-    let { w, h } = this.att;
-    // debugger
     let style = super.style();
-    if (this.att.background) {
-      // const url = this.env.bitmaps[this.att.image].url
-      const bitmap = this.env.ui.bitmaps[this.att.background];
-      const url = bitmap.url;
-      style += `background:url(${url});`;
-      if (!w && bitmap.attributes.w) w = bitmap.attributes.w;
-      if (!h && bitmap.attributes.h) h = bitmap.attributes.h;
+    if(!this.props.active){
+      style += 'display:none;'
     }
-    style += `width:${w}px; height:${h}px;`;
+    // let { w, h } = this.att;
+    // // debugger
+    // if (this.att.background) {
+    //   // const url = this.env.bitmaps[this.att.image].url
+    //   const bitmap = this.env.ui.bitmaps[this.att.background];
+    //   const url = bitmap.url;
+    //   style += `background:url(${url});`;
+    //   if (!w && bitmap.attributes.w) w = bitmap.attributes.w;
+    //   if (!h && bitmap.attributes.h) h = bitmap.attributes.h;
+    // }
+    // style += `width:${w}px; height:${h}px;`;
     return style;
     // return `min-width:${width}px; min-height:${height}px; top:${y}px; left:${x}px; z-index:${this.zIndex}`;
     // return `width: ${width}px;height: ${height}px;transform:translate(${x}px;left:${x}px;z-index:${this.zIndex}`;

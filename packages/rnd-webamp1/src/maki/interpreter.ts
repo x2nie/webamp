@@ -34,11 +34,11 @@ export function interpret(
   // validateMaki(program, classResolver);
   const interpreter = new Interpreter(program, classResolver);
   interpreter.stack = stack;
-  try{
+  try {
     return interpreter.interpret(start);
   } catch (error) {
     // console.warn('error while interpret', program.file, error)
-    console.warn(`Stopped executing ${program.file}.\n`, error )
+    console.warn(`Stopped executing ${program.file}.\n`, error);
   }
 }
 
@@ -250,8 +250,9 @@ class Interpreter {
           // before the object, we have to find the number of arguments without
           // actually having access to the object instance.
           if (!klass.prototype[methodName]) {
+            // console.log(`error on executing OPCODE: ${command.opcode}`)
             throw new Error(
-              `Need to add missing method: ${klass.name}.${methodName}: ${returnType}`
+              `Need to add missing method: ${klass.name}.${methodName}: ${returnType}\n OPCODE:${command.opcode}`
             );
           }
           let argCount: number = klass.prototype[methodName].length;
@@ -284,7 +285,14 @@ class Interpreter {
           // let value = obj.value[methodName](...methodArgs);
           let result: any = null;
           try {
-            // console.log(methodName, "with args:", methodArgs);
+            console.log(
+              "call:",
+              methodName,
+              "with args:",
+              methodArgs,
+              "OPCODE:",
+              command.opcode
+            );
             // result = obj.value[methodName](...methodArgs);
             let afunction = obj.value![methodName];
             if (afunction.constructor.name === "AsyncFunction") {
@@ -317,7 +325,7 @@ class Interpreter {
             const args = JSON.stringify(methodArgs)
               .replace("[", "")
               .replace("]", "");
-            const methodResult = methodDefinition.result
+            const methodResult = methodDefinition.result;
             throw new Error(
               `Did not expect ${klass.name}.${methodName}(${args}): ${methodResult} to return undefined`
             );
@@ -349,6 +357,7 @@ class Interpreter {
           this.stack.push({ type: returnType, value: result } as any);
           break;
         }
+        /*
         // call
         // strangeCall (seems to behave just like regular call)
         case 2400:
@@ -417,7 +426,7 @@ class Interpreter {
           }
           this.stack.push({ type: returnType, value } as any);
           break;
-        }
+        } */
         // callGlobal
         case 25: {
           this.callStack.push(ip);
@@ -726,7 +735,7 @@ class Interpreter {
           const guid = this.classes[classesOffset];
           const Klass = this.classResolver(guid);
           if (!Klass) {
-            const klassName = getClass(guid).name
+            const klassName = getClass(guid).name;
             throw new Error(
               `Failed to "new ${klassName}()". Class not found: ${klassName}, guid:${guid}.`
             );

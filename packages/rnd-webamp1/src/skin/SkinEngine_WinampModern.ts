@@ -51,6 +51,7 @@ export class WinampModern extends SkinEngine {
     this._env.bitmaps = this._bitmap;
     this._env.scripts = markRaw(this._script);
     this._env.root = parsed;
+    this._env.engine = this;
     // return parsed
   }
 
@@ -60,12 +61,12 @@ export class WinampModern extends SkinEngine {
       const imgBlob = await this.zip.getFileAsBlob(filepath);
       const imgUrl = URL.createObjectURL(imgBlob);
       bitmap.url = imgUrl;
-      if (!bitmap.attributes.w || !bitmap.attributes.h) {
-        const { w, h } = await getPngSize(imgBlob);
-        //@ts-ignore
-        bitmap.attributes.w = w;
-        bitmap.attributes.h = h;
-      }
+      // if (!bitmap.attributes.w || !bitmap.attributes.h) {
+        // const { w, h } = await getPngSize(imgBlob);
+        // //@ts-ignore
+        // bitmap.attributes.w = w;
+        // bitmap.attributes.h = h;
+      // }
     };
     return await Promise.all(Object.values(this._bitmap).map(loadBitmap));
   }
@@ -284,7 +285,7 @@ export class WinampModern extends SkinEngine {
         `ScriptFile file not found at path ${file}`
       );
       // TODO: Try catch?
-      const parsedScript = parseMaki(scriptContents);
+      const parsedScript = parseMaki(scriptContents, file);
       parsedScript.file = file;
       this._script[file] = parsedScript;
       // console.log('SCRIPT:',file, JSON.stringify(parsedScript))

@@ -23,8 +23,8 @@ import { XmlElement } from "@xml/parse-xml";
 
 export class Script extends Component {
   static GUID = "d6f50f6449b793fa66baf193983eaeef"; //System
-  // static template = xml`<t t-out="html()" />`;
-  static template = xml`<span/>`;
+  static template = xml`<t t-out="html()" />`;
+  // static template = xml`<span/>`;
   script: ParsedMaki;
 
   html() {
@@ -48,6 +48,8 @@ export class Script extends Component {
       // debugger
     });
     onMounted(() => {
+      console.log(`script ${this.script.file} loaded!`)
+      // debugger
       this.dispatch(this, "onScriptLoaded", []);
       // setTimeout(() => {
       //   //simulate play
@@ -61,6 +63,7 @@ export class Script extends Component {
     // markRaw(this.script)
     const script = this.script;
     for (const binding of script.bindings) {
+      console.log('iterate expected',event,' found:', script.methods[binding.methodOffset].name)
       if (
         script.methods[binding.methodOffset].name === event &&
         script.variables[binding.variableOffset].value === object

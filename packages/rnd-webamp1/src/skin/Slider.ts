@@ -10,7 +10,7 @@ export class Slider extends GuiObject {
   
   public setPosition(pos: number) {}
 
-  public getPosition(): number {}
+  public getPosition(): number { return 0}
 
   // locks descendant core collbacks
   public lock() {}

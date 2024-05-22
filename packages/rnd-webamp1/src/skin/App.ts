@@ -58,6 +58,11 @@ export class App extends Component {
     });
     // this.windowService = useWindowService();
 
+    onMounted(() => {
+      this.env.ui.root.children.forEach(c => {
+        // if(c.attributes.tag == 'script')
+      });
+    })
     // onWillStart(async () => {
     // onMounted( async () => {
     // if (env.options.skin) await this.switchSkin(env.options.skin);

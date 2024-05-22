@@ -30,6 +30,7 @@ const webamp = new Webamp(document.getElementById("app") || document.body, {
   // skin: .../,,,,
   // skin: "/skins/SimpleTutorial/",
   skin: 'skins/MMD3.wal'
+  // skin: 'skins/drone.wal'
   // skin: 'skins/WinampModern566.wal'
 });
 document.getElementById('mmd3')?.addEventListener('click', ()=>{

@@ -16,7 +16,7 @@ export class Container extends Object_ {
       t-att-style="style" 
       t-on-dblclick="toggleLayout" t-ref="root">
       <t t-foreach="layouts()" t-as="l" t-key="l.attributes.id">
-        <Layout t-if="l.attributes.id == att.layout_id" node="l"/>
+        <Layout active="l.attributes.id == att.layout_id" node="l"/>
       </t>
     </div>`;
   // <t t-esc="props.node.title"/> -

@@ -1,5 +1,9 @@
 import { Component, xml, markup, onMounted, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import './Script'
+import './Text'
+import './Timer'
+import './Map'
 
 export class Children extends Component {
   static template = xml`

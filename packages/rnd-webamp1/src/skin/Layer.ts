@@ -26,8 +26,25 @@ export class Layer extends GuiObject {
       const bitmap = this.env.ui.bitmaps[this.att.image];
       const url = bitmap.url;
       style += `background:url(${url});`;
-      if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
-      if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
+      if(this.att.w==null || this.att.h==null){
+
+        if(bitmap.attributes.w==null || bitmap.attributes.h==null){
+          const img = new Image();
+          img.addEventListener("load", () => {
+            this.att.w = img.width
+            this.att.h = img.height
+          });
+          img.addEventListener("error", () => {
+            console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+            
+          });
+          // img.src = `url(${url})`
+          img.src = url
+        }
+
+        if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
+        if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
+      }
       if (bitmap.attributes.x)
         style += `background-position-x:${bitmap.attributes.x}px;`;
       if (bitmap.attributes.y)

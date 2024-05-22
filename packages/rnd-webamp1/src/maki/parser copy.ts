@@ -1,8 +1,8 @@
-import { assert, assume } from "../skin/utils";
 import { COMMANDS } from "./constants";
-import { DataType, Variable } from "./v";
+import { DataType, Variable, VariableObject } from "./v";
 import MakiFile from "./MakiFile";
 import { getReturnType } from "./objects";
+import { assert } from "../utils";
 
 export type Command = {
   opcode: number;
@@ -16,13 +16,13 @@ export type Method = {
 };
 
 export type ParsedMaki = {
-  file: string;
   commands: Command[];
   methods: Method[];
   variables: Variable[];
   classes: string[];
   bindings: Binding[];
   version: number;
+  maki_id: string;
 };
 
 export type Binding = {
@@ -42,7 +42,7 @@ const PRIMITIVE_TYPES = {
   6: "STRING",
 };
 
-export function parse(data: ArrayBuffer): ParsedMaki {
+export function parse(data: ArrayBuffer, maki_id: string=''): ParsedMaki {
   const makiFile = new MakiFile(data);
 
   const magic = readMagic(makiFile);
@@ -90,6 +90,60 @@ export function parse(data: ArrayBuffer): ParsedMaki {
     }
     return command;
   });
+
+  // RESOLVE THE BINDING OF "CLASS"
+  // it is because we can't mutate the variable.value at runtime
+  /*
+  	{
+			"type": "CLASS",
+			"value": null,
+			"global": 0,
+			"guid": "4ee3e1994becc636bc78cd97b028869c",
+			"className": "GuiObj",
+			"isObject": 1,
+			"_index_": 11,
+			"isClass": true,
+			"newClassName": "NEW_CLASS_NAME-1",
+			"members": [
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22
+			],
+			"events": [
+				13,
+				14
+			]
+		},
+  */
+  // for( const ivar of variables){
+  //   if(ivar.isClass == true){
+  //     for(const ivarOffset of ivar.members){
+  //       const variable = variables[ivarOffset];
+  //       for(const methodOffset of ivar.events){
+  //         const binding = resolvedBindings[methodOffset];
+  //         const method = methods[binding.methodOffset];
+  //         const methodName = `${variable.className}.${method.name}`;
+  //         resolvedBindings.push({
+  //           ...binding,
+  //           methodName,
+  //           variableOffset: ivarOffset,
+  //           // binaryOffset,
+  //           // methodOffset,
+  //           // variable: clone1level(variables[variableOffset])
+  //           bindingOnClass: true,
+  //         });
+  //       }
+  //     }
+  //   }
+  // }
+
   return {
     classes,
     methods,
@@ -97,6 +151,7 @@ export function parse(data: ArrayBuffer): ParsedMaki {
     bindings: resolvedBindings,
     commands: resolvedCommands,
     version,
+    maki_id,
   };
 }
 
@@ -116,8 +171,6 @@ function opcodeToArgType(opcode: number) {
     case "obj":
       return "VARIABLE_OFFSET";
     default:
-      if(command.arg != null)
-        console.log('MAYBE UNKNOW command.arg:', command.arg)
       return "NONE";
   }
 }
@@ -160,7 +213,7 @@ function readMethods(makiFile: MakiFile, classes: string[]): Method[] {
     const typeOffset = classCode & 0xff;
     // This is probably the second half of a uint32
     makiFile.readUInt16LE();
-    const name = makiFile.readString()//.toLowerCase();
+    const name = makiFile.readString().toLowerCase();
 
     const className = classes[typeOffset];
 
@@ -186,7 +239,7 @@ function readVariables({ makiFile, classes }) {
     makiFile.readUInt8(); // system
 
     if (subClass) {
-      const variable = variables[typeOffset];
+      const variable = variables[typeOffset] as VariableObject;
       if (variable == null) {
         throw new Error("Invalid type");
       } else {
@@ -202,26 +255,30 @@ function readVariables({ makiFile, classes }) {
       // assume(false, "Unimplemented subclass variable type");
       variables.push({
         type: "OBJECT",
-        value: object,
+        value: null,
         global,
         guid: variable.guid,
-        //offset: count,
       });
+      const index = variables.length - 1;
+
+      if (!variable.members.includes(index)) {
+        variable.members.push(index);
+      }
     } else if (object) {
       const klass = classes[typeOffset];
       if (klass == null) {
         throw new Error("Invalid type");
       }
-      variables.push({ type: "OBJECT", value: object, global, guid: klass });
+      variables.push({ type: "OBJECT", value: null, global, guid: klass });
     } else {
       const typeName = PRIMITIVE_TYPES[typeOffset];
       if (typeName == null) {
         throw new Error("Invalid type");
       }
-      let value: any = null;
+      let value = null;
 
       switch (typeName) {
-        // BOOLEAN
+        // BOOL
         case PRIMITIVE_TYPES[5]:
           value = uinit1;
           assert(
@@ -270,7 +327,7 @@ function readConstants({ makiFile, variables }) {
 
 function readBindings(makiFile: MakiFile, variables: Variable[]): Binding[] {
   let count = makiFile.readUInt32LE();
-  const bindings: Binding[] = [];
+  const bindings = [];
   while (count--) {
     const variableOffset = makiFile.readUInt32LE();
     const methodOffset = makiFile.readUInt32LE();
@@ -318,9 +375,6 @@ function parseComand({ start, makiFile, length }) {
     case "COMMAND_OFFSET":
       // Note in the perl code here: "todo, something strange going on here..."
       arg = makiFile.readInt32LE() + 5 + pos;
-      // arg = makiFile.readInt32LE() ;
-      // console.log('PERHAPS OPCODE 112:', arg)
-      // arg += 5 + pos;
       break;
     case "VARIABLE_OFFSET":
       arg = makiFile.readUInt32LE();
@@ -339,16 +393,12 @@ function parseComand({ start, makiFile, length }) {
     makiFile.peekUInt32LE() >= 0xffff0000 &&
     makiFile.peekUInt32LE() <= 0xffff000f
   ) {
-    // command.stackProtection = makiFile.readUInt32LE();
-    const forward =makiFile.readUInt32LE();
-    // console.log('FOUND forward:', forward)
+    makiFile.readUInt32LE();
   }
 
   // TODO: What even is this?
   if (opcode === 112 /* strangeCall */) {
-    const strange = makiFile.readUInt8();
-    console.log('FOUND OPCODE 112:', strange)
-    command.opcode112 = strange
+    makiFile.readUInt8();
   }
   return command;
 }
