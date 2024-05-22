@@ -3,6 +3,19 @@ import { assert, num, px, removeAllChildNodes, toBool } from "../../utils";
 import Layout from "./Layout";
 import XmlObj from "../XmlObj";
 import Group from "./Group";
+import { Component, xml } from "@odoo/owl";
+import { registry } from "@lib/registry";
+
+export class Container extends Component {
+  // static template = xml`<t t-call="{{ node_template() }}" />`
+  static template = xml`<h1 class="container" t-out="props.node.id" />`;
+  // <t t-call="{{ kanban_template }}"  />
+
+  node_template(){
+    // debugger
+    return this.props.node.constructor.template;
+  }
+}
 
 // > A container is a top level object and it basically represents a window.
 // > Nothing holds a container. It is an object that holds multiple related
@@ -10,8 +23,10 @@ import Group from "./Group";
 // > different layouts for each window but only one can be visible at a time.
 //
 // -- http://wiki.winamp.com/wiki/Modern_Skin:_Container
-export default class Container extends XmlObj {
+export default class ContainerNode extends XmlObj {
   static GUID = "e90dc47b4ae7840d0b042cb0fcf775d2";
+  // static template = xml`<span class="container" t-out="attributes.id" />`;
+  static template = xml`<span class="container" t-out="'hello!'" />`;
   _uiRoot: UIRoot;
   _layouts: Layout[] = [];
   _activeLayout: Layout | null = null;
@@ -26,10 +41,11 @@ export default class Container extends XmlObj {
   _componentAlias: string; // eg. "guid:pl"
   _div: HTMLElement = document.createElement("container");
 
-  constructor(uiRoot: UIRoot) {
-    super();
-    this._uiRoot = uiRoot;
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   super();
+  //   this._uiRoot = uiRoot;
+  // }
+
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -330,3 +346,5 @@ export default class Container extends XmlObj {
     this._renderLayout();
   }
 }
+
+registry.category('node').add('container', ContainerNode)

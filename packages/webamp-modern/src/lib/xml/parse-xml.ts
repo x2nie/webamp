@@ -7,6 +7,7 @@ import { StringScanner } from "@rgrove/parse-xml/dist/lib/StringScanner";
 import * as syntax from "@rgrove/parse-xml/dist/lib/syntax";
 import { XmlError } from "@rgrove/parse-xml/dist/lib/XmlError";
 import { XmlElement } from "./xml-element";
+import { registry } from "@lib/registry";
 
 const emptyString = "";
 let DEBUG = 0;
@@ -25,7 +26,7 @@ export class Parser {
    * @param options Parser options.
    */
   constructor(xml: string) {
-    let doc = (this.document = new XmlElement());
+    let doc = (this.document = new XmlElement('DOC'));
     let scanner = (this.scanner = new StringScanner(xml));
 
     this.currentNode = doc;
@@ -52,6 +53,10 @@ export class Parser {
     if (DEBUG) {
       console.log("KNOWN-ATTs:", temp_att.sort());
     }
+  }
+
+  newNode(tag:string){
+    
   }
 
   /**
@@ -421,7 +426,10 @@ export class Parser {
 
     let attributes = this.consumeAttributes();
     let isEmpty = !!scanner.consumeStringFast("/>");
-    let element = new XmlElement(tag, attributes);
+
+    // let element = new XmlElement(tag, attributes);
+    const Klass = registry.category('node').get(tag, XmlElement)
+    let element = new Klass(tag, attributes);
 
     element.parent = this.currentNode;
 

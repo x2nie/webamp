@@ -2,7 +2,7 @@ import { getClass } from "../maki/objects";
 import BaseObject from "./makiClasses/BaseObject";
 import Button from "./makiClasses/Button";
 import SystemObject from "./makiClasses/SystemObject";
-import Container from "./makiClasses/Container";
+import ContainerNode from "./makiClasses/Container";
 import Layout from "./makiClasses/Layout";
 import Layer from "./makiClasses/Layer";
 import AnimatedLayer from "./makiClasses/AnimatedLayer";
@@ -62,7 +62,7 @@ const CLASSES = [
   AlbumArt,
   Button,
   SystemObject,
-  Container,
+  ContainerNode,
   Layout,
   Layer,
   AnimatedLayer,

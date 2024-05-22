@@ -1,7 +1,7 @@
 import { XmlElement } from "@lib/xml";
 import { Component, toRaw, useEnv, useState, useSubEnv, xml } from "@odoo/owl";
 import { createSkinEngineFor } from "./SkinEngine";
-
+import { Container } from "./makiClasses/Container";
 
 // -----------------------------------------------------------------------------
 // Window Container
@@ -9,10 +9,11 @@ import { createSkinEngineFor } from "./SkinEngine";
 
 export class App extends Component {
     static template = xml` <div class="window-manager">
-    <t t-foreach="state.node.children" t-as="w" t-key="w_index" >
-      <h1 t-out="w.attributes.id"/>
+    <t t-foreach="containers()" t-as="c" t-key="c_index" >
+      <Container node="c" />
     </t>
     </div>`;
+    // <h1 t-out="w.attributes.id"/>
     // <pre t-out="JSON.stringify(state.node.children)" />
     //   <Children children="state.node.children" />
       // <Children children="env.ui.root.children" />
@@ -23,6 +24,7 @@ export class App extends Component {
     //   </t>
     // </div>`;
     // static components = { Children };
+    static components = { Container };
     state: any;
     env: any;
     // windowService!: WindowManager;
@@ -32,8 +34,9 @@ export class App extends Component {
         debugger
         return JSON.stringify(toRaw(this.state.node).toJSON())
     }
-    getChilds(){
-        re
+    containers(){
+      // debugger
+        return this.state.node.children.filter(c => c.tag == 'container')
     }
   
     setup() {

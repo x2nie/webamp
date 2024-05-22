@@ -1,5 +1,5 @@
 import { UIRoot } from "../../UIRoot";
-import Container from "../makiClasses/Container";
+import ContainerNode from "../makiClasses/Container";
 import PRIVATE_CONFIG from "../PrivateConfig";
 import MediaCenter from "./MediaCenter";
 import Player from "./Player";
@@ -10,7 +10,7 @@ const WINDOWS_MEDIA_PLAYER = "WindowsMediaPlayer";
 /**
  * The global singleton object as root component in WindowsMediaPlayer skin
  */
-export default class Theme extends Container {
+export default class Theme extends ContainerNode {
   // I don't know where to put this element
   // For now I put as Container to be easy load/unload during skin switching
   _mediaCenter: MediaCenter;

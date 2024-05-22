@@ -5,7 +5,7 @@ import Bitmap from "./Bitmap";
 import ImageManager from "./ImageManager";
 import Layout from "./makiClasses/Layout";
 import Group from "./makiClasses/Group";
-import Container from "./makiClasses/Container";
+import ContainerNode from "./makiClasses/Container";
 import Layer from "./makiClasses/Layer";
 import Slider from "./makiClasses/Slider";
 import Button from "./makiClasses/Button";
@@ -1010,8 +1010,8 @@ export default class SkinEngineWAL extends SkinEngine {
     return frame;
   }
 
-  async container(node: XmlElement): Promise<Container> {
-    const container = new Container(this._uiRoot);
+  async container(node: XmlElement): Promise<ContainerNode> {
+    const container = new ContainerNode(this._uiRoot);
     container.setXmlAttributes(node.attributes);
     this._uiRoot.addContainers(container);
     await this.traverseChildren(node, container);

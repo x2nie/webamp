@@ -1,6 +1,6 @@
 import Group from "./Group";
 import * as Utils from "../../utils";
-import Container from "./Container";
+import ContainerNode from "./Container";
 import { LEFT, RIGHT, TOP, BOTTOM, CURSOR, MOVE } from "../Cursor";
 import { px, unimplemented } from "../../utils";
 import { UIRoot } from "../../UIRoot";
@@ -57,8 +57,8 @@ export default class Layout extends Group {
     }
   }
 
-  getcontainer(): Container {
-    return this._parent as unknown as Container;
+  getcontainer(): ContainerNode {
+    return this._parent as unknown as ContainerNode;
   }
 
   gettop(): number {
@@ -239,7 +239,7 @@ export default class Layout extends Group {
 
   // MOVING THINGS =====================
   setMoving(cmd: string, dx: number, dy: number) {
-    const container = this._parent as unknown as Container;
+    const container = this._parent as unknown as ContainerNode;
     if (cmd == "start") {
       this._moving = true;
       this._movingStartX = container._x;

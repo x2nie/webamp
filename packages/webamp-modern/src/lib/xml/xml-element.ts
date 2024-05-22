@@ -1,3 +1,5 @@
+import { EventBus } from "@odoo/owl";
+
 export const value2lower = [
   // identity
   "id",
@@ -76,7 +78,7 @@ const forbidden_keys = {
 /**
  * Element in an XML document.
  */
-export class XmlElement {
+export class XmlElement extends EventBus {
   /**
    * Name of this element.
    */
@@ -115,6 +117,7 @@ export class XmlElement {
     attributes: { [attrName: string]: string | any } = Object.create(null),
     children: Array<XmlElement> = []
   ) {
+    super()
     this.tag = tag.toLowerCase();
     //transform, as needed
     this.attributes = {};
@@ -169,21 +172,22 @@ export class XmlElement {
   }
 
   /**
-   * Merge with rebase strategy.
-   * @param base
+   * Merge with rebase strategy: incoming first, than my values.
+   * @param incoming
    */
-  merge(base: XmlElement) {
-    this.children = base.children;
+  merge(incoming: XmlElement) {
+    this.children = incoming.children;
     try {
       this.children.forEach((c) => (c.detach().parent = this));
     } catch (error) {
       debugger;
     }
-    this.attributes = { ...base.attributes, ...this.attributes }; // similar to git merge rebase.
+    this.attributes = { ...incoming.attributes, ...this.attributes }; // similar to git merge rebase.
   }
 
   /**
-   * Change the type of this class
+   * Change the type of this class, inplace.
+   * Useful to have new methods from new class
    * @param klass XMLElement class
    */
   cast(klass: typeof XmlElement) {

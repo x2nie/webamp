@@ -4,7 +4,7 @@ import { Edges } from "./Clippath";
 import { FileExtractor } from "./FileExtractor";
 import GammaGroup from "./GammaGroup";
 import Button from "./makiClasses/Button";
-import Container from "./makiClasses/Container";
+import ContainerNode from "./makiClasses/Container";
 import Group from "./makiClasses/Group";
 import ToggleButton from "./makiClasses/ToggleButton";
 import { registerSkinEngine, SkinEngine } from "./SkinEngine";
@@ -318,7 +318,7 @@ export class SoniqueSkinEngine extends SkinEngine {
 
   // #endregion
 
-  async loadContainer(): Promise<Container> {
+  async loadContainer(): Promise<ContainerNode> {
     let node = new XmlElement("container", {
       id: "main",
       x: "0",
@@ -329,7 +329,7 @@ export class SoniqueSkinEngine extends SkinEngine {
   }
 
   // #region (collapsed) layout: MID
-  async loadMid(parent: Container) {
+  async loadMid(parent: ContainerNode) {
     const prefix = "mid";
     // const bg = await this.loadBitmap(this._rc["BackgroundImage"]);
     const bg = this._uiRoot.getBitmap(`midsonique`);
@@ -577,7 +577,7 @@ export class SoniqueSkinEngine extends SkinEngine {
   //#endregion
 
   // #region (collapsed) layout: NAV
-  async loadNav(parent: Container) {
+  async loadNav(parent: ContainerNode) {
     const prefix = "nav";
     // const bg = await this.loadBitmap(this._rc["BackgroundImage"]);
     const bg = this._uiRoot.getBitmap(`navigator`);
@@ -650,7 +650,7 @@ export class SoniqueSkinEngine extends SkinEngine {
   //#endregion
 
   // #region (collapsed) layout: NAV
-  async loadSmall(parent: Container) {
+  async loadSmall(parent: ContainerNode) {
     const prefix = "small";
     // const bg = await this.loadBitmap(this._rc["BackgroundImage"]);
     const bg = this._uiRoot.getBitmap(`smallstate`);

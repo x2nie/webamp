@@ -4,6 +4,7 @@ import { ParsedMaki, parse as parseMaki } from "../maki/parser";
 import { assert,  assume  } from "../utils";
 import { SkinEngine, registerSkinEngine } from "./SkinEngine";
 import { markRaw } from "@odoo/owl";
+import { registry } from "@lib/registry";
 
 export class WinampModern extends SkinEngine {
   static supportedFileExt: string[] = ["wal", "zip"];

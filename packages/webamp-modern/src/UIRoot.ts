@@ -18,7 +18,7 @@ import AUDIO_PLAYER, { AudioPlayer, Track } from "./skin/AudioPlayer";
 import PRIVATE_CONFIG from "./skin/PrivateConfig";
 import ImageManager from "./skin/ImageManager";
 
-import Container from "./skin/makiClasses/Container";
+import ContainerNode from "./skin/makiClasses/Container";
 import BaseObject from "./skin/makiClasses/BaseObject";
 import SystemObject from "./skin/makiClasses/SystemObject";
 import ComponentBucket from "./skin/makiClasses/ComponentBucket";
@@ -54,7 +54,7 @@ export class UIRoot {
   _activeGammaSetName: string = "";
   _xuiGroupDefs: { [xuitag: string]: /* groupdef_id */ string } = {};
   _activeGammaSet: GammaGroup[] = [];
-  _containers: Container[] = [];
+  _containers: ContainerNode[] = [];
   _systemObjects: SystemObject[] = [];
   // _buckets: { [wndType: string]: ComponentBucket } = {};
   _buckets: ComponentBucket[] = [];
@@ -315,25 +315,25 @@ export class UIRoot {
     return this._groupDefs[groupdef_id];
   }
 
-  addContainers(container: Container): Container {
+  addContainers(container: ContainerNode): ContainerNode {
     this._containers.push(container);
     return container;
   }
 
-  getContainers(): Container[] {
+  getContainers(): ContainerNode[] {
     return this._containers;
   }
 
-  iterContainers(callback: (c: Container) => boolean): Container {
+  iterContainers(callback: (c: ContainerNode) => boolean): ContainerNode {
     for (const container of this._containers) {
       if (callback(container)) return container;
     }
   }
 
-  findContainer(id: string): Container {
+  findContainer(id: string): ContainerNode {
     // const container = findLast(this.getContainers(), (ct) => ct.hasId(id));
     // return container;
-    return this.iterContainers((ct: Container) => {
+    return this.iterContainers((ct: ContainerNode) => {
       return ct.hasId(id);
     });
   }
