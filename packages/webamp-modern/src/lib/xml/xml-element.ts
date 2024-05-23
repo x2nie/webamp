@@ -1,5 +1,3 @@
-import { EventBus } from "@odoo/owl";
-
 export const value2lower = [
   // identity
   "id",
@@ -78,7 +76,7 @@ const forbidden_keys = {
 /**
  * Element in an XML document.
  */
-export class XmlElement extends EventBus {
+export class XmlElement {
   /**
    * Name of this element.
    */
@@ -117,7 +115,7 @@ export class XmlElement extends EventBus {
     attributes: { [attrName: string]: string | any } = Object.create(null),
     children: Array<XmlElement> = []
   ) {
-    super()
+    // super()
     this.tag = tag.toLowerCase();
     //transform, as needed
     this.attributes = {};
