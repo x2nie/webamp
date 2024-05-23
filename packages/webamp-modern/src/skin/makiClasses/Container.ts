@@ -5,7 +5,7 @@ import XmlObj from "../XmlObj";
 import Group from "./Group";
 import { Component, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
-import { UI } from "../Children";
+import Children, { UI } from "../Children";
 
 export class ContainerUI extends UI {
   // static template = xml`<div class="container" t-out="props.node.id" />`;
@@ -19,7 +19,7 @@ export class ContainerUI extends UI {
       </t>
     </container>`;
       // t-on-dblclick="toggleLayout" 
-  static components = {LayoutGui}
+  static components = {LayoutGui, Children}
 
   // static template = xml`<t t-call="{{ node_template() }}" />`
   // <t t-call="{{ kanban_template }}"  />

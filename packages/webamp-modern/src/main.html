@@ -20,6 +20,10 @@
       #ui-root {
         opacity: 0.4;
       } */
+      div {
+        border: 5px solid red;
+        background: yellow;
+      }
 
     </style>
     <link rel="stylesheet" href="css/demo.css" />
@@ -28,6 +32,16 @@
     <style id="truetypefont-css"></style>
   </head>
   <body>
+    <div>BEFORE WEB-COMPONENTS</div>
+    <!-- <hello-world></hello-world> -->
+    <!-- Gunakan web component dengan parameter JSON -->
+    <owl-web-component data='{
+      "message": "Hello, world!",
+      "oke": true
+    }'><h3>inside owl?</h3></owl-web-component>
+    <!-- <owl-web-component data='{"message": "Hello, world!"}'/> -->
+    <div>AFTER WEB-COMPONENTS</div>
+
     <h1 id="status">Downloading JavaScript...</h1>
     <div id="web-amp"></div>
     <div id="experimental">Work in Progress</div>
