@@ -119,7 +119,7 @@ export default class Layout extends Group {
   ) {
     // TODO: Maybe this should move to the container?
     if (actionTarget != null) {
-      const target = this.findobject(actionTarget);
+      const target = this.findObject(actionTarget);
       if (target != null) {
         target.handleAction(action, param, actionTarget);
       }

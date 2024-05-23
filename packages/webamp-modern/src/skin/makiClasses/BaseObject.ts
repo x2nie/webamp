@@ -1,10 +1,13 @@
 import { XmlElement } from "@lib/xml";
+import { Component } from "@odoo/owl";
 
 /**
  * This is the base class from which all other classes inherit.
  */
 export default class BaseObject extends XmlElement {
   static GUID = "516549714a510d87b5a6e391e7f33532";
+
+  el : Component;
 
   /**
    * Returns the class name for the object.

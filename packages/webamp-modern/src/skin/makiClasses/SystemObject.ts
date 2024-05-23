@@ -17,7 +17,8 @@ import {
   Track,
 } from "../AudioPlayer";
 import Application from "./Application";
-import { xmlRegistry } from "@lib/registry";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
+import { Variable } from "../../maki/v";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -36,6 +37,39 @@ export default class SystemObject extends BaseObject {
   _param: string;
   _id: string;
 
+  async dispatch(object: BaseObject, event: string, args: Variable[] = []) {
+    if(!this.el) return
+    //@ts-ignore
+    return await this.el.dispatch(object, event, args)
+    
+    // markRaw(this.script)
+    // const script = this.script;
+    // for (const binding of script.bindings) {
+    //   console.log(`iterate expected "${event}", found: '${script.methods[binding.methodOffset].name}'`)
+    //   if (
+    //     script.methods[binding.methodOffset].name === event &&
+    //     script.variables[binding.variableOffset].value === object
+    //   ) {
+    //     // debugger
+    //     return interpret(
+    //       binding.commandOffset,  //? start
+    //       this.script,            //? program
+    //       args,                   //? stack: Variable[]
+    //       this.classResolver,     //? (guid) => Object_
+    //       event
+    //     );
+    //   }
+    // }
+  }
+
+  // classResolver(guid: string): any {
+  //   for (const Klass of uiRegistry.getAll()) {
+  //     if (Klass.GUID == guid) {
+  //       return Klass;
+  //     }
+  //   }
+  // }
+  
   constructor_obsolet(
     uiRoot: UIRoot,
     parsedScript: ParsedMaki,
@@ -633,7 +667,7 @@ export default class SystemObject extends BaseObject {
    * @param  group_id    The identifier for the group you want to create.
    */
   newgroup(group_id: string): Group {
-    return this._parentGroup.findobject(group_id) as Group;
+    return this._parentGroup.findObject(group_id) as Group;
   }
 
   /**
@@ -747,7 +781,8 @@ export default class SystemObject extends BaseObject {
    * Trigger the stop event.
    */
   stop() {
-    this._uiRoot.audio.stop();
+    // this._uiRoot.audio.stop();
+    return unimplemented(0)
   }
 
   /**
@@ -756,7 +791,8 @@ export default class SystemObject extends BaseObject {
    * Trigger the pause event.
    */
   pause() {
-    this._uiRoot.audio.pause();
+    // this._uiRoot.audio.pause();
+    return unimplemented(0)
   }
 
   /**
@@ -1126,7 +1162,7 @@ export default class SystemObject extends BaseObject {
    * @ret         The string equivalent of the integer.
    * @param  value   The integer to change into a string.
    */
-  integertostring(value: number): string {
+  integerToString(value: number): string {
     return String(Math.round(value));
   }
 
@@ -1265,8 +1301,9 @@ export default class SystemObject extends BaseObject {
    *
    * @ret The current position in the track.
    */
-  getposition(): string {
-    return String(this._uiRoot.audio.getCurrentTime() * 1000);
+  getPosition(): string {
+    // return String(this._uiRoot.audio.getCurrentTime() * 1000);
+    return unimplemented('3.1')
   }
 
   /**

@@ -385,11 +385,12 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   // extern Text.setText(String txt); // changes the display/text="something" param
-  settext(txt: string) {
-    if (this._text != txt) {
-      this._text = txt;
-      this._renderText();
-    }
+  setText(txt: string) {
+    this.attributes.text = txt
+    // if (this._text != txt) {
+    //   this._text = txt;
+    //   this._renderText();
+    // }
   }
   // overrides the display/text parameter with a custom string, set "" to cancel
   setalternatetext(txt: string) {
@@ -641,6 +642,7 @@ extern Text.onTextChanged(String newtxt);
     this._displayHandler = new Handler(this);
   }
 }
+xmlRegistry.add('text', Text)
 
 type DisplayHandlerClass = typeof DisplayHandler;
 
@@ -665,4 +667,3 @@ export class DisplayHandler {
     this._subscription();
   }
 }
-xmlRegistry.add('text', Text)

@@ -103,8 +103,8 @@ export default class Frame extends Group {
 
   _getEl(directions: string[]): GuiObj[] {
     const ret = [
-      this.findobject(this[`_${directions[0]}Id`]),
-      this.findobject(this[`_${directions[1]}Id`]),
+      this.findObject(this[`_${directions[0]}Id`]),
+      this.findObject(this[`_${directions[1]}Id`]),
     ];
     assume(ret[0] != null, "Frame." + directions[0] + " NOT FOUND!");
     assume(ret[1] != null, "Frame." + directions[1] + " NOT FOUND!");

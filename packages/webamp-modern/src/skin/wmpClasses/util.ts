@@ -74,7 +74,7 @@ export function solvePendingProps(
           return;
         } else if (s.indexOf(".") > 0) {
           const [id, attr] = s.split(".");
-          const el = component.findobject(id);
+          const el = component.findObject(id);
           if (el) {
             num = el["get" + attr]();
             if (!isNaN(num)) {

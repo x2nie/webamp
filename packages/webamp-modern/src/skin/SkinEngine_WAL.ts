@@ -610,9 +610,9 @@ export default class SkinEngineWAL extends SkinEngine {
     if (xuiEl && node.attributes.id != xuiEl.attributes.id) {
       const xuiFrame = new XmlElement("groupdev", { id: xuiEl.attributes.id });
       await this.maybeApplyGroupDef(group, xuiFrame);
-      text = group.findobject(xuiEl.attributes.embed_xui);
+      text = group.findObject(xuiEl.attributes.embed_xui);
     } else {
-      text = group.findobject("window.titlebar.title");
+      text = group.findObject("window.titlebar.title");
     }
 
     if (text) {

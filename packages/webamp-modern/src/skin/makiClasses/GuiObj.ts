@@ -226,7 +226,7 @@ export default class GuiObj extends XmlObj {
     for (const node of this._metaCommands) {
       const cmd = node.name.toLowerCase();
       const el = node.attributes.group
-        ? this.findobject(node.attributes.group)
+        ? this.findObject(node.attributes.group)
         : this;
       const targets_ids = node.attributes.target.split(";");
       for (const target_id of targets_ids) {
@@ -455,7 +455,7 @@ export default class GuiObj extends XmlObj {
     return this._div.getBoundingClientRect().height;
   }
 
-  findobject(id: string): GuiObj {
+  findObject(id: string): GuiObj {
     if (id.toLowerCase() == this.getId().toLowerCase()) return this;
 
     //? Phase 1: find in this children
@@ -489,13 +489,13 @@ export default class GuiObj extends XmlObj {
     // too complex to consol.log here
     const lower = id.toLowerCase();
     // find in direct children first
-    for (const obj of this._children) {
-      if ((obj.getId() || "").toLowerCase() === lower) {
-        return obj;
+    for (const obj of this.children) {
+      if ((obj.id || "").toLowerCase() === lower) {
+        return obj as GuiObj;
       }
     }
     // find in grand child
-    for (const obj of this._children) {
+    for (const obj of this.children) {
       const found = obj._findobject(id);
       if (found != null) {
         return found;

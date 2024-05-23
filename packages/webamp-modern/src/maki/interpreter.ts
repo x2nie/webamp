@@ -40,6 +40,7 @@ export async function interpret(
   classResolver: (guid: string) => any,
   eventName: string,
   // uiRoot: UIRoot
+  system: any
 ) {
   validateMaki(program);
   const interpreter = new Interpreter(
@@ -47,9 +48,16 @@ export async function interpret(
     classResolver,
     eventName,
     // uiRoot
+    system
   );
   interpreter.stack = stack;
-  return await interpreter.interpret(start);
+  // return await interpreter.interpret(start);
+  try {
+    return await interpreter.interpret(start);
+  } catch (error) {
+    // console.warn('error while interpret', program.file, error)
+    console.warn(`Stopped executing ${program.maki_id}.\n`, error);
+  }
 }
 
 function validateVariable(v: Variable) {
@@ -59,7 +67,7 @@ function validateVariable(v: Variable) {
 }
 
 class Interpreter {
-  _uiRoot: UIRoot; // actually only new Klass(uiRoot)
+  _uiRoot: any; // actually only new Klass(uiRoot)
   stack: Variable[];
   callStack: number[];
   classes: string[];
@@ -75,7 +83,7 @@ class Interpreter {
     program: ParsedMaki,
     classResolver: (guid: string) => any,
     eventName: string,
-    // uiRoot: UIRoot
+    uiRoot: any
   ) {
     const { commands, methods, variables, classes, maki_id } = program;
     this.classResolver = classResolver;
@@ -85,7 +93,7 @@ class Interpreter {
     this.classes = classes;
     this.maki_id = maki_id;
     this.eventName = eventName;
-    // this._uiRoot = uiRoot;
+    this._uiRoot = uiRoot;
 
     this.stack = [];
     this.callStack = [];
@@ -357,7 +365,7 @@ class Interpreter {
           const guid = this.classes[classesOffset];
           const klass = this.classResolver(guid);
           if (!klass) {
-            throw new Error("Need to add a missing class to runtime");
+            throw new Error(`Failed to call "${methodName}.\n` +"Need to add a missing class to runtime: "+guid);
           }
           // This is a bit awkward. Because the variables are stored on the stack
           // before the object, we have to find the number of arguments without

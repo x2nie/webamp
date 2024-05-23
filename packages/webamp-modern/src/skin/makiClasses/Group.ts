@@ -193,7 +193,7 @@ export default class Group extends Movable {
   // This shadows `getwidth()` on GuiObj
   getwidth(): number {
     if (this._autowidthsource) {
-      const widthSource = this.findobject(this._autowidthsource);
+      const widthSource = this.findObject(this._autowidthsource);
       if (widthSource) {
         return widthSource.getautowidth();
       }

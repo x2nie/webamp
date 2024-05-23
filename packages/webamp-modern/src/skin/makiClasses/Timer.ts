@@ -1,24 +1,26 @@
+import { xmlRegistry } from "@lib/registry";
 import { UIRoot } from "../../UIRoot";
 import { assume } from "../../utils";
 import BaseObject from "./BaseObject";
+import SystemObject from "./SystemObject";
 
 let TIMER_IDS = 0;
 
 export default class Timer extends BaseObject {
   static GUID = "5d0c5bb64b1f7de1168d0fa741199459";
-  _uiRoot: UIRoot;
+  _system: SystemObject;
   _delay: number = 5000; //x2nie
   _timeout: NodeJS.Timeout | null = null;
   _onTimer: () => void = null;
 
-  constructor(uiRoot: UIRoot) {
+  constructor(uiRoot: SystemObject) {
     super();
-    this._uiRoot = uiRoot;
-    TIMER_IDS += 1;
-    this._id = `timer_${TIMER_IDS}`;
+    this._system = uiRoot;
+  //   TIMER_IDS += 1;
+  //   this._id = `timer_${TIMER_IDS}`;
   }
 
-  setdelay(millisec: number) {
+  setDelay(millisec: number) {
     // assume(
     //   this._timeout == null,
     //   "Tried to change the delay on a running timer"
@@ -49,7 +51,7 @@ export default class Timer extends BaseObject {
       }
       this._timeout = setInterval(() => {
         // console.log('timer.ontimer()', this._nid)
-        // this._uiRoot.vm.dispatch(self, "ontimer");
+        // this._system.vm.dispatch(self, "ontimer");
         self.doTimer();
       }, this._delay);
       return true;
@@ -60,16 +62,16 @@ export default class Timer extends BaseObject {
   }
 
   doTimer() {
-    // console.log('timer.ontimer()', this._nid)
+    console.log('timer.ontimer()', "this._nid")
     if (this._onTimer != null) {
       this._onTimer();
     } else {
-      this._uiRoot.vm.dispatch(this, "ontimer");
+      this._system.dispatch(this, "onTimer");
     }
   }
 
-  ontimer() {
-    this._uiRoot.vm.dispatch(this, "ontimer");
+  onTimer() {
+    this._system.dispatch(this, "onTimer");
   }
 
   setOnTimer(callback: () => void) {
@@ -84,7 +86,7 @@ export default class Timer extends BaseObject {
     return this._timeout != null;
   }
 
-  getdelay(): number {
+  getDelay(): number {
     return this._delay;
   }
 
@@ -95,3 +97,5 @@ export default class Timer extends BaseObject {
 extern Int Timer.getSkipped();
 */
 }
+
+xmlRegistry.add('timer', Timer)

@@ -8,7 +8,7 @@ import { Variable } from "../../maki/v";
 import { interpret } from "../../maki/interpreter";
 
 
-export class System extends Component {
+export class SystemUI extends Component {
     static GUID = "d6f50f6449b793fa66baf193983eaeef"; //System
     static template = xml`<t t-out="html()" />`;
     script: ParsedMaki;
@@ -23,6 +23,7 @@ export class System extends Component {
     }
 
     setup() {
+        this.node.el = this;
         // console.log('SCRIPT.props=', this.props8.node)
         // const script = useSystem()
         this.env = useEnv();
@@ -51,29 +52,34 @@ export class System extends Component {
         });
       }
     
-      dispatch(object: Object_, event: string, args: Variable[] = []) {
+      async dispatch(object: any, event: string, args: Variable[] = []) {
         // markRaw(this.script)
+        const lower_id = object.id.toLowerCase();
         const script = this.script;
         for (const binding of script.bindings) {
-          console.log(`iterate expected "${event}", found: '${script.methods[binding.methodOffset].name}'`)
+            if(script.methods[binding.methodOffset].name.toLowerCase() == lower_id 
+                && script.methods[binding.methodOffset].name != object.id) {
+                    console.log(`iterate expected "${event}", found: '${script.methods[binding.methodOffset].name}'`)
+                }
           if (
             script.methods[binding.methodOffset].name === event &&
             script.variables[binding.variableOffset].value === object
           ) {
             // debugger
-            return interpret(
+            return await interpret(
               binding.commandOffset,  //? start
               this.script,            //? program
               args,                   //? stack: Variable[]
               this.classResolver,     //? (guid) => Object_
-              event
+              event, 
+              this
             );
           }
         }
       }
     
       classResolver(guid: string): any {
-        for (const Klass of uiRegistry.getAll()) {
+        for (const Klass of xmlRegistry.getAll()) {
           if (Klass.GUID == guid) {
             return Klass;
           }
@@ -122,7 +128,7 @@ export class System extends Component {
     //     return String(i);
     //   }
 }
-uiRegistry.add('script', System)
+uiRegistry.add('script', SystemUI)
 
 // export class Script extends XmlElement {
 

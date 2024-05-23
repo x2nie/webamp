@@ -184,7 +184,7 @@ export default class Button extends AudioEventedGui {
     source: GuiObj = null
   ): boolean {
     if (actionTarget) {
-      const guiObj = this.findobject(actionTarget);
+      const guiObj = this.findObject(actionTarget);
       if (guiObj) {
         guiObj.handleAction(action, param, null, this);
         return true;
