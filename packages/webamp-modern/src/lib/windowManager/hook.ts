@@ -91,7 +91,7 @@ export class WindowManager {
     const windows: MovingWindow[] = this.getWindows()
       .filter((w) => w.visible)
       .map((w) => toRaw(w));
-    console.log('dragstart.wins:', windows)
+    // console.log('dragstart.wins:', windows)
     // windows.forEach((w) => {
     //   if (w.el) {
     //     const bound = w.el.getBoundingClientRect();
@@ -177,7 +177,7 @@ export class WindowManager {
         // const win = this.windows[w.id];
         // win.x = x;
         // win.y = y;
-        console.log('moving to:', el.x, el.y)
+        // console.log('moving to:', el.x, el.y)
       });
       // }
     };
