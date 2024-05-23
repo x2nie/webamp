@@ -3,6 +3,7 @@ import { App } from "./skin/App";
 // import "./style.css";
 import { WebampOptions, webampDefaultOptions } from "./WebampOptions";
 import { createSkinEngineFor } from "./skin/SkinEngine";
+import Container from "./skin/makiClasses/Container";
 
 export class Webamp {
   private owlApp: OwlApp<any, App, any>;
@@ -41,14 +42,15 @@ export class Webamp {
 
     await loader.parseSkin();
     // env.ui.containers.
-    loader.containers().forEach((node) => {
+    loader.containers().forEach((node : Container) => {
       // this.getContainers().forEach((node) => {
       const att = node.attributes;
       // node.id = att.id;
       att.visible = Number(
         att.default_visible == null ? 1 : att.default_visible
       );
-      att.layout_id = "normal";
+      // att.layout_id = "normal";
+      node.switchToLayout('normal')
       const x = att["default_x"] || 0; // Number( att['default_x']) : Math.round(Math.random() * (window.innerWidth - 50));
       const y = att["default_y"] || 0; // Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
       att.x = x;

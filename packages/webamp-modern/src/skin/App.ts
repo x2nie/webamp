@@ -3,6 +3,7 @@ import { Component, toRaw, useEnv, useState, useSubEnv, xml } from "@odoo/owl";
 import { createSkinEngineFor } from "./SkinEngine";
 import { ContainerUI } from "./makiClasses/Container";
 import Children from "./Children";
+import { createWindowService } from "@lib/windowManager/hook";
 
 // -----------------------------------------------------------------------------
 // Window Container
@@ -45,6 +46,7 @@ export class App extends Component {
   
     setup() {
       this.env = useEnv(); //? global env
+      this.env.ui.app = this; //? usefull for later System calls
       console.log("APP.drens=", this.env.ui.root.children);
       this.state = useState({ node: this.env.ui.root });
       // this.env.ui.root.el = this;
@@ -52,10 +54,10 @@ export class App extends Component {
   
       useSubEnv({
         //? additional env, isolated for this instance and children
-        // windowService: createWindowService(),
+        windowService: createWindowService(),
         // bitmaps: {},
         // ui: {},
-        root: this, //? usefull for later System calls
+        // root: this, //? usefull for later System calls
       });
       // this.windowService = useWindowService();
   

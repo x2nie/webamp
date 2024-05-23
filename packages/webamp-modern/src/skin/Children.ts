@@ -41,6 +41,9 @@ export class UI extends Component {
   </t>`;
   static components = {Children}
 
+  setup(){
+    this.props.node.el = this;
+  }
   get att() {
     return this.props.node.attributes;
   }

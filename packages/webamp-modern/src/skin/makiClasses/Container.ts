@@ -6,6 +6,7 @@ import Group from "./Group";
 import { Component, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 import Children, { UI } from "../Children";
+import { useWindowService, WindowManager } from "@lib/windowManager/hook";
 
 export class ContainerUI extends UI {
   // static template = xml`<div class="container" t-out="props.node.id" />`;
@@ -13,14 +14,34 @@ export class ContainerUI extends UI {
     <container t-att-id="att.id" t-name="Container" 
     t-att-class="{container: true, invisible: !att.visible}" 
     t-att-style="style()" 
-    t-ref="root">
+    t-ref="root" t-on-mousedown="inMouseDown">
       <t t-foreach="props.node.children" t-as="l" t-key="l.attributes.id">
       <LayoutGui active="l.attributes.id == att.layout_id" node="l"/>
       </t>
     </container>`;
       // t-on-dblclick="toggleLayout" 
   static components = {LayoutGui, Children}
+  static nextZIndex = 1;
+  windowManager: WindowManager
 
+  // zIndex = 1;
+
+  setup(){
+    super.setup()
+    this.att.zIndex = ContainerUI.nextZIndex++;
+    this.windowManager = useWindowService()
+  }
+  
+  style() {
+    let style = super.style();
+    style += `z-index:${this.att.zIndex};`
+    return style
+  }
+  
+  inMouseDown(ev){
+    this.att.zIndex = ContainerUI.nextZIndex++;
+    this.windowManager.handleMouseDown(this.att.id, ev)
+  }
   // static template = xml`<t t-call="{{ node_template() }}" />`
   // <t t-call="{{ kanban_template }}"  />
 
@@ -115,7 +136,7 @@ export default class Container extends XmlObj {
     // maki need 'onswitchtolayout':
     // this.switchtolayout(this.getcurlayout().getId())
     this._uiRoot.vm.dispatch(this, "onswitchtolayout", [
-      { type: "OBJECT", value: this.getcurlayout() },
+      { type: "OBJECT", value: this.getCurLayout() },
     ]);
   }
 
@@ -222,7 +243,7 @@ export default class Container extends XmlObj {
 
   show() {
     if (!this._activeLayout) {
-      this.switchtolayout(this._layouts[0]._id);
+      this.switchToLayout(this._layouts[0]._id);
     }
     this._visible = true;
     this._renderLayout();
@@ -254,8 +275,8 @@ export default class Container extends XmlObj {
    */
   getlayout(layoutId: string): Layout {
     const lower = layoutId.toLowerCase();
-    for (const layout of this._layouts) {
-      if (layout.getId() === lower) {
+    for (const layout of this.children as Layout[]) {
+      if (layout.tag == 'layout' && layout.getId() === lower) {
         return layout;
       }
     }
@@ -279,7 +300,7 @@ export default class Container extends XmlObj {
   /**
    * @ret Layout
    */
-  getcurlayout(): Layout {
+  getCurLayout(): Layout {
     return this._activeLayout;
   }
 
@@ -309,15 +330,15 @@ export default class Container extends XmlObj {
     // this._div.removeChild(this._activeLayout.getDiv())
   }
 
-  switchtolayout(layout_id: string) {
+  switchToLayout(layout_id: string) {
     const layout = this.getlayout(layout_id);
     assert(layout != null, `Could not find layout with id "${layout_id}".`);
-    this._uiRoot.vm.dispatch(this, "onswitchtolayout", [
-      { type: "OBJECT", value: layout },
-    ]);
-    this._clearCurrentLayout();
+    // this._uiRoot.vm.dispatch(this, "onswitchtolayout", [
+    //   { type: "OBJECT", value: layout },
+    // ]);
+    // this._clearCurrentLayout();
     this._activeLayout = layout;
-    this._renderLayout();
+    // this._renderLayout();
   }
 
   dispatchAction(
@@ -327,7 +348,7 @@ export default class Container extends XmlObj {
   ) {
     switch (action) {
       case "SWITCH":
-        this.switchtolayout(param);
+        this.switchToLayout(param);
         break;
       default:
         this._uiRoot.dispatch(action, param, actionTarget);

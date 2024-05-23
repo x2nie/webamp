@@ -3,7 +3,7 @@
   <bitmap id="aa.background" file="player/aa-background.png" gammagroup="Backgrounds"/>
 </elements>
 
-<container id="winamp.albumart" name="Album Art" default_visible="1" default_x="354" default_y="165" nomenu="1" >
+<container id="winamp.albumart" name="Album Art" default_visible="1" default_x="270" default_y="100" nomenu="1" >
 
 <groupdef id="albumart.content.group">
 
