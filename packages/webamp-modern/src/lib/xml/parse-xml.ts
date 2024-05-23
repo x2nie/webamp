@@ -63,8 +63,6 @@ export class Parser {
    * Adds the given `XmlElement` as a child of `this.currentNode`.
    */
   addNode(node: XmlElement, charIndex: number) {
-    if(node.tag == 'button')
-      console.log('button:', node.attributes.id)
     node.parent = this.currentNode;
 
     // if (this.options.includeOffsets) {
