@@ -17,6 +17,7 @@ import {
   Track,
 } from "../AudioPlayer";
 import Application from "./Application";
+import { xmlRegistry } from "@lib/registry";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -35,13 +36,13 @@ export default class SystemObject extends BaseObject {
   _param: string;
   _id: string;
 
-  constructor(
+  constructor_obsolet(
     uiRoot: UIRoot,
     parsedScript: ParsedMaki,
     param: string,
     id: string
   ) {
-    super();
+    // super();
     this._uiRoot = uiRoot;
     this._parsedScript = parsedScript;
     this._param = param;
@@ -125,15 +126,14 @@ export default class SystemObject extends BaseObject {
     this._uiRoot.vm.dispatch(this, "onscriptunloading");
   }
 
-  setParentGroup(group: Group) {
-    this._parentGroup = group;
-  }
+  // setParentGroup(group: Group) {
+  // }
 
   hasvideosupport(): number {
     return unimplemented(0);
   }
   /* Required for Maki */
-  getruntimeversion(): number {
+  getRuntimeVersion(): number {
     return 5.666;
   }
 
@@ -582,8 +582,8 @@ export default class SystemObject extends BaseObject {
    *
    * @ret
    */
-  getscriptgroup(): Group {
-    return this._parentGroup;
+  getScriptGroup(): Group {
+    return this.parent as Group;
   }
 
   /**
@@ -1792,6 +1792,7 @@ export default class SystemObject extends BaseObject {
     return true;
   }
 }
+xmlRegistry.add('script', SystemObject)
 
 function dumpScriptDebug(script: ParsedMaki) {
   // @ts-ignore

@@ -11,6 +11,15 @@ import {
   clamp,
 } from "../../utils";
 import Timer from "./Timer";
+import { UI } from "../Children";
+import { xml } from "@odoo/owl";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
+
+export class TextUI extends UI {
+  static template = xml`<text t-out="att.text" t-att-style="style()" />`;
+}
+
+uiRegistry.add('text', TextUI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Ctext.2F.3E_.26_.3CWasabi:Text.2F.3E
 export default class Text extends GuiObj {
@@ -46,12 +55,12 @@ export default class Text extends GuiObj {
   _shadowY: number = 0;
   _drawn: boolean = false; // needed to check has parents
 
-  constructor(uiRoot: UIRoot) {
-    super(uiRoot);
-    this._uiRoot = uiRoot;
-    this._textWrapper = document.createElement("wrap");
-    this._div.appendChild(this._textWrapper);
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   super(uiRoot);
+  //   this._uiRoot = uiRoot;
+  //   this._textWrapper = document.createElement("wrap");
+  //   this._div.appendChild(this._textWrapper);
+  // }
 
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -656,3 +665,4 @@ export class DisplayHandler {
     this._subscription();
   }
 }
+xmlRegistry.add('text', Text)

@@ -1,18 +1,130 @@
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { XmlElement } from "@lib/xml";
-import { Component, markup, xml } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, useEnv, xml } from "@odoo/owl";
+import { ParsedMaki } from "../../maki/parser";
+import Container from "./Container";
+import Group from "./Group";
+import { Variable } from "../../maki/v";
+import { interpret } from "../../maki/interpreter";
+
 
 export class System extends Component {
     static GUID = "d6f50f6449b793fa66baf193983eaeef"; //System
     static template = xml`<t t-out="html()" />`;
+    script: ParsedMaki;
 
     html() {
         return markup(`<!-- script:${this.props.node.attributes.file} -->`);
     }
+
+    get node() {
+        return this.props.node
+        // return this;
+    }
+
+    setup() {
+        // console.log('SCRIPT.props=', this.props8.node)
+        // const script = useSystem()
+        this.env = useEnv();
+        // console.log("BINDING:", this.script.bindings);
+        // const self = this;
+        onWillStart(() => {
+          // onMounted(() => {
+          this.script = structuredClone(
+            this.env.ui.scripts[this.props.node.attributes.file]
+          );
+          // this.script = toRaw(this.props.node.parsedScript);
+          // debugger
+        //   this.script.variables[0].value = this.props.node;
+          this.script.variables[0].value = this.node;
+          // debugger
+        });
+        onMounted(() => {
+          console.log(`script ${this.script.maki_id} loaded!`)
+        //   debugger
+          this.dispatch(this.node, "onScriptLoaded", []);
+          setTimeout(() => {
+            //simulate play
+            console.log(`sys.onPlay()`);
+            this.dispatch(this.node, "onPlay", []);
+          }, 3000);
+        });
+      }
+    
+      dispatch(object: Object_, event: string, args: Variable[] = []) {
+        // markRaw(this.script)
+        const script = this.script;
+        for (const binding of script.bindings) {
+          console.log(`iterate expected "${event}", found: '${script.methods[binding.methodOffset].name}'`)
+          if (
+            script.methods[binding.methodOffset].name === event &&
+            script.variables[binding.variableOffset].value === object
+          ) {
+            // debugger
+            return interpret(
+              binding.commandOffset,  //? start
+              this.script,            //? program
+              args,                   //? stack: Variable[]
+              this.classResolver,     //? (guid) => Object_
+              event
+            );
+          }
+        }
+      }
+    
+      classResolver(guid: string): any {
+        for (const Klass of uiRegistry.getAll()) {
+          if (Klass.GUID == guid) {
+            return Klass;
+          }
+        }
+      }
+    
+      get group(): Group {
+        return this.props.node.parent.el;
+      }
+    
+      /* Required for Maki */
+      getRuntimeVersion(): number {
+        return 5.666;
+      }
+    
+      getSkinName() {
+        return "TODO: Get the Real skin name";
+      }
+    
+      getScriptGroup() {
+        return this.group;
+      }
+      // findObject(id: string): GuiObject {
+      //   return this.group.findObject(id);
+      // }
+    
+      getContainer(container_id: string): Container {
+        container_id = container_id.toLowerCase();
+        const containers = this.env.root.getContainers() as XmlElement[];
+        for (const c of containers) {
+          if (c.attributes.id == container_id && c.el) {
+            return c.el as Container;
+          }
+        }
+        console.log("failed to get container:", container_id);
+        //@ts-ignore
+        return null;
+      }
+    //   pause() {
+    //     // this.dispatch(this, 'onPaused')
+    //   }
+    //   getPosition(): number {
+    //     return 3.1;
+    //   }
+    //   integerToString(i: number): string {
+    //     return String(i);
+    //   }
 }
 uiRegistry.add('script', System)
 
-export class Script extends XmlElement {
+// export class Script extends XmlElement {
 
-}
-xmlRegistry.add('script', Script)
+// }
+// xmlRegistry.add('script', Script)

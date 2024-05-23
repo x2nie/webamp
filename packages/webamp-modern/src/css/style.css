@@ -102,3 +102,6 @@ body {
 .dummy {
   background-color: fuchsia;
 }
+.text, text {
+  background: yellow;
+}

@@ -39,14 +39,14 @@ export async function interpret(
   stack: Variable[],
   classResolver: (guid: string) => any,
   eventName: string,
-  uiRoot: UIRoot
+  // uiRoot: UIRoot
 ) {
   validateMaki(program);
   const interpreter = new Interpreter(
     program,
     classResolver,
     eventName,
-    uiRoot
+    // uiRoot
   );
   interpreter.stack = stack;
   return await interpreter.interpret(start);
@@ -75,7 +75,7 @@ class Interpreter {
     program: ParsedMaki,
     classResolver: (guid: string) => any,
     eventName: string,
-    uiRoot: UIRoot
+    // uiRoot: UIRoot
   ) {
     const { commands, methods, variables, classes, maki_id } = program;
     this.classResolver = classResolver;
@@ -85,7 +85,7 @@ class Interpreter {
     this.classes = classes;
     this.maki_id = maki_id;
     this.eventName = eventName;
-    this._uiRoot = uiRoot;
+    // this._uiRoot = uiRoot;
 
     this.stack = [];
     this.callStack = [];
@@ -352,7 +352,7 @@ class Interpreter {
           let methodName = method.name;
           const returnType = method.returnType;
           const classesOffset = method.typeOffset;
-          methodName = methodName.toLowerCase();
+          // methodName = methodName.toLowerCase();
 
           const guid = this.classes[classesOffset];
           const klass = this.classResolver(guid);

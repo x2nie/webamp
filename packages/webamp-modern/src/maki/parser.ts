@@ -213,7 +213,7 @@ function readMethods(makiFile: MakiFile, classes: string[]): Method[] {
     const typeOffset = classCode & 0xff;
     // This is probably the second half of a uint32
     makiFile.readUInt16LE();
-    const name = makiFile.readString().toLowerCase();
+    const name = makiFile.readString(); //x2nie .toLowerCase();
 
     const className = classes[typeOffset];
 
