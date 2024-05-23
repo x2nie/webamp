@@ -1,21 +1,36 @@
 import { UIRoot } from "../../UIRoot";
 import { assert, num, px, removeAllChildNodes, toBool } from "../../utils";
-import Layout from "./Layout";
+import Layout, { LayoutGui } from "./Layout";
 import XmlObj from "../XmlObj";
 import Group from "./Group";
 import { Component, xml } from "@odoo/owl";
-import { registry } from "@lib/registry";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
+import { UI } from "../Children";
 
-export class Container extends Component {
+export class ContainerUI extends UI {
+  // static template = xml`<div class="container" t-out="props.node.id" />`;
+  static template = xml`
+    <container t-att-id="att.id" t-name="Container" 
+    t-att-class="{container: true, invisible: !att.visible}" 
+    t-att-style="style()" 
+    t-ref="root">
+      <t t-foreach="props.node.children" t-as="l" t-key="l.attributes.id">
+      <LayoutGui active="l.attributes.id == att.layout_id" node="l"/>
+      </t>
+    </container>`;
+      // t-on-dblclick="toggleLayout" 
+  static components = {LayoutGui}
+
   // static template = xml`<t t-call="{{ node_template() }}" />`
-  static template = xml`<h1 class="container" t-out="props.node.id" />`;
   // <t t-call="{{ kanban_template }}"  />
 
-  node_template(){
+  // node_template(){
     // debugger
-    return this.props.node.constructor.template;
-  }
+    // return this.props.node.constructor.template;
+    // return this.props.node.template;
+  // }
 }
+uiRegistry.add('container', ContainerUI)
 
 // > A container is a top level object and it basically represents a window.
 // > Nothing holds a container. It is an object that holds multiple related
@@ -23,10 +38,12 @@ export class Container extends Component {
 // > different layouts for each window but only one can be visible at a time.
 //
 // -- http://wiki.winamp.com/wiki/Modern_Skin:_Container
-export default class ContainerNode extends XmlObj {
+export default class Container extends XmlObj {
   static GUID = "e90dc47b4ae7840d0b042cb0fcf775d2";
   // static template = xml`<span class="container" t-out="attributes.id" />`;
-  static template = xml`<span class="container" t-out="'hello!'" />`;
+  // static template = xml`<span class="container" t-out="'hello!'" />`;
+  // static template = xml`<span class="container" t-out="'hello!'" />`;
+
   _uiRoot: UIRoot;
   _layouts: Layout[] = [];
   _activeLayout: Layout | null = null;
@@ -347,4 +364,4 @@ export default class ContainerNode extends XmlObj {
   }
 }
 
-registry.category('node').add('container', ContainerNode)
+xmlRegistry.add('container', Container)

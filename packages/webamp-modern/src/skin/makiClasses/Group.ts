@@ -3,6 +3,10 @@ import GuiObj from "./GuiObj";
 import SystemObject from "./SystemObject";
 import Movable from "./Movable";
 import Layout from "./Layout";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
+import { UI } from "../Children";
+
+uiRegistry.add('group', UI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export default class Group extends Movable {
@@ -69,9 +73,9 @@ export default class Group extends Movable {
     }
   }
 
-  getId() {
-    return this._instanceId || this._id;
-  }
+  // getId() {
+  //   return this._instanceId || this._id;
+  // }
 
   addSystemObject(systemObj: SystemObject) {
     systemObj.setParentGroup(this);
@@ -301,3 +305,5 @@ export default class Group extends Movable {
     }
   }
 }
+
+xmlRegistry.add('group', Group)

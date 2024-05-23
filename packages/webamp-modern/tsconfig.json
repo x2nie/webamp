@@ -3,7 +3,8 @@
     "esModuleInterop": true,
     "allowJs": true,
     "resolveJsonModule": true,
-    "target": "es5",
+    "target": "eS5",
+    "downlevelIteration": true,
     "baseUrl": ".",
     "paths": {
       // "@/*": ["src/*"],

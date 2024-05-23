@@ -1,9 +1,27 @@
 import Group from "./Group";
 import * as Utils from "../../utils";
-import ContainerNode from "./Container";
+import Container from "./Container";
 import { LEFT, RIGHT, TOP, BOTTOM, CURSOR, MOVE } from "../Cursor";
 import { px, unimplemented } from "../../utils";
 import { UIRoot } from "../../UIRoot";
+import { Component, xml } from "@odoo/owl";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
+import Children, { UI } from "../Children";
+
+export class LayoutGui extends UI {
+  // static template = xml`<t t-call="{{ node_template() }}" />`
+  // static template = xml`<h2 class="layout" t-out="props.node.id" />`;
+  // <t t-call="{{ kanban_template }}"  />
+  static template = xml`
+    <layout t-att-style="style()">
+     <Children children="props.node.children" />
+    </layout>`;
+  static components = {Children}
+
+}
+
+// uiRegistry.add('layout', LayoutGui)
+uiRegistry.add('layout', UI)
 
 // > A layout is a special kind of group, which shown inside a container. Each
 // > layout represents an appearance for that window. Layouts give you the ability
@@ -25,11 +43,12 @@ export default class Layout extends Group {
   _movingStartY: number;
   _moving: boolean = false;
   _snap = { left: 0, top: 0, right: 0, bottom: 0 };
+  _classlist : Set<string> = new Set()
 
-  constructor(uiRoot: UIRoot) {
-    super(uiRoot);
-    this._isLayout = true;
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   super(uiRoot);
+  //   this._isLayout = true;
+  // }
 
   setXmlAttr(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
@@ -57,8 +76,8 @@ export default class Layout extends Group {
     }
   }
 
-  getcontainer(): ContainerNode {
-    return this._parent as unknown as ContainerNode;
+  getcontainer(): Container {
+    return this._parent as unknown as Container;
   }
 
   gettop(): number {
@@ -239,7 +258,7 @@ export default class Layout extends Group {
 
   // MOVING THINGS =====================
   setMoving(cmd: string, dx: number, dy: number) {
-    const container = this._parent as unknown as ContainerNode;
+    const container = this._parent as unknown as Container;
     if (cmd == "start") {
       this._moving = true;
       this._movingStartX = container._x;
@@ -260,3 +279,5 @@ export default class Layout extends Group {
     }
   }
 }
+
+xmlRegistry.add('layout', Layout)

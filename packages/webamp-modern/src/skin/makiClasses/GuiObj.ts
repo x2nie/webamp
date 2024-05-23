@@ -61,14 +61,14 @@ export default class GuiObj extends XmlObj {
 
   _metaCommands: XmlElement[] = [];
 
-  constructor(uiRoot: UIRoot) {
-    super();
-    this._uiRoot = uiRoot;
+  // constructor(uiRoot: UIRoot) {
+  //   super();
+  //   this._uiRoot = uiRoot;
 
-    this._div = document.createElement(
-      this.getElTag().toLowerCase().replace("_", "")
-    );
-  }
+  //   this._div = document.createElement(
+  //     this.getElTag().toLowerCase().replace("_", "")
+  //   );
+  // }
 
   getElTag(): string {
     return this.constructor.name;
@@ -290,9 +290,9 @@ export default class GuiObj extends XmlObj {
     return this._div;
   }
 
-  getId(): string {
-    return this._id || "";
-  }
+  // getId(): string {
+  //   return this._id || "";
+  // }
   getOriginalId(): string {
     return this._originalId;
   }

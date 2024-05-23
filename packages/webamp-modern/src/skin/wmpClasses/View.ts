@@ -1,6 +1,6 @@
 import { UIRoot } from "../../UIRoot";
 import { num } from "../../utils";
-import ContainerNode from "../makiClasses/Container";
+import Container from "../makiClasses/Container";
 import Group from "../makiClasses/Group";
 import GuiObj from "../makiClasses/GuiObj";
 import Layout from "../makiClasses/Layout";
@@ -9,7 +9,7 @@ import Theme from "./Theme";
 import { runInlineScript } from "./util";
 
 // https://docs.microsoft.com/en-us/windows/win32/wmp/view-element
-export default class View extends ContainerNode {
+export default class View extends Container {
   _clippingColor: string;
   _scriptFile: string;
   _onLoad: string;

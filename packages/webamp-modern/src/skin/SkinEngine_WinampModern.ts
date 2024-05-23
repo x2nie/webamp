@@ -5,6 +5,7 @@ import { assert,  assume  } from "../utils";
 import { SkinEngine, registerSkinEngine } from "./SkinEngine";
 import { markRaw } from "@odoo/owl";
 import { registry } from "@lib/registry";
+import './makiClasses/index'
 
 export class WinampModern extends SkinEngine {
   static supportedFileExt: string[] = ["wal", "zip"];

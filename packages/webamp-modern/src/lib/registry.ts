@@ -155,3 +155,6 @@ export class Registry extends EventBus {
 }
 
 export const registry = new Registry();
+
+export const uiRegistry = registry.category('ui')
+export const xmlRegistry = registry.category('xml')

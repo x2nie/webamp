@@ -7,7 +7,7 @@ import { StringScanner } from "@rgrove/parse-xml/dist/lib/StringScanner";
 import * as syntax from "@rgrove/parse-xml/dist/lib/syntax";
 import { XmlError } from "@rgrove/parse-xml/dist/lib/XmlError";
 import { XmlElement } from "./xml-element";
-import { registry } from "@lib/registry";
+import { xmlRegistry } from "@lib/registry";
 
 const emptyString = "";
 let DEBUG = 0;
@@ -428,7 +428,7 @@ export class Parser {
     let isEmpty = !!scanner.consumeStringFast("/>");
 
     // let element = new XmlElement(tag, attributes);
-    const Klass = registry.category('node').get(tag, XmlElement)
+    const Klass = xmlRegistry.get(tag, XmlElement)
     let element = new Klass(tag, attributes);
 
     element.parent = this.currentNode;

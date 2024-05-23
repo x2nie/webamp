@@ -7,7 +7,7 @@ import FlatSlider from "./kjofolClasses/FlatSlider";
 import FloodLevel from "./kjofolClasses/FloodLevel";
 import { ImageManagerKjofol } from "./kjofolClasses/ImageManagerKjofol";
 import ToggleButtonKjofol from "./kjofolClasses/ToggleButtonKjofol";
-import ContainerNode from "./makiClasses/Container";
+import Container from "./makiClasses/Container";
 import Group from "./makiClasses/Group";
 import { DisplayHandler } from "./makiClasses/Text";
 import Vis from "./makiClasses/Vis";
@@ -79,7 +79,7 @@ export default class KJofol_SkinEngine extends SkinEngine {
     // await this._loadBitmap("playButton");
   }
 
-  async loadMain(): Promise<ContainerNode> {
+  async loadMain(): Promise<Container> {
     let node = new XmlElement("container", {
       id: "main",
       x: "0",
@@ -89,7 +89,7 @@ export default class KJofol_SkinEngine extends SkinEngine {
     return main;
   }
 
-  async loadMainNormal(parent: ContainerNode) {
+  async loadMainNormal(parent: Container) {
     await this.loadKnowBitmaps(this._rc);
 
     const prefix = this._rc["prefix"];
@@ -154,7 +154,7 @@ export default class KJofol_SkinEngine extends SkinEngine {
     await this.loadButton("Minimize", "SWITCH;shade", group, this._rc);
   }
 
-  async loadMainDock(parent: ContainerNode) {
+  async loadMainDock(parent: Container) {
     await this.loadKnowBitmaps(this._dock);
     const prefix = this._dock["prefix"];
 
@@ -203,7 +203,7 @@ export default class KJofol_SkinEngine extends SkinEngine {
     await this.loadButton("UnDockMode", "SWITCH;normal", group, this._dock);
   }
 
-  async loadPlayerShade(parent: ContainerNode) {
+  async loadPlayerShade(parent: Container) {
     const config = this._shade;
     await this.loadKnowBitmaps(config);
     const prefix = config["prefix"];

@@ -19,6 +19,17 @@ export default class BaseObject extends XmlElement {
     return this.attributes.id;
   }
 
+  /**
+   * @ret
+   * @param  command
+   * @param  param
+   * @param  a
+   * @param  b
+   */
+  onNotify(command: string, param: string, a: number, b: number): number {
+    // this.trigger('Notify', )
+  }
+
   dispose() {
     // Pass
   }

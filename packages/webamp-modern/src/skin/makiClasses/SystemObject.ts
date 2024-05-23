@@ -1,7 +1,7 @@
 import { getClass } from "../../maki/objects";
 import { ParsedMaki } from "../../maki/parser";
 import BaseObject from "./BaseObject";
-import ContainerNode from "./Container";
+import Container from "./Container";
 import { clamp, integerToTime, unimplemented } from "../../utils";
 import Group from "./Group";
 import PRIVATE_CONFIG from "../PrivateConfig";
@@ -603,7 +603,7 @@ export default class SystemObject extends BaseObject {
    * @ret                 The requested container.
    * @param  container_id    The containers identifier string.
    **/
-  getcontainer(containerId: string): ContainerNode {
+  getcontainer(containerId: string): Container {
     const lower = containerId.toLowerCase();
     for (const container of this._uiRoot.getContainers()) {
       if (container.getId() === lower) {
@@ -620,7 +620,7 @@ export default class SystemObject extends BaseObject {
    * @ret                 The new container.
    * @param  container_id    The identifier for the container you want to create.
    */
-  newdynamiccontainer(container_id: string): ContainerNode {
+  newdynamiccontainer(container_id: string): Container {
     //TODO
     return unimplemented(null)
   }
