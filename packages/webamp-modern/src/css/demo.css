@@ -3,6 +3,7 @@ body {
   background-color: rgb(58, 110, 165);
   /* background-image: url(img/wallpaper.png); */
   font-family: Arial, Helvetica, sans-serif;
+  margin-top:400px;
 }
 #experimental {
   position: absolute;
