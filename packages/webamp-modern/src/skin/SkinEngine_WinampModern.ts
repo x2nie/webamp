@@ -41,14 +41,23 @@ export class WinampModern extends SkinEngine {
     // console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
     console.log("FINAL skin.xml=>", parsed);
-    await this.loadBitmaps();
-    await this.loadScripts();
+
+
+    await this.loadRes();
+    // await this.loadBitmaps();
+    // await this.loadScripts();
 
     // debugger
-    this._env.bitmaps = this._bitmap;
-    this._env.scripts = markRaw(this._script);
-    this._env.root = parsed;
+    this._env.bitmaps = markRaw(this._bitmap); // ractive not needed
+    this._env.scripts = markRaw(this._script); // do not reactive
+    this._env.root = parsed;  // reactive please.
     // return parsed
+  }
+  async loadRes() {
+    return await Promise.all([
+      this.loadBitmaps(),
+      this.loadScripts(),
+    ])
   }
 
   async loadBitmaps() {
