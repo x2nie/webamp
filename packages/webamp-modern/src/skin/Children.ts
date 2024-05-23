@@ -5,7 +5,7 @@ import { Component, markup, xml } from "@odoo/owl";
 
 export default class Children extends Component {
     static template = xml`
-    <t t-foreach="mychilds()" t-as="child" t-key="child_index">
+    <t t-foreach="mychilds()" t-as="child" t-key="child_index" t-if="props.children.length">
       <t t-component="lookup(child.tag)" node="child" />
     </t>`;
 

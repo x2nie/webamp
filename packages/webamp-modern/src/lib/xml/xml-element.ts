@@ -135,7 +135,8 @@ export class XmlElement {
 
     // this.attributes = attributes;
     this.children = children.map((c) => {
-      c.detach().parent = this;
+      // c.detach().parent = this;
+      c.parent = this;
       return c;
     });
   }
@@ -176,7 +177,7 @@ export class XmlElement {
   merge(incoming: XmlElement) {
     this.children = incoming.children;
     try {
-      this.children.forEach((c) => (c.detach().parent = this));
+      this.children.forEach((c) => (c./* detach(). */parent = this));
     } catch (error) {
       debugger;
     }

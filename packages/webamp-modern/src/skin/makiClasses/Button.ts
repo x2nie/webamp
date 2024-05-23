@@ -2,6 +2,60 @@ import GuiObj from "./GuiObj";
 import { V } from "../../maki/v";
 import AudioEventedGui from "../AudioEventedGui";
 import { UIRoot } from "../../UIRoot";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
+import { UI } from "../Children";
+
+export class ButtonUI extends UI {
+  // static template = xml`
+  // <t t-tag="props.node.tag" t-att-id="props.node.getId()" t-att-class="getCssClass()" t-att-style="style()">
+  //  <Children children="props.node.children" />
+  // </t>`;
+  // static components = {Children}
+
+  // get att() {
+  //   return this.props.node.attributes;
+  // }
+
+  // getCssClass(){
+  //   return this.props.node? this.props.node.tag : 'unknown-tag'
+  // }
+  style() {
+    let style = super.style();
+    if (this.att.image) {
+      // const url = this.env.bitmaps[this.att.image].url
+      const bitmap = this.env.ui.bitmaps[this.att.image];
+      const url = bitmap.url;
+      style += `background:url(${url});`;
+      if(this.att.w==null || this.att.h==null){
+        if(bitmap.attributes.w==null || bitmap.attributes.h==null){
+          const img = new Image();
+          img.addEventListener("load", () => {
+            this.att.w = img.width
+            this.att.h = img.height
+          });
+          img.addEventListener("error", () => {
+            console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+            
+          });
+          // img.src = `url(${url})`
+          img.src = url
+        }
+
+        
+        if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
+        if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
+      }
+      if (bitmap.attributes.x)
+        style += `background-position-x:${bitmap.attributes.x}px;`;
+      if (bitmap.attributes.y)
+        style += `background-position-y:${bitmap.attributes.y}px;`;
+    }
+    // if (visible != null && !visible) style += `display:none;`;
+    return style;
+  }
+}
+
+uiRegistry.add('button', ButtonUI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cbutton.2F.3E_.26_.3Ctogglebutton.2F.3E
 export default class Button extends AudioEventedGui {
@@ -15,18 +69,18 @@ export default class Button extends AudioEventedGui {
   _param: string | null = null;
   _actionTarget: string | null = null;
 
-  constructor(uiRoot: UIRoot) {
-    super(uiRoot);
-    // TODO: Cleanup!
-    this._div.addEventListener("mousedown", this._handleMouseDown.bind(this));
-    this._div.addEventListener("click", (e: MouseEvent) => {
-      if (e.button == 0) {
-        e.stopPropagation();
-        e.preventDefault();
-        this.leftclick();
-      }
-    });
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   super(uiRoot);
+  //   // TODO: Cleanup!
+  //   this._div.addEventListener("mousedown", this._handleMouseDown.bind(this));
+  //   this._div.addEventListener("click", (e: MouseEvent) => {
+  //     if (e.button == 0) {
+  //       e.stopPropagation();
+  //       e.preventDefault();
+  //       this.leftclick();
+  //     }
+  //   });
+  // }
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -237,3 +291,4 @@ export default class Button extends AudioEventedGui {
   extern Button.rightClick();e
   */
 }
+xmlRegistry.add('button', Button)
