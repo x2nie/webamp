@@ -322,7 +322,6 @@ export class WinampModern extends SkinEngine {
     if (!groupdef) {
       console.log("failed to get groupdef:", node.id);
     } else {
-      debugger
       node.merge(groupdef.clone());
     }
   }

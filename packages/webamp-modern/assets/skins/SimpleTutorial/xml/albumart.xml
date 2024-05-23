@@ -1,3 +1,8 @@
+<!-- Element definition -->
+<elements>
+  <bitmap id="aa.background" file="player/aa-background.png" gammagroup="Backgrounds"/>
+</elements>
+
 <container id="winamp.albumart" name="Album Art" default_visible="1" default_x="354" default_y="165" nomenu="1" >
 
 <groupdef id="albumart.content.group">
@@ -10,7 +15,7 @@
 
 </groupdef>
 
-<layout id="normal" minimum_w="107" minimum_h="60" h="164" w="164">
+<layout id="normal"  background="aa.background" minimum_w="116" minimum_h="116" h="116" w="116">
 	<group
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		id="albumart.content.group"
