@@ -1,6 +1,12 @@
 import GuiObj from "./GuiObj";
 import Movable from "./Movable";
 import { Edges } from "../Clippath";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
+import { GroupUI } from "./Group";
+import { UI } from "../Children";
+import { ButtonUI } from "./Button";
+
+uiRegistry.add('layer', ButtonUI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
 export default class Layer extends Movable {
@@ -90,3 +96,4 @@ export default class Layer extends Movable {
     this._renderBackground();
   }
 }
+xmlRegistry.add('layer', Layer)

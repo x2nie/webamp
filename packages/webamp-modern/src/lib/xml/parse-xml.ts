@@ -430,7 +430,8 @@ export class Parser {
     let isEmpty = !!scanner.consumeStringFast("/>");
 
     // let element = new XmlElement(tag, attributes);
-    const Klass = xmlRegistry.get(tag, XmlElement)
+    // tag = tag.toLowerCase()
+    const Klass = xmlRegistry.get(tag.toLowerCase(), XmlElement)
     let element = new Klass(tag, attributes);
 
     element.parent = this.currentNode;

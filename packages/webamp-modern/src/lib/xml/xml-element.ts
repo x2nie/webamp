@@ -184,6 +184,19 @@ export class XmlElement {
     this.attributes = { ...incoming.attributes, ...this.attributes }; // similar to git merge rebase.
   }
 
+  replace(incoming: XmlElement){
+    if(this.parent){
+      const index = this.parent.children.indexOf(this);
+      if (index >= 0) {
+        this.parent.children[index] = incoming;
+        incoming.parent = this.parent
+      }
+      this.parent = null;
+    }
+    // this.detach()
+    return incoming
+  }
+
   /**
    * Change the type of this class, inplace.
    * Useful to have new methods from new class

@@ -186,9 +186,11 @@ export class WinampModern extends SkinEngine {
       // console.log('include #5~', fileName, child.name, '#', child.toJSON())
       //? replace the <include> with first child
       if (first) {
-        node.tag = child.tag;
-        node.attributes = child.attributes;
-        node.children = child.children;
+        // node.tag = child.tag;
+        // node.attributes = child.attributes;
+        // node.children = child.children;
+        // node.cast(child.constructor)
+        node.replace(child)
         first = false;
       } else {
         if (parent.children) parent.children.push(child);
