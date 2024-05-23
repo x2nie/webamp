@@ -6,7 +6,57 @@ import Layout from "./Layout";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { UI } from "../Children";
 
-uiRegistry.add('group', UI)
+export class GroupUI extends UI {
+  // static template = xml`
+  // <t t-tag="props.node.tag" t-att-id="props.node.getId()" t-att-class="getCssClass()" t-att-style="style()">
+  //  <Children children="props.node.children" />
+  // </t>`;
+  // static components = {Children}
+
+  // get att() {
+  //   return this.props.node.attributes;
+  // }
+
+  // getCssClass(){
+  //   return this.props.node? this.props.node.tag : 'unknown-tag'
+  // }
+  style() {
+    let style = super.style();
+    if (this.att.background) {
+      // const url = this.env.bitmaps[this.att.image].url
+      const bitmap = this.env.ui.bitmaps[this.att.background];
+      const url = bitmap.url;
+      style += `background:url(${url});`;
+      if(this.att.w==null || this.att.h==null){
+        if(bitmap.attributes.w==null || bitmap.attributes.h==null){
+          const img = new Image();
+          img.addEventListener("load", () => {
+            this.att.w = img.width
+            this.att.h = img.height
+          });
+          img.addEventListener("error", () => {
+            console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+            
+          });
+          // img.src = `url(${url})`
+          img.src = url
+        }
+
+        
+        if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
+        if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
+      }
+      if (bitmap.attributes.x)
+        style += `background-position-x:${bitmap.attributes.x}px;`;
+      if (bitmap.attributes.y)
+        style += `background-position-y:${bitmap.attributes.y}px;`;
+    }
+    // if (visible != null && !visible) style += `display:none;`;
+    return style;
+  }
+}
+
+uiRegistry.add('group', GroupUI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export default class Group extends Movable {

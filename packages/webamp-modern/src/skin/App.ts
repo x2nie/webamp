@@ -10,8 +10,9 @@ import Children from "./Children";
 
 export class App extends Component {
     static template = xml` <div class="window-manager">
-    <Children children="state.node.children" />
+    <Children children="containers()" />
     </div>`;
+    // <Children children="state.node.children" />
     // <t t-foreach="containers()" t-as="c" t-key="c_index" >
     // </t>
     // <ContainerUI node="c" />
@@ -32,12 +33,13 @@ export class App extends Component {
     // windowService!: WindowManager;
     // state: { node: XmlElement };
 
+    // getChildrens()
+
     precontent(): string{
         debugger
         return JSON.stringify(toRaw(this.state.node).toJSON())
     }
     containers(){
-      // debugger
         return this.state.node.children.filter(c => c.tag == 'container')
     }
   

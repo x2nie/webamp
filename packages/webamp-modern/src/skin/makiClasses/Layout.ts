@@ -1,4 +1,4 @@
-import Group from "./Group";
+import Group, { GroupUI } from "./Group";
 import * as Utils from "../../utils";
 import Container from "./Container";
 import { LEFT, RIGHT, TOP, BOTTOM, CURSOR, MOVE } from "../Cursor";
@@ -8,15 +8,15 @@ import { Component, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 import Children, { UI } from "../Children";
 
-export class LayoutGui extends UI {
+export class LayoutGui extends GroupUI {
   // static template = xml`<t t-call="{{ node_template() }}" />`
   // static template = xml`<h2 class="layout" t-out="props.node.id" />`;
   // <t t-call="{{ kanban_template }}"  />
-  static template = xml`
-    <layout t-att-style="style()">
-     <Children children="props.node.children" />
-    </layout>`;
-  static components = {Children}
+  // static template = xml`
+  //   <layout t-att-style="style()">
+  //    <Children children="props.node.children" />
+  //   </layout>`;
+  // static components = {Children}
 
 }
 
