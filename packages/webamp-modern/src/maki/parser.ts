@@ -1,7 +1,7 @@
 import { COMMANDS } from "./constants";
 import { DataType, Variable, VariableObject } from "./v";
 import MakiFile from "./MakiFile";
-import { getReturnType } from "./objects";
+import { getMethod, getReturnType } from "./objects";
 import { assert } from "../utils";
 
 export type Command = {
@@ -42,58 +42,73 @@ const PRIMITIVE_TYPES = {
   6: "STRING",
 };
 
-export function parse(data: ArrayBuffer, maki_id_or_filepath: string): ParsedMaki {
-  const makiFile = new MakiFile(data);
+export function parse(
+  data: ArrayBuffer,
+  maki_id_or_filepath: string
+): ParsedMaki {
+  const parser = new MakiParser(data, maki_id_or_filepath);
+  return parser.parse();
+}
 
-  const magic = readMagic(makiFile);
-  // TODO: What format is this? Does it even change between compiler versions?
-  // Maybe it's the std.mi version?
-  const version = readVersion(makiFile);
-  // Not sure what we are skipping over here. Just some UInt 32.
-  // Maybe it's additional version info?
-  const extraVersion = makiFile.readUInt32LE();
-  const classes = readClasses(makiFile);
-  const methods = readMethods(makiFile, classes);
-  const variables = readVariables({ makiFile, classes });
-  readConstants({ makiFile, variables });
-  const bindings = readBindings(makiFile, variables);
-  const commands = decodeCode({ makiFile });
+class MakiParser {
+  makiFile: MakiFile;
 
-  // TODO: Assert that we are at the end of the maki file
-  if (!makiFile.isEof()) {
-    console.warn("EOF not reached!");
+  constructor(data: ArrayBuffer, private file_id: string) {
+    this.makiFile = new MakiFile(data);
   }
 
-  // Map binary offsets to command indexes.
-  // Some bindings/functions ask us to jump to a place in the binary data and
-  // start executing. However, we want to do all the parsing up front, and just
-  // return a list of commands. This map allows anything that mentions a binary
-  // offset to find the command they should jump to.
-  const offsetToCommand = {};
-  commands.forEach((command, i) => {
-    if (command.offset != null) {
-      offsetToCommand[command.offset] = i;
-    }
-  });
+  parse() {
+    const makiFile = this.makiFile;
 
-  const resolvedBindings = bindings.map((binding): Binding => {
-    return Object.assign({}, binding, {
-      commandOffset: offsetToCommand[binding.binaryOffset],
+    const magic = readMagic(makiFile);
+    // TODO: What format is this? Does it even change between compiler versions?
+    // Maybe it's the std.mi version?
+    const version = readVersion(makiFile);
+    // Not sure what we are skipping over here. Just some UInt 32.
+    // Maybe it's additional version info?
+    const extraVersion = makiFile.readUInt32LE();
+    const classes = readClasses(makiFile);
+    const methods = readMethods(makiFile, classes);
+    const variables = readVariables({ makiFile, classes });
+    readConstants({ makiFile, variables });
+    const bindings = readBindings(makiFile, variables);
+    const commands = decodeCode({ makiFile });
+
+    // TODO: Assert that we are at the end of the maki file
+    if (!makiFile.isEof()) {
+      console.warn("EOF not reached!");
+    }
+
+    // Map binary offsets to command indexes.
+    // Some bindings/functions ask us to jump to a place in the binary data and
+    // start executing. However, we want to do all the parsing up front, and just
+    // return a list of commands. This map allows anything that mentions a binary
+    // offset to find the command they should jump to.
+    const offsetToCommand = {};
+    commands.forEach((command, i) => {
+      if (command.offset != null) {
+        offsetToCommand[command.offset] = i;
+      }
     });
-  });
 
-  const resolvedCommands = commands.map((command): Command => {
-    if (command.argType === "COMMAND_OFFSET") {
-      return Object.assign({}, command, {
-        arg: offsetToCommand[command.arg],
+    const resolvedBindings = bindings.map((binding): Binding => {
+      return Object.assign({}, binding, {
+        commandOffset: offsetToCommand[binding.binaryOffset],
       });
-    }
-    return command;
-  });
+    });
 
-  // RESOLVE THE BINDING OF "CLASS"
-  // it is because we can't mutate the variable.value at runtime
-  /*
+    const resolvedCommands = commands.map((command): Command => {
+      if (command.argType === "COMMAND_OFFSET") {
+        return Object.assign({}, command, {
+          arg: offsetToCommand[command.arg],
+        });
+      }
+      return command;
+    });
+
+    // RESOLVE THE BINDING OF "CLASS"
+    // it is because we can't mutate the variable.value at runtime
+    /*
   	{
 			"type": "CLASS",
 			"value": null,
@@ -122,37 +137,38 @@ export function parse(data: ArrayBuffer, maki_id_or_filepath: string): ParsedMak
 			]
 		},
   */
-  // for( const ivar of variables){
-  //   if(ivar.isClass == true){
-  //     for(const ivarOffset of ivar.members){
-  //       const variable = variables[ivarOffset];
-  //       for(const methodOffset of ivar.events){
-  //         const binding = resolvedBindings[methodOffset];
-  //         const method = methods[binding.methodOffset];
-  //         const methodName = `${variable.className}.${method.name}`;
-  //         resolvedBindings.push({
-  //           ...binding,
-  //           methodName,
-  //           variableOffset: ivarOffset,
-  //           // binaryOffset,
-  //           // methodOffset,
-  //           // variable: clone1level(variables[variableOffset])
-  //           bindingOnClass: true,
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
+    // for( const ivar of variables){
+    //   if(ivar.isClass == true){
+    //     for(const ivarOffset of ivar.members){
+    //       const variable = variables[ivarOffset];
+    //       for(const methodOffset of ivar.events){
+    //         const binding = resolvedBindings[methodOffset];
+    //         const method = methods[binding.methodOffset];
+    //         const methodName = `${variable.className}.${method.name}`;
+    //         resolvedBindings.push({
+    //           ...binding,
+    //           methodName,
+    //           variableOffset: ivarOffset,
+    //           // binaryOffset,
+    //           // methodOffset,
+    //           // variable: clone1level(variables[variableOffset])
+    //           bindingOnClass: true,
+    //         });
+    //       }
+    //     }
+    //   }
+    // }
 
-  return {
-    classes,
-    methods,
-    variables,
-    bindings: resolvedBindings,
-    commands: resolvedCommands,
-    version,
-    maki_id : maki_id_or_filepath,
-  };
+    return {
+      classes,
+      methods,
+      variables,
+      bindings: resolvedBindings,
+      commands: resolvedCommands,
+      version,
+      maki_id: this.file_id,
+    };
+  }
 }
 
 // TODO: Don't depend upon COMMANDS
@@ -213,9 +229,13 @@ function readMethods(makiFile: MakiFile, classes: string[]): Method[] {
     const typeOffset = classCode & 0xff;
     // This is probably the second half of a uint32
     makiFile.readUInt16LE();
-    const name = makiFile.readString(); //x2nie .toLowerCase();
-
+    let name = makiFile.readString(); //x2nie .toLowerCase();
+    
     const className = classes[typeOffset];
+
+    // lets resolve the correct caseSensitiveName here
+    const method = getMethod(className, name)
+    name = method.name;
 
     const returnType = getReturnType(className, name);
 

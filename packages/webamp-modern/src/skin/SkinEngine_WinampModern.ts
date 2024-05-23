@@ -32,13 +32,6 @@ export class WinampModern extends SkinEngine {
     return this._containers;
   }
 
-  // bitmaps(): {[key:string]: XmlElement} {
-  //     return this._bitmap
-  // }
-  // scripts(): {[key:string]: XmlElement} {
-  //     return this._bitmap
-  // }
-
   async parseSkin() {
     const includedXml = await this.zip.getFileAsString("skin.xml");
     // console.log("skin.xml:", includedXml);
@@ -49,6 +42,7 @@ export class WinampModern extends SkinEngine {
     await this.traverseChildren(parsed, parsed);
     console.log("FINAL skin.xml=>", parsed);
     await this.loadBitmaps();
+    await this.loadScripts();
 
     // debugger
     this._env.bitmaps = this._bitmap;
@@ -73,6 +67,18 @@ export class WinampModern extends SkinEngine {
       // }
     };
     return await Promise.all(Object.values(this._bitmap).map(loadBitmap));
+  }
+  async loadScripts() {
+    const loadScript = async (file: string) => {
+      const scriptContents = await this.zip.getFileAsBytes(file);
+      assert(
+        scriptContents.byteLength > 0,
+        `ScriptFile file not found at path ${file}`
+      );
+      const parsedScript = parseMaki(scriptContents, file);
+      this._script[file] = parsedScript;
+    };
+    return await Promise.all(Object.keys(this._script).map(loadScript));
   }
 
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
@@ -285,16 +291,17 @@ export class WinampModern extends SkinEngine {
     assert(file != null, "Script element missing `file` attribute");
     if (!this._script[file]) {
       // assert(id != null, "Script element missing `id` attribute");
-      const scriptContents = await this.zip.getFileAsBytes(file);
-      assert(
-        scriptContents.byteLength > 0,
-        `ScriptFile file not found at path ${file}`
-      );
-      // TODO: Try catch?
-      const parsedScript = parseMaki(scriptContents, file);
-      this._script[file] = parsedScript;
+      // const scriptContents = await this.zip.getFileAsBytes(file);
+      // assert(
+      //   scriptContents.byteLength > 0,
+      //   `ScriptFile file not found at path ${file}`
+      // );
+      // // TODO: Try catch?
+      // const parsedScript = parseMaki(scriptContents, file);
+      // this._script[file] = parsedScript;
+      this._script[file] = null;
       // console.log('SCRIPT:',file, JSON.stringify(parsedScript))
-      console.log("SCRIPT:", file, parsedScript);
+      // console.log("SCRIPT:", file, parsedScript);
       // node.parsedScript = parsedScript
     } else {
       // const parsedScript = this._script[file];
