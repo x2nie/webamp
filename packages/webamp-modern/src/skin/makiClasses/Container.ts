@@ -15,6 +15,14 @@ export class ContainerUI extends UI {
     t-att-class="{container: true, invisible: !att.visible}" 
     t-att-style="style()" 
     t-ref="root" t-on-mousedown="inMouseDown">
+      <LayoutGui active="true" node="props.node.getCurLayout()"/>
+    </container>
+      `
+  static template0 = xml`
+    <container t-att-id="att.id" t-name="Container" 
+    t-att-class="{container: true, invisible: !att.visible}" 
+    t-att-style="style()" 
+    t-ref="root" t-on-mousedown="inMouseDown">
       <t t-foreach="props.node.children" t-as="l" t-key="l.attributes.id">
       <LayoutGui active="l.attributes.id == att.layout_id" node="l"/>
       </t>
