@@ -49,8 +49,13 @@ export class Webamp {
       att.visible = Number(
         att.default_visible == null ? 1 : att.default_visible
       );
+      
       // att.layout_id = "normal";
-      node.switchToLayout('normal')
+      // node.switchToLayout('normal')// failed on boxOr.wal
+      const layouts = node.children.filter(e => e.tag == 'layout').map(e => e.id)
+      const firstLayout = layouts.includes('normal') ? 'normal' : layouts[0]
+      node.switchToLayout(firstLayout)// failed on boxOr.wal
+
       const x = att["default_x"] || 0; // Number( att['default_x']) : Math.round(Math.random() * (window.innerWidth - 50));
       const y = att["default_y"] || 0; // Number( att['default_y']) : Math.round(Math.random() * (window.innerWidth - 50));
       att.x = x;
