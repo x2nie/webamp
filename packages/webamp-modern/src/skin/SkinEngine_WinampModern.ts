@@ -20,6 +20,7 @@ export class WinampModern extends SkinEngine {
   // }
   _env: { [key: string]: any };
   _groupdef: { [key: string]: XmlElement } = {};
+  _groupBeta: { [id: string]: XmlElement } = {}; // children needed.
   _xuidef: { [key: string]: XmlElement } = {};
   _bitmap: { [key: string]: XmlElement } = {};
   _script: { [file: string]: ParsedMaki } = {};
@@ -57,6 +58,7 @@ export class WinampModern extends SkinEngine {
     return await Promise.all([
       this.loadBitmaps(),
       this.loadScripts(),
+      this.attachGroupChild(),
     ])
   }
 
@@ -88,6 +90,19 @@ export class WinampModern extends SkinEngine {
       this._script[file] = parsedScript;
     };
     return await Promise.all(Object.keys(this._script).map(loadScript));
+  }
+
+  async attachGroupChild() {
+    const loadGroup = async (group: XmlElement) => {
+      const groupdef = this._groupdef[group.id];
+      if (!groupdef) {
+        console.log("failed to get groupdef:", group.id);
+      } else {
+        group.merge(groupdef.clone());
+      }
+    };
+    await Promise.all(Object.values(this._groupBeta).map(loadGroup));
+    this._groupBeta = {}
   }
 
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
@@ -192,6 +207,7 @@ export class WinampModern extends SkinEngine {
       return;
     }
     let first = true;
+    let putIndex = 0;
     childs.forEach((child) => {
       if (!child.parent) return; //TODO: keep back this.
       if (child.tag == "include" && child.children.length == 0) {
@@ -205,10 +221,15 @@ export class WinampModern extends SkinEngine {
         // node.attributes = child.attributes;
         // node.children = child.children;
         // node.cast(child.constructor)
+        putIndex = node.parent.children.indexOf(node)
         node.replace(child)
         first = false;
       } else {
-        if (parent.children) parent.children.push(child);
+        if (parent.children) {
+          parent.children.push(child);
+          // [].push()
+          // parent.children.push(child);
+        }
         child.parent = parent;
       }
     });
@@ -245,6 +266,7 @@ export class WinampModern extends SkinEngine {
       return;
     }
     let first = true;
+    let putIndex = 0;
     childs.forEach((child) => {
       if (!child.parent) return; //TODO: keep back this.
       if (child.tag == "include" && child.children.length == 0) {
@@ -336,12 +358,14 @@ export class WinampModern extends SkinEngine {
   }
 
   async group(node: XmlElement, parent: any, path: string[] = []) {
-    const groupdef = this._groupdef[node.id];
-    if (!groupdef) {
-      console.log("failed to get groupdef:", node.id);
-    } else {
-      node.merge(groupdef.clone());
-    }
+    // const groupdef = this._groupdef[node.id];
+    // if (!groupdef) {
+    //   console.log("failed to get groupdef:", node.id);
+    // } else {
+    //   node.merge(groupdef.clone());
+    // }
+    // sometime, group is defined before the groupdef. eg WinampModern566/player.normal.drawer
+    this._groupBeta[node.id] = node
   }
 }
 
