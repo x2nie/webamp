@@ -66,6 +66,7 @@ function validateVariable(v: Variable) {
   }
 }
 
+// http://wiki.winamp.com/wiki/Modern_Skin:_Maki_Overview
 class Interpreter {
   _uiRoot: any; // actually only new Klass(uiRoot)
   stack: Variable[];
