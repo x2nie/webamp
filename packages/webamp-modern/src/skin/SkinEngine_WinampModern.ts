@@ -1,11 +1,11 @@
 import { XmlElement, parseXml, parseXmlFragment } from "@lib/xml";
 //import { FileExtractor, PathFileExtractor, ZipFileExtractor } from "./FileExtractor";
 import { ParsedMaki, parse as parseMaki } from "../maki/parser";
-import { assert,  assume  } from "../utils";
+import { assert, assume } from "../utils";
 import { SkinEngine, registerSkinEngine } from "./SkinEngine";
 import { markRaw } from "@odoo/owl";
-import { registry } from "@lib/registry";
-import './makiClasses/index'
+import { registry, xmlRegistry } from "@lib/registry";
+import "./makiClasses/index";
 
 export class WinampModern extends SkinEngine {
   static supportedFileExt: string[] = ["wal", "zip"];
@@ -20,8 +20,9 @@ export class WinampModern extends SkinEngine {
   // }
   _env: { [key: string]: any };
   _groupdef: { [key: string]: XmlElement } = {};
-  _groupBeta: { [id: string]: XmlElement } = {}; // children needed.
+  _groupBeta: { [id: string]: XmlElement } = {}; // children needed. it is group that groupdef may unparsed
   _xuidef: { [key: string]: XmlElement } = {};
+  _unknownTag: XmlElement[] = []; // may later cast'ed with xuitag
   _bitmap: { [key: string]: XmlElement } = {};
   _script: { [file: string]: ParsedMaki } = {};
   _containers: XmlElement[] = [];
@@ -41,9 +42,10 @@ export class WinampModern extends SkinEngine {
     const parsed = parseXml(includedXml);
     // console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
+    console.log("xuidef", this._xuidef);
     console.log("FINAL skin.xml=>", parsed);
 
-
+    await this.resolveXui();
     await this.loadRes();
     // await this.loadBitmaps();
     // await this.loadScripts();
@@ -51,7 +53,7 @@ export class WinampModern extends SkinEngine {
     // debugger
     this._env.bitmaps = markRaw(this._bitmap); // ractive not needed
     this._env.scripts = markRaw(this._script); // do not reactive
-    this._env.root = parsed;  // reactive please.
+    this._env.root = parsed; // reactive please.
     // return parsed
   }
   async loadRes() {
@@ -59,7 +61,7 @@ export class WinampModern extends SkinEngine {
       this.loadBitmaps(),
       this.loadScripts(),
       this.attachGroupChild(),
-    ])
+    ]);
   }
 
   async loadBitmaps() {
@@ -92,9 +94,22 @@ export class WinampModern extends SkinEngine {
     return await Promise.all(Object.keys(this._script).map(loadScript));
   }
 
+  async resolveXui() {
+    this._unknownTag.forEach(el => {
+      const groupdef = this._xuidef[el.tag];
+      if(groupdef){
+        // debugger
+        const Group = xmlRegistry.get('group', XmlElement)
+        el.merge(groupdef.clone());
+        el = el.cast(Group)
+        el.tag = 'group'
+      }
+    });
+  }
   async attachGroupChild() {
     const loadGroup = async (group: XmlElement) => {
       const groupdef = this._groupdef[group.id];
+      // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
       if (!groupdef) {
         console.log("failed to get groupdef:", group.id);
       } else {
@@ -102,7 +117,7 @@ export class WinampModern extends SkinEngine {
       }
     };
     await Promise.all(Object.values(this._groupBeta).map(loadGroup));
-    this._groupBeta = {}
+    this._groupBeta = {};
   }
 
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
@@ -146,6 +161,8 @@ export class WinampModern extends SkinEngine {
       case "email":
         // debugger;
         break;
+      default:
+        this._unknownTag.push(node)
     }
   }
 
@@ -221,8 +238,8 @@ export class WinampModern extends SkinEngine {
         // node.attributes = child.attributes;
         // node.children = child.children;
         // node.cast(child.constructor)
-        putIndex = node.parent.children.indexOf(node)
-        node.replace(child)
+        putIndex = node.parent.children.indexOf(node);
+        node.replace(child);
         first = false;
       } else {
         if (parent.children) {
@@ -364,7 +381,7 @@ export class WinampModern extends SkinEngine {
     //   node.merge(groupdef.clone());
     // }
     // sometime, group is defined before the groupdef. eg WinampModern566/player.normal.drawer
-    this._groupBeta[node.id] = node
+    this._groupBeta[node.id] = node;
   }
 }
 

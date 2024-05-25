@@ -142,6 +142,14 @@ export class XmlElement {
   }
 
   /**
+   * @api
+   */
+  init(parent:XmlElement){
+    parent.children.push(this)
+    this.parent = parent;
+  }
+
+  /**
    * delete this from parent
    */
   detach(): XmlElement {
@@ -207,13 +215,14 @@ export class XmlElement {
     if (this.parent) {
       const index = this.parent.children.indexOf(this);
       if (index > -1) {
-        this.parent[index] = x;
+        this.parent.children[index] = x;
         x.parent = this.parent;
       }
       this.parent = null;
     }
     this.children = []
     this.attributes = {}
+    return x;
   }
 
   /** @returns {{[key: string]: any}} */
