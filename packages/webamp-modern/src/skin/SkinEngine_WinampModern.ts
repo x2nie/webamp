@@ -226,9 +226,8 @@ export class WinampModern extends SkinEngine {
         first = false;
       } else {
         if (parent.children) {
-          parent.children.push(child);
-          // [].push()
-          // parent.children.push(child);
+          //parent.children.push(child);
+          parent.children.splice(++putIndex, 0, child);
         }
         child.parent = parent;
       }
