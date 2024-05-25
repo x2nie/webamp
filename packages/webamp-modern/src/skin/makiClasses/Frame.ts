@@ -95,9 +95,9 @@ export default class Frame extends Group {
     };
     this._from = correction[from];
   }
-  init() {
+  initialize() {
     // this.alignChildren();
-    super.init();
+    super.initialize();
     // this._uiRoot.vm.dispatch(this, "onstartup", []);
   }
 

@@ -654,7 +654,7 @@ export class UIRoot {
   }
 
   //? Zip things ========================
-  /* because maki need to load a groupdef outside init() */
+  /* because maki need to load a groupdef outside initialize() */
   _zip: JSZip;
   // in rare case, we load from both zip & path.
   // so `_preferZip` is used to decide which file-loader is used by default.
@@ -764,21 +764,21 @@ export class UIRoot {
   // }
 
   //? System things ========================
-  /* because maki need to be run if not inside any Group @init() */
+  /* because maki need to be run if not inside any Group @initialize() */
   addSystemObject(systemObj: SystemObject) {
     this._systemObjects.push(systemObj);
   }
-  init() {
+  initialize() {
     for (const systemObject of this._systemObjects) {
-      systemObject.init();
+      systemObject.initialize();
     }
 
     this.logMessage("Initializing Maki...");
     for (const container of this.getContainers()) {
-      container.init();
+      container.initialize();
     }
 
-    this.playlist.init();
+    this.playlist.initialize();
   }
 
   setSkinInfo(skinInfo: { [key: string]: string }) {

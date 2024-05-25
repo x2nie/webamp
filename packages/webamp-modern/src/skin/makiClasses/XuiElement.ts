@@ -18,11 +18,11 @@ export default abstract class XuiElement extends Group {
     return true;
   }
 
-  init() {
+  initialize() {
     if (this.__inited) return;
     this.__inited = true;
 
-    super.init();
+    super.initialize();
 
     for (const systemObject of this._systemObjects) {
       this._unhandledXuiParams.forEach(({ key, value }) => {

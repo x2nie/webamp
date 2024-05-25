@@ -114,8 +114,8 @@ export default class Menu extends Group {
     this._div.classList.remove("open");
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
     // this.resolveButtonsAction();
     // this._uiRoot.vm.dispatch(this, "onstartup", []);
   }

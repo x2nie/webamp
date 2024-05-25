@@ -40,8 +40,8 @@ export default class WasabiTitleBar extends Group {
         : px(-this._padtitleright + this.getwidth());
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
     // this._uiRoot.vm.dispatch(this, "onresize", [
     //   { type: "INT", value: 0 },
     //   { type: "INT", value: 0 },

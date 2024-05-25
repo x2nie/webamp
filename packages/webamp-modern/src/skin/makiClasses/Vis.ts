@@ -172,9 +172,9 @@ export default class Vis extends GuiObj {
     return true;
   }
 
-  init() {
+  initialize() {
     this.setmode(this._mode); // in case xml doesn't define mode.
-    super.init();
+    super.initialize();
     this.audioStatusChanged();
   }
 

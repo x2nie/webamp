@@ -16,8 +16,8 @@ export default class AlbumArt extends Layer {
     this._relath = "1";
   }
 
-  init(): void {
-    super.init();
+  initialize(): void {
+    super.initialize();
 
     this._uiRoot.playlist.on("trackchange", this._trackChanged);
   }

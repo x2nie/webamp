@@ -14,7 +14,7 @@ export class ActionHandler {
     this._subscription = () => {}; // deFault empty
   }
 
-  init(): void {}
+  initialize(): void {}
   onChange(percent: number): void {}
   onFrame(percent: number): void {} // during animation
 
@@ -60,14 +60,14 @@ export default class DialKnob extends AnimatedLayer {
     return true;
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
     this._frameCount = this.getlength(); // because getLength seem as expensive
     this._registerDragEvents();
     this._map.loadmap(this._mapImage);
     this._actionHandler = new ActionHandler(this); // to be always has an handler
     this._initializeActionHandler();
-    this._actionHandler.init();
+    this._actionHandler.initialize();
   }
 
   _initializeActionHandler() {
@@ -255,7 +255,7 @@ class VolumeActionHandler extends ActionHandler {
     });
   }
 
-  init(): void {
+  initialize(): void {
     this._slider.setPercentValue(this._uiRoot.audio.getVolume());
   }
 
@@ -287,7 +287,7 @@ class PitchActionHandler extends ActionHandler {
     this._uiRoot.audio.setPlaybackRate(pitch);
   }
 
-  init(): void {
+  initialize(): void {
     this._subscription = this._uiRoot.audio.on("playbackratechange", () => {
       // this._slider.setPercentValue(this._uiRoot.audio.getPlaybackRate());
       this._setSliderValue();

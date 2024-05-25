@@ -13,7 +13,7 @@ export class ActionHandler {
     this._subscription = () => {}; // deFault empty
   }
 
-  init(): void {}
+  initialize(): void {}
   onChange(percent: number): void {}
   dispose(): void {
     this._subscription();
@@ -76,12 +76,12 @@ export default class RingProgress extends GuiObj {
     }
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
     this._actionHandler = new ActionHandler(this); // to be always has an handler
     this._registerDragEvents();
     this._initializeActionHandler();
-    this._actionHandler.init();
+    this._actionHandler.initialize();
   }
 
   _initializeActionHandler() {
@@ -249,7 +249,7 @@ function parseColor(soniqueColor: string): string {
 class SeekActionHandler extends ActionHandler {
   //
 
-  init() {
+  initialize() {
     this._registerOnAudioProgress();
   }
 

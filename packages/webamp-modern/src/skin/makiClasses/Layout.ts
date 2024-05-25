@@ -178,8 +178,8 @@ export default class Layout extends Group {
     return this._desktopalpha;
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
   }
   afterInited() {
     this._invalidateSize();

@@ -14,8 +14,8 @@ export default class PlayListGui extends Group {
     return "group";
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
     this._uiRoot.playlist.on("trackchange", this.refresh);
     this._contentPanel.addEventListener("scroll", this._contentScrolled);
     this.refresh();

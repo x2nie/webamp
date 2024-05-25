@@ -100,17 +100,17 @@ export default class Group extends Movable {
     return true;
   }
 
-  init() {
+  initialize() {
     if (this._inited) return;
     this._inited = true;
 
-    super.init();
+    super.initialize();
 
     for (const systemObject of this._systemObjects) {
-      systemObject.init();
+      systemObject.initialize();
     }
     for (const child of this._children) {
-      child.init();
+      child.initialize();
     }
   }
 

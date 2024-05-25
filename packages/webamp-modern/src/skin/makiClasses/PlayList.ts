@@ -37,7 +37,7 @@ export class PlEdit {
     this._listenShuffleRepeat();
   }
 
-  init() {
+  initialize() {
     this._shuffleChanged(); //trigger to get value from cache storage
     this._repeatChanged(); //trigger to get value from cache storage
   }

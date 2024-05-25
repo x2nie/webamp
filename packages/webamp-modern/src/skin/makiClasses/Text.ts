@@ -231,14 +231,14 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     }
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
     if (this._ticker && this._ticker != "off") {
       this._prepareScrolling();
     }
     this._div.addEventListener("click", this._onClick);
     if (this._displayHandler != null) {
-      this._displayHandler.init();
+      this._displayHandler.initialize();
     }
   }
 
@@ -657,7 +657,7 @@ export class DisplayHandler {
     this._subscription = () => {}; // deFault empty
   }
 
-  init(): void {
+  initialize(): void {
     //* possible add a hook to uiRoot
     //* to update text, call:
     //*   `this._text.setDisplayValue(newTextValue)`

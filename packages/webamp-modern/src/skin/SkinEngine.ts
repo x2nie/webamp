@@ -32,7 +32,7 @@ export class SkinEngine {
    * Check Wether this skin-engine can continue working with skin/filePath
    * @returns
    */
-  public async init(): Promise<boolean> {
+  public async initialize(): Promise<boolean> {
     const mustExistFileName = (this.constructor as SkinEngineClass)
       .uniqueByFile;
     this.zip = await this.initSkinExtractor();
@@ -176,7 +176,7 @@ export async function createSkinEngineFor(
     const EngineClass = classes[i];
     try {
       const engine = new EngineClass(skinPath);
-      if (await engine.init()) return engine;
+      if (await engine.initialize()) return engine;
     } catch {}
   }
   return new SkinEngine(skinPath); // default

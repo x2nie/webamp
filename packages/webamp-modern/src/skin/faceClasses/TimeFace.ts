@@ -23,8 +23,8 @@ export default class TimeFace extends Text {
     }
   }
 
-  // init(): void {
-  //   super.init();
+  // initialize(): void {
+  //   super.initialize();
   //   this._disposeDisplaySubscription = this._uiRoot.audio.onCurrentTimeChange(() => {
   //     this.setDisplayValue(integerToTime(this._uiRoot.audio.getCurrentTime()));
   //   });

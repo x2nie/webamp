@@ -134,9 +134,9 @@ export default class Container extends XmlObj {
     return true;
   }
 
-  init() {
+  initialize() {
     for (const layout of this._layouts) {
-      layout.init();
+      layout.initialize();
     }
     for (const layout of this._layouts) {
       layout.afterInited();

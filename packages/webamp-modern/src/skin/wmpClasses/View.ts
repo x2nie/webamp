@@ -50,8 +50,8 @@ export default class View extends Container {
     return true;
   }
 
-  init() {
-    super.init();
+  initialize() {
+    super.initialize();
 
     // this.loadJsScripts(); //done in skinengin
 
