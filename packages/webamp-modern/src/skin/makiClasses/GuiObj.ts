@@ -114,9 +114,8 @@ export class UI extends Component {
     let style = ""; //`top:${y}px; left:${x}px; color:fuchsia;`;
     if (x != null) style += `left:${relative(x, relatx)};`;
     if (y != null) style += `top:${relative(y, relaty)};`;
-    if (w != null)
-      style += relatw ? `right:${w * -1}px;` : `width:${relative(w, relatw)};`;
-    if (h != null) style += `height:${relative(h, relath)};`;
+    if (w != null) style += relatw ? `right:${w * -1}px;` : `width:${w}px;`;
+    if (h != null) style += relath ? `bottom:${h * -1}px` : `height:${h}px;`;
     if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
     // if (visible != null && !visible) style += `display:none;`;
     if (this.att.background) style += this.bgStyle(this.att.background);
