@@ -459,50 +459,51 @@ export default class GuiObj extends XmlObj {
     if (id.toLowerCase() == this.getId().toLowerCase()) return this;
 
     //? Phase 1: find in this children
-    let ret = this._findobject(id);
+    let ret = this._findObject(id);
 
     //? Phase 2: find in this layout's children
     if (!ret /* && this._parent  */) {
       const layout = this.getparentlayout();
       if (layout) {
-        ret = layout._findobject(id);
+        ret = layout._findObject(id);
       }
     }
     if (!ret && id != "sysmenu") {
       console.warn(`findObject(${id}) failed, @${this.getId()}`);
     }
-    return ret;
+    console.log(`findObject(${id}) = ${ret?ret.id:ret}`);
+    return ret as GuiObj;
   }
 
   /* internal findObject with custom error msg */
   findobjectF(id: string, msg: string): GuiObj {
-    const ret = this._findobject(id);
+    const ret = this._findObject(id);
     // temporary stop complaining missing obj, reduce polution of Devtool's Cnsole
     const warnMissingObject = false;
     if (warnMissingObject && !ret && id != "sysmenu") {
       console.warn(msg);
     }
-    return ret;
+    return ret as GuiObj;
   }
 
-  _findobject(id: string): GuiObj {
-    // too complex to consol.log here
-    const lower = id.toLowerCase();
-    // find in direct children first
-    for (const obj of this.children) {
-      if ((obj.id || "").toLowerCase() === lower) {
-        return obj as GuiObj;
-      }
-    }
-    // find in grand child
-    for (const obj of this.children) {
-      const found = obj._findobject(id);
-      if (found != null) {
-        return found;
-      }
-    }
-    return null;
-  }
+  // _findobject(id: string): GuiObj {
+  //   // too complex to consol.log here
+  //   const lower = id.toLowerCase();
+  //   // find in direct children first
+  //   for (const obj of this.children) {
+  //     if ((obj.id || "").toLowerCase() === lower) {
+  //       return obj as GuiObj;
+  //     }
+  //   }
+  //   // find in grand child
+  //   for (const obj of this.children) {
+  //     const found = obj._findobject(id);
+  //     if (found != null) {
+  //       return found;
+  //     }
+  //   }
+  //   return null;
+  // }
 
   isActive(): boolean {
     return this._div.matches(":focus");

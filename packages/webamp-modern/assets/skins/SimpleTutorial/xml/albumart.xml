@@ -1,3 +1,6 @@
+<!-- <include file="standardframe-nostatus.xml"/> -->
+<include file="titlebar.xml"/>
+
 <!-- Element definition -->
 <elements>
   <bitmap id="aa.background" file="player/aa-background.png" gammagroup="Backgrounds"/>
@@ -16,14 +19,20 @@
 </groupdef>
 
 <layout id="normal"  background="aa.background" minimum_w="116" minimum_h="116" h="116" w="116">
-	<group
+	<!-- <group
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		id="albumart.content.group"
-	/>
+	/> -->
 	<!-- <Wasabi:Standardframe:NoStatus
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		content="albumart.content.group"
 	/> -->
+	  <Wasabi:TitleBar
+    id="wasabi.titlebar"
+    x="10" y="0"
+    w="-29" h="18"
+    relatw="1"
+  />
 
 </layout>
 

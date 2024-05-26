@@ -11,8 +11,9 @@ import { createWindowService } from "@lib/windowManager/hook";
 
 export class App extends Component {
     static template = xml` <div class="window-manager">
-    <Children children="containers()" />
-    </div>`;
+    <ContainerUI t-foreach="containers()" t-as="container" t-key="container.id" node="container"  />
+  </div>`;
+  // <Children children="containers()" />
     // <Children children="state.node.children" />
     // <t t-foreach="containers()" t-as="c" t-key="c_index" >
     // </t>
@@ -27,7 +28,7 @@ export class App extends Component {
     //     <Container node="w"/>
     //   </t>
     // </div>`;
-    static components = { Children };
+    static components = { Children, ContainerUI };
     // static components = { ContainerUI };
     state: any;
     env: any;
@@ -39,9 +40,6 @@ export class App extends Component {
     precontent(): string{
         debugger
         return JSON.stringify(toRaw(this.state.node).toJSON())
-    }
-    containers(){
-        return this.state.node.children.filter(c => c.tag == 'container')
     }
   
     setup() {
@@ -73,6 +71,12 @@ export class App extends Component {
       // }
       // });
     }
+
+    
+    containers(){
+      return this.state.node.children.filter(c => c.tag == 'container')
+    }
+
   
     getContainers(): XmlElement[] {
       return this.env.ui.root.children.filter((c) => c.tag == "container");

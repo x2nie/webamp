@@ -5,6 +5,22 @@ import { WebampOptions, webampDefaultOptions } from "./WebampOptions";
 import { createSkinEngineFor } from "./skin/SkinEngine";
 import Container from "./skin/makiClasses/Container";
 
+const templates = `<odoo>
+  <t t-name="childs" t-foreach="nodeChildren()" t-as="child" t-key="child_index">
+      <t t-component="lookupTag(child.tag)" t-props="{node:child}" />
+  </t>
+
+  <t t-name="ui">
+    <t t-tag="props.node.tag" t-att-id="att.id" t-att-class="getCssClass()" t-att-style="style()">
+      <!-- <t t-foreach="nodeChildren()" t-as="child" t-key="child_index" t-if="props.node.children.length"> -->
+          <!-- <t t-component="lookupTag(child.tag)" node="child" /> -->
+      <!-- </t> -->
+      <t t-call="childs" />
+    </t>
+  </t>
+</odoo>`;
+      // <t t-set="children" t-value="knownChildren()" />
+
 export class Webamp {
   private owlApp: OwlApp<any, App, any>;
   private app: App;
@@ -35,10 +51,12 @@ export class Webamp {
     const env = {
       options: this.options,
       ui: {},
+      engine: null,
     };
     const skinPath = env.options.skin;
-    const loader = await createSkinEngineFor(skinPath);
+    const loader = env.engine = await createSkinEngineFor(skinPath);
     loader.setStorage(env.ui);
+
 
     await loader.parseSkin();
     // env.ui.containers.
@@ -62,7 +80,7 @@ export class Webamp {
       att.y = y;
     });
 
-    const options = { env, dev: true };
+    const options = { env, templates, dev: true };
     this.owlApp = new OwlApp(App, options);
     this.app = await this.owlApp.mount(htmlNode)
     // this.owlApp.mount(htmlNode);

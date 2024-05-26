@@ -6,7 +6,10 @@ import { GroupUI } from "./Group";
 import { UI } from "../Children";
 import { ButtonUI } from "./Button";
 
-uiRegistry.add('layer', ButtonUI)
+export class LayerUI extends ButtonUI {
+
+}
+uiRegistry.add('layer', LayerUI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
 export default class Layer extends Movable {

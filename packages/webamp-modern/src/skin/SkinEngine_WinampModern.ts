@@ -20,7 +20,7 @@ export class WinampModern extends SkinEngine {
   // }
   _env: { [key: string]: any };
   _groupdef: { [key: string]: XmlElement } = {};
-  _groupBeta: { [id: string]: XmlElement } = {}; // children needed. it is group that groupdef may unparsed
+  _groupBeta: XmlElement[] = []; // children needed. it is group that groupdef may unparsed
   _xuidef: { [key: string]: XmlElement } = {};
   _unknownTag: XmlElement[] = []; // may later cast'ed with xuitag
   _bitmap: { [key: string]: XmlElement } = {};
@@ -45,8 +45,8 @@ export class WinampModern extends SkinEngine {
     console.log("xuidef", this._xuidef);
     console.log("FINAL skin.xml=>", parsed);
 
-    await this.resolveXui();
     await this.loadRes();
+    await this.resolveXui();
     // await this.loadBitmaps();
     // await this.loadScripts();
 
@@ -99,10 +99,12 @@ export class WinampModern extends SkinEngine {
       const groupdef = this._xuidef[el.tag];
       if(groupdef){
         // debugger
-        const Group = xmlRegistry.get('group', XmlElement)
-        el.merge(groupdef.clone());
-        el = el.cast(Group)
-        el.tag = 'group'
+        const Xui = xmlRegistry.get('xui', XmlElement)
+        el = el.cast(Xui)
+        if(!el.attributes.content){
+          el.merge(groupdef.clone());
+        }
+        el.tag = 'xui'
       }
     });
   }
@@ -116,8 +118,8 @@ export class WinampModern extends SkinEngine {
         group.merge(groupdef.clone());
       }
     };
-    await Promise.all(Object.values(this._groupBeta).map(loadGroup));
-    this._groupBeta = {};
+    await Promise.all(this._groupBeta.map(loadGroup));
+    this._groupBeta = [];
   }
 
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
@@ -381,7 +383,7 @@ export class WinampModern extends SkinEngine {
     //   node.merge(groupdef.clone());
     // }
     // sometime, group is defined before the groupdef. eg WinampModern566/player.normal.drawer
-    this._groupBeta[node.id] = node;
+    this._groupBeta.push(node);
   }
 }
 

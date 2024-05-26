@@ -100,6 +100,18 @@ export default class Group extends Movable {
     return true;
   }
 
+  sendXuiParam(param, value){
+    const scripts = this.children.filter(c => c.tag == 'script') as SystemObject[]
+    // console.log('redirecting XuiParam', param, '=', value, 'cripts:', scripts.length)
+    scripts.forEach(s => s.dispatch(s, 'onSetXuiParam', [
+      {type:'STRING', value:param},
+      {type:'STRING', value:value}]))
+  }
+  // setXmlParam(key, value){
+  //   console.log('receiving XmlParam:',key, '=', value)
+  //   this.attributes[key] = value
+  // }
+
   initialize() {
     if (this._inited) return;
     this._inited = true;

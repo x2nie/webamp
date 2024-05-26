@@ -234,4 +234,35 @@ export class XmlElement {
       children: children.map((child) => child.toJSON()),
     });
   }
+
+  setXmlParam(key, value){
+    console.log('receiving XmlParam:',key, '=', value)
+    this.attributes[key] = value
+  }
+  _findObject(id: string): XmlElement {
+    // too complex to consol.log here
+    const lower = id.toLowerCase();
+    if(this.id == lower){
+      return this
+    }
+    let result: XmlElement = null;
+    // find in direct children first
+    for (const obj of this.children) {
+      // if ((obj.id || "").toLowerCase() === lower) {
+      //   return obj as GuiObj;
+      // }
+      result = obj._findObject(lower)
+      if(result) {
+        return result
+      }
+    }
+    // // find in grand child
+    // for (const obj of this.children) {
+    //   const found = obj._findobject(id);
+    //   if (found != null) {
+    //     return found;
+    //   }
+    // }
+    return null;
+  }
 }

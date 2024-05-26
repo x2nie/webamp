@@ -604,8 +604,8 @@ export default class SystemObject extends BaseObject {
    *
    * @ret The parameter for the script.
    */
-  getparam(): string {
-    return this._param;
+  getParam(): string {
+    return this.attributes.param;
   }
 
   /**
@@ -666,8 +666,9 @@ export default class SystemObject extends BaseObject {
    * @ret             The new group.
    * @param  group_id    The identifier for the group you want to create.
    */
-  newgroup(group_id: string): Group {
-    return this._parentGroup.findObject(group_id) as Group;
+  newGroup(group_id: string): Group {
+    // return this._parentGroup.findObject(group_id) as Group;
+    return new Group('group', {id: group_id})
   }
 
   /**
@@ -1259,7 +1260,7 @@ export default class SystemObject extends BaseObject {
    * @param  separator   The separator to use.
    * @param  tokennum    The token to retreive.
    */
-  gettoken(str: string, separator: string, tokennum: number): string {
+  getToken(str: string, separator: string, tokennum: number): string {
     // getToken("28,39,-56,-84,0,0,1,1", ",", 3) will return "-84"
     const commas = str.split(separator);
     return commas[tokennum] || "";
