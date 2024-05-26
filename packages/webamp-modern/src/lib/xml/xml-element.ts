@@ -31,7 +31,7 @@ export const value2number = [
   "y",
   "w",
   "h",
-  "relatex",
+  "relatx",
   "relaty",
   "relatw",
   "relath",

@@ -19,7 +19,7 @@ export class ButtonUI extends UI {
   // getCssClass(){
   //   return this.props.node? this.props.node.tag : 'unknown-tag'
   // }
-  style() {
+  style0() {
     let style = super.style();
     if (this.att.image) {
       // const url = this.env.bitmaps[this.att.image].url
@@ -46,9 +46,21 @@ export class ButtonUI extends UI {
         if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
       }
       if (bitmap.attributes.x)
-        style += `background-position-x:${bitmap.attributes.x}px;`;
+        style += `background-position-x:${-bitmap.attributes.x}px;`;
       if (bitmap.attributes.y)
-        style += `background-position-y:${bitmap.attributes.y}px;`;
+        style += `background-position-y:${-bitmap.attributes.y}px;`;
+
+      /*
+      titlebar.center.active
+      left: 10px;
+      top: 1px;
+      width: calc(100% + -20px);
+      background: url(blob:http://localhost:3001/3ac4cdd0-c1c5-4db1-88af-2292cc6cfdbd);
+      height: 9px;
+      background-position-x: -50px;
+      background-position-y: -100px;
+      background-size: 400px 166px;   400% x 100%
+      */
     }
     // if (visible != null && !visible) style += `display:none;`;
     return style;

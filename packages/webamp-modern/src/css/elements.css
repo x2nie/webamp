@@ -168,6 +168,7 @@ slider,
 status,
 text,menu,frame2,
 vis,
+xui,
 wasabiframe,
 wasabititlebar,
 windowholder
@@ -176,6 +177,7 @@ windowholder
   left: 0;
   top: 0;
   display: block;
+  image-rendering: pixelated;
   /* overflow: hidden; */
 }
 group {

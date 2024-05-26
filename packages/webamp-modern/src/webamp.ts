@@ -11,7 +11,7 @@ const templates = `<odoo>
   </t>
 
   <t t-name="ui">
-    <t t-tag="props.node.tag" t-att-id="att.id" t-att-class="getCssClass()" t-att-style="style()">
+    <t t-tag="props.node.tag" t-att-id="att.id" t-att-class="getCssClass()" t-att-style="style()" t-ref="gui">
       <!-- <t t-foreach="nodeChildren()" t-as="child" t-key="child_index" t-if="props.node.children.length"> -->
           <!-- <t t-component="lookupTag(child.tag)" node="child" /> -->
       <!-- </t> -->

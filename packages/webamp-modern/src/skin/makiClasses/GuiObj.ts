@@ -16,9 +16,180 @@ import Layout from "./Layout";
 import Region from "./Region";
 import ConfigAttribute from "./ConfigAttribute";
 import { XmlElement } from "@rgrove/parse-xml";
+import {
+  Component,
+  markup,
+  onMounted,
+  onPatched,
+  onRendered,
+  onWillPatch,
+  onWillRender,
+  onWillStart,
+  onWillUpdateProps,
+  useEffect,
+  useRef,
+  xml,
+} from "@odoo/owl";
+import { uiRegistry } from "@lib/registry";
 
 let BRING_LEAST: number = -1;
 let BRING_MOST_TOP: number = 1;
+
+export class UI extends Component {
+  static template = "ui";
+  gui: { el: HTMLElement };
+  // static template0 = xml`
+  // <t t-tag="props.node.tag" t-att-id="props.node.getId()" t-att-class="getCssClass()" t-att-style="style()">
+  //  <Children children="props.node.children" />
+  // </t>`;
+  // static components = { Children };
+
+  setup() {
+    this.props.node.el = this;
+    this.gui = useRef("gui"); // the html element in DOM
+    const bound = () => {
+      if (this.gui.el) {
+        const r = this.gui.el.getBoundingClientRect();
+        const { width } = r;
+        return JSON.stringify({ width });
+      } else {
+        return "no-dom";
+      }
+    };
+    // onWillStart(() => console.log(`${bound()}:willStart`));
+    // onMounted(() => console.log(`${bound()}:mounted`));
+    // onWillUpdateProps(() => console.log(`${bound()}:willUpdateProps`));
+    // onWillRender(() => console.log(`${bound()}:willRender`));
+    // onRendered(() => console.log(`${bound()}:rendered`));
+    // onWillPatch(() => console.log(`${bound()}:willPatch`));
+    // onPatched(() => console.log(`${bound()}:patched`));
+
+    onMounted(() => this.detectRealSize());
+    useEffect(
+      (el) => {
+        if (el) {
+          this.detectRealSize();
+        }
+      },
+      () => [this.gui.el, this.att.w, this.att.h]
+    );
+  }
+  get att() {
+    return this.props.node.attributes;
+  }
+  detectRealSize() {
+    if ((this.att.background || this.att.image) && this.gui.el) {
+      // const r = this.gui.el.getBoundingClientRect();
+      const el = this.gui.el;
+      this.att.bound = { width: el.offsetWidth, height: el.offsetHeight };
+    }
+  }
+  nodeChildren() {
+    const notFound = this.props.node.children
+      .filter((e) => !uiRegistry.contains(e.tag))
+      .map((e) => e.tag);
+    if (notFound.length) {
+      console.log("TAG NOT FOUND:::", [...new Set(notFound)].join(", "));
+    }
+    return this.props.node.children.filter((e) => uiRegistry.contains(e.tag));
+  }
+
+  lookupTag(tag: string): typeof Component {
+    // console.log('finding component for tag:', tag)
+    try {
+      //ts-ignore
+      return uiRegistry.get(tag, Nothing) || Nothing;
+    } catch {
+      console.log("failed to get component:", tag);
+      return Nothing;
+    }
+  }
+
+  getCssClass() {
+    return this.props.node ? this.props.node.tag : "unknown-tag";
+  }
+  style() {
+    let { x, y, w, h, alpha, visible, relatx, relaty, relatw, relath } =
+      this.att;
+    let style = ""; //`top:${y}px; left:${x}px; color:fuchsia;`;
+    if (x != null) style += `left:${relative(x, relatx)};`;
+    if (y != null) style += `top:${relative(y, relaty)};`;
+    if (w != null)
+      style += relatw ? `right:${w * -1}px;` : `width:${relative(w, relatw)};`;
+    if (h != null) style += `height:${relative(h, relath)};`;
+    if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
+    // if (visible != null && !visible) style += `display:none;`;
+    if (this.att.background) style += this.bgStyle(this.att.background);
+    if (this.att.image) style += this.bgStyle(this.att.image);
+    return style;
+  }
+  bgStyle(bitmap_id: any): string {
+    let style = "";
+    let scalex = 1,
+      scaley = 1;
+    const bitmap = this.env.ui.bitmaps[bitmap_id];
+    const url = bitmap.attributes.url;
+    style += `background:url(${url});`;
+    if (this.att.w == null || this.att.h == null) {
+      if (bitmap.attributes.w == null || bitmap.attributes.h == null) {
+        this.att.w = bitmap.attributes.width;
+        this.att.h = bitmap.attributes.height;
+        // const img = new Image();
+        // img.addEventListener("load", () => {
+        //   this.att.w = bitmap.attributes.w = img.width;
+        //   this.att.h = bitmap.attributes.h = img.height;
+        // });
+        // img.addEventListener("error", () => {
+        //   console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+        // });
+        // // img.src = `url(${url})`
+        // img.src = url;
+      } else {
+        if (this.att.w == null)
+          this.att.w = bitmap.attributes.w || bitmap.attributes.width;
+        if (this.att.h == null)
+          this.att.h = bitmap.attributes.h || bitmap.attributes.height;
+      }
+
+      // if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
+      // if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
+    }
+
+    if (
+      (this.att.relatw || this.att.relath) &&
+      (!bitmap.attributes.width || !bitmap.attributes.height)
+    ) {
+      // const img = new Image();
+      // img.addEventListener("load", () => {
+      //   bitmap.attributes.width = img.width;
+      //   bitmap.attributes.height = img.height;
+      // });
+      // img.addEventListener("error", () => {
+      //   // console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+      // });
+      // // img.src = `url(${url})`
+      // img.src = url;
+    }
+
+    const b = this.att.bound;
+    if (b && bitmap.attributes.width) {
+      scalex = b.width / bitmap.attributes.w;
+      scaley = b.height / bitmap.attributes.h;
+    }
+    if (scalex != 1 || scaley != 1) {
+      // debugger
+      style += `background-size:${bitmap.attributes.width * scalex}px ${
+        bitmap.attributes.height * scaley
+      }px;`;
+      style += `--scale-xy:${scalex} ${scaley};`;
+    }
+    if (bitmap.attributes.x)
+      style += `background-position-x:${-bitmap.attributes.x * scalex}px;`;
+    if (bitmap.attributes.y)
+      style += `background-position-y:${-bitmap.attributes.y * scaley}px;`;
+    return style;
+  }
+}
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#GuiObject_.28Global_params.29
 export default class GuiObj extends XmlObj {
@@ -471,7 +642,7 @@ export default class GuiObj extends XmlObj {
     if (!ret && id != "sysmenu") {
       console.warn(`findObject(${id}) failed, @${this.getId()}`);
     }
-    console.log(`findObject(${id}) = ${ret?ret.id:ret}`);
+    console.log(`findObject(${id}) = ${ret ? ret.id : ret}`);
     return ret as GuiObj;
   }
 
@@ -1049,5 +1220,17 @@ export default class GuiObj extends XmlObj {
       this._div.style.pointerEvents = "auto";
     }
     this._renderDimensions();
+  }
+}
+
+export class Nothing extends Component {
+  static template = xml`<t t-out="commented()" />`;
+
+  commented() {
+    return markup(`<!-- @ -->`);
+    return markup(`<!-- @${this.props.node.tag} -->`);
+    return markup(
+      `<!-- @${this.props.node.tag}:${this.props.node.attributes.id} -->`
+    );
   }
 }

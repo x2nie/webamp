@@ -23,6 +23,7 @@ export class WinampModern extends SkinEngine {
   _groupBeta: XmlElement[] = []; // children needed. it is group that groupdef may unparsed
   _xuidef: { [key: string]: XmlElement } = {};
   _unknownTag: XmlElement[] = []; // may later cast'ed with xuitag
+  _image: { [file: string]: { img: HTMLImageElement; url: string } } = {};
   _bitmap: { [key: string]: XmlElement } = {};
   _script: { [file: string]: ParsedMaki } = {};
   _containers: XmlElement[] = [];
@@ -65,21 +66,40 @@ export class WinampModern extends SkinEngine {
   }
 
   async loadBitmaps() {
-    const loadBitmap = async (bitmap: XmlElement) => {
-      const filepath = bitmap.attributes.file;
-      const imgBlob = await this.zip.getFileAsBlob(filepath);
-      const imgUrl = URL.createObjectURL(imgBlob);
-      bitmap.url = imgUrl;
-      // if (!bitmap.attributes.w || !bitmap.attributes.h) {
-      //   // const { w, h } = await getPngSize(imgBlob);
-      //   const w = 100;
-      //   const h = 100;
-      //   //@ts-ignore
-      //   bitmap.attributes.w = w;
-      //   bitmap.attributes.h = h;
-      // }
-    };
-    return await Promise.all(Object.values(this._bitmap).map(loadBitmap));
+    //? register unique files
+    Object.values(this._bitmap).forEach(
+      (bitmap) => (this._image[bitmap.attributes.file] = null)
+    );
+    //? load png as Image
+    await Promise.all(
+      Object.keys(this._image).map(async (filepath: string) => {
+        const imgBlob = await this.zip.getFileAsBlob(filepath);
+        const url = URL.createObjectURL(imgBlob);
+
+        const img = new Image();
+        // Dapatkan dimensi PNG dengan menunggu img.onload dalam sebuah Promise
+        await new Promise<void>((resolve, reject) => {
+          img.src = url;
+          img.onload = () => {
+            resolve();
+          };
+          img.onerror = reject;
+        });
+        this._image[filepath] = { img, url };
+      })
+    );
+    console.log(this._image)
+    //? put img url
+    Object.values(this._bitmap).forEach(
+      (bitmap) => {
+        const att = bitmap.attributes
+        const img = this._image[att.file]
+        att.url = img.url
+        att.width = img.img.width
+        att.height = img.img.height
+        console.log(`bmp:${att.id} = "${att.url}"`)
+      }
+    );
   }
   async loadScripts() {
     const loadScript = async (file: string) => {
@@ -95,16 +115,16 @@ export class WinampModern extends SkinEngine {
   }
 
   async resolveXui() {
-    this._unknownTag.forEach(el => {
+    this._unknownTag.forEach((el) => {
       const groupdef = this._xuidef[el.tag];
-      if(groupdef){
+      if (groupdef) {
         // debugger
-        const Xui = xmlRegistry.get('xui', XmlElement)
-        el = el.cast(Xui)
-        if(!el.attributes.content){
+        const Xui = xmlRegistry.get("xui", XmlElement);
+        el = el.cast(Xui);
+        if (!el.attributes.content) {
           el.merge(groupdef.clone());
         }
-        el.tag = 'xui'
+        el.tag = "xui";
       }
     });
   }
@@ -164,7 +184,7 @@ export class WinampModern extends SkinEngine {
         // debugger;
         break;
       default:
-        this._unknownTag.push(node)
+        this._unknownTag.push(node);
     }
   }
 

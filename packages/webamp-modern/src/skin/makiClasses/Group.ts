@@ -1,10 +1,9 @@
 import * as Utils from "../../utils";
-import GuiObj from "./GuiObj";
+import GuiObj, {UI} from "./GuiObj";
 import SystemObject from "./SystemObject";
 import Movable from "./Movable";
 import Layout from "./Layout";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
-import { UI } from "../Children";
 
 export class GroupUI extends UI {
   // static template = xml`
@@ -20,40 +19,40 @@ export class GroupUI extends UI {
   // getCssClass(){
   //   return this.props.node? this.props.node.tag : 'unknown-tag'
   // }
-  style() {
-    let style = super.style();
-    if (this.att.background) {
-      // const url = this.env.bitmaps[this.att.image].url
-      const bitmap = this.env.ui.bitmaps[this.att.background];
-      const url = bitmap.url;
-      style += `background:url(${url});`;
-      if(this.att.w==null || this.att.h==null){
-        if(bitmap.attributes.w==null || bitmap.attributes.h==null){
-          const img = new Image();
-          img.addEventListener("load", () => {
-            this.att.w = img.width
-            this.att.h = img.height
-          });
-          img.addEventListener("error", () => {
-            console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+  // style() {
+  //   let style = super.style();
+  //   if (this.att.background) {
+  //     // const url = this.env.bitmaps[this.att.image].url
+  //     const bitmap = this.env.ui.bitmaps[this.att.background];
+  //     const url = bitmap.url;
+  //     style += `background:url(${url});`;
+  //     if(this.att.w==null || this.att.h==null){
+  //       if(bitmap.attributes.w==null || bitmap.attributes.h==null){
+  //         const img = new Image();
+  //         img.addEventListener("load", () => {
+  //           this.att.w = img.width
+  //           this.att.h = img.height
+  //         });
+  //         img.addEventListener("error", () => {
+  //           console.warn(`cant load empty image: ${this.att.image}. ::`, url);
             
-          });
-          // img.src = `url(${url})`
-          img.src = url
-        }
+  //         });
+  //         // img.src = `url(${url})`
+  //         img.src = url
+  //       }
 
         
-        if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
-        if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
-      }
-      if (bitmap.attributes.x)
-        style += `background-position-x:${bitmap.attributes.x}px;`;
-      if (bitmap.attributes.y)
-        style += `background-position-y:${bitmap.attributes.y}px;`;
-    }
-    // if (visible != null && !visible) style += `display:none;`;
-    return style;
-  }
+  //       if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
+  //       if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
+  //     }
+  //     if (bitmap.attributes.x)
+  //       style += `background-position-x:${bitmap.attributes.x}px;`;
+  //     if (bitmap.attributes.y)
+  //       style += `background-position-y:${bitmap.attributes.y}px;`;
+  //   }
+  //   // if (visible != null && !visible) style += `display:none;`;
+  //   return style;
+  // }
 }
 
 uiRegistry.add('group', GroupUI)
