@@ -46,8 +46,8 @@ export class WinampModern extends SkinEngine {
     console.log("xuidef", this._xuidef);
     console.log("FINAL skin.xml=>", parsed);
 
-    await this.resolveXui();
     await this.loadRes();
+    await this.resolveXui();
     // await this.loadBitmaps();
     // await this.loadScripts();
 
@@ -125,9 +125,9 @@ export class WinampModern extends SkinEngine {
         // debugger
         const Xui = xmlRegistry.get("xui", XmlElement);
         el = el.cast(Xui);
-        if (!el.attributes.content) {
+        // if (!el.attributes.content) {
           el.merge(groupdef.clone());
-        }
+        // }
         el.tag = "xui";
       }
     });
