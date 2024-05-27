@@ -63,25 +63,36 @@ export class UI extends Component {
     // onRendered(() => console.log(`${bound()}:rendered`));
     // onWillPatch(() => console.log(`${bound()}:willPatch`));
     // onPatched(() => console.log(`${bound()}:patched`));
-
-    onMounted(() => this.detectRealSize());
-    useEffect(
-      (el) => {
-        if (el) {
-          this.detectRealSize();
-        }
-      },
-      () => [this.gui.el, this.att.w, this.att.h]
-    );
+    
+    onWillStart(() => {
+      this.att.scalex = this.att.relatw? 100 : 1;
+      this.att.scaley = this.att.relath? 100 : 1;
+    });
+    // onMounted(() => this.detectRealSize());
+    // useEffect(
+    //   (el) => {
+    //     if (el) {
+    //       console.log('guiEL mounted!:', this.att.id)
+    //       this.detectRealSize();
+    //     }
+    //   },
+    //   // () => [this.gui.el, this.att.w, this.att.h]
+    //   () => [this.gui.el]
+    // );
   }
   get att() {
     return this.props.node.attributes;
   }
   detectRealSize() {
-    if ((this.att.background || this.att.image) && this.gui.el) {
+    if(this.att.image=='wasabi.frame.top'){
+      debugger
+    }
+    if ((this.att.background || this.att.image) && (this.att.relatw || this.att.relath) && this.gui.el) {
+      console.log('guiWH mounted!')
       // const r = this.gui.el.getBoundingClientRect();
       const el = this.gui.el;
       this.att.bound = { width: el.offsetWidth, height: el.offsetHeight };
+      this.render(true)
     }
   }
   nodeChildren() {
@@ -125,68 +136,79 @@ export class UI extends Component {
     return style;
   }
   bgStyle(bitmap_id: any): string {
+    if(bitmap_id=='wasabi.frame.top'){
+      // debugger
+    }
     let style = "";
-    let scalex = 1,
-      scaley = 1;
+    // let scalex = 1,
+    //   scaley = 1;
     const bitmap = this.env.ui.bitmaps[bitmap_id];
     if(!bitmap) {
-      console.log('failed to find bitmap.id:', bitmap_id)
+      console.log('failed to find bitmap.id:', bitmap_id, 'for node:', this.props.node.id)
       return style
     }  
     const url = bitmap.attributes.url;
     style += `background:url(${url});`;
     if (this.att.w == null || this.att.h == null) {
-      if (bitmap.attributes.w == null || bitmap.attributes.h == null) {
-        this.att.w = bitmap.attributes.width;
-        this.att.h = bitmap.attributes.height;
-        // const img = new Image();
-        // img.addEventListener("load", () => {
-        //   this.att.w = bitmap.attributes.w = img.width;
-        //   this.att.h = bitmap.attributes.h = img.height;
-        // });
-        // img.addEventListener("error", () => {
-        //   console.warn(`cant load empty image: ${this.att.image}. ::`, url);
-        // });
-        // // img.src = `url(${url})`
-        // img.src = url;
-      } else {
+      // if (bitmap.attributes.w == null || bitmap.attributes.h == null) {
+      //   this.att.w = bitmap.attributes.width;
+      //   this.att.h = bitmap.attributes.height;
+      //   // const img = new Image();
+      //   // img.addEventListener("load", () => {
+      //   //   this.att.w = bitmap.attributes.w = img.width;
+      //   //   this.att.h = bitmap.attributes.h = img.height;
+      //   // });
+      //   // img.addEventListener("error", () => {
+      //   //   console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+      //   // });
+      //   // // img.src = `url(${url})`
+      //   // img.src = url;
+      // } else {
         if (this.att.w == null)
           this.att.w = bitmap.attributes.w || bitmap.attributes.width;
         if (this.att.h == null)
           this.att.h = bitmap.attributes.h || bitmap.attributes.height;
-      }
+      // }
 
       // if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
       // if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
     }
 
-    if (
-      (this.att.relatw || this.att.relath) &&
-      (!bitmap.attributes.width || !bitmap.attributes.height)
-    ) {
-      // const img = new Image();
-      // img.addEventListener("load", () => {
-      //   bitmap.attributes.width = img.width;
-      //   bitmap.attributes.height = img.height;
-      // });
-      // img.addEventListener("error", () => {
-      //   // console.warn(`cant load empty image: ${this.att.image}. ::`, url);
-      // });
-      // // img.src = `url(${url})`
-      // img.src = url;
-    }
+    // if (
+    //   (this.att.relatw || this.att.relath) &&
+    //   (!bitmap.attributes.width || !bitmap.attributes.height)
+    // ) {
+    //   // const img = new Image();
+    //   // img.addEventListener("load", () => {
+    //   //   bitmap.attributes.width = img.width;
+    //   //   bitmap.attributes.height = img.height;
+    //   // });
+    //   // img.addEventListener("error", () => {
+    //   //   // console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+    //   // });
+    //   // // img.src = `url(${url})`
+    //   // img.src = url;
+    // }
 
-    const b = this.att.bound;
+    // if((this.att.relatw || this.att.relath) && this.gui.el){
+    //   const b = this.gui.el
+    //   scalex = b.offsetWidth / bitmap.attributes.w;
+    //   scaley = b.offsetHeight / bitmap.attributes.h;
+    //   debugger
+    // }
+
+    /*const b = this.att.bound;
     if (b && bitmap.attributes.width) {
       scalex = b.width / bitmap.attributes.w;
       scaley = b.height / bitmap.attributes.h;
-    }
+    }*/
+    const {scalex, scaley} = this.att
     if (scalex != 1 || scaley != 1) {
       // debugger
       style += `background-size:${bitmap.attributes.width * scalex}px ${
         bitmap.attributes.height * scaley
       }px;`;
-      style += `--scale-xy:${scalex} ${scaley};`;
+      // style += `--scale-xy:${scalex} ${scaley};`;
     }
     if (bitmap.attributes.x)
       style += `background-position-x:${-bitmap.attributes.x * scalex}px;`;
@@ -417,7 +439,7 @@ export default class GuiObj extends XmlObj {
         if (cmd == "sendparams") {
           for (let attribute in node.attributes) {
             if (gui && attribute != "target") {
-              gui.setxmlparam(attribute, node.attributes[attribute]);
+              gui.setXmlParam(attribute, node.attributes[attribute]);
             }
           }
         } else if (cmd == "hideobject" && target_id != "close") {

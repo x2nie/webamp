@@ -10,16 +10,14 @@ const templates = `<odoo>
       <t t-component="lookupTag(child.tag)" t-props="{node:child}" />
   </t>
 
-  <t t-name="ui">
-    <t t-tag="props.node.tag" t-att-id="att.id" t-att-class="getCssClass()" t-att-style="style()" t-ref="gui">
-      <!-- <t t-foreach="nodeChildren()" t-as="child" t-key="child_index" t-if="props.node.children.length"> -->
-          <!-- <t t-component="lookupTag(child.tag)" node="child" /> -->
-      <!-- </t> -->
+  <t t-name="ui" t-tag="props.node.tag" t-att-id="att.id" t-att-class="getCssClass()" t-att-style="style()" t-ref="gui">
       <t t-call="childs" />
-    </t>
   </t>
 </odoo>`;
       // <t t-set="children" t-value="knownChildren()" />
+      // <!-- <t t-foreach="nodeChildren()" t-as="child" t-key="child_index" t-if="props.node.children.length"> -->
+      //     <!-- <t t-component="lookupTag(child.tag)" node="child" /> -->
+      // <!-- </t> -->
 
 export class Webamp {
   private owlApp: OwlApp<any, App, any>;

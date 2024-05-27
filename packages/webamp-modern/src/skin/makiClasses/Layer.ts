@@ -9,7 +9,7 @@ import { ButtonUI } from "./Button";
 export class LayerUI extends UI {
 
 }
-uiRegistry.add('layer', LayerUI)
+uiRegistry.add('layer', UI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
 export default class Layer extends Movable {
