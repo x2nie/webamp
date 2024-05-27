@@ -46,8 +46,8 @@ export class WinampModern extends SkinEngine {
     console.log("xuidef", this._xuidef);
     console.log("FINAL skin.xml=>", parsed);
 
-    await this.loadRes();
     await this.resolveXui();
+    await this.loadRes();
     // await this.loadBitmaps();
     // await this.loadScripts();
 
@@ -68,11 +68,12 @@ export class WinampModern extends SkinEngine {
   async loadBitmaps() {
     //? register unique files
     Object.values(this._bitmap).forEach(
-      (bitmap) => (this._image[bitmap.attributes.file] = null)
+      (bitmap) => (this._image[bitmap.attributes.file] = {})
     );
     //? load png as Image
     await Promise.all(
       Object.keys(this._image).map(async (filepath: string) => {
+        try{
         const imgBlob = await this.zip.getFileAsBlob(filepath);
         const url = URL.createObjectURL(imgBlob);
 
@@ -86,18 +87,21 @@ export class WinampModern extends SkinEngine {
           img.onerror = reject;
         });
         this._image[filepath] = { img, url };
+      } catch {
+        console.log('failed to download bitmap:', filepath)
+      }
       })
     );
-    console.log(this._image)
+    // console.log(this._image)
     //? put img url
     Object.values(this._bitmap).forEach(
       (bitmap) => {
         const att = bitmap.attributes
         const img = this._image[att.file]
         att.url = img.url
-        att.width = img.img.width
-        att.height = img.img.height
-        console.log(`bmp:${att.id} = "${att.url}"`)
+        att.width = img.img?.width
+        att.height = img.img?.height
+        // console.log(`bmp:${att.id} = "${att.url}"`)
       }
     );
   }
@@ -128,18 +132,33 @@ export class WinampModern extends SkinEngine {
       }
     });
   }
+
+  populateGroup(group:XmlElement, id: string){
+    const groupdef = this._groupdef[id];
+    // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
+    if (!groupdef) {
+      console.log("failed to get groupdef:", group.id);
+    } else {
+      group.merge(groupdef.clone());
+      if(group.attributes.instanceid){
+        group.attributes.id = group.attributes.instanceid
+      }
+    }
+  }
+
   async attachGroupChild() {
     const loadGroup = async (group: XmlElement) => {
-      const groupdef = this._groupdef[group.id];
-      // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
-      if (!groupdef) {
-        console.log("failed to get groupdef:", group.id);
-      } else {
-        group.merge(groupdef.clone());
-        if(group.attributes.instanceid){
-          group.attributes.id = group.attributes.instanceid
-        }
-      }
+      this.populateGroup(group, group.id)
+      // const groupdef = this._groupdef[group.id];
+      // // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
+      // if (!groupdef) {
+      //   console.log("failed to get groupdef:", group.id);
+      // } else {
+      //   group.merge(groupdef.clone());
+      //   if(group.attributes.instanceid){
+      //     group.attributes.id = group.attributes.instanceid
+      //   }
+      // }
     };
     await Promise.all(this._groupBeta.map(loadGroup));
     this._groupBeta = [];

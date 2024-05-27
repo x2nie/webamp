@@ -1,5 +1,5 @@
-<!-- <include file="standardframe-nostatus.xml"/> -->
 <include file="titlebar.xml"/>
+<include file="standardframe-nostatus.xml"/>
 
 <!-- Element definition -->
 <elements>
@@ -12,9 +12,9 @@ default_x="0" default_y="116" nomenu="1" >
 
 <groupdef id="albumart.content.group">
 
-	<AlbumArt
+	<!-- <AlbumArt
 		id="waaa" fitparent="1" move="1"
-	/>
+	/> -->
 
 	<!-- <script file="scripts/albumart.maki" param="waaa" /> -->
 
@@ -26,16 +26,20 @@ minimum_w="116" minimum_h="116" h="116" w="275">
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		id="albumart.content.group"
 	/> -->
+	<group
+		x="0" y="0" w="0" h="0" relatw="1" relath="1"
+		id="wasabi.standardframe.nostatusbar"
+	/>
 	<!-- <Wasabi:Standardframe:NoStatus
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		content="albumart.content.group"
 	/> -->
-	  <Wasabi:TitleBar
+	  <!-- <Wasabi:TitleBar
     id="wasabi.titlebar"
     x="0" y="0"
     w="-29" h="18"
     relatw="1"
-  />
+  /> -->
 
 </layout>
 

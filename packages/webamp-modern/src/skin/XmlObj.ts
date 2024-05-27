@@ -11,9 +11,9 @@ export default class XmlObj extends BaseObject {
     return false;
   }
 
-  setxmlparam(key: string, value: string) {
-    this.setXmlAttr(key, value);
-  }
+  // setxmlparam(key: string, value: string) {
+  //   this.setXmlAttr(key, value);
+  // }
 
   style() {
     debugger

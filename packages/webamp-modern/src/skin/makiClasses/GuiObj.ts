@@ -47,15 +47,15 @@ export class UI extends Component {
   setup() {
     this.props.node.el = this;
     this.gui = useRef("gui"); // the html element in DOM
-    const bound = () => {
-      if (this.gui.el) {
-        const r = this.gui.el.getBoundingClientRect();
-        const { width } = r;
-        return JSON.stringify({ width });
-      } else {
-        return "no-dom";
-      }
-    };
+    // const bound = () => {
+    //   if (this.gui.el) {
+    //     const r = this.gui.el.getBoundingClientRect();
+    //     const { width } = r;
+    //     return JSON.stringify({ width });
+    //   } else {
+    //     return "no-dom";
+    //   }
+    // };
     // onWillStart(() => console.log(`${bound()}:willStart`));
     // onMounted(() => console.log(`${bound()}:mounted`));
     // onWillUpdateProps(() => console.log(`${bound()}:willUpdateProps`));
@@ -129,6 +129,10 @@ export class UI extends Component {
     let scalex = 1,
       scaley = 1;
     const bitmap = this.env.ui.bitmaps[bitmap_id];
+    if(!bitmap) {
+      console.log('failed to find bitmap.id:', bitmap_id)
+      return style
+    }  
     const url = bitmap.attributes.url;
     style += `background:url(${url});`;
     if (this.att.w == null || this.att.h == null) {
@@ -250,7 +254,7 @@ export default class GuiObj extends XmlObj {
     this._parent = group;
   }
 
-  setXmlAttr(_key: string, value: string): boolean {
+  setXmlAttr0(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
     switch (key) {
       case "id":
@@ -357,7 +361,7 @@ export default class GuiObj extends XmlObj {
     return true;
   }
 
-  setxmlparam(key: string, value: string) {
+  setxmlparam0(key: string, value: string) {
     this.setXmlAttr(key, value);
   }
 
@@ -633,7 +637,11 @@ export default class GuiObj extends XmlObj {
     //? Phase 1: find in this children
     let ret = this._findObject(id);
 
-    //? Phase 2: find in this layout's children
+    //? Phase 2: find sibling
+    if(this.parent){
+      ret = this.parent._findObject(id);
+    }
+    //? Phase 3: find in this layout's children
     if (!ret /* && this._parent  */) {
       const layout = this.getparentlayout();
       if (layout) {
@@ -643,7 +651,7 @@ export default class GuiObj extends XmlObj {
     if (!ret && id != "sysmenu") {
       console.warn(`findObject(${id}) failed, @${this.getId()}`);
     }
-    console.log(`findObject(${id}) = ${ret ? ret.id : ret}`);
+    // console.log(`findObject(${id}) = ${ret ? ret.id : ret}`);
     return ret as GuiObj;
   }
 

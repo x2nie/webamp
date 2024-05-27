@@ -80,8 +80,13 @@ export class Webamp {
       att.y = y;
     });
 
-    const options = { env, templates, dev: true };
+    const options = { env, templates, dev: true, debug:true };
     this.owlApp = new OwlApp(App, options);
+    this.owlApp.handleError = ({node, error}) => {
+      console.log('failed on uiNode:',node)
+      console.warn('owl errror:', error)
+      // debugger
+    }
     this.app = await this.owlApp.mount(htmlNode)
     // this.owlApp.mount(htmlNode);
   }

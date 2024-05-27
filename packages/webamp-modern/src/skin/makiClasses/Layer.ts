@@ -6,7 +6,7 @@ import { GroupUI } from "./Group";
 import { UI } from "../Children";
 import { ButtonUI } from "./Button";
 
-export class LayerUI extends ButtonUI {
+export class LayerUI extends UI {
 
 }
 uiRegistry.add('layer', LayerUI)

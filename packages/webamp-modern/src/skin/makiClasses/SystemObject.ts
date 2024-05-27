@@ -19,6 +19,7 @@ import {
 import Application from "./Application";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { Variable } from "../../maki/v";
+import { SystemUI } from "./Script";
 
 const MOUSE_POS = { x: 0, y: 0 };
 
@@ -668,7 +669,12 @@ export default class SystemObject extends BaseObject {
    */
   newGroup(group_id: string): Group {
     // return this._parentGroup.findObject(group_id) as Group;
-    return new Group('group', {id: group_id})
+    // return new Group('group', {id: group_id})
+    debugger
+    const group = new Group('group', {id: group_id})
+    const engine = (this.el as SystemUI).getEngine()
+    engine.populateGroup(group, group_id)
+    return group
   }
 
   /**

@@ -122,6 +122,10 @@ export class SkinEngine {
         break;
     }
   }
+
+  populateGroup(group:XmlElement, id: string){
+    
+  }
 }
 
 // -----------------------------------------------------------------------------

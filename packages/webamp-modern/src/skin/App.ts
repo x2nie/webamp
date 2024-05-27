@@ -48,7 +48,7 @@ export class App extends Component {
       console.log("APP.drens=", this.env.ui.root.children);
       this.state = useState({ node: this.env.ui.root });
       // this.env.ui.root.el = this;
-      console.log(this.state.node.constructor.name)
+      // console.log(this.state.node.constructor.name)
   
       useSubEnv({
         //? additional env, isolated for this instance and children

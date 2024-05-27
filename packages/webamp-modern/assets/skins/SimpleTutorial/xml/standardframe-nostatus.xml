@@ -13,6 +13,7 @@
 
 ======================================================================================================== -->
 
+<include file="player-elements.xml" />
 <include file="standardframe-elements.xml" />
 <include file="titlebar.xml" />
 
@@ -204,7 +205,7 @@
     image="player.main.right.region"
     sysregion="-2"
   />
-  <script id="standardframe.script" file="scripts/standardframe.maki" param="6,23,-12,-33,0,0,1,1" />
+  <!-- <script id="standardframe.script" file="scripts/standardframe.maki" param="6,23,-12,-33,0,0,1,1" /> -->
 
 </groupdef>
 
