@@ -140,6 +140,22 @@ export class XmlElement {
       return c;
     });
   }
+  setXmlParam(key:string, value:string|any){
+    console.log('receiving XmlParam:',key, '=', value)
+    // this.attributes[key] = value
+    if (key in forbidden_keys) {
+      key = forbidden_keys[key];
+    }
+    if (value2lower.includes(key)) {
+      this.attributes[key] = value.toLowerCase();
+    } else if (value2number.includes(key)) {
+      //@ts-ignore
+      this.attributes[key] = Number(value);
+    } else {
+      this.attributes[key] = value;
+    }
+  }
+
 
   /**
    * @api
@@ -235,10 +251,6 @@ export class XmlElement {
     });
   }
 
-  setXmlParam(key, value){
-    console.log('receiving XmlParam:',key, '=', value)
-    this.attributes[key] = value
-  }
   _findObject(id: string): XmlElement {
     // too complex to consol.log here
     const lower = id.toLowerCase();

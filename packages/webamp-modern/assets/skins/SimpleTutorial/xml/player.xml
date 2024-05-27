@@ -146,6 +146,12 @@
 <container id="main" name="Main Window" default_x="0" default_y="0" default_visible="1">
   <!-- First Layout -->
   <layout id="normal" background="player.main.background" droptarget="pldr">
+    <Wasabi:TitleBar
+      id="wasabi.titlebar"
+      x="10" y="0"
+      w="-29" h="18"
+      relatw="1"
+    />
     <!-- Using Playback Buttons Group -->
     <group id="player.normal" />
     <group id="player.normal.playbuttons" x="12" y="85" />

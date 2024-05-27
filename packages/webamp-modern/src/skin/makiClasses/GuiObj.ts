@@ -30,7 +30,7 @@ import {
   useRef,
   xml,
 } from "@odoo/owl";
-import { uiRegistry } from "@lib/registry";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
 
 let BRING_LEAST: number = -1;
 let BRING_MOST_TOP: number = 1;
@@ -114,8 +114,10 @@ export class UI extends Component {
     let style = ""; //`top:${y}px; left:${x}px; color:fuchsia;`;
     if (x != null) style += `left:${relative(x, relatx)};`;
     if (y != null) style += `top:${relative(y, relaty)};`;
-    if (w != null) style += relatw ? `right:${w * -1}px;` : `width:${w}px;`;
-    if (h != null) style += relath ? `bottom:${h * -1}px` : `height:${h}px;`;
+    // if (w != null) style += relatw ? `right:${w * -1}px;` : `width:${w}px;`;
+    // if (h != null) style += relath ? `bottom:${h * -1}px` : `height:${h}px;`;
+    if (w != null) style += `width:${relative(w, relatw)};`;
+    if (h != null) style += `height:${relative(h, relath)};`;
     if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
     // if (visible != null && !visible) style += `display:none;`;
     if (this.att.background) style += this.bgStyle(this.att.background);
@@ -1221,7 +1223,7 @@ export default class GuiObj extends XmlObj {
     this._renderDimensions();
   }
 }
-
+xmlRegistry.add('xml', GuiObj)
 export class Nothing extends Component {
   static template = xml`<t t-out="commented()" />`;
 
