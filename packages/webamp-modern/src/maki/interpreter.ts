@@ -461,7 +461,11 @@ class Interpreter {
             );
           }
           if (this.debug) {
-            console.log(`Calling method ${methodName} got: ${result}`);
+            const args = JSON.stringify(methodArgs)
+              .replace("[", "")
+              .replace("]", "");
+            const ret = result && result.id ? result.id : result
+            console.log(`Calling method ${methodName}(${args}) got: ${ret}`);
           }
           this.push({ type: returnType, value: result } as any);
           break;

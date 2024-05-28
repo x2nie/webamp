@@ -544,7 +544,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     this._div.style.setProperty("--full-width", px(this._textFullWidth));
   }
 
-  getautowidth(): number {
+  getAutoWidth(): number {
+    return 81
     this._invalidateFullWidth();
     let textWidth = this._textFullWidth;
     if (this._relatw == "1") {

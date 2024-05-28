@@ -8,7 +8,7 @@ Global GuiObject left, right, center;
 Global Text tcenter;
 Global Layer lcenter;
 Global Group sg;
-Global int padleft, padright;
+Global int padleft, padright, ppp;
 
 System.onScriptLoaded() {
 
@@ -29,6 +29,7 @@ System.onScriptLoaded() {
     lcenter = center.findObject("window.titlebar.title.overlay");
   }
   right = sg.findObject(getToken(getParam(), ";", 2));
+  resizeObjects();
 }
 
 // backward compatibility with prerelease notify trick

@@ -262,20 +262,21 @@ export class XmlElement {
     // find in direct children first
     for (const obj of this.children) {
       // if ((obj.id || "").toLowerCase() === lower) {
-      //   return obj as GuiObj;
+      if (obj.id  == lower) {
+        return obj;
+      }
+      // result = obj._findObject(lower)
+      // if(result) {
+      //   return result
       // }
-      result = obj._findObject(lower)
-      if(result) {
-        return result
+    }
+    // find in grand child
+    for (const obj of this.children) {
+      const found = obj._findObject(id);
+      if (found != null) {
+        return found;
       }
     }
-    // // find in grand child
-    // for (const obj of this.children) {
-    //   const found = obj._findobject(id);
-    //   if (found != null) {
-    //     return found;
-    //   }
-    // }
     return null;
   }
 }

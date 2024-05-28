@@ -167,7 +167,8 @@
 
 ======================================================================================================== -->
 
-<groupdef id="wasabi.standardframe.nostatusbar" background="wasabi.frame.basetexture" sysregion="1" xuitag="Wasabi:StandardFrame:NoStatus">
+<groupdef id="wasabi.standardframe.nostatusbar" background="wasabi.frame.basetexture" sysregion="1" 
+xuitag="Wasabi:StandardFrame:NoStatus">
 
   <group id="wasabi.frame.layout" x="0" y="0" w="0" h="-15" relatw="1" relath="1"/>
   <layer

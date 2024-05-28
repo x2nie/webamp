@@ -457,7 +457,7 @@ export default class GuiObj extends XmlObj {
       // e.preventDefault();
       console.log("mouse-down!");
       this.onLeftButtonDown(
-        e.offsetX + this.getleft(),
+        e.offsetX + this.getLeft(),
         e.offsetY + this.gettop()
       );
 
@@ -466,7 +466,7 @@ export default class GuiObj extends XmlObj {
         // e.preventDefault();
         console.log("mouse-up!");
         this.onLeftButtonUp(
-          e.offsetX + this.getleft(),
+          e.offsetX + this.getLeft(),
           e.offsetY + this.gettop()
         );
         this._div.removeEventListener("mouseup", mouseUpHandler);
@@ -544,8 +544,8 @@ export default class GuiObj extends XmlObj {
    *
    * @ret The left edge's position (in screen coordinates).
    */
-  getleft(): number {
-    return this._x;
+  getLeft(): number {
+    return this.attributes.x;
   }
 
   /**
@@ -575,6 +575,10 @@ export default class GuiObj extends XmlObj {
    * @ret The width of the object.
    */
   getWidth(): number {
+    if(this.el && this.el.gui.el){
+      return (this.el.gui.el as unknown as HTMLElement).offsetWidth
+    }
+    return 111;
     if (this._w || this._minimumWidth || this._maximumWidth) {
       let w = Math.max(this._w || 0, this._minimumWidth);
       if (this._maximumHeight) {
@@ -585,7 +589,7 @@ export default class GuiObj extends XmlObj {
     return this._w;
   }
   get width(): number {
-    return this.getwidth();
+    return this.getWidth();
   }
   set width(value: number) {
     this._w = value;
@@ -637,7 +641,8 @@ export default class GuiObj extends XmlObj {
   getguirelaty(): number {
     return this._relaty == "1" ? 1 : 0;
   }
-  getautowidth(): number {
+  getAutoWidth(): number {
+    return 78
     const child = !this._autowidthsource
       ? this
       : findLast(
@@ -749,9 +754,9 @@ export default class GuiObj extends XmlObj {
    */
   onLeftButtonDown(x: number, y: number) {
     assert(
-      x >= this.getleft(),
+      x >= this.getLeft(),
       "Expected click to be to the right of the component's left." +
-        ` x:${x} left:${this.getleft()}`
+        ` x:${x} left:${this.getLeft()}`
     );
     assert(
       y >= this.gettop(),
@@ -1032,7 +1037,8 @@ export default class GuiObj extends XmlObj {
    * Given the screen coordinates of a point, is there some way to calculate the coordinates of that point on the actual page of the browser?
    */
 
-  clienttoscreenx(x: number): number {
+  clientToScreenX(x: number): number {
+    return x;
     const element = this.getDiv();
     const position = element.getBoundingClientRect();
     return window.screenX + position.left + x;
@@ -1050,7 +1056,8 @@ export default class GuiObj extends XmlObj {
     return unimplemented(this.clienttoscreeny(h));
   }
 
-  screentoclientx(x: number): number {
+  screenToClientX(x: number): number {
+    return x;
     const element = this.getDiv();
     const position = element.getBoundingClientRect();
     return x - (window.screenX + position.left);

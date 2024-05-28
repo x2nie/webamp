@@ -90,7 +90,7 @@ export default class Layout extends Group {
    *
    * @ret The left edge's position (in screen coordinates).
    */
-  getleft(): number {
+  getLeft(): number {
     return this._parent._x;
   }
 
@@ -210,7 +210,7 @@ export default class Layout extends Group {
       this._resizingDiv.style.width = px(r.width);
       this._resizingDiv.style.height = px(r.height);
       this._resizingDiv.style.top = px(container.gettop());
-      this._resizingDiv.style.left = px(container.getleft());
+      this._resizingDiv.style.left = px(container.getLeft());
       this._div.appendChild(this._resizingDiv);
     } else if (dx == CURSOR && dy == CURSOR) {
       this._resizingDiv.style.cursor = cmd;
@@ -225,7 +225,7 @@ export default class Layout extends Group {
         this._resizingDiv.style.height = px(clampH(r.height + dy));
 
       if (this._canResize & LEFT) {
-        this._resizingDiv.style.left = px(container.getleft() + dx);
+        this._resizingDiv.style.left = px(container.getLeft() + dx);
         this._resizingDiv.style.width = px(clampW(r.width + -dx));
       }
       if (this._canResize & TOP) {

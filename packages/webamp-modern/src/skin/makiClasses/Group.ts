@@ -149,7 +149,8 @@ export default class Group extends Movable {
   }
 
   /* Required for Maki */
-  getobject(objectId: string): GuiObj {
+  getObject(objectId: string): GuiObj {
+    return this._findObject(objectId) as GuiObj;
     const lower = objectId.toLowerCase();
     for (const obj of this._children) {
       if (obj.getId() === lower) {
@@ -170,13 +171,13 @@ export default class Group extends Movable {
     return this._children.length;
   }
 
-  getparentlayout(): Layout {
+  getParentLayout(): Layout {
     let obj: Group = this;
-    while (obj._parent) {
-      if (obj._isLayout) {
-        break;
+    while (obj) {
+      if (obj.tag == 'layout') {
+        return obj as Layout
       }
-      obj = obj._parent;
+      obj = obj.parent;
     }
     if (!obj) {
       console.warn("getParentLayout", this.getId(), "failed!");
@@ -202,7 +203,11 @@ export default class Group extends Movable {
   }
 
   // This shadows `getwidth()` on GuiObj
-  getwidth(): number {
+  getWidth0(): number {
+    if(this.el){
+      return (this.el as unknown as HTMLElement).offsetWidth
+    }
+    return 76;
     if (this._autowidthsource) {
       const widthSource = this.findObject(this._autowidthsource);
       if (widthSource) {

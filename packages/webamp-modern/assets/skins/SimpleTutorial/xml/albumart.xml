@@ -12,6 +12,7 @@ default_x="0" default_y="116" nomenu="1" >
 
 <groupdef id="albumart.content.group">
 
+	<text default="welcome art!" />
 	<!-- <AlbumArt
 		id="waaa" fitparent="1" move="1"
 	/> -->
@@ -21,7 +22,7 @@ default_x="0" default_y="116" nomenu="1" >
 </groupdef>
 
 <layout id="normal"  background="aa.background" 
-minimum_w="116" minimum_h="116" h="116" w="275">
+minimum_w="116" minimum_h="116" h="164" w="164">
 	<!-- <group
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		id="albumart.content.group"
@@ -33,6 +34,7 @@ minimum_w="116" minimum_h="116" h="116" w="275">
 	<Wasabi:Standardframe:NoStatus
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		content="albumart.content.group"
+
 	/>
 	  <!-- <Wasabi:TitleBar
     id="wasabi.titlebar"
