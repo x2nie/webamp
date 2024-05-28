@@ -51,6 +51,7 @@ export async function interpret(
     system
   );
   interpreter.stack = stack;
+  interpreter.debug = true;
   // return await interpreter.interpret(start);
   try {
     return await interpreter.interpret(start);
@@ -117,9 +118,9 @@ class Interpreter {
     let ip = start;
     while (ip < this.commands.length) {
       const command = this.commands[ip];
-      if (this.debug) {
-        console.log(command);
-      }
+      // if (this.debug) {
+      //   console.log(command);
+      // }
 
       switch (command.opcode) {
         // push 0x01
@@ -460,7 +461,7 @@ class Interpreter {
             );
           }
           if (this.debug) {
-            console.log(`Calling method ${methodName}`);
+            console.log(`Calling method ${methodName} got: ${result}`);
           }
           this.push({ type: returnType, value: result } as any);
           break;

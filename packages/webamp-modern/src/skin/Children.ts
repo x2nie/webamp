@@ -3,7 +3,7 @@ import { Component, markup, xml } from "@odoo/owl";
 export { UI } from "./makiClasses/GuiObj";
 import { Nothing } from "./makiClasses/GuiObj";
 
-export default class Children extends Component {
+export class Children0 extends Component {
   static template = xml`
     <t t-foreach="mychilds()" t-as="child" t-key="child_index" t-if="props.children.length">
       <t t-component="lookup(child.tag)" node="child" />

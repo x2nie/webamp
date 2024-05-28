@@ -1,5 +1,5 @@
 import { uiRegistry } from "@lib/registry";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, onWillStart, xml } from "@odoo/owl";
 
 export class Sendparams extends Component {
   static template = xml`<!-- sendparams -->`
@@ -19,8 +19,9 @@ export class Sendparams extends Component {
         }
         for(const [k,v] of Object.entries(this.att)){
           if(!['group', 'target'].includes(k) && v != null){
-            // console.log('sendz:', group.id, '@', targetNode.id, '::', k, '=', v)
+            console.log('sendz:', group.id, '@', targetNode.id, '::', k, '=', v)
             targetNode.setXmlParam(k, String(v))
+            console.log('checkpoint:',k, '=>>',targetNode.attributes[k])
           }
         }
       }

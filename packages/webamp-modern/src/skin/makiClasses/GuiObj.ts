@@ -100,7 +100,7 @@ export class UI extends Component {
       .filter((e) => !uiRegistry.contains(e.tag))
       .map((e) => e.tag);
     if (notFound.length) {
-      console.log("TAG NOT FOUND:::", [...new Set(notFound)].join(", "));
+      console.warn("TAG NOT FOUND:::", [...new Set(notFound)].join(", "));
     }
     return this.props.node.children.filter((e) => uiRegistry.contains(e.tag));
   }
@@ -574,7 +574,7 @@ export default class GuiObj extends XmlObj {
    *
    * @ret The width of the object.
    */
-  getwidth(): number {
+  getWidth(): number {
     if (this._w || this._minimumWidth || this._maximumWidth) {
       let w = Math.max(this._w || 0, this._minimumWidth);
       if (this._maximumHeight) {

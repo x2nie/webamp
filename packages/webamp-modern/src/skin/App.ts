@@ -2,7 +2,7 @@ import { XmlElement } from "@lib/xml";
 import { Component, toRaw, useEnv, useState, useSubEnv, xml } from "@odoo/owl";
 import { createSkinEngineFor } from "./SkinEngine";
 import { ContainerUI } from "./makiClasses/Container";
-import Children from "./Children";
+// import Children from "./Children";
 import { createWindowService } from "@lib/windowManager/hook";
 
 // -----------------------------------------------------------------------------
@@ -28,7 +28,7 @@ export class App extends Component {
     //     <Container node="w"/>
     //   </t>
     // </div>`;
-    static components = { Children, ContainerUI };
+    static components = { ContainerUI };
     // static components = { ContainerUI };
     state: any;
     env: any;

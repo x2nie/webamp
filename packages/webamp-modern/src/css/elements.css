@@ -355,5 +355,7 @@ ul.popup-menu-container li:hover > span {
 }
 
 text {
-  background: yellow;
+  /* background: yellow; */
+  color: white;
+  padding-top: 1px;
 }

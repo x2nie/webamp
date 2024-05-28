@@ -22,6 +22,7 @@ export class WinampModern extends SkinEngine {
   _groupdef: { [key: string]: XmlElement } = {};
   _groupBeta: XmlElement[] = []; // children needed. it is group that groupdef may unparsed
   _xuidef: { [key: string]: XmlElement } = {};
+  _xuiBeta: XmlElement[] = []; // children needed. it is a wasabi:group that groupdef may unparsed
   _unknownTag: XmlElement[] = []; // may later cast'ed with xuitag
   _image: { [file: string]: { img: HTMLImageElement; url: string } } = {};
   _bitmap: { [key: string]: XmlElement } = {};
@@ -46,8 +47,8 @@ export class WinampModern extends SkinEngine {
     console.log("xuidef", this._xuidef);
     console.log("FINAL skin.xml=>", parsed);
 
-    await this.loadRes();
     await this.resolveXui();
+    await this.loadRes();
     // await this.loadBitmaps();
     // await this.loadScripts();
 
@@ -119,22 +120,35 @@ export class WinampModern extends SkinEngine {
   }
 
   async resolveXui() {
-    this._unknownTag.forEach((el) => {
+    this._xuiBeta.forEach((el) => {
       const groupdef = this._xuidef[el.tag];
       if (groupdef) {
         // debugger
         const Xui = xmlRegistry.get("xui", XmlElement);
         el = el.cast(Xui);
+        //? don't do populate here, 
+        //? it may have another unresolved xui as children/ grandchild
         // if (!el.attributes.content) {
-          el.merge(groupdef.clone());
+          // el.merge(groupdef.clone());
         // }
+        el.attributes.instance_id = el.id
+        el.attributes.id = groupdef.id
+        // this._groupBeta.push(el)
         el.tag = "xui";
       }
     });
   }
 
-  populateGroup(group:XmlElement, id: string){
-    const groupdef = this._groupdef[id];
+  async attachXuiChild() {
+    const loadGroup = async (group: XmlElement) => {
+      this.populateGroup(group)
+    };
+    await Promise.all(this._groupBeta.map(loadGroup));
+    this._groupBeta = [];
+  }  
+
+  populateGroup(group:XmlElement){
+    const groupdef = this._groupdef[group.id];
     // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
     if (!groupdef) {
       console.log("failed to get groupdef:", group.id);
@@ -163,6 +177,7 @@ export class WinampModern extends SkinEngine {
     await Promise.all(this._groupBeta.map(loadGroup));
     this._groupBeta = [];
   }
+
 
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
     const tag = node.tag;
@@ -206,7 +221,11 @@ export class WinampModern extends SkinEngine {
         // debugger;
         break;
       default:
-        this._unknownTag.push(node);
+        if(tag.startsWith('wasabi:')){
+          this._xuiBeta.push(node)
+        } else {
+          this._unknownTag.push(node);
+        }
     }
   }
 

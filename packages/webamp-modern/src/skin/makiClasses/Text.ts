@@ -62,7 +62,14 @@ export default class Text extends GuiObj {
   //   this._div.appendChild(this._textWrapper);
   // }
 
-  setXmlAttr(key: string, value: string): boolean {
+  setXmlParam(key:string, value:string|any){
+    if(key=='default'){
+      super.setXmlParam('text',value)
+    }
+    super.setXmlParam(key,value)
+  }
+
+  setXmlAttr0(key: string, value: string): boolean {
     if (super.setXmlAttr(key, value)) {
       return true;
     }

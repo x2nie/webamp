@@ -120,17 +120,18 @@ export class XmlElement {
     //transform, as needed
     this.attributes = {};
     for (let [k, v] of Object.entries(attributes)) {
-      if (k in forbidden_keys) {
-        k = forbidden_keys[k];
-      }
-      if (value2lower.includes(k)) {
-        this.attributes[k] = v.toLowerCase();
-      } else if (value2number.includes(k)) {
-        //@ts-ignore
-        this.attributes[k] = Number(v);
-      } else {
-        this.attributes[k] = v;
-      }
+      this.setXmlParam(k, v)
+      // if (k in forbidden_keys) {
+      //   k = forbidden_keys[k];
+      // }
+      // if (value2lower.includes(k)) {
+      //   this.attributes[k] = v.toLowerCase();
+      // } else if (value2number.includes(k)) {
+      //   //@ts-ignore
+      //   this.attributes[k] = Number(v);
+      // } else {
+      //   this.attributes[k] = v;
+      // }
     }
 
     // this.attributes = attributes;
@@ -141,7 +142,7 @@ export class XmlElement {
     });
   }
   setXmlParam(key:string, value:string|any){
-    console.log('receiving XmlParam:',key, '=', value)
+    // console.log('receiving XmlParam:',key, '=', value)
     // this.attributes[key] = value
     if (key in forbidden_keys) {
       key = forbidden_keys[key];

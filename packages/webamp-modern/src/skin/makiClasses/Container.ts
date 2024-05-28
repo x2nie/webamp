@@ -5,8 +5,9 @@ import XmlObj from "../XmlObj";
 import Group from "./Group";
 import { Component, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
-import Children, { UI } from "../Children";
+// import Children, { UI } from "../Children";
 import { useWindowService, WindowManager } from "@lib/windowManager/hook";
+import { UI } from "./GuiObj";
 
 export class ContainerUI extends UI {
   // static template = xml`<div class="container" t-out="props.node.id" />`;
@@ -18,7 +19,7 @@ export class ContainerUI extends UI {
       <LayoutGui active="true" node="props.node.getCurLayout()"/>
     </container>
       `
-  static template0 = xml`
+  static template0 = `
     <container t-att-id="att.id" t-name="Container" 
     t-att-class="{container: true, invisible: !att.visible}" 
     t-att-style="style()" 
@@ -28,7 +29,7 @@ export class ContainerUI extends UI {
       </t>
     </container>`;
       // t-on-dblclick="toggleLayout" 
-  static components = {LayoutGui, Children}
+  static components = {LayoutGui}
   static nextZIndex = 1;
   windowManager: WindowManager
 
