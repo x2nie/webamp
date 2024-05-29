@@ -6,7 +6,7 @@ export class Sendparams extends Component {
   setup() {
     onMounted(() => {
       if(/* !this.att.group || */ !this.att.target)  {
-        console.log('sendparam has no valid att.group/.target:', this.props.node)
+        console.warn('sendparam has no valid att.group/.target:', this.props.node)
         return
       }
       const group = this.att.group? this.props.node.parent.findObject(this.att.group) : this.props.node.parent;
@@ -14,14 +14,14 @@ export class Sendparams extends Component {
       for(const target_id of targets){
         const targetNode = group.findObject(target_id)
         if(!targetNode){
-          console.log('failed to find target:', target_id)
+          console.warn('failed to find target:', target_id)
           continue
         }
         for(const [k,v] of Object.entries(this.att)){
           if(!['group', 'target'].includes(k) && v != null){
-            console.log('sendz:', group.id, '@', targetNode.id, '::', k, '=', v)
+            // console.log('sendz:', group.id, '@', targetNode.id, '::', k, '=', v)
             targetNode.setXmlParam(k, String(v))
-            console.log('checkpoint:',k, '=>>',targetNode.attributes[k])
+            // console.log('checkpoint:',k, '=>>',targetNode.attributes[k])
           }
         }
       }
