@@ -665,7 +665,7 @@ export default class GuiObj extends XmlObj {
     let ret = this._findObject(id);
 
     //? Phase 2: find sibling
-    if(this.parent){
+    if(!ret && this.parent){
       ret = this.parent._findObject(id);
     }
     //? Phase 3: find in this layout's children
