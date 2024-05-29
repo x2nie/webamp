@@ -74,37 +74,35 @@ export class WinampModern extends SkinEngine {
     //? load png as Image
     await Promise.all(
       Object.keys(this._image).map(async (filepath: string) => {
-        try{
-        const imgBlob = await this.zip.getFileAsBlob(filepath);
-        const url = URL.createObjectURL(imgBlob);
+        try {
+          const imgBlob = await this.zip.getFileAsBlob(filepath);
+          const url = URL.createObjectURL(imgBlob);
 
-        const img = new Image();
-        // Dapatkan dimensi PNG dengan menunggu img.onload dalam sebuah Promise
-        await new Promise<void>((resolve, reject) => {
-          img.src = url;
-          img.onload = () => {
-            resolve();
-          };
-          img.onerror = reject;
-        });
-        this._image[filepath] = { img, url };
-      } catch {
-        console.log('failed to download bitmap:', filepath)
-      }
+          const img = new Image();
+          // Dapatkan dimensi PNG dengan menunggu img.onload dalam sebuah Promise
+          await new Promise<void>((resolve, reject) => {
+            img.src = url;
+            img.onload = () => {
+              resolve();
+            };
+            img.onerror = reject;
+          });
+          this._image[filepath] = { img, url };
+        } catch {
+          console.log("failed to download bitmap:", filepath);
+        }
       })
     );
     // console.log(this._image)
     //? put img url
-    Object.values(this._bitmap).forEach(
-      (bitmap) => {
-        const att = bitmap.attributes
-        const img = this._image[att.file]
-        att.url = img.url
-        att.width = img.img?.width
-        att.height = img.img?.height
-        // console.log(`bmp:${att.id} = "${att.url}"`)
-      }
-    );
+    Object.values(this._bitmap).forEach((bitmap) => {
+      const att = bitmap.attributes;
+      const img = this._image[att.file];
+      att.url = img.url;
+      att.width = img.img?.width;
+      att.height = img.img?.height;
+      // console.log(`bmp:${att.id} = "${att.url}"`)
+    });
   }
   async loadScripts() {
     const loadScript = async (file: string) => {
@@ -120,49 +118,102 @@ export class WinampModern extends SkinEngine {
   }
 
   async resolveXui() {
+    const Xui = xmlRegistry.get("xui", XmlElement);
+    /*
     this._xuiBeta.forEach((el) => {
       const groupdef = this._xuidef[el.tag];
       if (groupdef) {
         // debugger
-        const Xui = xmlRegistry.get("xui", XmlElement);
+        el.attributes.xuitag = el.tag
+        el.tag = "xui";
         el = el.cast(Xui);
         //? don't do populate here, 
         //? it may have another unresolved xui as children/ grandchild
         // if (!el.attributes.content) {
           // el.merge(groupdef.clone());
         // }
-        el.attributes.instance_id = el.id
-        el.attributes.id = groupdef.id
+        // el.attributes.instance_id = el.id
+        // el.attributes.id = groupdef.id
         // this._groupBeta.push(el)
-        el.tag = "xui";
       }
     });
+    */
+
+    const scanXui = (el: XmlElement) => {
+      //recursive, child first
+      for (const child of el.children) {
+        scanXui(child);
+      }
+      if (this._xuidef[el.tag]) {
+        loadXui(el);
+      }
+    };
+    const loadXui = (el: XmlElement) => {
+      // if(el.attributes.resolved == true){
+      //   return
+      // }
+      const groupdef = this._xuidef[el.tag];
+      if (groupdef) {
+        // debugger
+        el.attributes.xuitag = el.tag;
+        el.tag = "xui";
+        el = el.cast(Xui);
+        //? don't do populate here,
+        //? it may have another unresolved xui as children/ grandchild
+        // if (!el.attributes.content) {
+        // el.merge(groupdef.clone());
+        // }
+
+        //lets load its childrens first.
+        // debugger
+        scanXui(groupdef);
+        el.merge(groupdef.clone());
+        if (el.id) {
+          this._groupBeta.push(el);
+        }
+        // el.attributes.resolved = true
+        // el.attributes.instance_id = el.id
+        // el.attributes.id = groupdef.id
+        // this._groupBeta.push(el)
+      }
+    };
+    this._xuiBeta.forEach(loadXui);
   }
 
-  async attachXuiChild() {
-    const loadGroup = async (group: XmlElement) => {
-      this.populateGroup(group)
-    };
-    await Promise.all(this._groupBeta.map(loadGroup));
-    this._groupBeta = [];
-  }  
+  populateGroupDef(def: XmlElement) {
+    //recursive, child first
+    for (const child of def.children) {
+      this.populateGroupDef(child);
+    }
+    if (def.tag == "group" && !def.attributes.populated) {
+      this.populateGroup(def);
+    }
+  }
+  populateGroup(group: XmlElement) {
+    if (group.attributes.populated == true) return;
 
-  populateGroup(group:XmlElement){
     const groupdef = this._groupdef[group.id];
     // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
     if (!groupdef) {
       console.log("failed to get groupdef:", group.id);
     } else {
+      if (!groupdef.attributes.populated) {
+        this.populateGroupDef(groupdef);
+        groupdef.attributes.populated = true;
+      }
       group.merge(groupdef.clone());
-      if(group.attributes.instanceid){
-        group.attributes.id = group.attributes.instanceid
+      group.attributes.populated = true;
+
+      if (group.attributes.instanceid) {
+        group.attributes.id = group.attributes.instanceid;
+        delete group.attributes.instanceid;
       }
     }
   }
 
   async attachGroupChild() {
     const loadGroup = async (group: XmlElement) => {
-      this.populateGroup(group, group.id)
+      this.populateGroup(group);
       // const groupdef = this._groupdef[group.id];
       // // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
       // if (!groupdef) {
@@ -178,6 +229,13 @@ export class WinampModern extends SkinEngine {
     this._groupBeta = [];
   }
 
+  async attachXuiChild() {
+    const loadGroup = async (group: XmlElement) => {
+      this.populateGroup(group);
+    };
+    await Promise.all(this._groupBeta.map(loadGroup));
+    this._groupBeta = [];
+  }
 
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
     const tag = node.tag;
@@ -221,8 +279,8 @@ export class WinampModern extends SkinEngine {
         // debugger;
         break;
       default:
-        if(tag.startsWith('wasabi:')){
-          this._xuiBeta.push(node)
+        if (tag.startsWith("wasabi:")) {
+          this._xuiBeta.push(node);
         } else {
           this._unknownTag.push(node);
         }

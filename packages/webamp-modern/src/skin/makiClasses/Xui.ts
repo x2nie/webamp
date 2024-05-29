@@ -6,10 +6,10 @@ import { onMounted, onWillStart } from "@odoo/owl";
 export class XuiUi extends GroupUI {
   setup(): void {
     super.setup();
-    onWillStart(()=>{
-      const engine = this.env.engine
-      engine.populateGroup(this.props.node)
-    })
+    // onWillStart(()=>{
+    //   const engine = this.env.engine
+    //   engine.populateGroup(this.props.node)
+    // })
 
     onMounted(() => {
       for (const [k, v] of Object.entries(this.props.node.attributes)) {
