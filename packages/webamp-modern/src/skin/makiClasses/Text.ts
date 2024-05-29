@@ -1,7 +1,7 @@
 import GuiObj from "./GuiObj";
 import { UIRoot } from "../../UIRoot";
 import TrueTypeFont from "../TrueTypeFont";
-import BitmapFont from "../BitmapFont";
+import BitmapFont, { BitmapFontUI } from "../BitmapFont";
 import {
   integerToTime,
   removeAllChildNodes,
@@ -15,40 +15,14 @@ import { UI } from "../Children";
 import { Component, useEnv, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 
-class BitmapFontUI extends Component {
-  static template = xml`<span t-att-style="style()"/>`
-
-  setup(): void {
-    this.env = useEnv()
-  }
-  get att() {
-    return this.props.node.attributes;// <bitmapfont>
-  }
-  style(){
-    let style = ''
-    // const font_id = this.att.
-    // const bitmap = this.env.ui.bitmapFonts[bitmap_id];
-    // if(!bitmap) {
-    //   console.log('failed to find bitmap.id:', bitmap_id, 'for node:', this.props.node.id)
-    //   return style
-    // }  
-    // const url = bitmap.attributes.url;
-    const {url, charheight} = this.att
-
-    style += `display:block;`;
-    style += `background:url(${url});`;
-    style += `background-position-y:-${charheight}px;`;
-    style += `height:${px(charheight)};`;
-    style += `width:100px;`;
-    return style
-  }
-}
-
 export class TextUI extends UI {
   static template = xml`
     <text t-att-id="att.id" t-att-style="style()">
       <t t-if="att.fontmode=='truetype'" t-out="att.text"/>
-      <BitmapFontUI t-if="att.fontmode=='bitmap'" node="getBitmapFont()"/>
+      <BitmapFontUI t-if="att.fontmode=='bitmap'" 
+        node="props.node"
+        font="getBitmapFont()" 
+        text="'-78:51'"/>
    </text>
     `;
   static components = {BitmapFontUI}

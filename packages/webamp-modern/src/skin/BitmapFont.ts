@@ -1,3 +1,4 @@
+import { Component, xml, useEnv } from "@odoo/owl";
 import { num, px, toBool } from "../utils";
 import Bitmap from "./Bitmap";
 import ImageManager from "./ImageManager";
@@ -14,7 +15,64 @@ CHARS.forEach((chars, line) => {
     CHAR_MAP[char] = [col, line];
   });
 });
-console.log("CHAR_MAP:", CHAR_MAP);
+// console.log("CHAR_MAP:", CHAR_MAP);
+
+export class BitmapFontUI extends Component {
+  static template = xml`
+    <wrap font="BitmapFont" t-att-style="style()">
+      <t t-foreach="chars()" t-as="style" t-key="style_index">
+        <span t-att-style="style"/>
+      </t>
+    </wrap>`;
+
+  setup(): void {
+    this.env = useEnv()
+  }
+  get att() {
+    return this.props.node.attributes;// <text>
+  }
+  get font() {
+    return this.props.font.attributes;// <bitmapfont>
+  }
+  chars(){
+    const chars = []
+    const {charwidth,charheight} = this.font;
+    const {timecolonwidth} = this.att;
+    for (const char of this.props.text.split("")) {
+      let style = ''
+      const [x, y] = CHAR_MAP[char.toLocaleLowerCase()] ?? CHAR_MAP[" "];
+      style += `--x:${px(-x * charwidth)};`
+      style += `--y:${px(-y * charheight)};`
+      if(char==':'&& timecolonwidth){
+        style += `--charwidth: ${timecolonwidth}px;`
+      }
+      chars.push(style)
+      // const charNode = font.renderLetter(char);
+      // // TODO: This is quite hacky.
+      // if (char === ":" && useColonWidth) {
+      //   charNode.style.width = px(this._timeColonWidth);
+      //   charNode.style.marginRight = "0";
+      // }
+      // this._textWrapper.appendChild(charNode);
+    }
+    return chars
+  }
+  style(){
+    let style = ''
+    const {url, charheight, charwidth,hspacing} = this.font
+
+    // style += `display:block;`;
+    style += `background-image:url(${url});`;
+    style += `background-position-y:-${charheight}px;`;
+    style += `height:${px(charheight)};`;
+    style += `--charheight: ${charheight}px;`
+    style += `--charwidth: ${charwidth}px;`
+    style += `--hspacing: ${hspacing}px;`
+    // style += `width:100px;`;
+    return style
+  }
+}
+
 
 // http://wiki.winamp.com/wiki/XML_Elements#.3Cbitmapfont.2F.3E
 export default class BitmapFont extends Bitmap {
