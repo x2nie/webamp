@@ -22,7 +22,7 @@ export class TextUI extends UI {
       <BitmapFontUI t-if="att.fontmode=='bitmap'" 
         node="props.node"
         font="getBitmapFont()" 
-        text="'-78:51'"/>
+        text="'05:79'"/>
    </text>
     `;
   static components = {BitmapFontUI}
@@ -38,6 +38,11 @@ export class TextUI extends UI {
       }px rgb(${shadowcolor});`;
     }
     if (bold) style += `font-weight: bold;`;
+    
+    //bitmapfont
+    let { align } = this.att;
+    if(align!=null) style += `--align:${align}`;
+
 
     return style;
   }

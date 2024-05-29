@@ -64,7 +64,7 @@ export class BitmapFontUI extends Component {
     // style += `display:block;`;
     style += `background-image:url(${url});`;
     style += `background-position-y:-${charheight}px;`;
-    style += `height:${px(charheight)};`;
+    // style += `height:${px(charheight)};`;
     style += `--charheight: ${charheight}px;`
     style += `--charwidth: ${charwidth}px;`
     style += `--hspacing: ${hspacing}px;`
