@@ -55,7 +55,8 @@ export const value2number = [
   "ghost",
   "visible",
   "forceuppercase",
-  "altbolt",
+  "bold",
+  "altbold",
   "rectrgn",
 ];
 

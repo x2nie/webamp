@@ -17,9 +17,24 @@ import { uiRegistry, xmlRegistry } from "@lib/registry";
 
 export class TextUI extends UI {
   static template = xml`<text t-out="att.text" t-att-style="style()" />`;
+
+  style() {
+    let style = super.style();
+    let { shadowx, shadowy, shadowcolor, forceuppercase, bold } = this.att;
+    if (forceuppercase) style += `text-transform: uppercase;`;
+    if (shadowx || shadowy) {
+      shadowcolor = shadowcolor || "0,0,0";
+      style += `text-shadow: ${shadowx || 0}px ${
+        shadowy || 0
+      }px rgb(${shadowcolor});`;
+    }
+    if (bold) style += `font-weight: bold;`;
+
+    return style;
+  }
 }
 
-uiRegistry.add('text', TextUI)
+uiRegistry.add("text", TextUI);
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Ctext.2F.3E_.26_.3CWasabi:Text.2F.3E
 export default class Text extends GuiObj {
@@ -62,11 +77,11 @@ export default class Text extends GuiObj {
   //   this._div.appendChild(this._textWrapper);
   // }
 
-  setXmlParam(key:string, value:string|any){
-    if(key=='default'){
-      super.setXmlParam('text',value)
+  setXmlParam(key: string, value: string | any) {
+    if (key == "default") {
+      super.setXmlParam("text", value);
     }
-    super.setXmlParam(key,value)
+    super.setXmlParam(key, value);
   }
 
   setXmlAttr0(key: string, value: string): boolean {
@@ -393,7 +408,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   // extern Text.setText(String txt); // changes the display/text="something" param
   setText(txt: string) {
-    this.attributes.text = txt
+    this.attributes.text = txt;
     // if (this._text != txt) {
     //   this._text = txt;
     //   this._renderText();
@@ -545,7 +560,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   getAutoWidth(): number {
-    return 81
+    return 81;
     this._invalidateFullWidth();
     let textWidth = this._textFullWidth;
     if (this._relatw == "1") {
@@ -650,7 +665,7 @@ extern Text.onTextChanged(String newtxt);
     this._displayHandler = new Handler(this);
   }
 }
-xmlRegistry.add('text', Text)
+xmlRegistry.add("text", Text);
 
 type DisplayHandlerClass = typeof DisplayHandler;
 
