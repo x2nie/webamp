@@ -52,10 +52,12 @@ export const value2number = [
   "snapadjustbottom",
   "activealpha",
   "inactivealpha",
+  //bitmapfont
   "charwidth",
   "charheight",
   "hspacing",
   "vspacing",
+  "timecolonwidth",
   //bool
   "ghost",
   "visible",
