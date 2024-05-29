@@ -12,11 +12,46 @@ import {
 } from "../../utils";
 import Timer from "./Timer";
 import { UI } from "../Children";
-import { xml } from "@odoo/owl";
+import { Component, useEnv, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 
+class BitmapFontUI extends Component {
+  static template = xml`<span t-att-style="style()"/>`
+
+  setup(): void {
+    this.env = useEnv()
+  }
+  get att() {
+    return this.props.node.attributes;// <bitmapfont>
+  }
+  style(){
+    let style = ''
+    // const font_id = this.att.
+    // const bitmap = this.env.ui.bitmapFonts[bitmap_id];
+    // if(!bitmap) {
+    //   console.log('failed to find bitmap.id:', bitmap_id, 'for node:', this.props.node.id)
+    //   return style
+    // }  
+    // const url = bitmap.attributes.url;
+    const {url, charheight} = this.att
+
+    style += `display:block;`;
+    style += `background:url(${url});`;
+    style += `background-position-y:-${charheight}px;`;
+    style += `height:${px(charheight)};`;
+    style += `width:100px;`;
+    return style
+  }
+}
+
 export class TextUI extends UI {
-  static template = xml`<text t-out="att.text" t-att-style="style()" />`;
+  static template = xml`
+    <text t-att-id="att.id" t-att-style="style()">
+      <t t-if="att.fontmode=='truetype'" t-out="att.text"/>
+      <BitmapFontUI t-if="att.fontmode=='bitmap'" node="getBitmapFont()"/>
+   </text>
+    `;
+  static components = {BitmapFontUI}
 
   style() {
     let style = super.style();
@@ -31,6 +66,11 @@ export class TextUI extends UI {
     if (bold) style += `font-weight: bold;`;
 
     return style;
+  }
+  getBitmapFont(){
+    // debugger
+    const engine = this.env.engine
+    return engine._bitmapFont[this.att.font]
   }
 }
 

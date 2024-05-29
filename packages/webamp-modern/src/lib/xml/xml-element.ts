@@ -23,7 +23,8 @@ export const value2lower = [
   "activeimage",
   "thumb",
   "downthumb",
-  "notfoundImage", // ALbumArt
+  "notfoundimage", // ALbumArt
+  "gammagroup",
 ];
 
 export const value2number = [
@@ -51,6 +52,10 @@ export const value2number = [
   "snapadjustbottom",
   "activealpha",
   "inactivealpha",
+  "charwidth",
+  "charheight",
+  "hspacing",
+  "vspacing",
   //bool
   "ghost",
   "visible",

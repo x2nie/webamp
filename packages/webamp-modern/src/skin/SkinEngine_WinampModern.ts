@@ -26,6 +26,8 @@ export class WinampModern extends SkinEngine {
   _unknownTag: XmlElement[] = []; // may later cast'ed with xuitag
   _image: { [file: string]: { img: HTMLImageElement; url: string } } = {};
   _bitmap: { [key: string]: XmlElement } = {};
+  _bitmapFont: { [key: string]: XmlElement } = {};
+  _textBeta: XmlElement[] = []; // for later detect it's font-type:
   _script: { [file: string]: ParsedMaki } = {};
   _containers: XmlElement[] = [];
 
@@ -47,12 +49,14 @@ export class WinampModern extends SkinEngine {
     console.log("xuidef", this._xuidef);
     console.log("FINAL skin.xml=>", parsed);
 
+    this.resolveTextFont();
     await this.resolveXui();
     await this.loadRes();
     // await this.loadBitmaps();
     // await this.loadScripts();
 
     // debugger
+    this._env.bitmapFonts = markRaw(this._bitmapFont); // ractive not needed
     this._env.bitmaps = markRaw(this._bitmap); // ractive not needed
     this._env.scripts = markRaw(this._script); // do not reactive
     this._env.root = parsed; // reactive please.
@@ -69,7 +73,12 @@ export class WinampModern extends SkinEngine {
   async loadBitmaps() {
     //? register unique files
     Object.values(this._bitmap).forEach(
-      (bitmap) => (this._image[bitmap.attributes.file] = {})
+      //@ts-ignore
+      (bitmap) => this._image[bitmap.attributes.file] = {}
+    );
+    Object.values(this._bitmapFont).forEach(
+      //@ts-ignore
+      (bitmap) => this._image[bitmap.attributes.file] = {}
     );
     //? load png as Image
     await Promise.all(
@@ -103,6 +112,14 @@ export class WinampModern extends SkinEngine {
       att.height = img.img?.height;
       // console.log(`bmp:${att.id} = "${att.url}"`)
     });
+    Object.values(this._bitmapFont).forEach((bitmap) => {
+      const att = bitmap.attributes;
+      const img = this._image[att.file];
+      att.url = img.url;
+      att.width = img.img?.width;
+      att.height = img.img?.height;
+      // console.log(`bmp:${att.id} = "${att.url}"`)
+    });
   }
   async loadScripts() {
     const loadScript = async (file: string) => {
@@ -117,6 +134,16 @@ export class WinampModern extends SkinEngine {
     return await Promise.all(Object.keys(this._script).map(loadScript));
   }
 
+  resolveTextFont() {
+    //? detect font mode here
+    this._textBeta.forEach(
+      //@ts-ignore
+      (text) => {
+        const bitmap = this._bitmapFont[text.attributes.font]
+        text.attributes.fontmode = bitmap? 'bitmap': 'truetype'
+      }
+    );
+  }
   async resolveXui() {
     const Xui = xmlRegistry.get("xui", XmlElement);
     /*
@@ -272,8 +299,15 @@ export class WinampModern extends SkinEngine {
 
       case "bitmap":
         return this.bitmap(node, parent, path);
+      case "bitmapfont":
+        return await this.bitmapFont(node);
+      // case "color":
+      //   return await this.color(node, parent);
       case "gammaset":
         node.detach(); //? trial to cleanup, to see what the rest
+        break;
+      case "text":
+        this._textBeta.push(node)
         break;
       case "email":
         // debugger;
@@ -452,6 +486,9 @@ export class WinampModern extends SkinEngine {
 
   async bitmap(node: XmlElement, parent: any, path: string[] = []) {
     this._bitmap[node.id] = node.detach();
+  }
+  async bitmapFont(node: XmlElement) {
+    this._bitmapFont[node.id] = node.detach();
   }
 
   async script(node: XmlElement, parent: any, path: string[] = []) {
