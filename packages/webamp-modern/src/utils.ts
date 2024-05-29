@@ -45,12 +45,11 @@ export function px(size: number): string {
   return `${size}px`;
 }
 
-export function relative(v:number, relatv: number, opposite:number = 0): string {
+export function relative(v:number, relatv: number): string {
   if(relatv!=1){
     return px(v)
   } 
-  if (relatv == 0) return "100%";
-  return `calc(100% + ${v}px - ${opposite}px)`;
+  return `calc(100% + ${v}px)`;
 }
 
 export function toBool(str: string) {
