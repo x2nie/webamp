@@ -17,7 +17,7 @@ import { SkinEngine } from "../SkinEngine";
 import BaseObject from "./BaseObject";
 
 type eventInfo = {
-  node: XmlElement;
+  node: BaseObject;
   event: string;
   callback: Function;
 };
@@ -52,8 +52,9 @@ export class SystemUI extends Component {
       // this.script = toRaw(this.props.node.parsedScript);
       // debugger
       //   this.script.variables[0].value = this.props.node;
-      this.script.variables[0].value = this.node;
-      this.binding(this.script.variables[0] as VariableObject)
+      const me = this.script.variables[0] as VariableObject
+      me.value = this.node;
+      this.attachBindings(me)
 
       // debugger
     });
@@ -75,8 +76,13 @@ export class SystemUI extends Component {
     this.subscription.push({ node, event, callback });
     node.emitter.on(event, callback);
   }
+  unsubscribe() {
+    this.subscription.forEach(({ node, event, callback })=>{
+      node.emitter.off(event, callback);
+    });
+  }
 
-  binding(v: VariableObject) {
+  attachBindings(v: VariableObject) {
     // const xmlNode = v.value;
     for (const binding of this.script.bindings) {
       if (binding.variableOffset == v.offset) {

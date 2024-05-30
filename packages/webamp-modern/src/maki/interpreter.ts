@@ -522,7 +522,7 @@ class Interpreter {
             // debugger
             // console.log('assigning 48!: please register binding here (if is a global var!)')            
             b.binded=true;
-            this._uiRoot.binding(b)
+            this._uiRoot.attachBindings(b)
           }
           this.push(a);
           break;
