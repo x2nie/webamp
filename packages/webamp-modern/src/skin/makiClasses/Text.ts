@@ -22,7 +22,7 @@ export class TextUI extends UI {
       <BitmapFontUI t-if="att.fontmode=='bitmap'" 
         node="props.node"
         font="getBitmapFont()" 
-        text="'05:79'"/>
+        text="att.text"/>
    </text>
     `;
   static components = {BitmapFontUI}

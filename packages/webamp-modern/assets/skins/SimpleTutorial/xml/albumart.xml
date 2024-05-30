@@ -31,11 +31,11 @@ minimum_w="116" minimum_h="116" h="164" w="164">
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		id="wasabi.standardframe.nostatusbar"
 	/> -->
-	<Wasabi:Standardframe:NoStatus
+	<!-- <Wasabi:Standardframe:NoStatus
 		x="0" y="0" w="0" h="0" relatw="1" relath="1"
 		content="albumart.content.group"
 
-	/>
+	/> -->
 	  <!-- <Wasabi:TitleBar
     id="wasabi.titlebar"
     x="0" y="0"

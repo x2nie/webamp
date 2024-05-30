@@ -18,6 +18,7 @@ import ConfigAttribute from "./ConfigAttribute";
 import { XmlElement } from "@rgrove/parse-xml";
 import {
   Component,
+  EventBus,
   markup,
   onMounted,
   onPatched,
@@ -36,8 +37,15 @@ let BRING_LEAST: number = -1;
 let BRING_MOST_TOP: number = 1;
 
 export class UI extends Component {
-  static template = "ui";
+  static template = xml`
+    <t t-name="ui" t-tag="props.node.tag" t-att-id="att.id" 
+      t-att-class="getCssClass()" 
+      t-att-style="style()" t-ref="gui">
+        <t t-call="childs" />
+    </t>`;
+
   gui: { el: HTMLElement };
+  bus: EventBus;
   // static template0 = xml`
   // <t t-tag="props.node.tag" t-att-id="props.node.getId()" t-att-class="getCssClass()" t-att-style="style()">
   //  <Children children="props.node.children" />
@@ -45,8 +53,11 @@ export class UI extends Component {
   // static components = { Children };
 
   setup() {
+    this.bus = new EventBus();
     this.props.node.el = this;
     this.gui = useRef("gui"); // the html element in DOM
+
+    // this.bus.addEventListener()
     // const bound = () => {
     //   if (this.gui.el) {
     //     const r = this.gui.el.getBoundingClientRect();
@@ -63,10 +74,10 @@ export class UI extends Component {
     // onRendered(() => console.log(`${bound()}:rendered`));
     // onWillPatch(() => console.log(`${bound()}:willPatch`));
     // onPatched(() => console.log(`${bound()}:patched`));
-    
+
     onWillStart(() => {
-      this.att.scalex = this.att.relatw? 100 : 1;
-      this.att.scaley = this.att.relath? 100 : 1;
+      this.att.scalex = this.att.relatw ? 100 : 1;
+      this.att.scaley = this.att.relath ? 100 : 1;
     });
     // onMounted(() => this.detectRealSize());
     // useEffect(
@@ -84,15 +95,19 @@ export class UI extends Component {
     return this.props.node.attributes;
   }
   detectRealSize() {
-    if(this.att.image=='wasabi.frame.top'){
-      debugger
+    if (this.att.image == "wasabi.frame.top") {
+      debugger;
     }
-    if ((this.att.background || this.att.image) && (this.att.relatw || this.att.relath) && this.gui.el) {
-      console.log('guiWH mounted!')
+    if (
+      (this.att.background || this.att.image) &&
+      (this.att.relatw || this.att.relath) &&
+      this.gui.el
+    ) {
+      console.log("guiWH mounted!");
       // const r = this.gui.el.getBoundingClientRect();
       const el = this.gui.el;
       this.att.bound = { width: el.offsetWidth, height: el.offsetHeight };
-      this.render(true)
+      this.render(true);
     }
   }
   nodeChildren() {
@@ -136,17 +151,22 @@ export class UI extends Component {
     return style;
   }
   bgStyle(bitmap_id: any): string {
-    if(bitmap_id=='wasabi.frame.top'){
+    if (bitmap_id == "wasabi.frame.top") {
       // debugger
     }
     let style = "";
     // let scalex = 1,
     //   scaley = 1;
     const bitmap = this.env.ui.bitmaps[bitmap_id];
-    if(!bitmap) {
-      console.log('failed to find bitmap.id:', bitmap_id, 'for node:', this.props.node.id)
-      return style
-    }  
+    if (!bitmap) {
+      console.log(
+        "failed to find bitmap.id:",
+        bitmap_id,
+        "for node:",
+        this.props.node.id
+      );
+      return style;
+    }
     const url = bitmap.attributes.url;
     style += `background:url(${url});`;
     if (this.att.w == null || this.att.h == null) {
@@ -164,10 +184,10 @@ export class UI extends Component {
       //   // // img.src = `url(${url})`
       //   // img.src = url;
       // } else {
-        if (this.att.w == null)
-          this.att.w = bitmap.attributes.w || bitmap.attributes.width;
-        if (this.att.h == null)
-          this.att.h = bitmap.attributes.h || bitmap.attributes.height;
+      if (this.att.w == null)
+        this.att.w = bitmap.attributes.w || bitmap.attributes.width;
+      if (this.att.h == null)
+        this.att.h = bitmap.attributes.h || bitmap.attributes.height;
       // }
 
       // if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
@@ -202,7 +222,7 @@ export class UI extends Component {
       scalex = b.width / bitmap.attributes.w;
       scaley = b.height / bitmap.attributes.h;
     }*/
-    const {scalex, scaley} = this.att
+    const { scalex, scaley } = this.att;
     if (scalex != 1 || scaley != 1) {
       // debugger
       style += `background-size:${bitmap.attributes.width * scalex}px ${
@@ -575,8 +595,8 @@ export default class GuiObj extends XmlObj {
    * @ret The width of the object.
    */
   getWidth(): number {
-    if(this.el && this.el.gui.el){
-      return (this.el.gui.el as unknown as HTMLElement).offsetWidth
+    if (this.el && this.el.gui.el) {
+      return (this.el.gui.el as unknown as HTMLElement).offsetWidth;
     }
     return 111;
     if (this._w || this._minimumWidth || this._maximumWidth) {
@@ -642,7 +662,7 @@ export default class GuiObj extends XmlObj {
     return this._relaty == "1" ? 1 : 0;
   }
   getAutoWidth(): number {
-    return 78
+    return 78;
     const child = !this._autowidthsource
       ? this
       : findLast(
@@ -665,7 +685,7 @@ export default class GuiObj extends XmlObj {
     let ret = this._findObject(id);
 
     //? Phase 2: find sibling
-    if(!ret && this.parent){
+    if (!ret && this.parent) {
       ret = this.parent._findObject(id);
     }
     //? Phase 3: find in this layout's children
@@ -1260,7 +1280,7 @@ export default class GuiObj extends XmlObj {
     this._renderDimensions();
   }
 }
-xmlRegistry.add('xml', GuiObj)
+xmlRegistry.add("xml", GuiObj);
 export class Nothing extends Component {
   static template = xml`<t t-out="commented()" />`;
 

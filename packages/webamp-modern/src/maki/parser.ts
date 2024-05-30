@@ -289,7 +289,8 @@ function readVariables({ makiFile, classes }) {
       if (klass == null) {
         throw new Error("Invalid type");
       }
-      variables.push({ type: "OBJECT", value: null, global, guid: klass });
+      const index = variables.length
+      variables.push({ type: "OBJECT", value: null, global, guid: klass, offset: index });
     } else {
       const typeName = PRIMITIVE_TYPES[typeOffset];
       if (typeName == null) {

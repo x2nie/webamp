@@ -72,11 +72,16 @@ export class WinampModern extends SkinEngine {
 
   async loadBitmaps() {
     //? register unique files
-    Object.values(this._bitmap).forEach(
-      //@ts-ignore
-      (bitmap) => this._image[bitmap.attributes.file] = {}
-    );
     Object.values(this._bitmapFont).forEach(
+      (bitmapfont) => {
+        if(this._bitmap[bitmapfont.attributes.file]){
+          bitmapfont.attributes.file = this._bitmap[bitmapfont.attributes.file].attributes.file
+        }
+        //@ts-ignore
+        this._image[bitmapfont.attributes.file] = {}
+      }
+    );
+    Object.values(this._bitmap).forEach(
       //@ts-ignore
       (bitmap) => this._image[bitmap.attributes.file] = {}
     );

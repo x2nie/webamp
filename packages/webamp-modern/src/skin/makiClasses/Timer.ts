@@ -71,7 +71,8 @@ export default class Timer extends BaseObject {
   }
 
   onTimer() {
-    this._system.dispatch(this, "onTimer");
+    // this._system.dispatch(this, "onTimer");
+    this.emitter.trigger('onTimer')
   }
 
   setOnTimer(callback: () => void) {

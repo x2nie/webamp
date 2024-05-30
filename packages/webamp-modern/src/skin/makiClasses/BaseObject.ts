@@ -1,3 +1,4 @@
+import { Emitter } from "@lib/Emitter";
 import { XmlElement } from "@lib/xml";
 import { Component } from "@odoo/owl";
 
@@ -8,6 +9,16 @@ export default class BaseObject extends XmlElement {
   static GUID = "516549714a510d87b5a6e391e7f33532";
 
   el : Component;
+  private _emit: Emitter;
+
+
+  get emitter(){
+    // lazy 
+    if(!this._emit){
+      this._emit = new Emitter()
+    }
+    return this._emit
+  }
 
   /**
    * Returns the class name for the object.

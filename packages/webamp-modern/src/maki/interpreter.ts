@@ -1,4 +1,4 @@
-import { V, Variable } from "./v";
+import { V, Variable, VariableObject } from "./v";
 import { assert, assume } from "../utils";
 import { ParsedMaki, Command, Method } from "./parser";
 import { getClass, getMethod } from "./objects";
@@ -88,6 +88,7 @@ class Interpreter {
     uiRoot: any
   ) {
     const { commands, methods, variables, classes, maki_id } = program;
+    const { bindings } = program;
     this.classResolver = classResolver;
     this.commands = commands;
     this.methods = methods;
@@ -152,6 +153,9 @@ class Interpreter {
           );
 
           current.value = a.value;
+          if(current.type=='OBJECT' || a.value instanceof Object){
+            console.log('assigning1!:', current.value, '<==', a.value)
+          }
           break;
         }
         // == 0x08
@@ -500,11 +504,7 @@ class Interpreter {
             `Type mismatch: ${a.type} != ${b.type} at ip: ${ip}`
           );
           */
-          if (a.type == "OBJECT" && b.type == "OBJECT") {
-            // TODO: do attach bindings here now, since we got the variable type=object
-            // const objId = a.value instanceof BaseObject ? a.value.getId() : '!noid'
-            // console.log(objId, '=','dest:',b, 'src:',a)
-          }
+          
           if (b == null) {
             // TypeError: Cannot set properties of undefined (setting 'value'):
             const objId =
@@ -513,9 +513,15 @@ class Interpreter {
             //b={value:null}
             console.warn("Hey, can't move: b.value=a.value with b==nul;a=", a);
           }
-          if (b != null) {
-            //temporary, to see what next problem ?
-            b.value = a.value;
+          b.value = a.value;
+          if (b.type == "OBJECT"  && b.global && !b.binded) {
+            // TODO: do attach bindings here now, since we got the variable type=object
+            // const objId = a.value instanceof BaseObject ? a.value.getId() : '!noid'
+            // console.log(objId, '=','dest:',b, 'src:',a)
+            // console.log('assigning 48!:', b.value, '<==', a.value)
+            // debugger
+            // console.log('assigning 48!: please register binding here (if is a global var!)')            
+            this.attachEventListener(b)
           }
           this.push(a);
           break;
@@ -867,5 +873,10 @@ class Interpreter {
       }
       */
     }
+  }
+
+  attachEventListener(v: VariableObject){
+    const xmlNode = v.value;
+    v.binded = true
   }
 }

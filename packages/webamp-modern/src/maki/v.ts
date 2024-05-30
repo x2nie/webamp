@@ -8,6 +8,8 @@ export type VariableObject = {
   members?: number[];
   isClass?: boolean;
   events?: number[];
+  offset?: number; // index in program.variables, for search back
+  binded?:boolean; //mark as has been binding
   // }
   // | {
   //   type: "CLASS";
