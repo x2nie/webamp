@@ -3883,7 +3883,7 @@
   dependencies:
     "@octokit/openapi-types" "^12.11.0"
 
-"@odoo/owl@^2.2.0":
+"@odoo/owl@^2.2.10":
   version "2.2.10"
   resolved "https://registry.yarnpkg.com/@odoo/owl/-/owl-2.2.10.tgz#465727c49099f171efae153e7c38ee8848722d6e"
   integrity sha512-93wrtl202UYVJMCrCZxi3AMcGyBslhVqxgldYEGxh+T6u6pt0Txi6uoBTY5hyXmGRB+zE1W15ZbYYlNWTE5MuQ==

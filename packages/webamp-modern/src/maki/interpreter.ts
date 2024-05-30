@@ -51,7 +51,7 @@ export async function interpret(
     system
   );
   interpreter.stack = stack;
-  interpreter.debug = true;
+  // interpreter.debug = true;
   // return await interpreter.interpret(start);
   try {
     return await interpreter.interpret(start);
@@ -521,7 +521,8 @@ class Interpreter {
             // console.log('assigning 48!:', b.value, '<==', a.value)
             // debugger
             // console.log('assigning 48!: please register binding here (if is a global var!)')            
-            this.attachEventListener(b)
+            b.binded=true;
+            this._uiRoot.binding(b)
           }
           this.push(a);
           break;
@@ -852,7 +853,7 @@ class Interpreter {
           const classesOffset = command.arg;
           const guid = this.classes[classesOffset];
           const Klass = this.classResolver(guid);
-          const klassInst = new Klass(this._uiRoot);
+          const klassInst = new Klass();
           this.push({ type: "OBJECT", value: klassInst });
           break;
         }
@@ -873,10 +874,5 @@ class Interpreter {
       }
       */
     }
-  }
-
-  attachEventListener(v: VariableObject){
-    const xmlNode = v.value;
-    v.binded = true
   }
 }

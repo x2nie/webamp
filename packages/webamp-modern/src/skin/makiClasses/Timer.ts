@@ -13,12 +13,12 @@ export default class Timer extends BaseObject {
   _timeout: NodeJS.Timeout | null = null;
   _onTimer: () => void = null;
 
-  constructor(uiRoot: SystemObject) {
-    super();
-    this._system = uiRoot;
-  //   TIMER_IDS += 1;
-  //   this._id = `timer_${TIMER_IDS}`;
-  }
+  // constructor(uiRoot: SystemObject) {
+  //   super();
+  //   this._system = uiRoot;
+  // //   TIMER_IDS += 1;
+  // //   this._id = `timer_${TIMER_IDS}`;
+  // }
 
   setDelay(millisec: number) {
     // assume(
@@ -62,12 +62,13 @@ export default class Timer extends BaseObject {
   }
 
   doTimer() {
-    console.log('timer.ontimer()', "this._nid")
-    if (this._onTimer != null) {
-      this._onTimer();
-    } else {
-      this._system.dispatch(this, "onTimer");
-    }
+    // console.log('timer.ontimer()', "this._nid")
+    // if (this._onTimer != null) {
+    //   this._onTimer();
+    // } else {
+    //   this._system.dispatch(this, "onTimer");
+    // }
+    this.emitter.trigger('onTimer')
   }
 
   onTimer() {
@@ -75,13 +76,13 @@ export default class Timer extends BaseObject {
     this.emitter.trigger('onTimer')
   }
 
-  setOnTimer(callback: () => void) {
-    const handler = () => {
-      callback();
-    };
-    this._onTimer = handler;
-    // this._onTimer = callback;
-  }
+  // setOnTimer(callback: () => void) {
+  //   const handler = () => {
+  //     callback();
+  //   };
+  //   this._onTimer = handler;
+  //   // this._onTimer = callback;
+  // }
 
   isrunning(): boolean {
     return this._timeout != null;
