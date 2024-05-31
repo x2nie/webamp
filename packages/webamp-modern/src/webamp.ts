@@ -39,7 +39,11 @@ export class Webamp {
     // if(this.options.ownPlayback && this.options.tracks.length)
 
     this.playlist = sharePlayback ? PLEDIT : new PlEdit('pledit', {audio: this.audio})
-
+    if(this.playlist.getNumTracks()==0){
+      this.options.tracks.forEach((filename) =>{
+        this.playlist.enqueueFile(filename)
+      })
+    }
   }
   
   switchSkin(skinPath: string) {
@@ -68,7 +72,7 @@ export class Webamp {
     };
     const skinPath = env.options.skin;
     const loader = env.engine = await createSkinEngineFor(skinPath);
-    loader.setStorage(env.ui);
+    loader.setEnv(env);
 
 
     await loader.parseSkin();

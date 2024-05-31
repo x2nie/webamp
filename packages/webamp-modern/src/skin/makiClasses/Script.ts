@@ -55,11 +55,11 @@ export class SystemUI extends Component {
     onMounted(() => {
       console.log(`script ${this.script.maki_id} loaded!`);
       this.system.emitter.trigger("onScriptLoaded");
-      setTimeout(() => {
-        //simulate play
-        console.log(`sys.onPlay()`);
-        this.system.emitter.trigger("onPlay");
-      }, 3000);
+      // setTimeout(() => {
+      //   //simulate play
+      //   console.log(`sys.onPlay()`);
+      //   this.system.emitter.trigger("onPlay");
+      // }, 3000);
     });
     onWillUnmount(() => this.unsubscribe());
   }
@@ -78,6 +78,10 @@ export class SystemUI extends Component {
     });
   }
 
+  /**
+   * Chance to subscribe the eventListeners of a Variable.
+   * @param v Maki.variables member, v.value = GuiObject
+   */
   attachBindings(v: VariableObject) {
     // special action listener ---------------------------
     // const fun = async (...args: any[]) => {

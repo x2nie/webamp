@@ -44,7 +44,7 @@ export class SkinEngine {
     );
   }
 
-  setStorage(env: { [key: string]: XmlElement }) {}
+  setEnv(env: { [key: string]: any }) {}
 
   async initSkinExtractor(): Promise<FileExtractor> {
     let zip: FileExtractor;

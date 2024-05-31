@@ -86,7 +86,7 @@ export class App extends Component {
   
     async switchSkin(skinPath: string) {
       const loader = await createSkinEngineFor(skinPath);
-      loader.setStorage(this.env.ui);
+      loader.setEnv(this.env.ui);
   
       // loader._bitmap = this.env.bitmaps
       // await loader.loadSkin('skins/WinampModern566.wal')

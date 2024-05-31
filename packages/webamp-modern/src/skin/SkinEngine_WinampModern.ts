@@ -7,6 +7,8 @@ import { markRaw } from "@odoo/owl";
 import { registry, xmlRegistry } from "@lib/registry";
 import "./makiClasses/index";
 import GuiObj from "./makiClasses/GuiObj";
+import { AudioPlayer } from "./AudioPlayer";
+import { PlEdit } from "./makiClasses/PlayList";
 
 export class WinampModern extends SkinEngine {
   static supportedFileExt: string[] = ["wal", "zip"];
@@ -32,11 +34,19 @@ export class WinampModern extends SkinEngine {
   _script: { [file: string]: ParsedMaki } = {};
   _containers: XmlElement[] = [];
 
-  setStorage(env: { [key: string]: XmlElement }) {
+  setEnv(env: { [key: string]: any }) {
     this._env = env;
+    // this._audio = env.audio
   }
   containers(): XmlElement[] {
     return this._containers;
+  }
+
+  get audio(): AudioPlayer {
+    return this._env.audio;
+  }
+  get playlist(): PlEdit {
+    return this._env.playlist;
   }
 
   async parseSkin() {
@@ -57,10 +67,10 @@ export class WinampModern extends SkinEngine {
     // await this.loadScripts();
 
     // debugger
-    this._env.bitmapFonts = markRaw(this._bitmapFont); // ractive not needed
-    this._env.bitmaps = markRaw(this._bitmap); // ractive not needed
-    this._env.scripts = markRaw(this._script); // do not reactive
-    this._env.root = parsed; // reactive please.
+    this._env.ui.bitmapFonts = markRaw(this._bitmapFont); // ractive not needed
+    this._env.ui.bitmaps = markRaw(this._bitmap); // ractive not needed
+    this._env.ui.scripts = markRaw(this._script); // do not reactive
+    this._env.ui.root = parsed; // reactive please.
     // return parsed
   }
   async loadRes() {
@@ -73,18 +83,17 @@ export class WinampModern extends SkinEngine {
 
   async loadBitmaps() {
     //? register unique files
-    Object.values(this._bitmapFont).forEach(
-      (bitmapfont) => {
-        if(this._bitmap[bitmapfont.attributes.file]){
-          bitmapfont.attributes.file = this._bitmap[bitmapfont.attributes.file].attributes.file
-        }
-        //@ts-ignore
-        this._image[bitmapfont.attributes.file] = {}
+    Object.values(this._bitmapFont).forEach((bitmapfont) => {
+      if (this._bitmap[bitmapfont.attributes.file]) {
+        bitmapfont.attributes.file =
+          this._bitmap[bitmapfont.attributes.file].attributes.file;
       }
-    );
+      //@ts-ignore
+      this._image[bitmapfont.attributes.file] = {};
+    });
     Object.values(this._bitmap).forEach(
       //@ts-ignore
-      (bitmap) => this._image[bitmap.attributes.file] = {}
+      (bitmap) => (this._image[bitmap.attributes.file] = {})
     );
     //? load png as Image
     await Promise.all(
@@ -145,8 +154,8 @@ export class WinampModern extends SkinEngine {
     this._textBeta.forEach(
       //@ts-ignore
       (text) => {
-        const bitmap = this._bitmapFont[text.attributes.font]
-        text.attributes.fontmode = bitmap? 'bitmap': 'truetype'
+        const bitmap = this._bitmapFont[text.attributes.font];
+        text.attributes.fontmode = bitmap ? "bitmap" : "truetype";
       }
     );
   }
@@ -313,7 +322,7 @@ export class WinampModern extends SkinEngine {
         node.detach(); //? trial to cleanup, to see what the rest
         break;
       case "text":
-        this._textBeta.push(node)
+        this._textBeta.push(node);
         break;
       case "email":
         // debugger;
@@ -548,10 +557,23 @@ export class WinampModern extends SkinEngine {
     this._groupBeta.push(node);
   }
 
-  async triggerAction(sender: GuiObj, action: string, param: string){
-    console.log('WModern: action Triggered:', action, param)
+  async triggerAction(sender: GuiObj, action: string, param: string) {
+    console.log("WModern: action Triggered:", action, param);
+    switch (action) {
+      case "play":
+        this.audio.play();
+        break;
+      case "pause":
+        this.audio.pause();
+        break;
+      case "stop":
+        this.audio.stop();
+        break;
+      case "next":
+        // this.next();
+        break;
+    }
   }
-
 }
 
 registerSkinEngine(WinampModern);

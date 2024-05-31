@@ -94,7 +94,7 @@ export class PlEdit extends BaseObject {
   };
 
   //? ======= General PlEdit Information =======
-  getnumtracks(): number {
+  getNumTracks(): number {
     return this._tracks.length;
   }
 
@@ -144,7 +144,7 @@ export class PlEdit extends BaseObject {
     }
   }
 
-  enqueuefile(file: string): void {
+  enqueueFile(file: string): void {
     const newTrack: Track = { filename: file };
     this.addTrack(newTrack);
   }
