@@ -70,6 +70,10 @@ export default class SystemObject extends BaseObject {
   //     }
   //   }
   // }
+
+  async triggerAction(sender: GuiObj, action: string, param: string){
+    console.log('action Triggered:', action, param)
+  }
   
   constructor_obsolet(
     uiRoot: UIRoot,

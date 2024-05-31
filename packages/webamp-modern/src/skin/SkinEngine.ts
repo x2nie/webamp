@@ -8,6 +8,7 @@ import {
   PathFileExtractor,
   ZipFileExtractor,
 } from "./FileExtractor";
+import GuiObj from "./makiClasses/GuiObj";
 
 export class SkinEngine {
   /**
@@ -125,6 +126,20 @@ export class SkinEngine {
 
   populateGroup(group:XmlElement, id: string){
     
+  }
+
+  /**
+   * This is here, because some node doesn't loaded via script.
+   * example: play button on SimpleTutorial.wal
+   * If were possible, using script will subscribe the action as event.
+   * We can't subscribe into script, because there are many scirpts per group.
+   * So, because that is not as always possible, let put it here.
+   * @param sender Who sent the action?
+   * @param action const. such as 'SWITCH'
+   * @param param optional, such as 'shade'
+   */
+  async triggerAction(sender: GuiObj, action: string, param: string){
+    console.log('Ngin: action Triggered:', action, param)
   }
 }
 

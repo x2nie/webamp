@@ -6,6 +6,7 @@ import { SkinEngine, registerSkinEngine } from "./SkinEngine";
 import { markRaw } from "@odoo/owl";
 import { registry, xmlRegistry } from "@lib/registry";
 import "./makiClasses/index";
+import GuiObj from "./makiClasses/GuiObj";
 
 export class WinampModern extends SkinEngine {
   static supportedFileExt: string[] = ["wal", "zip"];
@@ -546,6 +547,11 @@ export class WinampModern extends SkinEngine {
     // sometime, group is defined before the groupdef. eg WinampModern566/player.normal.drawer
     this._groupBeta.push(node);
   }
+
+  async triggerAction(sender: GuiObj, action: string, param: string){
+    console.log('WModern: action Triggered:', action, param)
+  }
+
 }
 
 registerSkinEngine(WinampModern);

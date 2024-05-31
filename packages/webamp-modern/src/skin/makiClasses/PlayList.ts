@@ -1,4 +1,4 @@
-import { assume, Emitter, integerToTime, num, toBool } from "../../utils";
+import { assume, integerToTime, num, toBool } from "../../utils";
 import AUDIO_PLAYER, { Track } from "../AudioPlayer";
 // import * as musicMetadata from 'music-metadata-browser';
 import { parse } from "id3-parser";
@@ -9,6 +9,7 @@ import {
 import { parseMetaData } from "../AudioMetadata";
 import { UIRoot } from "../../UIRoot";
 import ConfigAttribute from "./ConfigAttribute";
+import { Emitter } from "@lib/Emitter";
 
 // import * as jsmediatags from 'jsmediatags';
 

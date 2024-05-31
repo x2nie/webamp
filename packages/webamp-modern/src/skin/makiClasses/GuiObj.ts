@@ -36,10 +36,19 @@ import { uiRegistry, xmlRegistry } from "@lib/registry";
 let BRING_LEAST: number = -1;
 let BRING_MOST_TOP: number = 1;
 
+const uiTemplate = xml`
+<t t-name="ui" t-tag="props.node.tag" t-att-id="att.id" 
+  t-att-class="getCssClass()" 
+  t-att-style="style()" t-ref="gui">
+    <t t-call="childs" />
+</t>`;
+
 export class UI extends Component {
   static template = xml`
     <t t-name="ui" t-tag="props.node.tag" t-att-id="att.id" 
       t-att-class="getCssClass()" 
+      t-att="attrs()"
+      t-on-click="handleClick"
       t-att-style="style()" t-ref="gui">
         <t t-call="childs" />
     </t>`;
@@ -91,8 +100,26 @@ export class UI extends Component {
     //   () => [this.gui.el]
     // );
   }
+  get node(): GuiObj {
+    return this.props.node;
+    // return this;
+  }
   get att() {
     return this.props.node.attributes;
+  }
+  attrs() {
+    //? for template.attributes
+    return {}
+  }
+  handleClick(ev:MouseEvent){
+    ev.stopPropagation()
+    console.log('click!')
+    // debugger
+    if(this.att.action){
+      const {action, param} = this.att;
+      this.env.engine.triggerAction(this.node, action, param)
+      // this.node.emitter.trigger('action', action, param)
+    }
   }
   detectRealSize() {
     if (this.att.image == "wasabi.frame.top") {

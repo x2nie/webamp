@@ -5,6 +5,7 @@ import {
   markup,
   onMounted,
   onWillStart,
+  onWillUnmount,
   useEnv,
   xml,
 } from "@odoo/owl";
@@ -15,6 +16,7 @@ import { Variable, VariableObject } from "../../maki/v";
 import { interpret } from "../../maki/interpreter";
 import { SkinEngine } from "../SkinEngine";
 import BaseObject from "./BaseObject";
+import SystemObject from "./SystemObject";
 
 type eventInfo = {
   node: BaseObject;
@@ -32,44 +34,34 @@ export class SystemUI extends Component {
     return markup(`<!-- script:${this.props.node.attributes.file} -->`);
   }
 
-  get node():BaseObject {
+  get system(): SystemObject {
     return this.props.node;
     // return this;
   }
 
   setup() {
-    this.node.el = this;
-    // console.log('SCRIPT.props=', this.props8.node)
-    // const script = useSystem()
+    this.system.el = this;
     this.env = useEnv();
-    // console.log("BINDING:", this.script.bindings);
-    // const self = this;
+
     onWillStart(() => {
-      // onMounted(() => {
       this.script = structuredClone(
         this.env.ui.scripts[this.props.node.attributes.file]
       );
-      // this.script = toRaw(this.props.node.parsedScript);
-      // debugger
-      //   this.script.variables[0].value = this.props.node;
-      const me = this.script.variables[0] as VariableObject
-      me.value = this.node;
-      this.attachBindings(me)
-
-      // debugger
+      const me = this.script.variables[0] as VariableObject;
+      me.value = this.system;
+      this.attachBindings(me);
     });
+
     onMounted(() => {
       console.log(`script ${this.script.maki_id} loaded!`);
-      //   debugger
-      // this.dispatch(this.node, "onScriptLoaded", []);
-      this.node.emitter.trigger('onScriptLoaded')
+      this.system.emitter.trigger("onScriptLoaded");
       setTimeout(() => {
         //simulate play
         console.log(`sys.onPlay()`);
-        //this.dispatch(this.node, "onPlay", []);
-        this.node.emitter.trigger('onPlay')
+        this.system.emitter.trigger("onPlay");
       }, 3000);
     });
+    onWillUnmount(() => this.unsubscribe());
   }
 
   subscribe(node: BaseObject, event: string, callback: Function) {
@@ -77,20 +69,32 @@ export class SystemUI extends Component {
     node.emitter.on(event, callback);
   }
   unsubscribe() {
-    this.subscription.forEach(({ node, event, callback })=>{
+    this.subscription.forEach(({ node, event, callback }) => {
       node.emitter.off(event, callback);
     });
   }
 
   attachBindings(v: VariableObject) {
-    // const xmlNode = v.value;
+    // special action listener ---------------------------
+    // const fun = async (...args: any[]) => {
+    //   const info = (fun as any).info;
+    //   const [action, param] = args;
+    //   return await this.system.triggerAction(info.sender, action, param);
+    // };
+    // (fun as any).info = {
+    //   sender: v.value,
+    // };
+    // debugger
+    // this.subscribe(v.value, "action", fun);
+
+    // general event listener ---------------------------
     for (const binding of this.script.bindings) {
       if (binding.variableOffset == v.offset) {
         const eventName = this.script.methods[binding.methodOffset].name;
 
         const fun = async (...args: any[]) => {
           const info = (fun as any).info;
-          this.invoke(info.event, info.start, ...args);
+          return await this.invoke(info.event, info.start, ...args);
         };
         (fun as any).info = {
           start: binding.commandOffset,
@@ -159,9 +163,9 @@ export class SystemUI extends Component {
     return this.env.engine;
   }
 
-  get group(): Group {
-    return this.props.node.parent.el;
-  }
+  // get group(): Group {
+  //   return this.props.node.parent.el;
+  // }
 
   /* Required for Maki */
   getRuntimeVersion(): number {
@@ -173,7 +177,7 @@ export class SystemUI extends Component {
   }
 
   getScriptGroup() {
-    return this.group;
+    return this.props.node.parent;
   }
   // findObject(id: string): GuiObject {
   //   return this.group.findObject(id);

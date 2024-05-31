@@ -1,4 +1,4 @@
-import { Emitter } from "../../utils";
+import { Emitter } from "@lib/Emitter";
 import BaseObject from "./BaseObject";
 import ConfigItem from "./ConfigItem";
 
