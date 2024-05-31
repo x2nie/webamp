@@ -38,7 +38,8 @@ export class BitmapFontUI extends Component {
     const chars = []
     const {charwidth,charheight} = this.font;
     const {timecolonwidth} = this.att;
-    for (const char of this.props.text.split("")) {
+    const text = this.props.text || ''
+    for (const char of text.split("")) {
       let style = ''
       const [x, y] = CHAR_MAP[char.toLocaleLowerCase()] ?? CHAR_MAP[" "];
       style += `--x:${px(-x * charwidth)};`
