@@ -1,16 +1,31 @@
-import GuiObj from "./GuiObj";
+import GuiObj, {UI} from "./GuiObj";
 import { V } from "../../maki/v";
 import AudioEventedGui from "../AudioEventedGui";
 import { UIRoot } from "../../UIRoot";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
-import { UI } from "../Children";
+import { xml } from "@odoo/owl";
 
 export class ButtonUI extends UI {
+  // static template = xml`
+  // <t t-name="ButtonUi" t-inherit="ui" t-inherit-mode="primary">
+  //   <xpath expr="//t[@t-name='ui']" position="attributes">
+  //     <attribute name="t-on-click">handleClick</attribute>
+  //   </xpath>
+  // </t>`
   // static template = xml`
   // <t t-tag="props.node.tag" t-att-id="props.node.getId()" t-att-class="getCssClass()" t-att-style="style()">
   //  <Children children="props.node.children" />
   // </t>`;
   // static components = {Children}
+
+  // attrs(){
+  //   let attr = super.attrs()
+  //   attr['t-on-click'] = 'handleClick'
+  //   return attr;
+  // }
+  // handleCLick(ev:MouseEvent){
+  //   console.log('click!')
+  // }
 
   // get att() {
   //   return this.props.node.attributes;
@@ -19,52 +34,52 @@ export class ButtonUI extends UI {
   // getCssClass(){
   //   return this.props.node? this.props.node.tag : 'unknown-tag'
   // }
-  style0() {
-    let style = super.style();
-    if (this.att.image) {
-      // const url = this.env.bitmaps[this.att.image].url
-      const bitmap = this.env.ui.bitmaps[this.att.image];
-      const url = bitmap.url;
-      style += `background:url(${url});`;
-      if(this.att.w==null || this.att.h==null){
-        if(bitmap.attributes.w==null || bitmap.attributes.h==null){
-          const img = new Image();
-          img.addEventListener("load", () => {
-            this.att.w = img.width
-            this.att.h = img.height
-          });
-          img.addEventListener("error", () => {
-            console.warn(`cant load empty image: ${this.att.image}. ::`, url);
+  // style0() {
+  //   let style = super.style();
+  //   if (this.att.image) {
+  //     // const url = this.env.bitmaps[this.att.image].url
+  //     const bitmap = this.env.ui.bitmaps[this.att.image];
+  //     const url = bitmap.url;
+  //     style += `background:url(${url});`;
+  //     if(this.att.w==null || this.att.h==null){
+  //       if(bitmap.attributes.w==null || bitmap.attributes.h==null){
+  //         const img = new Image();
+  //         img.addEventListener("load", () => {
+  //           this.att.w = img.width
+  //           this.att.h = img.height
+  //         });
+  //         img.addEventListener("error", () => {
+  //           console.warn(`cant load empty image: ${this.att.image}. ::`, url);
             
-          });
-          // img.src = `url(${url})`
-          img.src = url
-        }
+  //         });
+  //         // img.src = `url(${url})`
+  //         img.src = url
+  //       }
 
         
-        if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
-        if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
-      }
-      if (bitmap.attributes.x)
-        style += `background-position-x:${-bitmap.attributes.x}px;`;
-      if (bitmap.attributes.y)
-        style += `background-position-y:${-bitmap.attributes.y}px;`;
+  //       if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
+  //       if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
+  //     }
+  //     if (bitmap.attributes.x)
+  //       style += `background-position-x:${-bitmap.attributes.x}px;`;
+  //     if (bitmap.attributes.y)
+  //       style += `background-position-y:${-bitmap.attributes.y}px;`;
 
-      /*
-      titlebar.center.active
-      left: 10px;
-      top: 1px;
-      width: calc(100% + -20px);
-      background: url(blob:http://localhost:3001/3ac4cdd0-c1c5-4db1-88af-2292cc6cfdbd);
-      height: 9px;
-      background-position-x: -50px;
-      background-position-y: -100px;
-      background-size: 400px 166px;   400% x 100%
-      */
-    }
-    // if (visible != null && !visible) style += `display:none;`;
-    return style;
-  }
+  //     /*
+  //     titlebar.center.active
+  //     left: 10px;
+  //     top: 1px;
+  //     width: calc(100% + -20px);
+  //     background: url(blob:http://localhost:3001/3ac4cdd0-c1c5-4db1-88af-2292cc6cfdbd);
+  //     height: 9px;
+  //     background-position-x: -50px;
+  //     background-position-y: -100px;
+  //     background-size: 400px 166px;   400% x 100%
+  //     */
+  //   }
+  //   // if (visible != null && !visible) style += `display:none;`;
+  //   return style;
+  // }
 }
 
 uiRegistry.add('button', ButtonUI)
