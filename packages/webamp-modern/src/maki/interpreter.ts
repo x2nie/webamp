@@ -69,7 +69,7 @@ function validateVariable(v: Variable) {
 
 // http://wiki.winamp.com/wiki/Modern_Skin:_Maki_Overview
 class Interpreter {
-  _uiRoot: any; // actually only new Klass(uiRoot)
+  systemUi: any; // actually only new Klass(uiRoot)
   stack: Variable[];
   callStack: number[];
   classes: string[];
@@ -96,7 +96,7 @@ class Interpreter {
     this.classes = classes;
     this.maki_id = maki_id;
     this.eventName = eventName;
-    this._uiRoot = uiRoot;
+    this.systemUi = uiRoot;
 
     this.stack = [];
     this.callStack = [];
@@ -421,6 +421,9 @@ class Interpreter {
               );
               // result = await afunction(...methodArgs);
               result = await obj.value[methodName](...methodArgs);
+            // } else if(methodName == 'getScriptGroup') {
+            //   //
+            //   result = this.systemUi.getScriptGroup()
             } else {
               // afunction = afunction.bind(obj)
               // result = afunction(...methodArgs);
@@ -522,7 +525,7 @@ class Interpreter {
             // debugger
             // console.log('assigning 48!: please register binding here (if is a global var!)')            
             b.binded=true;
-            this._uiRoot.attachBindings(b)
+            this.systemUi.attachBindings(b)
           }
           this.push(a);
           break;
