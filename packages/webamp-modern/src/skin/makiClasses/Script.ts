@@ -66,7 +66,11 @@ export class SystemUI extends Component {
 
   subscribe(node: BaseObject, event: string, callback: Function) {
     this.subscription.push({ node, event, callback });
-    node.emitter.on(event, callback);
+    try{
+      node.emitter.on(event, callback);
+    } catch (e) {
+      console.warn(`Failed to attach event: ${event} ${node.id? node.id : node} @${this.script.maki_id}`,e)
+    }
   }
   unsubscribe() {
     this.subscription.forEach(({ node, event, callback }) => {

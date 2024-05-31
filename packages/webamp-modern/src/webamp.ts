@@ -4,6 +4,8 @@ import { App } from "./skin/App";
 import { WebampOptions, webampDefaultOptions } from "./WebampOptions";
 import { createSkinEngineFor } from "./skin/SkinEngine";
 import Container from "./skin/makiClasses/Container";
+import AUDIO_PLAYER, { AudioPlayer } from "./skin/AudioPlayer";
+import { PLEDIT, PlEdit } from "./skin/makiClasses/PlayList";
 
 const templates = `<odoo>
   <t t-name="childs" t-foreach="nodeChildren()" t-as="child" t-key="child_index">
@@ -21,10 +23,23 @@ export class Webamp {
   private owlApp: OwlApp<any, App, any>;
   private app: App;
   options: WebampOptions;
+  audio: AudioPlayer;
+  playlist: PlEdit;
 
   constructor(private htmlNode: HTMLElement, options: Partial<WebampOptions> = {}) {
     this.options = { ...webampDefaultOptions, ...options };
+    this.preparePlayback()
     this.mount(htmlNode);
+  }
+  
+  private preparePlayback(){
+    const sharePlayback = !this.options.ownPlayback;
+    this.audio = sharePlayback? AUDIO_PLAYER : new AudioPlayer();
+    // put a track to play
+    // if(this.options.ownPlayback && this.options.tracks.length)
+
+    this.playlist = sharePlayback ? PLEDIT : new PlEdit('pledit', {audio: this.audio})
+
   }
   
   switchSkin(skinPath: string) {
@@ -47,6 +62,8 @@ export class Webamp {
     const env = {
       options: this.options,
       ui: {},
+      audio: this.audio,
+      playlist: this.playlist,
       engine: null,
     };
     const skinPath = env.options.skin;

@@ -10,6 +10,7 @@ import { parseMetaData } from "../AudioMetadata";
 import { UIRoot } from "../../UIRoot";
 import ConfigAttribute from "./ConfigAttribute";
 import { Emitter } from "@lib/Emitter";
+import BaseObject from "./BaseObject";
 
 // import * as jsmediatags from 'jsmediatags';
 
@@ -18,11 +19,11 @@ import { Emitter } from "@lib/Emitter";
  * Hold tracs.
  * It still exist (not interfered) when skin changed
  */
-export class PlEdit {
+export class PlEdit extends BaseObject {
   static GUID = "345beebc49210229b66cbe90d9799aa4";
   // taken from lib/pldir.mi
   static guid = "{345BEEBC-0229-4921-90BE-6CB6A49A79D9}";
-  _uiRoot: UIRoot;
+  // _uiRoot: UIRoot;
   _tracks: Track[] = [];
   _trackCounter: number = 1;
   _currentIndex: number = -1;
@@ -33,10 +34,10 @@ export class PlEdit {
   _repeat: number = 0; // 0=off | 1=all | -1=track
   _eventListener: Emitter = new Emitter();
 
-  constructor(uiRoot: UIRoot) {
-    this._uiRoot = uiRoot;
-    this._listenShuffleRepeat();
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   this._uiRoot = uiRoot;
+  //   this._listenShuffleRepeat();
+  // }
 
   initialize() {
     this._shuffleChanged(); //trigger to get value from cache storage
@@ -185,7 +186,7 @@ export class PlEdit {
     this._currentIndex = item;
     const track = this._tracks[item];
     const url = track.file ? URL.createObjectURL(track.file) : track.filename;
-    AUDIO_PLAYER.setAudioSource(url);
+    this.attributes.audio.setAudioSource(url);
     this.trigger("trackchange");
   }
 
@@ -253,6 +254,8 @@ export class PlEdit {
   //   }
   // }
 }
+
+export const PLEDIT = new PlEdit('pledit', {audio: AUDIO_PLAYER})
 
 /**
  * The PlaylistDirectory object is simply a list with all the saved playlist from the media library.

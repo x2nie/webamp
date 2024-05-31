@@ -18,4 +18,5 @@
   <!-- <include file="@DEFAULTSKINPATH@xml/video.xml"/> -->
   <include file="xml/albumart.xml"/>
   <include file="xml/player.xml"/>
+  <include file="xml/pledit.xml"/>
 </WinampAbstractionLayer>
