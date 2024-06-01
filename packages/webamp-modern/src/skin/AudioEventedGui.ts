@@ -53,7 +53,7 @@ export default class AudioEventedGui extends GuiObj {
     // console.log("audio-state-changed:", this.getId(), this._audioEvent);
     const pl = this._uiRoot.playlist;
     const plCount = pl.getnumtracks();
-    const plIndex = pl.getcurrentindex();
+    const plIndex = pl.getCurrentIndex();
     const canNext = plIndex < plCount - 1;
     const canPrev = plIndex > 0;
     const buttonStates = {

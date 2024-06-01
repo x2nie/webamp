@@ -574,7 +574,7 @@ export class UIRoot {
   }
 
   next() {
-    const currentTrack = this.playlist.getcurrentindex();
+    const currentTrack = this.playlist.getCurrentIndex();
     if (currentTrack < this.playlist.getnumtracks() - 1) {
       this.playlist.playtrack(currentTrack + 1);
     }
@@ -583,7 +583,7 @@ export class UIRoot {
   }
 
   previous() {
-    const currentTrack = this.playlist.getcurrentindex();
+    const currentTrack = this.playlist.getCurrentIndex();
     if (currentTrack > 0) {
       this.playlist.playtrack(currentTrack - 1);
     }

@@ -885,7 +885,7 @@ export default class SystemObject extends BaseObject {
   }
 
   getplaylistindex(): number {
-    return this._uiRoot.playlist.getcurrentindex();
+    return this._uiRoot.playlist.getCurrentIndex();
   }
 
   /**

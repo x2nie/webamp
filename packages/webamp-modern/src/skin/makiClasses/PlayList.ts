@@ -12,15 +12,64 @@ import ConfigAttribute from "./ConfigAttribute";
 import { Emitter } from "@lib/Emitter";
 import BaseObject from "./BaseObject";
 import { uiRegistry } from "@lib/registry";
-import { xml } from "@odoo/owl";
+import { xml, onMounted, onWillUnmount } from "@odoo/owl";
 import { UI } from "./GuiObj";
 
 // import * as jsmediatags from 'jsmediatags';
 export class PlaylistUI extends UI {
-  // static template = xml`<div style="border:1px solid red;"/>`
+  static template = xml`
+    <t t-call="ui">
+      <!-- <div style="border:1px solid yellow;">asdf</div> -->
+      <ol class="content-list">
+        <t t-set="current" t-value="pl.getCurrentIndex()"/>
+        <li t-foreach="[...Array(pl.getNumTracks()).keys()]" t-as="i" t-key="i"
+          t-att-class="{'current': i==current}"
+          t-att-offset="i"
+          t-on-dblclick="runTrack"
+        >
+          <span t-out="i+1"/>. 
+          <span t-out="pl.getTitle(i)"/>
+          <span t-out="pl.getLength(i)"/>
+          <!-- <t t-out="window.JSON.stringify(track)"/> -->
+        </li>
+      </ol>
+    </t>`
+
+  setup(){
+    super.setup()
+    this.refresh = this.refresh.bind(this)
+    onMounted(()=>{
+      this.pl.on('trackchange', this.refresh)
+    })
+    onWillUnmount(()=>{
+      this.pl.off('trackchange', this.refresh)
+    })
+  }
+
+  get pl():PlEdit{
+    return this.env.playlist as PlEdit;
+  }
+  tracks(){
+    return this.pl._tracks
+  }
+
+  refresh(){
+    console.log('refreshed')
+    this.render()
+  }
+
+  runTrack(ev: MouseEvent){
+    // debugger
+    const offset = Number((ev.currentTarget as HTMLElement).getAttribute('offset'))
+    console.log('running track #',offset)
+    this.pl.playtrack(offset)
+  }
 
   style(): string {
-    return super.style() + 'border:1px solid red;'
+    let style = super.style() 
+    style += 'border:1px solid red;'
+    style += '--color-pledit-text-current:blue;'
+    return style;
   }
 }
 uiRegistry.add('pl', PlaylistUI)
@@ -109,7 +158,7 @@ export class PlEdit extends BaseObject {
     return this._tracks.length;
   }
 
-  getcurrentindex(): number {
+  getCurrentIndex(): number {
     return this._currentIndex;
   }
 
@@ -198,6 +247,7 @@ export class PlEdit extends BaseObject {
     const track = this._tracks[item];
     const url = track.file ? URL.createObjectURL(track.file) : track.filename;
     this.attributes.audio.setAudioSource(url);
+    this.attributes.audio.play();
     this.trigger("trackchange");
   }
 
@@ -205,7 +255,7 @@ export class PlEdit extends BaseObject {
     if (this._currentIndex < 0) {
       return "";
     }
-    return this.gettitle(this._currentIndex);
+    return this.getTitle(this._currentIndex);
   }
 
   getrating(item: number): number {
@@ -216,7 +266,7 @@ export class PlEdit extends BaseObject {
     this._tracks[item].rating = rating;
   }
 
-  gettitle(item: number): string {
+  getTitle(item: number): string {
     const track = this._tracks[item];
     if (track.metadata) {
       return `${track.metadata.artist} - ${track.metadata.title}`;
@@ -224,7 +274,7 @@ export class PlEdit extends BaseObject {
     return this._tracks[item].filename.split("/").pop();
   }
 
-  getlength(item: number): string {
+  getLength(item: number): string {
     return integerToTime(this._tracks[item].duration || 0);
     // return unimplementedWarning("getlength");
   }

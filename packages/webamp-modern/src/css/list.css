@@ -29,12 +29,18 @@ colorthemeslist > select {
 }
 
 /* == PLAYLIST == */
+.pl{
+  font-size: 12px;
+  cursor: default;
+}
 .pl.list {
   /* pointer-events: all; */
   color: aqua;
   background: none;
 }
 .pl > .content-list {
+  margin:0;
+  padding:0;
   margin-right: 15px;
   max-height: 100%;
   /* background: black; */
@@ -43,16 +49,21 @@ colorthemeslist > select {
   background-color: var(--color-wasabi-list-background, transparent);
   background-image: var(--bitmap-studio-list-background, none);
 }
-.pl > .content-list > div {
+.pl > .content-list > * {
   display: flex;
 }
-.pl > .content-list div>span:first-child{
+.pl > .content-list > * span {
+  padding: 0 2px;
+  user-select: none;
+}
+.pl > .content-list > * >span:nth-child(2){
   /* color:red; */
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  flex-grow: 1;
 }
-.pl > .content-list div>span:last-child{
+.pl > .content-list > * >span:last-child{
   width: 30px;
   float: right;
   text-align: right;

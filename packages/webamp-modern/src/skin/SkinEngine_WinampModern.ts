@@ -1,9 +1,9 @@
 import { XmlElement, parseXml, parseXmlFragment } from "@lib/xml";
+import { markRaw } from "@odoo/owl";
 //import { FileExtractor, PathFileExtractor, ZipFileExtractor } from "./FileExtractor";
 import { ParsedMaki, parse as parseMaki } from "../maki/parser";
 import { assert, assume, guid2alias } from "../utils";
 import { SkinEngine, registerSkinEngine } from "./SkinEngine";
-import { markRaw } from "@odoo/owl";
 import { registry, xmlRegistry } from "@lib/registry";
 import "./makiClasses/index";
 import GuiObj from "./makiClasses/GuiObj";

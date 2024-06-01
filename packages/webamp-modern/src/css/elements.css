@@ -172,7 +172,8 @@ xui,
 wasabiframe,
 wasabititlebar,
 windowholder,
-layout *
+/* layout :not(.box) * */
+pl
 {
   position: absolute;
   left: 0;

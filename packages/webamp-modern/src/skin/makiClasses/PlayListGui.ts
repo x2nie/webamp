@@ -55,8 +55,8 @@ export default class PlayListGui extends Group {
   refresh = () => {
     removeAllChildNodes(this._contentPanel);
     const pl = this._uiRoot.playlist;
-    const currentTrack = pl.getcurrentindex();
-    for (let i = 0; i < pl.getnumtracks(); i++) {
+    const currentTrack = pl.getCurrentIndex();
+    for (let i = 0; i < pl.getNumTracks(); i++) {
       const line = document.createElement("div");
       if (i == currentTrack) {
         line.classList.add("current");
@@ -74,9 +74,9 @@ export default class PlayListGui extends Group {
         this.refresh();
       });
       // line.textContent = `${i + 1}. ${pl.gettitle(i)}`;
-      line.innerHTML = `<span>${i + 1}. ${pl.gettitle(
+      line.innerHTML = `<span>${i + 1}. ${pl.getTitle(
         i
-      )}</span><span>${pl.getlength(i)}</span>`;
+      )}</span><span>${pl.getLength(i)}</span>`;
       this._contentPanel.appendChild(line);
     }
   };

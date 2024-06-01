@@ -17,7 +17,7 @@ const templates = `<odoo>
       t-att="attrs()"
       t-on-click="handleClick"
       t-att-style="style()" t-ref="gui">
-        <t t-slot="default"/>
+        <t t-raw="0"/>
         <t t-call="childs" />
     </t>
   
