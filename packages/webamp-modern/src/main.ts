@@ -35,6 +35,8 @@ const webamp = new Webamp(document.getElementById("web-amp") || document.body, {
   // skin: 'assets/skins/WinampModern566.wal',
   tracks: [
     "assets/Just_Plain_Ant_-_05_-_Stumble.mp3",
+    "assets/Just_Plain_Ant_-_05_-_Stumble.mp3",
+    "assets/Just_Plain_Ant_-_05_-_Stumble.mp3",
   ],
 });
 document.getElementById("mmd3")?.addEventListener("click", () => {
@@ -43,6 +45,12 @@ document.getElementById("mmd3")?.addEventListener("click", () => {
 document.getElementById("tutorial")?.addEventListener("click", () => {
   webamp.switchSkin("/skins/SimpleTutorial/");
 });
+
+
+//? trial to secondary webamap 2 ================================
+const webamp2 = new Webamp(document.getElementById("web-amp2") || document.body, {
+  skin: "assets/skins/SimpleTutorial/",
+})
 
 // setTimeout(() => {
 //   webamp.app.say('helloBoss')
