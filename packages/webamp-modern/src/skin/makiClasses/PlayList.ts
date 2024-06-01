@@ -11,8 +11,19 @@ import { UIRoot } from "../../UIRoot";
 import ConfigAttribute from "./ConfigAttribute";
 import { Emitter } from "@lib/Emitter";
 import BaseObject from "./BaseObject";
+import { uiRegistry } from "@lib/registry";
+import { xml } from "@odoo/owl";
+import { UI } from "./GuiObj";
 
 // import * as jsmediatags from 'jsmediatags';
+export class PlaylistUI extends UI {
+  // static template = xml`<div style="border:1px solid red;"/>`
+
+  style(): string {
+    return super.style() + 'border:1px solid red;'
+  }
+}
+uiRegistry.add('pl', PlaylistUI)
 
 /**
  * Non GUI element.

@@ -157,6 +157,16 @@
 
   <script file="SongStopper.maki" />
 
+   <slider
+    id="Volume"
+    action="VOLUME"
+    x="183" y="110"
+    w="86" h="13"
+    thumb="player.button.volume"
+    downThumb="player.button.volume.pressed"
+    hoverThumb="player.button.volume.hover"
+    tooltip="Volume"
+  />
 </groupdef>
 
 <!-- Main Window: Container and Layout -->

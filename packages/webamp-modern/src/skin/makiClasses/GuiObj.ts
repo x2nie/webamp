@@ -44,7 +44,8 @@ const uiTemplate = xml`
 </t>`;
 
 export class UI extends Component {
-  static template = xml`
+  static template = 'ui'
+  static template0 = xml`
     <t t-name="ui" t-tag="props.node.tag" t-att-id="att.id" 
       t-att-class="getCssClass()" 
       t-att="attrs()"

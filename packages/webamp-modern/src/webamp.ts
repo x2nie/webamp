@@ -12,6 +12,14 @@ const templates = `<odoo>
       <t t-component="lookupTag(child.tag)" t-props="{node:child}" />
   </t>
 
+  <t t-name="ui" t-tag="props.node.tag" t-att-id="att.id" 
+      t-att-class="getCssClass()" 
+      t-att="attrs()"
+      t-on-click="handleClick"
+      t-att-style="style()" t-ref="gui">
+        <t t-slot="default"/>
+        <t t-call="childs" />
+    </t>
   
 </odoo>`;
       // <t t-set="children" t-value="knownChildren()" />

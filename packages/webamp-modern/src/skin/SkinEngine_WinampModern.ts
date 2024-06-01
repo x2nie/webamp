@@ -1,7 +1,7 @@
 import { XmlElement, parseXml, parseXmlFragment } from "@lib/xml";
 //import { FileExtractor, PathFileExtractor, ZipFileExtractor } from "./FileExtractor";
 import { ParsedMaki, parse as parseMaki } from "../maki/parser";
-import { assert, assume } from "../utils";
+import { assert, assume, guid2alias } from "../utils";
 import { SkinEngine, registerSkinEngine } from "./SkinEngine";
 import { markRaw } from "@odoo/owl";
 import { registry, xmlRegistry } from "@lib/registry";
@@ -311,6 +311,8 @@ export class WinampModern extends SkinEngine {
         return this.group(node, parent, path);
       case "script":
         return this.script(node, parent, path);
+      case "component":
+        return this.component(node, parent, path);
 
       case "bitmap":
         return this.bitmap(node, parent, path);
@@ -504,6 +506,31 @@ export class WinampModern extends SkinEngine {
   }
   async bitmapFont(node: XmlElement) {
     this._bitmapFont[node.id] = node.detach();
+  }
+
+  async component(node: XmlElement) {
+    // this._bitmapFont[node.id] = node.detach();
+    const alias = guid2alias(node.attributes.param.toLowerCase());
+    switch (alias) {
+      case "vis":
+        // const gui = new Avs(this._uiRoot);
+        // // const spec = new XmlElement("dummy", { fitparent: '1' });
+        // gui.setXmlAttributes(spec.attributes)
+        // this.addChild(gui);
+        // this._heldObj = gui;
+        // return this.newGui(Avs, node, parent);
+        break;
+      case "pl":
+        node.tag = alias; //PlayListGui
+        break;
+    }
+    //TODO: parse dynamic element by guid value
+    // if (
+    //   node.attributes.param == "guid:{45F3F7C1-A6F3-4ee6-A15E-125E92FC3F8D}"
+    // ) {
+    //   await this.buildWasabiButtonFace();
+    //   return this.newGui(PlayListGui, node, parent);
+    // }
   }
 
   async script(node: XmlElement, parent: any, path: string[] = []) {

@@ -171,7 +171,8 @@ vis,
 xui,
 wasabiframe,
 wasabititlebar,
-windowholder
+windowholder,
+layout *
 {
   position: absolute;
   left: 0;
