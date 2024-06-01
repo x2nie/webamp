@@ -576,7 +576,7 @@ export class UIRoot {
   next() {
     const currentTrack = this.playlist.getCurrentIndex();
     if (currentTrack < this.playlist.getnumtracks() - 1) {
-      this.playlist.playtrack(currentTrack + 1);
+      this.playlist.playTrack(currentTrack + 1);
     }
     this.audio.play();
     //TODO: check if "repeat" is take account
@@ -585,7 +585,7 @@ export class UIRoot {
   previous() {
     const currentTrack = this.playlist.getCurrentIndex();
     if (currentTrack > 0) {
-      this.playlist.playtrack(currentTrack - 1);
+      this.playlist.playTrack(currentTrack - 1);
     }
     this.audio.play();
     //TODO: check if "repeat" is take account

@@ -69,7 +69,7 @@ export default class PlayListGui extends Group {
         this.refresh();
       });
       line.addEventListener("dblclick", (ev: MouseEvent) => {
-        this._uiRoot.playlist.playtrack(i);
+        this._uiRoot.playlist.playTrack(i);
         this._uiRoot.audio.play();
         this.refresh();
       });
