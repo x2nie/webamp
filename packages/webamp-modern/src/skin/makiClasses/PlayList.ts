@@ -34,46 +34,48 @@ export class PlaylistUI extends UI {
           <!-- <t t-out="window.JSON.stringify(track)"/> -->
         </li>
       </ol>
-    </t>`
+    </t>`;
 
-  setup(){
-    super.setup()
-    this.refresh = this.refresh.bind(this)
-    onMounted(()=>{
-      this.pl.on('trackchange', this.refresh)
-    })
-    onWillUnmount(()=>{
-      this.pl.off('trackchange', this.refresh)
-    })
+  setup() {
+    super.setup();
+    this.refresh = this.refresh.bind(this);
+    onMounted(() => {
+      this.pl.on("trackchange", this.refresh);
+    });
+    onWillUnmount(() => {
+      this.pl.off("trackchange", this.refresh);
+    });
   }
 
-  get pl():PlEdit{
+  get pl(): PlEdit {
     return this.env.playlist as PlEdit;
   }
-  tracks(){
-    return this.pl._tracks
+  tracks() {
+    return this.pl._tracks;
   }
 
-  refresh(){
-    console.log('refreshed')
-    this.render()
+  refresh() {
+    console.log("refreshed");
+    this.render();
   }
 
-  runTrack(ev: MouseEvent){
+  runTrack(ev: MouseEvent) {
     // debugger
-    const offset = Number((ev.currentTarget as HTMLElement).getAttribute('offset'))
-    console.log('running track #',offset)
-    this.pl.playTrack(offset)
+    const offset = Number(
+      (ev.currentTarget as HTMLElement).getAttribute("offset")
+    );
+    console.log("running track #", offset);
+    this.pl.playTrack(offset);
   }
 
   style(): string {
-    let style = super.style() 
-    style += 'border:1px solid red;'
-    style += '--color-pledit-text-current:blue;'
+    let style = super.style();
+    style += "border:1px solid red;";
+    style += "--color-pledit-text-current:blue;";
     return style;
   }
 }
-uiRegistry.add('pl', PlaylistUI)
+uiRegistry.add("pl", PlaylistUI);
 
 /**
  * Non GUI element.
@@ -252,7 +254,7 @@ export class PlEdit extends BaseObject {
     this.trigger("trackchange");
   }
 
-  next(){
+  next() {
     const currentTrack = this.getCurrentIndex();
     //TODO: check if "repeat" is take account
     if (currentTrack < this.getNumTracks() - 1) {
@@ -310,14 +312,26 @@ export class PlEdit extends BaseObject {
     // return unimplementedWarning("onpleditmodified");
   }
 
-  async appendFiles(){
-    const files = await promptForFileReferences({accept: 'audio/*, video/*'});
-    console.log(files)
+  async appendFiles(clear:boolean=false, directory:boolean=false) {
+    const files = await promptForFileReferences({ accept: "audio/*, video/*", directory });
+    // console.log(files);
+    if (files.length) {
+      if(clear){
+        this.clear();
+      }
+      for (var i = 0; i < files.length; i++) {
+        const newTrack: Track = {
+          filename: files[i].name,
+          file: files[i],
+        };
+        this.addTrack(newTrack);
+      }
+      this.attributes.audio.play()
+    }
   }
 
-  async appendFolder(){
-    const files = await promptForFileReferences({ directory: true });
-    console.log(files)
+  async appendFolder(clear:boolean=false) {
+    return this.appendFiles(clear, true)
   }
 
   // async fetchMediaDuration(track: Track, callback: Function):Promise<void> {
@@ -345,7 +359,7 @@ export class PlEdit extends BaseObject {
   // }
 }
 
-export const PLEDIT = new PlEdit('pledit', {audio: AUDIO_PLAYER})
+export const PLEDIT = new PlEdit("pledit", { audio: AUDIO_PLAYER });
 
 /**
  * The PlaylistDirectory object is simply a list with all the saved playlist from the media library.
