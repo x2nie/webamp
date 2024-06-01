@@ -62,7 +62,7 @@ export class PlaylistUI extends UI {
     // debugger
     const offset = Number((ev.currentTarget as HTMLElement).getAttribute('offset'))
     console.log('running track #',offset)
-    this.pl.playtrack(offset)
+    this.pl.playTrack(offset)
   }
 
   style(): string {
@@ -192,10 +192,10 @@ export class PlEdit extends BaseObject {
 
     // set audio source if it is the first
     if (this._tracks.length == 1) {
-      this.playtrack(0);
+      this.playTrack(0);
     }
 
-    this.trigger("trackchange"); //TODO: why is this neeeded here
+    this.trigger("trackchange"); //let PL(gui) show the change.
 
     if (!track.metadata) {
       parseMetaData(track, () => {
@@ -242,13 +242,31 @@ export class PlEdit extends BaseObject {
     return this._tracks[this._currentIndex];
   }
 
-  playtrack(item: number): void {
+  playTrack(item: number): void {
     this._currentIndex = item;
     const track = this._tracks[item];
     const url = track.file ? URL.createObjectURL(track.file) : track.filename;
     this.attributes.audio.setAudioSource(url);
     this.attributes.audio.play();
     this.trigger("trackchange");
+  }
+
+  next(){
+    const currentTrack = this.getCurrentIndex();
+    //TODO: check if "repeat" is take account
+    if (currentTrack < this.getNumTracks() - 1) {
+      this.playTrack(currentTrack + 1);
+    }
+    this.attributes.audio.play();
+  }
+
+  previous() {
+    const currentTrack = this.getCurrentIndex();
+    if (currentTrack > 0) {
+      this.playTrack(currentTrack - 1);
+    }
+    this.attributes.audio.play();
+    //TODO: check if "repeat" is take account
   }
 
   getCurrentTrackTitle(): string {

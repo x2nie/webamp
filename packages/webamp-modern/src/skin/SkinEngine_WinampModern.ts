@@ -597,7 +597,10 @@ export class WinampModern extends SkinEngine {
         this.audio.stop();
         break;
       case "next":
-        // this.next();
+        this.playlist.next();
+        break;
+      case "prev":
+        this.playlist.previous();
         break;
     }
   }
