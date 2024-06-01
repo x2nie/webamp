@@ -602,6 +602,14 @@ export class WinampModern extends SkinEngine {
       case "prev":
         this.playlist.previous();
         break;
+      case "eject":
+        if (!param.includes(";KBD_SHIFT")) {
+          this.playlist.appendFiles
+          ();
+        }else {
+          this.playlist.appendFolder();
+        }
+        break;
     }
   }
 }

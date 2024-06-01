@@ -112,16 +112,23 @@ export class UI extends Component {
     //? for template.attributes
     return {}
   }
+
   handleClick(ev:MouseEvent){
     ev.stopPropagation()
     console.log('click!')
     // debugger
     if(this.att.action){
-      const {action, param} = this.att;
+      const {action} = this.att;
+      let {param} = this.att;
+      param = param || '';
+      if (ev.shiftKey) param += ';KBD_SHIFT'
+      if (ev.altKey) param += ';KBD_ALT'
+      if (ev.ctrlKey) param += ';KBD_CTRL'
       this.env.engine.triggerAction(this.node, action, param)
       // this.node.emitter.trigger('action', action, param)
     }
   }
+  
   detectRealSize() {
     if (this.att.image == "wasabi.frame.top") {
       debugger;

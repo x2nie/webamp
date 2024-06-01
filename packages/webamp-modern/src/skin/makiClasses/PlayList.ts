@@ -14,6 +14,7 @@ import BaseObject from "./BaseObject";
 import { uiRegistry } from "@lib/registry";
 import { xml, onMounted, onWillUnmount } from "@odoo/owl";
 import { UI } from "./GuiObj";
+import { promptForFileReferences } from "@lib/webamp2";
 
 // import * as jsmediatags from 'jsmediatags';
 export class PlaylistUI extends UI {
@@ -307,6 +308,16 @@ export class PlEdit extends BaseObject {
 
   onpleditmodified(): void {
     // return unimplementedWarning("onpleditmodified");
+  }
+
+  async appendFiles(){
+    const files = await promptForFileReferences({accept: 'audio/*, video/*'});
+    console.log(files)
+  }
+
+  async appendFolder(){
+    const files = await promptForFileReferences({ directory: true });
+    console.log(files)
   }
 
   // async fetchMediaDuration(track: Track, callback: Function):Promise<void> {
