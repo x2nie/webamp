@@ -195,7 +195,7 @@ export class PlEdit extends BaseObject {
 
     // set audio source if it is the first
     if (this._tracks.length == 1) {
-      this.playTrack(0);
+      this._setPlayingTrack(0, false);
     }
 
     this.trigger("trackchange"); //let PL(gui) show the change.
@@ -245,13 +245,25 @@ export class PlEdit extends BaseObject {
     return this._tracks[this._currentIndex];
   }
 
-  playTrack(item: number): void {
+  _setPlayingTrack(item: number, play:boolean): void {
     this._currentIndex = item;
     const track = this._tracks[item];
     const url = track.file ? URL.createObjectURL(track.file) : track.filename;
     this.attributes.audio.setAudioSource(url);
-    this.attributes.audio.play();
+    if(play){
+      this.attributes.audio.play();
+    }
     this.trigger("trackchange");
+  }
+
+  playTrack(item: number): void {
+    this._setPlayingTrack(item, true)
+    // this._currentIndex = item;
+    // const track = this._tracks[item];
+    // const url = track.file ? URL.createObjectURL(track.file) : track.filename;
+    // this.attributes.audio.setAudioSource(url);
+    // this.attributes.audio.play();
+    // this.trigger("trackchange");
   }
 
   next() {

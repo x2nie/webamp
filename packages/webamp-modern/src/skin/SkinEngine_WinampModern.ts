@@ -61,10 +61,11 @@ export class WinampModern extends SkinEngine {
     console.log("FINAL skin.xml=>", parsed);
 
     this.resolveTextFont();
-    await this.resolveXui();
+    // await this.resolveXui();
     await this.loadRes();
     // await this.loadBitmaps();
     // await this.loadScripts();
+    this.attachGroupChild();
 
     // debugger
     this._env.ui.bitmapFonts = markRaw(this._bitmapFont); // ractive not needed
@@ -77,7 +78,7 @@ export class WinampModern extends SkinEngine {
     return await Promise.all([
       this.loadBitmaps(),
       this.loadScripts(),
-      this.attachGroupChild(),
+      // this.attachGroupChild(),
     ]);
   }
 
@@ -223,17 +224,17 @@ export class WinampModern extends SkinEngine {
   }
 
   populateGroupDef(def: XmlElement) {
+    if (def.attributes.populated) return;
     //recursive, child first
     for (const child of def.children) {
       this.populateGroupDef(child);
     }
-    if (def.tag == "group" && !def.attributes.populated) {
+    if (!def.attributes.populated && ["group", "xui"].includes(def.tag)) {
       this.populateGroup(def);
     }
+    def.attributes.populated = true;
   }
-  populateGroup(group: XmlElement) {
-    if (group.attributes.populated == true) return;
-
+  _populateGroup(group: XmlElement) {
     const groupdef = this._groupdef[group.id];
     // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
     if (!groupdef) {
@@ -252,9 +253,44 @@ export class WinampModern extends SkinEngine {
       }
     }
   }
+  populateGroup(group: XmlElement) {
+    if (group.attributes.populated == true) return;
 
-  async attachGroupChild() {
-    const loadGroup = async (group: XmlElement) => {
+    if (group.tag == "xui") {
+      const Xui = xmlRegistry.get("xui", XmlElement);
+      const groupdef = this._xuidef[group.attributes._wasabi];
+      if (groupdef) {
+        // debugger
+        if (!groupdef.attributes.populated) {
+          this.populateGroupDef(groupdef);
+          groupdef.attributes.populated = true;
+        }
+        // group.attributes.xuitag = group.tag;
+        // group.tag = "xui";
+        group = group.cast(Xui);
+        //? don't do populate here,
+        //? it may have another unresolved xui as children/ grandchild
+        // if (!group.attributes.content) {
+        // group.merge(groupdef.clone());
+        // }
+
+        //lets load its childrens first.
+        // debugger
+        // scanXui(groupdef);
+        group.merge(groupdef.clone());
+        if (group.id) {
+          // this._groupBeta.push(group);
+          this._populateGroup(group)
+        }
+      }
+    }
+    else if (group.tag == "group") {
+      this._populateGroup(group)
+    } 
+  }
+
+  attachGroupChild() {
+    const loadGroup = (group: XmlElement) => {
       this.populateGroup(group);
       // const groupdef = this._groupdef[group.id];
       // // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
@@ -267,7 +303,8 @@ export class WinampModern extends SkinEngine {
       //   }
       // }
     };
-    await Promise.all(this._groupBeta.map(loadGroup));
+    // await Promise.all(this._groupBeta.map(loadGroup));
+    this._groupBeta.map(loadGroup);
     this._groupBeta = [];
   }
 
@@ -331,7 +368,10 @@ export class WinampModern extends SkinEngine {
         break;
       default:
         if (tag.startsWith("wasabi:")) {
-          this._xuiBeta.push(node);
+          node.attributes._wasabi = tag;
+          node.tag = "xui";
+          this._groupBeta.push(node);
+          // this._xuiBeta.push(node);
         } else {
           this._unknownTag.push(node);
         }

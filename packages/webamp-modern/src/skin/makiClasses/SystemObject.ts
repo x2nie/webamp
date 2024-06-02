@@ -674,7 +674,7 @@ export default class SystemObject extends BaseObject {
   newGroup(group_id: string): Group {
     // return this._parentGroup.findObject(group_id) as Group;
     // return new Group('group', {id: group_id})
-    debugger
+    // debugger
     const group = new Group('group', {id: group_id})
     const engine = (this.el as SystemUI).getEngine()
     engine.populateGroup(group, group_id)
@@ -858,13 +858,15 @@ export default class SystemObject extends BaseObject {
    * @param    flag            The message box style you want.
    * @param    notanymore_id   Configuration item name in which to store the users answer.
    */
-  messagebox(
+  messageBox(
     message: string,
     msgtitle: string,
     flag: number,
     notanymore_id: string
   ) {
     // TODO
+    console.log('message box:', message, msgtitle)
+    return 0
   }
 
   // #region //? Track method =========================================

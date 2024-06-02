@@ -76,7 +76,7 @@ export default class Layout extends Group {
     }
   }
 
-  getcontainer(): Container {
+  getContainer(): Container {
     return this._parent as unknown as Container;
   }
 

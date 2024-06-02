@@ -12,7 +12,17 @@ default_x="0" default_y="116" nomenu="1" >
 
 <groupdef id="albumart.content.group">
 
-	<text default="welcome art!" />
+	<text id="timer"
+	 default="welcome art!"
+        display="time"
+        x="30"
+        y="24"
+        w="70"
+        h="18"
+        font="player.BIGNUM"
+        fontsize="21"
+        align="right"
+        timecolonwidth="7" />
 	<!-- <AlbumArt
 		id="waaa" fitparent="1" move="1"
 	/> -->

@@ -16,7 +16,10 @@ export class XuiUi extends GroupUI {
         if (["id"].includes(k)) continue;
         if (typeof v == "string") {
           console.log(`setting XuiParam: "${k}" : "${v}"`);
-          // this.props.node.sendXuiParam(k, v);
+          // if(k=='content'){
+          //   debugger
+          // }
+          this.props.node.sendXuiParam(k, v);
         }
       }
     
