@@ -146,12 +146,12 @@ export class PlEdit extends BaseObject {
     );
   }
   _shuffleChanged = () => {
-    const sshuffle = this._shuffleAttrib.getdata();
+    const sshuffle = this._shuffleAttrib.getData();
     this._shuffle = toBool(sshuffle);
     console.log("shuffle:", this._shuffle);
   };
   _repeatChanged = () => {
-    const srepeat = this._repeatAttrib.getdata();
+    const srepeat = this._repeatAttrib.getData();
     this._repeat = num(srepeat);
     console.log("repeat:", this._repeat);
   };

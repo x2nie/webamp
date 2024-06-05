@@ -17,6 +17,7 @@ import { interpret } from "../../maki/interpreter";
 import { SkinEngine } from "../SkinEngine";
 import BaseObject from "./BaseObject";
 import SystemObject from "./SystemObject";
+import Config from "./Config";
 
 type eventInfo = {
   node: BaseObject;
@@ -50,6 +51,18 @@ export class SystemUI extends Component {
       const me = this.script.variables[0] as VariableObject;
       me.value = this.system;
       this.attachBindings(me);
+
+      for (const vari of this.script.variables) {
+        if (vari.type == "OBJECT") {
+          if (vari.guid == Config.GUID) {
+            vari.value = this.env.config;
+          // } else if (vari.guid == WinampConfig.GUID) {
+          //   vari.value = this._uiRoot.WINAMP_CONFIG;
+          // } else if (vari.guid == Application.GUID) {
+          //   vari.value = this._uiRoot.APPLICATION;
+          }
+        }
+      }
     });
 
     onMounted(() => {
@@ -191,18 +204,18 @@ export class SystemUI extends Component {
   //   return this.group.findObject(id);
   // }
 
-  getContainer(container_id: string): Container {
-    container_id = container_id.toLowerCase();
-    const containers = this.env.root.getContainers() as XmlElement[];
-    for (const c of containers) {
-      if (c.attributes.id == container_id && c.el) {
-        return c.el as Container;
-      }
-    }
-    console.log("failed to get container:", container_id);
-    //@ts-ignore
-    return null;
-  }
+  // getContainer(container_id: string): Container {
+  //   container_id = container_id.toLowerCase();
+  //   const containers = this.env.root.getContainers() as XmlElement[];
+  //   for (const c of containers) {
+  //     if (c.attributes.id == container_id && c.el) {
+  //       return c.el as Container;
+  //     }
+  //   }
+  //   console.log("failed to get container:", container_id);
+  //   //@ts-ignore
+  //   return null;
+  // }
   //   pause() {
   //     // this.dispatch(this, 'onPaused')
   //   }

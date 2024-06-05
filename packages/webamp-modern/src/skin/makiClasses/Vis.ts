@@ -1,3 +1,4 @@
+import { xmlRegistry } from "@lib/registry";
 import { UIRoot } from "../../UIRoot";
 import { debounce, num, toBool, unimplemented } from "../../utils";
 import { AUDIO_PLAYING } from "../AudioPlayer";
@@ -71,18 +72,18 @@ export default class Vis extends GuiObj {
   _gammagroup: string;
   _realtime: boolean = true;
 
-  constructor(uiRoot: UIRoot) {
-    super(uiRoot);
-    while (this._colorBands.length < 16) {
-      this._colorBands.push("255,255,255");
-    }
-    while (this._colorOsc.length < 5) {
-      this._colorOsc.push("255,255,255");
-    }
-    this._painter = new NoVisualizerHandler(this);
-    this._uiRoot.audio.on("statchanged", this.audioStatusChanged);
-    this._uiRoot.on("colorthemechanged", this._colorThemeChanged);
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   super(uiRoot);
+  //   while (this._colorBands.length < 16) {
+  //     this._colorBands.push("255,255,255");
+  //   }
+  //   while (this._colorOsc.length < 5) {
+  //     this._colorOsc.push("255,255,255");
+  //   }
+  //   this._painter = new NoVisualizerHandler(this);
+  //   this._uiRoot.audio.on("statchanged", this.audioStatusChanged);
+  //   this._uiRoot.on("colorthemechanged", this._colorThemeChanged);
+  // }
 
   setXmlAttr(_key: string, value: string): boolean {
     const key = _key.toLowerCase();
@@ -844,3 +845,5 @@ class WavePaintHandler extends VisPaintHandler {
   }
 }
 registerPainter("2", WavePaintHandler);
+
+xmlRegistry.add('vis', Vis)

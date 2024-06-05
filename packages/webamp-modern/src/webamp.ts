@@ -6,6 +6,7 @@ import { createSkinEngineFor } from "./skin/SkinEngine";
 import Container from "./skin/makiClasses/Container";
 import AUDIO_PLAYER, { AudioPlayer } from "./skin/AudioPlayer";
 import { PLEDIT, PlEdit } from "./skin/makiClasses/PlayList";
+import Config from "./skin/makiClasses/Config";
 
 const templates = `<odoo>
   <t t-name="childs" t-foreach="nodeChildren()" t-as="child" t-key="child_index">
@@ -33,9 +34,11 @@ export class Webamp {
   options: WebampOptions;
   audio: AudioPlayer;
   playlist: PlEdit;
+  config: Config;
 
   constructor(private htmlNode: HTMLElement, options: Partial<WebampOptions> = {}) {
     this.options = { ...webampDefaultOptions, ...options };
+    this.config = new Config();
     this.preparePlayback()
     this.mount(htmlNode);
   }
@@ -77,6 +80,7 @@ export class Webamp {
       audio: this.audio,
       playlist: this.playlist,
       engine: null,
+      config: this.config,
     };
     const skinPath = env.options.skin;
     const loader = env.engine = await createSkinEngineFor(skinPath);

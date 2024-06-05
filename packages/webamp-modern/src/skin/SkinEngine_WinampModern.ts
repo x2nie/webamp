@@ -258,7 +258,7 @@ export class WinampModern extends SkinEngine {
 
     if (group.tag == "xui") {
       const Xui = xmlRegistry.get("xui", XmlElement);
-      const groupdef = this._xuidef[group.attributes._wasabi];
+      const groupdef = this._xuidef[group.attributes._xuitag];
       if (groupdef) {
         // debugger
         if (!groupdef.attributes.populated) {
@@ -367,8 +367,8 @@ export class WinampModern extends SkinEngine {
         // debugger;
         break;
       default:
-        if (tag.startsWith("wasabi:")) {
-          node.attributes._wasabi = tag;
+        if (tag.includes(':')) {
+          node.attributes._xuitag = tag;
           node.tag = "xui";
           this._groupBeta.push(node);
           // this._xuiBeta.push(node);

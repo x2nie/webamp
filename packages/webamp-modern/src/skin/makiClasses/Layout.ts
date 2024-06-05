@@ -77,7 +77,7 @@ export default class Layout extends Group {
   }
 
   getContainer(): Container {
-    return this._parent as unknown as Container;
+    return this.parent as Container;
   }
 
   gettop(): number {

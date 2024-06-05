@@ -13,7 +13,7 @@ export class XuiUi extends GroupUI {
 
     onMounted(() => {
       for (const [k, v] of Object.entries(this.props.node.attributes)) {
-        if (["id" , "_wasabi", "embed_xui"].includes(k)) continue;
+        if (["id" , "_xuitag", "embed_xui"].includes(k)) continue;
         if (typeof v == "string") {
           console.log(`setting XuiParam: "${k}" : "${v}"`);
           // if(k=='content'){

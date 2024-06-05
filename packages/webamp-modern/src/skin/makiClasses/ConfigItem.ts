@@ -1,3 +1,4 @@
+import { xmlRegistry } from "@lib/registry";
 import { UIRoot } from "../../UIRoot";
 import BaseObject from "./BaseObject";
 import Config from "./Config";
@@ -14,16 +15,16 @@ export default class ConfigItem extends BaseObject {
   _guid: string;
   _attributes: { [key: string]: ConfigAttribute } = {};
 
-  constructor(uiRoot: UIRoot, config: Config, name: string, guid: string) {
+  constructor(config: Config, name: string, guid: string) {
     super();
-    this._uiRoot = uiRoot;
+    // this._uiRoot = uiRoot;
     this._config = config;
-    this._id = name;
+    this.attributes.name = name;
     this._guid = guid.toLowerCase();
   }
 
   getname(): string {
-    return this._id;
+    return this.attributes.name;
   }
 
   getguid(attr_name: string): string {
@@ -37,7 +38,7 @@ export default class ConfigItem extends BaseObject {
     return this._config.setValue(this._guid, key, value);
   }
 
-  newattribute(name: string, defaultValue: string): ConfigAttribute {
+  newAttribute(name: string, defaultValue: string): ConfigAttribute {
     name = name.toLowerCase();
     let oldValue = this.getValue(name);
     if (oldValue == null) {
@@ -48,7 +49,7 @@ export default class ConfigItem extends BaseObject {
     return cfg;
   }
 
-  getattribute(att_name: string): ConfigAttribute {
+  getAttribute(att_name: string): ConfigAttribute {
     att_name = att_name.toLowerCase();
     // sample:
     // ConfigItem ciMisc;
@@ -56,8 +57,10 @@ export default class ConfigItem extends BaseObject {
     // configAttribute_system_repeatType = ciMisc.getAttribute("repeat");
     let cfg = this._attributes[att_name];
     if (!cfg) {
-      return this.newattribute(att_name, "0");
+      return this.newAttribute(att_name, "0");
     }
     return cfg;
   }
 }
+
+xmlRegistry.add('config-item', ConfigItem)

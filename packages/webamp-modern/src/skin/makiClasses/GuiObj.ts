@@ -276,7 +276,7 @@ export class UI extends Component {
       style += `background-position-y:${-bitmap.attributes.y * scaley}px;`;
     return style;
   }
-  
+
   cursorStyle(resize:string){
     let cursor = ''
     switch (resize) {
@@ -482,9 +482,9 @@ export default class GuiObj extends XmlObj {
 
   _setConfigAttrib(cfgattrib: string) {
     const [guid, attrib] = cfgattrib.split(";");
-    const configItem = this._uiRoot.CONFIG.getitem(guid);
+    const configItem = this._uiRoot.CONFIG.getItem(guid);
     //TODO: check if old exist: dispose.
-    this._configAttrib = configItem.getattribute(attrib);
+    this._configAttrib = configItem.getAttribute(attrib);
     //TODO: dispose it
     this._configAttrib.on("datachanged", this.__cfgAttribChanged.bind(this));
   }
@@ -495,7 +495,7 @@ export default class GuiObj extends XmlObj {
    */
   __cfgAttribChanged = () => {
     // this function is called when other object make change to cfgattrib
-    const newValue = this._configAttrib.getdata();
+    const newValue = this._configAttrib.getData();
     this._cfgAttribChanged(newValue);
   };
 
@@ -506,7 +506,7 @@ export default class GuiObj extends XmlObj {
 
   updateCfgAttib(newValue: string) {
     if (this._configAttrib != null) {
-      this._configAttrib.setdata(newValue);
+      this._configAttrib.setData(newValue);
     }
   }
 
@@ -542,7 +542,7 @@ export default class GuiObj extends XmlObj {
     }
 
     if (this._configAttrib) {
-      this._cfgAttribChanged(this._configAttrib.getdata());
+      this._cfgAttribChanged(this._configAttrib.getData());
     }
 
     this._div.addEventListener("mousedown", (e) => {
@@ -592,21 +592,23 @@ export default class GuiObj extends XmlObj {
    * Trigger the show event.
    */
   show() {
-    this._visible = true;
-    this._renderVisibility();
-    this.onsetvisible(true);
+    this.attributes.visible = true
+    // this._visible = true;
+    // this._renderVisibility();
+    // this.onsetvisible(true);
   }
-
+  
   /**
    * Trigger the hide event.
-   */
-  hide() {
-    this._visible = false;
-    this._renderVisibility();
-    this.onsetvisible(true);
+  */
+ hide() {
+    this.attributes.visible = false
+    // this._visible = false;
+    // this._renderVisibility();
+    // this.onsetvisible(true);
   }
-  isvisible(): boolean {
-    return this._visible;
+  isVisible(): boolean {
+    return this.attributes.visible;
   }
 
   /** getter setter */

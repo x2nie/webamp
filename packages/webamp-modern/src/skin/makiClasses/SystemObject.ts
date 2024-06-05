@@ -213,7 +213,7 @@ export default class SystemObject extends BaseObject {
    * @param  item      The name of the item to read.
    * @param  defvalue  The defautl value to return if no item is found.
    */
-  getprivateint(section: string, item: string, defvalue: number): number {
+  getPrivateInt(section: string, item: string, defvalue: number): number {
     return PRIVATE_CONFIG.getPrivateInt(section, item, defvalue);
   }
 
@@ -535,7 +535,7 @@ export default class SystemObject extends BaseObject {
    * @param  item      The item name for the entry.
    * @param  value     The value of the entry.
    */
-  setprivateint(section: string, item: string, value: number) {
+  setPrivateInt(section: string, item: string, value: number) {
     PRIVATE_CONFIG.setPrivateInt(section, item, value);
   }
 
@@ -642,13 +642,20 @@ export default class SystemObject extends BaseObject {
    * @ret                 The requested container.
    * @param  container_id    The containers identifier string.
    **/
-  getcontainer(containerId: string): Container {
-    const lower = containerId.toLowerCase();
-    for (const container of this._uiRoot.getContainers()) {
-      if (container.getId() === lower) {
-        return container;
+  getContainer(containerId: string): Container {
+    let parent = this.parent;
+    while (parent != null) {
+      if(parent.tag == 'container'){
+        return parent as Container
       }
+      parent = parent.parent
     }
+    // const lower = containerId.toLowerCase();
+    // for (const container of this._uiRoot.getContainers()) {
+    //   if (container.getId() === lower) {
+    //     return container;
+    //   }
+    // }
     throw new Error(`Could not find a container with the id; "${containerId}"`);
   }
 
@@ -1504,7 +1511,7 @@ export default class SystemObject extends BaseObject {
    * @param  str       The debug message.
    * @param  severity  The severity of the error.
    */
-  debugstring(str: string, severity: number) {
+  debugString(str: string, severity: number) {
     console.log("Wasabi Console:", str);
   }
 

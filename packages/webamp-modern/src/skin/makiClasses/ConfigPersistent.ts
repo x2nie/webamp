@@ -6,7 +6,7 @@ export default abstract class ConfigPersistent extends BaseObject {
   _configTree: { [section: string]: SectionValues };
 
   getStorageName(): string {
-    return `${this.getclassname()}.${this.getId() || "~"}`;
+    return `${this.getClassName()}.${this.getId() || "~"}`;
   }
 
   constructor() {

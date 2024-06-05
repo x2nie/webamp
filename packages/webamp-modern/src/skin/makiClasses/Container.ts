@@ -282,13 +282,17 @@ export default class Container extends XmlObj {
    *  @ret             The layout associated with the id.
    * @param  layout_id   The id of the layout you wish to retrieve.
    */
-  getlayout(layoutId: string): Layout {
-    const lower = layoutId.toLowerCase();
-    for (const layout of this.children as Layout[]) {
-      if (layout.tag == 'layout' && layout.getId() === lower) {
-        return layout;
-      }
+  getLayout(layoutId: string): Layout {
+    const layouts = this.children.filter(c => c.tag=='layout' && c.id == layoutId.toLowerCase())
+    if(layouts.length==1){
+      return layouts[0] as Layout
     }
+    // const lower = layoutId.toLowerCase();
+    // for (const layout of this.children as Layout[]) {
+    //   if (layout.tag == 'layout' && layout.getId() === lower) {
+    //     return layout;
+    //   }
+    // }
     throw new Error(`Could not find a container with the id; "${layoutId}"`);
   }
 
@@ -340,7 +344,7 @@ export default class Container extends XmlObj {
   }
 
   switchToLayout(layout_id: string) {
-    const layout = this.getlayout(layout_id);
+    const layout = this.getLayout(layout_id);
     assert(layout != null, `Could not find layout with id "${layout_id}".`);
     // this._uiRoot.vm.dispatch(this, "onswitchtolayout", [
     //   { type: "OBJECT", value: layout },
