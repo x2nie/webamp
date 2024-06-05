@@ -180,10 +180,11 @@ export class UI extends Component {
     if (w != null) style += `width:${relative(w, relatw)};`;
     if (h != null) style += `height:${relative(h, relath)};`;
     if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
-
+    
     if (visible != null && !visible) style += `display:none;`;
     const touchable = action || move || resize;
     style += `pointer-events:${touchable ? "auto" : "none"};`;
+    if (resize != null) style += this.cursorStyle(resize);
 
     if (this.att.background) style += this.bgStyle(this.att.background);
     if (this.att.image) style += this.bgStyle(this.att.image);
@@ -274,6 +275,39 @@ export class UI extends Component {
     if (bitmap.attributes.y)
       style += `background-position-y:${-bitmap.attributes.y * scaley}px;`;
     return style;
+  }
+  
+  cursorStyle(resize:string){
+    let cursor = ''
+    switch (resize) {
+      case "right":
+        cursor = "e-resize";
+        break;
+      case "left":
+        cursor = "w-resize";
+        break;
+      case "top":
+        cursor = "n-resize";
+        break;
+      case "bottom":
+        cursor = "s-resize";
+        break;
+      case "topleft":
+        cursor = "nw-resize";
+        break;
+      case "topright":
+        cursor = "ne-resize";
+        break;
+      case "bottomleft":
+        cursor = "sw-resize";
+        break;
+      case "bottomright":
+        cursor = "se-resize";
+        break;
+      default:
+        return ''
+    }
+    return `cursor: ${cursor};`
   }
 }
 
