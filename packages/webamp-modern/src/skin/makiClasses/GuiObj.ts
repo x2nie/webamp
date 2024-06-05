@@ -44,7 +44,7 @@ const uiTemplate = xml`
 </t>`;
 
 export class UI extends Component {
-  static template = 'ui'
+  static template = "ui";
   static template0 = xml`
     <t t-name="ui" t-tag="props.node.tag" t-att-id="att.id" 
       t-att-class="getCssClass()" 
@@ -110,25 +110,25 @@ export class UI extends Component {
   }
   attrs() {
     //? for template.attributes
-    return {}
+    return {};
   }
 
-  handleClick(ev:MouseEvent){
-    ev.stopPropagation()
-    console.log('click!')
+  handleClick(ev: MouseEvent) {
+    ev.stopPropagation();
+    console.log("click!");
     // debugger
-    if(this.att.action){
-      const {action} = this.att;
-      let {param} = this.att;
-      param = param || '';
-      if (ev.shiftKey) param += ';KBD_SHIFT'
-      if (ev.altKey) param += ';KBD_ALT'
-      if (ev.ctrlKey) param += ';KBD_CTRL'
-      this.env.engine.triggerAction(this.node, action, param)
+    if (this.att.action) {
+      const { action } = this.att;
+      let { param } = this.att;
+      param = param || "";
+      if (ev.shiftKey) param += ";KBD_SHIFT";
+      if (ev.altKey) param += ";KBD_ALT";
+      if (ev.ctrlKey) param += ";KBD_CTRL";
+      this.env.engine.triggerAction(this.node, action, param);
       // this.node.emitter.trigger('action', action, param)
     }
   }
-  
+
   detectRealSize() {
     if (this.att.image == "wasabi.frame.top") {
       debugger;
@@ -148,11 +148,11 @@ export class UI extends Component {
   nodeChildren() {
     const notFound = this.props.node.children
       .filter((e) => !uiRegistry.contains(e.tag))
-      .map((e) => e.tag);
+      .map((e) => `'${e.tag}'`);
     if (notFound.length) {
       console.warn("TAG NOT FOUND:::", [...new Set(notFound)].join(", "));
     }
-    return this.props.node.children.filter((e) => uiRegistry.contains(e.tag));
+    return this.props.node.children.filter((e) => e.attributes.visible != false && uiRegistry.contains(e.tag));
   }
 
   lookupTag(tag: string): typeof Component {
@@ -170,8 +170,8 @@ export class UI extends Component {
     return this.props.node ? this.props.node.tag : "unknown-tag";
   }
   style() {
-    let { x, y, w, h, alpha, visible, relatx, relaty, relatw, relath } =
-      this.att;
+    let { x, y, w, h, relatx, relaty, relatw, relath } = this.att;
+    const { alpha, visible, action, move, resize } = this.att;
     let style = ""; //`top:${y}px; left:${x}px; color:fuchsia;`;
     if (x != null) style += `left:${relative(x, relatx)};`;
     if (y != null) style += `top:${relative(y, relaty)};`;
@@ -180,7 +180,11 @@ export class UI extends Component {
     if (w != null) style += `width:${relative(w, relatw)};`;
     if (h != null) style += `height:${relative(h, relath)};`;
     if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
-    // if (visible != null && !visible) style += `display:none;`;
+
+    if (visible != null && !visible) style += `display:none;`;
+    const touchable = action || move || resize;
+    style += `pointer-events:${touchable ? "auto" : "none"};`;
+
     if (this.att.background) style += this.bgStyle(this.att.background);
     if (this.att.image) style += this.bgStyle(this.att.image);
     return style;
