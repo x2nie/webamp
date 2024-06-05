@@ -78,7 +78,11 @@ const value_kept = [
 ];
 
 const forbidden_keys = {
-  component: "identifier",
+  // component: "identifier",
+  // default_x: 'x',
+  // default_y: 'y',
+  // default_w: 'w',
+  // default_h: 'h',
 };
 
 /**
@@ -152,7 +156,7 @@ export class XmlElement {
   setXmlParam(key:string, value:string|any){
     // console.log('receiving XmlParam:',key, '=', value)
     // this.attributes[key] = value
-    if (key in forbidden_keys) {
+    if (forbidden_keys[key]) {
       key = forbidden_keys[key];
     }
     if (value2lower.includes(key)) {

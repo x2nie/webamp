@@ -504,12 +504,18 @@ export class WinampModern extends SkinEngine {
       // console.log('include #5~', fileName, child.name, '#', child.toJSON())
       //? replace the <include> with first child
       if (first) {
-        node.tag = child.tag;
-        node.attributes = child.attributes;
-        node.children = child.children;
+        putIndex = node.parent.children.indexOf(node);
+        node.replace(child);
+        // node.tag = child.tag;
+        // node.attributes = child.attributes;
+        // node.children = child.children;
         first = false;
       } else {
-        if (parent.children) parent.children.push(child);
+        // if (parent.children) parent.children.push(child);
+        if (parent.children) {
+          //parent.children.push(child);
+          parent.children.splice(++putIndex, 0, child);
+        }
         child.parent = parent;
       }
     });
@@ -549,6 +555,7 @@ export class WinampModern extends SkinEngine {
   }
 
   async component(node: XmlElement) {
+    console.warn('--component:',node)
     // this._bitmapFont[node.id] = node.detach();
     const alias = guid2alias(node.attributes.param.toLowerCase());
     switch (alias) {

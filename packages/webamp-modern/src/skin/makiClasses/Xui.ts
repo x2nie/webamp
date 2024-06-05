@@ -13,13 +13,18 @@ export class XuiUi extends GroupUI {
 
     onMounted(() => {
       for (const [k, v] of Object.entries(this.props.node.attributes)) {
-        if (["id"].includes(k)) continue;
+        if (["id" , "_wasabi", "embed_xui"].includes(k)) continue;
         if (typeof v == "string") {
           console.log(`setting XuiParam: "${k}" : "${v}"`);
           // if(k=='content'){
           //   debugger
           // }
-          this.props.node.sendXuiParam(k, v);
+          // this.props.node.sendXuiParam(k, v);
+          try{
+            this.props.node.sendXuiParam(k, v);
+          } catch(err){
+            console.warn('failed to sendXuiParam:', err)
+          }
         }
       }
     
