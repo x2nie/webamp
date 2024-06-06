@@ -28,6 +28,7 @@ import {
   onWillStart,
   onWillUpdateProps,
   useEffect,
+  useEnv,
   useRef,
   xml,
 } from "@odoo/owl";
@@ -63,7 +64,8 @@ export class UI extends Component {
   // static components = { Children };
 
   setup() {
-    this.bus = new EventBus();
+    // this.bus = new EventBus();
+    this.env = useEnv()
     this.props.node.el = this;
     this.gui = useRef("gui"); // the html element in DOM
 

@@ -12,20 +12,44 @@ import {
 } from "../../utils";
 import Timer from "./Timer";
 import { UI } from "../Children";
-import { Component, useEnv, xml } from "@odoo/owl";
+import { Component, onMounted, useEffect, useEnv, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 
 export class TextUI extends UI {
   static template = xml`
-    <text t-att-id="att.id" t-att-style="style()">
-      <t t-if="att.fontmode=='truetype'" t-out="att.text"/>
+    <t t-call="ui">
+      <wrap t-if="att.fontmode=='truetype'" t-out="att.text"/>
       <BitmapFontUI t-if="att.fontmode=='bitmap'" 
         node="props.node"
         font="getBitmapFont()" 
         text="att.text"/>
-   </text>
+</t>
     `;
   static components = {BitmapFontUI}
+
+  setup(){
+    super.setup();
+    useEffect(
+      ()=>{
+        this.node.emitter.trigger('onTextChanged', this.att.text)
+      }, 
+      () => [this.att.text]
+    )
+
+    onMounted(()=>{
+      //demo|test purpose
+      // setTimeout(() => {
+        
+        if(this.att.text==':componentname'){
+          // const container = 
+          // this.att.text = 'HeyBoss'
+          // debugger
+          this.att.text = this.env.container.att.name
+        }
+
+      // }, 1000);
+    })
+  }
 
   style() {
     let style = super.style();
@@ -37,6 +61,9 @@ export class TextUI extends UI {
         shadowy || 0
       }px rgb(${shadowcolor});`;
     }
+    //assuring shadow not trimmed
+    if(shadowx) style += `padding-right: ${shadowx || 0}px;`
+    
     if (bold) style += `font-weight: bold;`;
     
     //bitmapfont
@@ -579,6 +606,17 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   }
 
   getAutoWidth(): number {
+    if(this.el && this.el.gui.el){
+      const el: HTMLElement = this.el.gui.el;
+      // console.log('txt:',this.attributes.text, el.firstChild.offsetWidth)
+      const val = el.style.width;
+      el.style.width = 'auto' //store
+      const width =  (el.firstChild as HTMLElement).offsetWidth + (this.attributes.shadowx || 0)
+      el.style.width = val  //restore
+      return width;
+
+      // el.firstElementChild.offset
+    }
     return 81;
     this._invalidateFullWidth();
     let textWidth = this._textFullWidth;

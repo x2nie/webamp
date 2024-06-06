@@ -3,7 +3,7 @@ import { assert, num, px, removeAllChildNodes, toBool } from "../../utils";
 import Layout, { LayoutGui } from "./Layout";
 import XmlObj from "../XmlObj";
 import Group from "./Group";
-import { Component, xml } from "@odoo/owl";
+import { Component, useSubEnv, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
 // import Children, { UI } from "../Children";
 import { useWindowService, WindowManager } from "@lib/windowManager/hook";
@@ -39,6 +39,7 @@ export class ContainerUI extends UI {
     super.setup()
     this.att.zIndex = ContainerUI.nextZIndex++;
     this.windowManager = useWindowService()
+    useSubEnv({container: this})
   }
   
   style() {
