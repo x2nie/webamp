@@ -8,7 +8,7 @@ document.getElementById("img1").onclick = (event) => {
   event.stopPropagation();
 };
 
-const GRIDSIZE = 4;
+const GRIDSIZE = 8;
 // const CELLSIZE = 15;
 const SCALE = 30; //px
 
@@ -40,7 +40,7 @@ function prepareGrid() {
   ctx.fillStyle = "#ff00ff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#000000";
-  ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+  // ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
 
   //? red dot
   const dot = document.getElementById("dot") as HTMLElement;
@@ -50,6 +50,17 @@ function prepareGrid() {
     dot.style.left = `${ax * SCALE}px`;
     dot.style.top = `${ay * SCALE}px`;
   };
+
+  //? LOCALSTORAGE things
+  const gridBackend = JSON.parse(localStorage.getItem('clip_path_Designing') || '{}')
+  const setGridBackend = (key, value) => {
+    if(value){
+      gridBackend[key] = 1
+    } else {
+      delete gridBackend[key]
+    }
+    localStorage.setItem('clip_path_Designing', JSON.stringify(gridBackend))
+  }
 
   //? onClick
   const toggleCell = (e: MouseEvent) => {
@@ -72,6 +83,11 @@ function prepareGrid() {
     data[2] = color[2];
     data[3] = 255;
     ctx.putImageData(idata, x, y);
+    setGridBackend(`${x}_${y}`, color[0]?0:1)
+    invalidate()
+  }
+
+  function invalidate(){
 
     //? IMG
     img.setAttribute("src", canvas.toDataURL());
@@ -124,6 +140,7 @@ function prepareGrid() {
     zoom.style.clipPath = edge.getPolygon();
   }; // eof onClick
 
+  //? init the grid
   for (var i = 0; i < GRIDSIZE * GRIDSIZE; i++) {
     const div = document.createElement("div");
     div.setAttribute("id", `${i}`);
@@ -155,11 +172,16 @@ function prepareGrid() {
     //debug/default
     if (i < (GRIDSIZE * GRIDSIZE) / 2) {
       //HALF
+      // div.classList.add("black");
+    }
+    if(gridBackend[`${x}_${y}`]){
       div.classList.add("black");
+      ctx.fillRect(x, y, 1, 1);
     }
   }
+  invalidate()
 
-  toggleCell({ target: document.getElementById("4") } as unknown as MouseEvent);
+  // toggleCell({ target: document.getElementById("4") } as unknown as MouseEvent);
   // img.setAttribute("src", canvas.toDataURL());
 
   //debug
