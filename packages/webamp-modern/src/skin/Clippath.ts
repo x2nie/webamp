@@ -78,6 +78,10 @@ export class Edges {
       lastY = y;
     }
 
+    const smallestSide = Math.min(w,h)
+    const halfSide = Math.floor(smallestSide / 2)
+    // do detect top left joining point here, by exponent increments
+
     //? top -------------------------------------------------
     points = [];
     for (x = 0; x < w; x++) {
