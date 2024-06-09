@@ -29,10 +29,11 @@ import { Webamp } from "./webamp";
 
 const webamp = new Webamp(document.getElementById("web-amp") || document.body, {
   // skin: .../,,,,
-  skin: "assets/skins/SimpleTutorial/",
+  // skin: "assets/skins/SimpleTutorial/",
+  // skin: 'assets/skins/WinampModern566.wal',
+    skin: 'assets/skins/extracted/MMD3/',
     // skin: 'assets/skins/MMD3.wal',
     // skin: 'assets/skins/boxOr.wal',
-  // skin: 'assets/skins/WinampModern566.wal',
   tracks: [
     "assets/Just_Plain_Ant_-_05_-_Stumble.mp3",
     "assets/Just_Plain_Ant_-_05_-_Stumble.mp3",

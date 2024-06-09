@@ -1,5 +1,12 @@
+import { uiRegistry } from "@lib/registry";
 import { ensureVmInt, num, px, toBool, unimplemented } from "../../utils";
 import Layer from "./Layer";
+import { UI } from "./GuiObj";
+
+export class AnimatedLayerUI extends UI {
+  //
+}
+uiRegistry.add('animatedlayer', AnimatedLayerUI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Canimatedlayer.2F.3E
 export default class AnimatedLayer extends Layer {

@@ -1,6 +1,12 @@
+import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { UIRoot } from "../../UIRoot";
 import { assume, clamp, num, px, throttle } from "../../utils";
-import GuiObj from "./GuiObj";
+import GuiObj, { UI } from "./GuiObj";
+
+export class SliderUI extends UI {
+
+}
+uiRegistry.add('slider', SliderUI)
 
 export class ActionHandler {
   _slider: Slider;
@@ -434,6 +440,7 @@ export default class Slider extends GuiObj {
   extern Slider.unlock(); // unloads the
   */
 }
+xmlRegistry.add('slider', Slider)
 
 /*****
  * Here we have the action handlers for the different action types:

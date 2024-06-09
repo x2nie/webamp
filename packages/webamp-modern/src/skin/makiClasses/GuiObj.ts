@@ -466,7 +466,7 @@ export default class GuiObj extends XmlObj {
         break;
       // (int) An integer [0,255] specifying the alpha blend mode of the object (0 is transparent, 255 is opaque). Default is 255.
       case "alpha":
-        this.setalpha(num(value));
+        this.setAlpha(num(value));
       case "sysregion":
         this._sysregion = num(value);
         break;
@@ -1114,9 +1114,10 @@ export default class GuiObj extends XmlObj {
    *
    * @param  alpha   The alpha value.
    */
-  setalpha(alpha: number) {
-    this._alpha = alpha;
-    this._renderAlpha();
+  setAlpha(alpha: number) {
+    console.log(this.id, 'setAlpha:', alpha)
+    this.attributes.alpha = alpha;
+    // this._renderAlpha();
   }
 
   /**
@@ -1126,8 +1127,8 @@ export default class GuiObj extends XmlObj {
    *
    * @ret The alpha value.
    */
-  getalpha(): number {
-    return this._alpha;
+  getAlpha(): number {
+    return this.attributes.alpha;
   }
 
   /**

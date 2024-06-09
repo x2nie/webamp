@@ -23,7 +23,8 @@ export class SkinEngine extends XmlElement {
   static uniqueByFile = "";
 
   constructor(protected skinPath: string) {
-    super(skinPath)
+    super('', {skinPath})
+    this.tag = this.constructor.name
   }
   protected zip: FileExtractor;
 
@@ -64,6 +65,10 @@ export class SkinEngine extends XmlElement {
   }
   bitmaps(): { [key: string]: XmlElement } {
     return {};
+  }
+
+  image(file:string) : HTMLImageElement {
+    return null
   }
 
   async traverseChildren(

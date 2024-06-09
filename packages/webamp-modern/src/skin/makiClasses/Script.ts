@@ -28,11 +28,11 @@ type eventInfo = {
 
 export class SystemUI extends Component {
   static GUID = "d6f50f6449b793fa66baf193983eaeef"; //System
-  static template = xml`<t t-out="html()" />`;
+  static template = xml`<t t-out="appearance()" />`;
   script: ParsedMaki;
   subscription: eventInfo[] = [];
 
-  html() {
+  appearance() {
     return markup(`<!-- script:${this.props.node.attributes.file} -->`);
   }
 
@@ -68,6 +68,7 @@ export class SystemUI extends Component {
 
     onMounted(() => {
       console.log(`script ${this.script.maki_id} loaded!`);
+      debugger
       this.system.emitter.trigger("onScriptLoaded");
       // setTimeout(() => {
       //   //simulate play

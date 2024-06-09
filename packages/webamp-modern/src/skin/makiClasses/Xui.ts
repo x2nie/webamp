@@ -23,7 +23,7 @@ export class XuiUi extends GroupUI {
           try{
             this.props.node.sendXuiParam(k, v);
           } catch(err){
-            console.warn('failed to sendXuiParam:', err)
+            console.warn(`${JSON.stringify(this.att)} failed to sendXuiParam:`, err)
           }
         }
       }

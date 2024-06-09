@@ -1,11 +1,16 @@
-import { xmlRegistry } from "@lib/registry";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { UIRoot } from "../../UIRoot";
 import { debounce, num, toBool, unimplemented } from "../../utils";
 import { AUDIO_PLAYING } from "../AudioPlayer";
 import GammaGroup from "../GammaGroup";
-import GuiObj from "./GuiObj";
+import GuiObj, { UI } from "./GuiObj";
 
 type ColorTriplet = string;
+
+export class VisUI extends UI {
+
+}
+uiRegistry.add('vis', VisUI)
 
 /**
  * Base class of AVS (animation frame renderer engine)

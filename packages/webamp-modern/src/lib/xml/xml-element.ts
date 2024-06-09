@@ -110,6 +110,14 @@ export class XmlElement {
    */
   parent: XmlElement | null;
 
+  get root(): XmlElement {
+    let root:XmlElement = this.parent
+    while (root && root.parent){
+      root = root.parent
+    }
+    return root
+  }
+
   get id(): string {
     return String(this.attributes.id || "");
   }

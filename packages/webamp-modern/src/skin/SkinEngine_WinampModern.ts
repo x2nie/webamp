@@ -49,12 +49,17 @@ export class WinampModern extends SkinEngine {
     return this._env.playlist;
   }
 
+  image(file:string) : HTMLImageElement {
+    return this._image[file].img
+  }
+
   async parseSkin() {
     const includedXml = await this.zip.getFileAsString("skin.xml");
     // console.log("skin.xml:", includedXml);
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
-    const parsed = parseXml(includedXml, this);
+    const parsed = parseXml(includedXml);
+    // const parsed = parseXml(includedXml, this);
     // console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
     console.log("xuidef", this._xuidef);
