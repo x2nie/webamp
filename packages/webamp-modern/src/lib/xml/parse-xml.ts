@@ -25,8 +25,8 @@ export class Parser {
    * @param xml XML string to parse.
    * @param options Parser options.
    */
-  constructor(xml: string) {
-    let doc = (this.document = new XmlElement('DOC'));
+  constructor(xml: string, root:XmlElement=null) {
+    let doc = (this.document = root? root : new XmlElement('DOC'));
     let scanner = (this.scanner = new StringScanner(xml));
 
     this.currentNode = doc;
@@ -849,8 +849,8 @@ export class Parser {
  * @param xml XML string to parse.
  * @param options Parser options.
  */
-export function parseXml(xml: string) {
-  return new Parser(xml).document;
+export function parseXml(xml: string, root:XmlElement=null) {
+  return new Parser(xml, root).document;
 }
 
 export function parseXmlFragment(xml: string): XmlElement {

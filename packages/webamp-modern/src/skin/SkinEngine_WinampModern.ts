@@ -54,7 +54,7 @@ export class WinampModern extends SkinEngine {
     // console.log("skin.xml:", includedXml);
     // Note: Included files don't have a single root node, so we add a synthetic one.
     // A different XML parser library might make this unnessesary.
-    const parsed = parseXml(includedXml);
+    const parsed = parseXml(includedXml, this);
     // console.log('skin.xml=>', parsed)
     await this.traverseChildren(parsed, parsed);
     console.log("xuidef", this._xuidef);
@@ -282,6 +282,8 @@ export class WinampModern extends SkinEngine {
           // this._groupBeta.push(group);
           this._populateGroup(group)
         }
+      } else {
+        this._xuiBeta.push(group)
       }
     }
     else if (group.tag == "group") {

@@ -10,23 +10,21 @@ import {
 } from "./FileExtractor";
 import GuiObj from "./makiClasses/GuiObj";
 
-export class SkinEngine {
+export class SkinEngine extends XmlElement {
   /**
    * Useful for quick detect by file extension
-   * @param filePath full file address or URL
-   * @returns True if this skin engine can parse the skin
    */
   static supportedFileExt: string[] = [];
 
   /**
    * In case the skin can't be detected by file extension,
    * let detect by whether one file name is found
-   * @param filePath file name url
-   * @returns file name or file extension
    */
   static uniqueByFile = "";
 
-  constructor(protected skinPath: string) {}
+  constructor(protected skinPath: string) {
+    super(skinPath)
+  }
   protected zip: FileExtractor;
 
   /**

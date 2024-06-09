@@ -192,6 +192,11 @@ export class XmlElement {
     }
     return this;
   }
+  attachTo(parent:XmlElement){
+    this.detach()
+    this.parent = parent;
+    parent.children.push(this)
+  }
 
   clone() {
     // return structuredClone(this); //* this will transform XMLElement class into an Object

@@ -40,7 +40,8 @@ export async function interpret(
   classResolver: (guid: string) => any,
   eventName: string,
   // uiRoot: UIRoot
-  system: any
+  system: any,
+  parent: BaseObject, // default parent for `new ()`
 ) {
   validateMaki(program);
   const interpreter = new Interpreter(
@@ -48,7 +49,8 @@ export async function interpret(
     classResolver,
     eventName,
     // uiRoot
-    system
+    system,
+    parent
   );
   interpreter.stack = stack;
   // interpreter.debug = true;
@@ -80,12 +82,14 @@ class Interpreter {
   maki_id: string;
   eventName: string;
   classResolver: (guid: string) => any;
+  defaultParent: BaseObject;
 
   constructor(
     program: ParsedMaki,
     classResolver: (guid: string) => any,
     eventName: string,
-    uiRoot: any
+    uiRoot: any,
+    defaultParent: BaseObject,
   ) {
     const { commands, methods, variables, classes, maki_id } = program;
     const { bindings } = program;
@@ -97,6 +101,7 @@ class Interpreter {
     this.maki_id = maki_id;
     this.eventName = eventName;
     this.systemUi = uiRoot;
+    this.defaultParent = defaultParent;
 
     this.stack = [];
     this.callStack = [];
@@ -527,7 +532,7 @@ class Interpreter {
             b.binded=true;
             
             // if it is not a NULL
-            if(b.value != this.variables[1]){
+            if(b.value != this.variables[1].value){
               this.systemUi.attachBindings(b)
             }
           }
@@ -861,6 +866,7 @@ class Interpreter {
           const guid = this.classes[classesOffset];
           const Klass = this.classResolver(guid);
           const klassInst = new Klass();
+          klassInst.attachTo(this.defaultParent) //useful to find SkinEngine
           this.push({ type: "OBJECT", value: klassInst });
           break;
         }
