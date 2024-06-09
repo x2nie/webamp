@@ -8,7 +8,7 @@ Global Button Sysmenu;
 Function setNewGroup(String groupid);
 
 System.onScriptLoaded() {
-  messagebox("Hello bosston", "Nothing Error", 0, "");
+  // messagebox("Hello bosston", "Nothing Error", 0, "");
   frameGroup = getScriptGroup();
   String param = getParam();
   x = getToken(param, ",", 0);
@@ -23,7 +23,7 @@ System.onScriptLoaded() {
 }
 
 System.onSetXuiParam(String param, String value) {
-  messagebox(">>>receiving...: "+param+" @="+value, "Nothing Error", 0, "");
+  // messagebox(">>>receiving...: "+param+" @="+value, "Nothing Error", 0, "");
   if (param == "content") {
     setNewGroup(value);
     titlebar = frameGroup.findObject("wasabi.titlebar");
@@ -36,7 +36,7 @@ System.onSetXuiParam(String param, String value) {
     if (mouselayer != NULL) mouselayer.setXmlParam("dblclickaction", "switch;"+value);
     else messagebox("Cannot set shade parameter for StandardFrame object, no mousetrap found", "Skin Error", 0, "");
   }
-  messagebox("<<<received: "+param+" @="+value, "Nothing Error", 0, "");
+  // messagebox("<<<received: "+param+" @="+value, "Nothing Error", 0, "");
 }
 
 // backward compatibility for prerelease notify trick

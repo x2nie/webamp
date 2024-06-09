@@ -117,7 +117,7 @@
 </groupdef>
 
 
-<groupdef id="pl.frame.layout" relatw="1" relath="1" w="0" h="-35" background="wasabi.frame.basetexture">
+<groupdef id="pl.frame.layout" relatw="1" relath="1" w="0" h="-18" background="wasabi.frame.basetexture">
   <layer
     x="0" y="0"
     image="player.pl.topleft"
@@ -196,7 +196,7 @@
     y="6"
     w="-12"
     relatw="1"
-    h="-65"
+    h="-50"
     relath="1"
     noshowcmdbar="1"
     autoopen="1"
@@ -211,24 +211,24 @@
   <!-- <script id="pltime.script" file="scripts/pltime.maki" /> -->
 </groupdef>
 
-<layout id="normal" background="player.main.background" h="116" w="275" linkwidth="shade" appbar="left|top|right|bottom">
-    <!-- <Wasabi:PlaylistFrame:NoStatus
+<layout id="normal" background="player.main.background" h="116" w="410" linkwidth="shade" appbar="left|top|right|bottom">
+    <Wasabi:PlaylistFrame:NoStatus
     x="0" y="0" w="0" h="0" relatw="1" relath="1"
     content="pledit.content.group"
     padtitleleft="10"
     padtitleright="12"
-  /> -->
+  />
   <!-- 
   <sendparams target="mousetrap" dblClickAction="SWITCH;shade"/>
   <sendparams target="window.top.left;window.top;window.top.right;window.left;window.right;window.bottom.left.top;window.bottom.left;window.bottom.left.bottom;window.bottom.top;window.bottom;window.bottom.bottom;window.bottom.right.top;window.bottom.right;window.bottom.right.bottom;" resize="0"/>
  -->
- <Wasabi:TitleBar id="wasabi.titlebar"
+ <!-- <Wasabi:TitleBar id="wasabi.titlebar"
                      x="10"
                      y="0"
                      w="-29"
                      h="18"
-                     relatw="1" />
- <component
+                     relatw="1" /> -->
+ <!-- <component
     x="13"
     y="20"
     w="-26"
@@ -239,7 +239,7 @@
     autoopen="1"
     autoclose="0"
     param="guid:{45F3F7C1-A6F3-4ee6-A15E-125E92FC3F8D}"
-  />
+  /> -->
 
 
 </layout>
