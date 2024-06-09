@@ -18,6 +18,7 @@ import { SkinEngine } from "../SkinEngine";
 import BaseObject from "./BaseObject";
 import SystemObject from "./SystemObject";
 import Config from "./Config";
+import WinampConfig from "./WinampConfig";
 
 type eventInfo = {
   node: BaseObject;
@@ -56,8 +57,8 @@ export class SystemUI extends Component {
         if (vari.type == "OBJECT") {
           if (vari.guid == Config.GUID) {
             vari.value = this.env.config;
-          // } else if (vari.guid == WinampConfig.GUID) {
-          //   vari.value = this._uiRoot.WINAMP_CONFIG;
+          } else if (vari.guid == WinampConfig.GUID) {
+            vari.value = this.env.wconfig;
           // } else if (vari.guid == Application.GUID) {
           //   vari.value = this._uiRoot.APPLICATION;
           }
@@ -135,7 +136,8 @@ export class SystemUI extends Component {
       args, //? stack: Variable[]
       this.classResolver, //? (guid) => Object_
       event,
-      this
+      this,
+      this.props.node
     );
   }
 
@@ -166,7 +168,8 @@ export class SystemUI extends Component {
           args, //? stack: Variable[]
           this.classResolver, //? (guid) => Object_
           event,
-          this
+          this, //sytemui
+          this.props.node, //parent
         );
       }
     }

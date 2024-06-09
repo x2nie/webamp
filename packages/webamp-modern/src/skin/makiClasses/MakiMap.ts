@@ -8,13 +8,18 @@ export default class MakiMap extends BaseObject {
   _uiRoot: UIRoot;
   _bitmap: Bitmap;
 
-  constructor(uiRoot: UIRoot) {
-    super();
-    this._uiRoot = uiRoot;
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   super();
+  //   this._uiRoot = uiRoot;
+  // }
 
-  loadmap(bitmapId: string) {
-    this._bitmap = this._uiRoot.getBitmap(bitmapId);
+  loadMap(bitmapId: string) {
+    let parent = this.parent;
+    while (parent){
+      console.log('myParent=', parent.id)
+      parent = parent.parent
+    }
+    // this._bitmap = this._uiRoot.getBitmap(bitmapId);
   }
   inregion(x: number, y: number): boolean {
     // Maybe this checks if the pixel is transparent?

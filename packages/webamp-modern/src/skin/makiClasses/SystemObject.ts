@@ -176,7 +176,8 @@ export default class SystemObject extends BaseObject {
     return 5.666;
   }
 
-  getskinname(): string {
+  getSkinName(): string {
+    return 'Winamp Modern'
     return this._uiRoot.getSkinName();
   }
   getwinampversion(): string {

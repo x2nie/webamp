@@ -133,14 +133,14 @@ export default class Layout extends Group {
     }
   }
 
-  snapadjust(left: number, top: number, right: number, bottom: number) {
+  snapAdjust(left: number, top: number, right: number, bottom: number) {
     this._snap.left = left;
     this._snap.top = top;
     this._snap.right = right;
     this._snap.bottom = bottom;
   }
 
-  beforeredock() {
+  beforeRedock() {
     // TODO:
   }
 

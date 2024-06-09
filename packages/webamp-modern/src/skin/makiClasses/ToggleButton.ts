@@ -1,5 +1,11 @@
+import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { V } from "../../maki/v";
-import Button from "./Button";
+import Button, { ButtonUI } from "./Button";
+
+export class ToggleButtonUi extends ButtonUI {
+
+}
+uiRegistry.add('togglebutton', ToggleButtonUi)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cbutton.2F.3E_.26_.3Ctogglebutton.2F.3E
 export default class ToggleButton extends Button {
@@ -46,3 +52,5 @@ export default class ToggleButton extends Button {
     this._div.setAttribute("data-obj-name", "ToggleButton");
   }
 }
+
+xmlRegistry.add('togglebutton', ToggleButton)

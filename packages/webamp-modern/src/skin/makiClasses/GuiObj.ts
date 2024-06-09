@@ -118,7 +118,6 @@ export class UI extends Component {
   handleClick(ev: MouseEvent) {
     ev.stopPropagation();
     console.log("click!");
-    // debugger
     if (this.att.action) {
       const { action } = this.att;
       let { param } = this.att;
@@ -128,6 +127,8 @@ export class UI extends Component {
       if (ev.ctrlKey) param += ";KBD_CTRL";
       this.env.engine.triggerAction(this.node, action, param);
       // this.node.emitter.trigger('action', action, param)
+    } else if (ev.button == 0) {
+      this.node.emitter.trigger('onLeftClick')
     }
   }
 
@@ -184,7 +185,7 @@ export class UI extends Component {
     if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
     
     if (visible != null && !visible) style += `display:none;`;
-    const touchable = action || move || resize;
+    const touchable = action || move || resize || this.node.tag.includes('button');
     style += `pointer-events:${touchable ? "auto" : "none"};`;
     if (resize != null) style += this.cursorStyle(resize);
 

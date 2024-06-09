@@ -94,6 +94,7 @@ text {
   overflow: hidden;
   box-sizing: border-box;
   text-align: center;
+  color: white;
   /* padding: 2px; */
   --valign: center;
 }
@@ -356,8 +357,3 @@ ul.popup-menu-container li:hover > span {
   display: unset;
 }
 
-text {
-  /* background: yellow; */
-  color: white;
-  padding-top: 1px;
-}
