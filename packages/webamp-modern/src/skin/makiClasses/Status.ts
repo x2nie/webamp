@@ -1,5 +1,11 @@
-import GuiObj from "./GuiObj";
+import GuiObj, { UI } from "./GuiObj";
 import { AUDIO_PAUSED, AUDIO_STOPPED, AUDIO_PLAYING } from "../AudioPlayer";
+import { uiRegistry } from "@lib/registry";
+
+export class StatusUi extends UI {
+  //
+}
+uiRegistry.add('status', StatusUi)
 
 // Maybe this?
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3CWasabi:StandardFrame:Status.2F.3E
@@ -10,10 +16,10 @@ export default class Status extends GuiObj {
   _pausebitmap: string;
   _state: string = AUDIO_STOPPED;
 
-  constructor(uiRoot: UIRoot) {
-    super(uiRoot);
-    this._uiRoot.audio.on("statchanged", () => this._updateStatus());
-  }
+  // constructor(uiRoot: UIRoot) {
+  //   super(uiRoot);
+  //   this._uiRoot.audio.on("statchanged", () => this._updateStatus());
+  // }
 
   _updateStatus() {
     this._state = this._uiRoot.audio.getState();

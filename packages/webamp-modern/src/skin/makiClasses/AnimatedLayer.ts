@@ -1,4 +1,4 @@
-import { uiRegistry } from "@lib/registry";
+import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { ensureVmInt, num, px, toBool, unimplemented } from "../../utils";
 import Layer from "./Layer";
 import { UI } from "./GuiObj";
@@ -90,7 +90,8 @@ export default class AnimatedLayer extends Layer {
   }
 
   // api
-  getlength(): number {
+  getLength(): number {
+    return 4;
     const bitmap = this._uiRoot.getBitmap(this._image);
     // return bitmap.getHeight();
     if (!bitmap || !bitmap.getImg()) {
@@ -103,12 +104,15 @@ export default class AnimatedLayer extends Layer {
       return bitmap.getWidth() / (this._frameWidth || this.getwidth());
     }
   }
-  gotoframe(framenum: number) {
+  gotoFrame(framenum: number) {
     this._currentFrame = ensureVmInt(framenum);
-    this._renderFrame();
-    this._uiRoot.vm.dispatch(this, "onframe", [
-      { type: "INT", value: this._currentFrame },
-    ]);
+    // this._renderFrame();
+    // this._uiRoot.vm.dispatch(this, "onframe", [
+    //   { type: "INT", value: this._currentFrame },
+    // ]);
+    this.emitter.trigger('onFrame', [
+        { type: "INT", value: this._currentFrame },
+      ])
   }
   getcurframe(): number {
     return this._currentFrame;
@@ -134,7 +138,7 @@ export default class AnimatedLayer extends Layer {
     const backward: boolean = end < start;
 
     let frame = this._startFrame;
-    this.gotoframe(frame); // initially, jump to start
+    this.gotoFrame(frame); // initially, jump to start
 
     this._uiRoot.vm.dispatch(this, "onplay");
 
@@ -146,7 +150,7 @@ export default class AnimatedLayer extends Layer {
       if (this._paused) {
         return;
       }
-      this.gotoframe(frame); // visual update
+      this.gotoFrame(frame); // visual update
 
       if (frame === end) {
         if (!this._autoReplay) {
@@ -221,11 +225,11 @@ export default class AnimatedLayer extends Layer {
     if (!this._frameHeight) {
       this._frameHeight = this.getheight();
     }
-    if (this._endFrame == 0 && this.getlength() > 0) {
-      this._endFrame = this.getlength() - 1;
+    if (this._endFrame == 0 && this.getLength() > 0) {
+      this._endFrame = this.getLength() - 1;
     }
     if (this._startFrame != 0) {
-      this.gotoframe(this._startFrame);
+      this.gotoFrame(this._startFrame);
     }
     if (this._autoPlay) this.play();
   }
@@ -258,3 +262,4 @@ extern AnimatedLayer.setRealtime(Boolean onoff);
     this._div.setAttribute("data-obj-name", "AnimatedLayer");
   }
 }
+xmlRegistry.add('animatedlayer', AnimatedLayer)

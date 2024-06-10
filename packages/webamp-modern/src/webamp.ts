@@ -18,6 +18,8 @@ const templates = `<odoo>
       t-att-class="getCssClass()" 
       t-att="attrs()"
       t-on-click="handleClick"
+      t-on-mouseenter="handleMouseEnter"
+      t-on-mouseleave="handleMouseLeave"
       t-att-style="style()" t-ref="gui">
         <t t-out="0"/>
         <t t-call="childs" />

@@ -418,7 +418,7 @@ class Interpreter {
           try {
             // result = obj.value[methodName](...methodArgs);
             let afunction = obj.value[methodName];
-            if (afunction.constructor.name === "AsyncFunction") {
+            if (afunction && afunction.constructor.name === "AsyncFunction") {
               console.log(
                 "calling fun type:",
                 afunction.constructor.name,
@@ -439,7 +439,8 @@ class Interpreter {
               .replace("[", "")
               .replace("]", "");
             console.warn(
-              `error call: ${klass.name}.${methodName}(${args})`,
+              `error call: ${klass?klass.name: 'unknownClass'}.${methodName}(${args}) @${obj.value.constructor.name}`,
+              // `error call: .${methodName}(${args})`,
               `err: ${err.message} obj:`,
               obj
             );

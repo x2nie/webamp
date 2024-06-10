@@ -99,7 +99,7 @@ export default class Vis extends GuiObj {
 
     switch (key) {
       case "mode":
-        this.setmode(value);
+        this.setMode(value);
         break;
       case "gammagroup":
         this._gammagroup = value;
@@ -179,7 +179,7 @@ export default class Vis extends GuiObj {
   }
 
   initialize() {
-    this.setmode(this._mode); // in case xml doesn't define mode.
+    this.setMode(this._mode); // in case xml doesn't define mode.
     super.initialize();
     this.audioStatusChanged();
   }
@@ -208,7 +208,7 @@ export default class Vis extends GuiObj {
     this._rebuildPainter();
   };
 
-  setmode(mode: string) {
+  setMode(mode: string) {
     this._mode = mode;
     const painterClass =
       VISPAINTERS[mode] || VISPAINTERS["0"]; /* NoVisualizerHandler */
@@ -230,16 +230,16 @@ export default class Vis extends GuiObj {
     // }
   }
 
-  getmode(): number {
+  getMode(): number {
     return parseInt("0" + this._mode); // so we support non numeral use. eg: 'butterchurn'
   }
 
-  nextmode() {
-    let newMode = this.getmode() + 1;
+  nextMmode() {
+    let newMode = this.getMode() + 1;
     if (newMode > 2) {
       newMode = 0;
     }
-    this.setmode(String(newMode));
+    this.setMode(String(newMode));
   }
 
   _setPainter(PainterType: typeof VisPaintHandler) {

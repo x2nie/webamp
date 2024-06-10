@@ -64,7 +64,7 @@ function getPopupJson(popupId: string, res:string): MenuItem[] {
                 case 'popup':
                     const newPopup = new PopupMenu();
                     if(popup){  // if it is a sub-popup, attach to parent
-                        popup.addsubmenu(newPopup, t2)
+                        popup.addSubmenu(newPopup, t2)
                     }
                     popup = newPopup;
                     popupStack.push(popup);
@@ -80,10 +80,10 @@ function getPopupJson(popupId: string, res:string): MenuItem[] {
                     menu.id = id;
                     // if(flags.indexOf('GRAYED') >= 0) menu.disabled = true;
                     menu.disabled = flags.indexOf('GRAYED') >= 0;
-                    popup.addcommand(t2, id, false, menu.disabled)
+                    popup.addCommand(t2, id, false, menu.disabled)
                     break;
                 case 'separator':
-                    popup.addseparator()
+                    popup.addSeparator()
                     break;
             }
             // const id = type=='popup'? 65535: type == 'separator' ? 0 : parseInt(sid);
@@ -165,7 +165,7 @@ function getPopupMenu(popupId: string, res:string): PopupMenu {
                 case 'popup':
                     const newPopup = new PopupMenu();
                     if(popup){  // if it is a sub-popup, attach to parent
-                        popup.addsubmenu(newPopup, t2)
+                        popup.addSubmenu(newPopup, t2)
                     } else {
                         root = newPopup
                     }
@@ -183,10 +183,10 @@ function getPopupMenu(popupId: string, res:string): PopupMenu {
                     menu.id = id;
                     // if(flags.indexOf('GRAYED') >= 0) menu.disabled = true;
                     menu.disabled = flags.indexOf('GRAYED') >= 0;
-                    popup.addcommand(t2, id, false, menu.disabled)
+                    popup.addCommand(t2, id, false, menu.disabled)
                     break;
                 case 'separator':
-                    popup.addseparator()
+                    popup.addSeparator()
                     break;
             }
             // const id = type=='popup'? 65535: type == 'separator' ? 0 : parseInt(sid);

@@ -51,6 +51,8 @@ export class UI extends Component {
       t-att-class="getCssClass()" 
       t-att="attrs()"
       t-on-click="handleClick"
+      t-on-mouseenter="handleMouseEnter"
+      t-on-mouseleave="handleMouseLeave"
       t-att-style="style()" t-ref="gui">
         <t t-call="childs" />
     </t>`;
@@ -65,7 +67,7 @@ export class UI extends Component {
 
   setup() {
     // this.bus = new EventBus();
-    this.env = useEnv()
+    this.env = useEnv();
     this.props.node.el = this;
     this.gui = useRef("gui"); // the html element in DOM
 
@@ -128,8 +130,20 @@ export class UI extends Component {
       this.env.engine.triggerAction(this.node, action, param);
       // this.node.emitter.trigger('action', action, param)
     } else if (ev.button == 0) {
-      this.node.emitter.trigger('onLeftClick')
+      this.handleLeftClick(ev);
     }
+  }
+
+  handleLeftClick(ev: MouseEvent) {
+    this.node.emitter.trigger("onLeftClick");
+  }
+  handleMouseEnter(ev:MouseEvent){
+    console.log('mouse-enter...')
+    this.node.emitter.trigger("onEnterArea");
+  }
+  handleMouseLeave(ev:MouseEvent){
+    console.log('mouse-out...')
+    this.node.emitter.trigger("onLeaveArea");
   }
 
   detectRealSize() {
@@ -155,7 +169,9 @@ export class UI extends Component {
     if (notFound.length) {
       console.warn("TAG NOT FOUND:::", [...new Set(notFound)].join(", "));
     }
-    return this.props.node.children.filter((e) => e.attributes.visible != false && uiRegistry.contains(e.tag));
+    return this.props.node.children.filter(
+      (e) => e.attributes.visible != false && uiRegistry.contains(e.tag)
+    );
   }
 
   lookupTag(tag: string): typeof Component {
@@ -183,9 +199,10 @@ export class UI extends Component {
     if (w != null) style += `width:${relative(w, relatw)};`;
     if (h != null) style += `height:${relative(h, relath)};`;
     if (alpha != null && alpha < 255) style += `opacity:${alpha / 255};`;
-    
+
     if (visible != null && !visible) style += `display:none;`;
-    const touchable = action || move || resize || this.node.tag.includes('button');
+    const touchable =
+      action || move || resize || this.node.tag.includes("button") || this.node.tag.includes("animate");
     style += `pointer-events:${touchable ? "auto" : "none"};`;
     if (resize != null) style += this.cursorStyle(resize);
 
@@ -280,8 +297,8 @@ export class UI extends Component {
     return style;
   }
 
-  cursorStyle(resize:string){
-    let cursor = ''
+  cursorStyle(resize: string) {
+    let cursor = "";
     switch (resize) {
       case "right":
         cursor = "e-resize";
@@ -308,9 +325,9 @@ export class UI extends Component {
         cursor = "se-resize";
         break;
       default:
-        return ''
+        return "";
     }
-    return `cursor: ${cursor};`
+    return `cursor: ${cursor};`;
   }
 }
 
@@ -554,7 +571,7 @@ export default class GuiObj extends XmlObj {
       console.log("mouse-down!");
       this.onLeftButtonDown(
         e.offsetX + this.getLeft(),
-        e.offsetY + this.gettop()
+        e.offsetY + this.getTop()
       );
 
       const mouseUpHandler = (e: MouseEvent) => {
@@ -563,7 +580,7 @@ export default class GuiObj extends XmlObj {
         console.log("mouse-up!");
         this.onLeftButtonUp(
           e.offsetX + this.getLeft(),
-          e.offsetY + this.gettop()
+          e.offsetY + this.getTop()
         );
         this._div.removeEventListener("mouseup", mouseUpHandler);
       };
@@ -595,17 +612,17 @@ export default class GuiObj extends XmlObj {
    * Trigger the show event.
    */
   show() {
-    this.attributes.visible = true
+    this.attributes.visible = true;
     // this._visible = true;
     // this._renderVisibility();
     // this.onsetvisible(true);
   }
-  
+
   /**
    * Trigger the hide event.
-  */
- hide() {
-    this.attributes.visible = false
+   */
+  hide() {
+    this.attributes.visible = false;
     // this._visible = false;
     // this._renderVisibility();
     // this.onsetvisible(true);
@@ -632,8 +649,8 @@ export default class GuiObj extends XmlObj {
    *
    * @ret The top edge's position (in screen coordinates).
    */
-  gettop(): number {
-    return this._y;
+  getTop(): number {
+    return this.attributes.y;
   }
 
   /**
@@ -857,9 +874,9 @@ export default class GuiObj extends XmlObj {
         ` x:${x} left:${this.getLeft()}`
     );
     assert(
-      y >= this.gettop(),
+      y >= this.getTop(),
       "Expected click to be below the component's top." +
-        ` y:${y} top:${this.gettop()}`
+        ` y:${y} top:${this.getTop()}`
     );
     this.getparentlayout().bringtofront();
     this._uiRoot.vm.dispatch(this, "onleftbuttondown", [
@@ -1115,7 +1132,7 @@ export default class GuiObj extends XmlObj {
    * @param  alpha   The alpha value.
    */
   setAlpha(alpha: number) {
-    console.log(this.id, 'setAlpha:', alpha)
+    console.log(this.id, "setAlpha:", alpha);
     this.attributes.alpha = alpha;
     // this._renderAlpha();
   }

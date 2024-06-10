@@ -4,6 +4,7 @@ import { createSkinEngineFor } from "./SkinEngine";
 import { ContainerUI } from "./makiClasses/Container";
 // import Children from "./Children";
 import { createWindowService } from "@lib/windowManager/hook";
+import { SystemUI } from "./makiClasses/Script";
 
 // -----------------------------------------------------------------------------
 // Window Container
@@ -12,6 +13,7 @@ import { createWindowService } from "@lib/windowManager/hook";
 export class App extends Component {
     static template = xml` <div class="window-manager">
     <ContainerUI t-foreach="containers()" t-as="container" t-key="container.id" node="container"  />
+    <SystemUI t-foreach="scripts()" t-as="script" t-key="script_index" node="script"  />
   </div>`;
   // <Children children="containers()" />
     // <Children children="state.node.children" />
@@ -28,7 +30,7 @@ export class App extends Component {
     //     <Container node="w"/>
     //   </t>
     // </div>`;
-    static components = { ContainerUI };
+    static components = { ContainerUI, SystemUI };
     // static components = { ContainerUI };
     state: any;
     env: any;
@@ -75,6 +77,9 @@ export class App extends Component {
     
     containers(){
       return this.state.node.children.filter(c => c.tag == 'container')
+    }
+    scripts(){
+      return this.state.node.children.filter(c => c.tag == 'script')
     }
 
   

@@ -1,8 +1,14 @@
-import GuiObj from "./GuiObj";
+import GuiObj, { UI } from "./GuiObj";
 import { UIRoot } from "../../UIRoot";
 import Group from "./Group";
 import { px, toBool, clamp, num } from "../../utils";
 import Button from "./Button";
+import { uiRegistry } from "@lib/registry";
+
+export class ComponentBucketUi extends UI {
+  //
+}
+uiRegistry.add('componentbucket', ComponentBucketUi)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Ccomponentbucket.2F.3E
 export default class ComponentBucket extends Group {

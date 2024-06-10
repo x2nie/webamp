@@ -21,11 +21,11 @@ export default class Timer extends BaseObject {
   // }
 
   setDelay(millisec: number) {
-    let parent = this.parent;
-    while (parent){
-      console.log('myParent=', parent.id, parent.constructor.name)
-      parent = parent.parent
-    }
+    // let parent = this.parent;
+    // while (parent){
+    //   console.log('myParent=', parent.id, parent.constructor.name)
+    //   parent = parent.parent
+    // }
     // assume(
     //   this._timeout == null,
     //   "Tried to change the delay on a running timer"

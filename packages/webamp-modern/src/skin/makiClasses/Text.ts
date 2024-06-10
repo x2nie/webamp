@@ -461,9 +461,10 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     // }
   }
   // overrides the display/text parameter with a custom string, set "" to cancel
-  setalternatetext(txt: string) {
-    this._alternateText = txt;
-    this._renderText();
+  setAlternateText(txt: string) {
+    this.attributes.alternatetext = txt;
+    // this._alternateText = txt;
+    // this._renderText();
   }
 
   //to speedup animation like text-scrolling, we spit rendering processes.

@@ -80,7 +80,7 @@ export default class Layout extends Group {
     return this.parent as Container;
   }
 
-  gettop(): number {
+  getTop(): number {
     return this._parent._y;
   }
 
@@ -209,7 +209,7 @@ export default class Layout extends Group {
       this._resizingDiv.style.cssText = "position:fixed;";
       this._resizingDiv.style.width = px(r.width);
       this._resizingDiv.style.height = px(r.height);
-      this._resizingDiv.style.top = px(container.gettop());
+      this._resizingDiv.style.top = px(container.getTop());
       this._resizingDiv.style.left = px(container.getLeft());
       this._div.appendChild(this._resizingDiv);
     } else if (dx == CURSOR && dy == CURSOR) {
@@ -229,7 +229,7 @@ export default class Layout extends Group {
         this._resizingDiv.style.width = px(clampW(r.width + -dx));
       }
       if (this._canResize & TOP) {
-        this._resizingDiv.style.top = px(container.gettop() + dy);
+        this._resizingDiv.style.top = px(container.getTop() + dy);
         this._resizingDiv.style.height = px(clampH(r.height + -dy));
       }
     } else if (cmd == "final") {

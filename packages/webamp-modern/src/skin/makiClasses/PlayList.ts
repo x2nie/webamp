@@ -74,6 +74,11 @@ export class PlaylistUI extends UI {
     style += "--color-pledit-text-current:blue;";
     return style;
   }
+
+  handleLeftClick(ev: MouseEvent) {
+    // do nothing, lets children/items do the rest
+    //this.node.emitter.trigger("onLeftClick");
+  }
 }
 uiRegistry.add("pl", PlaylistUI);
 

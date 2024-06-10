@@ -187,7 +187,7 @@ export default class FloodLevel extends GuiObj {
     const bitmap = this._uiRoot.getBitmap(this._frontImage); // source pixel
     const canvasb = bitmap.getCanvas(true);
     const ctxb = canvasb.getContext("2d");
-    const imgb = ctxb.getImageData(this.getLeft(), this.gettop(), w, h);
+    const imgb = ctxb.getImageData(this.getLeft(), this.getTop(), w, h);
     const datab = imgb.data;
 
     assume(

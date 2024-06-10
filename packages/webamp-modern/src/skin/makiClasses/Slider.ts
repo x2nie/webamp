@@ -2,6 +2,7 @@ import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { UIRoot } from "../../UIRoot";
 import { assume, clamp, num, px, throttle } from "../../utils";
 import GuiObj, { UI } from "./GuiObj";
+import { V } from "../../maki/v";
 
 export class SliderUI extends UI {
 
@@ -91,7 +92,7 @@ export default class Slider extends GuiObj {
     const newPercent = this._vertical ? (height - y) / height : x / width;
     this._position = clamp(newPercent, 0, 1);
     this._renderThumbPosition();
-    this.doSetPosition(this.getposition());
+    this.doSetPosition(this.getPosition());
   }
   /**
    * Part of central logic that detect whether mouseDown is inside thumb
@@ -294,14 +295,14 @@ export default class Slider extends GuiObj {
   _cfgAttribChanged(newValue: string) {
     // do something when configAttrib broadcast message `datachanged` by other object
     const newPos = parseInt(newValue);
-    if (newPos != this.getposition()) {
+    if (newPos != this.getPosition()) {
       this.setposition(newPos);
     }
   }
 
   // extern Int Slider.getPosition();
-  getposition(): number {
-    return this._position * this._high;
+  getPosition(): number {
+    return this.attributes.position * this._high;
   }
 
   /**
@@ -311,25 +312,26 @@ export default class Slider extends GuiObj {
   setposition(newpos: number) {
     this._position = newpos / this._high;
     this._renderThumbPosition();
-    this.doSetPosition(this.getposition());
+    this.doSetPosition(this.getPosition());
   }
 
-  onsetposition(newPos: number) {
-    this._onSetPositionEvenEaten = this._uiRoot.vm.dispatch(
-      this,
-      "onsetposition",
-      [
-        //needed by seekerGhost
-        { type: "INT", value: newPos },
-      ]
-    );
+  onSetPosition(newPos: number) {
+    this.emitter.trigger('onSetPosition', [V.newInt(newPos)] )
+    // this._onSetPositionEvenEaten = this._uiRoot.vm.dispatch(
+    //   this,
+    //   "onsetposition",
+    //   [
+    //     //needed by seekerGhost
+    //     { type: "INT", value: newPos },
+    //   ]
+    // );
   }
   doSetPosition(newPos: number) {
     this.onsetposition(newPos);
     if (this._actionHandler != null) {
       this._actionHandler.onsetposition(newPos);
     }
-    this.updateCfgAttib(String(this.getposition()));
+    this.updateCfgAttib(String(this.getPosition()));
   }
 
   doLeftMouseDown(x: number, y: number) {
@@ -353,10 +355,10 @@ export default class Slider extends GuiObj {
       { type: "INT", value: y },
     ]);
     this._uiRoot.vm.dispatch(this, "onsetfinalposition", [
-      { type: "INT", value: this.getposition() },
+      { type: "INT", value: this.getPosition() },
     ]);
     this._uiRoot.vm.dispatch(this, "onpostedposition", [
-      { type: "INT", value: this.getposition() },
+      { type: "INT", value: this.getPosition() },
     ]);
     if (this._actionHandler != null) {
       this._actionHandler.onLeftMouseUp(x, y);
@@ -487,7 +489,7 @@ class SeekActionHandler extends ActionHandler {
     if (this._pendingChange) {
       this._pendingChange = false;
       this._uiRoot.audio.seekToPercent(
-        this._slider.getposition() / this._slider._high
+        this._slider.getPosition() / this._slider._high
       );
     }
   }

@@ -62,7 +62,7 @@ export default class DialKnob extends AnimatedLayer {
 
   initialize() {
     super.initialize();
-    this._frameCount = this.getlength(); // because getLength seem as expensive
+    this._frameCount = this.getLength(); // because getLength seem as expensive
     this._registerDragEvents();
     this._map.loadmap(this._mapImage);
     this._actionHandler = new ActionHandler(this); // to be always has an handler
@@ -153,7 +153,7 @@ export default class DialKnob extends AnimatedLayer {
         if (animate) {
           this._animateDial();
         } else {
-          this.gotoframe(
+          this.gotoFrame(
             Math.round((this._value / 255) * (this._frameCount - 1))
           );
         }
@@ -162,8 +162,8 @@ export default class DialKnob extends AnimatedLayer {
   }
 
   // called by animation loop
-  gotoframe(framenum: number) {
-    super.gotoframe(framenum);
+  gotoFrame(framenum: number) {
+    super.gotoFrame(framenum);
     this._actionHandler.onFrame(framenum / (this._frameCount - 1));
   }
 

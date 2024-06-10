@@ -60,6 +60,7 @@ export const value2number = [
   "timecolonwidth",
   //bool
   "ghost",
+  "move",
   "visible",
   "forceuppercase",
   "bold",

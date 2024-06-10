@@ -1,5 +1,6 @@
 import BaseObject from "./BaseObject";
 import { assume } from "../../utils";
+import { xmlRegistry } from "@lib/registry";
 // import { sleep } from 'deasync';
 // import { deasync } from '@kaciras/deasync';
 // import sp from 'synchronized-promise';
@@ -144,7 +145,7 @@ function generateCaption(caption: string): HTMLElement {
 export default class PopupMenu extends BaseObject {
   static GUID = "f4787af44ef7b2bb4be7fb9c8da8bea9";
   _items: MenuItem[] = [];
-  addcommand(
+  addCommand(
     cmdText: string,
     cmd_id: number,
     checked: boolean,
@@ -158,15 +159,15 @@ export default class PopupMenu extends BaseObject {
       disabled,
     });
   }
-  addseparator() {
+  addSeparator() {
     this._items.push({ type: "separator" });
   }
-  addsubmenu(popup: PopupMenu, submenutext: string) {
+  addSubmenu(popup: PopupMenu, submenutext: string) {
     this._items.push({ type: "popup", popup: popup, caption: submenutext });
     // // TODO:
     // this.addcommand(submenutext, 0, false, false)
   }
-  checkcommand(cmd_id: number, check: boolean) {
+  checkCommand(cmd_id: number, check: boolean) {
     const item = this._items.find((item) => {
       return item.type === "menuitem" && item.id === cmd_id;
     });
@@ -222,3 +223,4 @@ export default class PopupMenu extends BaseObject {
     return this._items.length;
   }
 }
+xmlRegistry.add('popup-menu', PopupMenu)

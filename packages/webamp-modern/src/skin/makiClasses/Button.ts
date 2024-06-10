@@ -171,18 +171,19 @@ export default class Button extends AudioEventedGui {
     return super.getwidth();
   }
 
-  getactivated(): boolean {
-    return this._active ? true : false;
+  getActivated(): boolean {
+    return this._active ? 0 : 1;
   }
-  setactivated(onoff: boolean): void {
+  setActivated(onoff: boolean): void {
     onoff = Boolean(onoff); // may receive int as bool
 
     if (onoff !== this._active) {
       this._active = onoff;
-      this._renderActive();
+      // this._renderActive();
     }
     //sometime maki call: setactivated(getactivated())
-    this._uiRoot.vm.dispatch(this, "onactivate", [V.newBool(onoff)]);
+    // this._uiRoot.vm.dispatch(this, "onactivate", [V.newBool(onoff)]);
+    this.emitter.trigger('onActivated', [V.newBool(onoff)])
   }
 
   setactivatednocallback(onoff: boolean) {
@@ -201,7 +202,7 @@ export default class Button extends AudioEventedGui {
   }
 
   onLeftClick() {
-    this._uiRoot.vm.dispatch(this, "onleftclick", []);
+    // this._uiRoot.vm.dispatch(this, "onleftclick", []);
   }
 
   handleAction(

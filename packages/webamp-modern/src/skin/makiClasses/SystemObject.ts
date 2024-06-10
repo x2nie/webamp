@@ -644,19 +644,22 @@ export default class SystemObject extends BaseObject {
    * @param  container_id    The containers identifier string.
    **/
   getContainer(containerId: string): Container {
-    let parent = this.parent;
-    while (parent != null) {
-      if(parent.tag == 'container'){
-        return parent as Container
-      }
-      parent = parent.parent
-    }
-    // const lower = containerId.toLowerCase();
-    // for (const container of this._uiRoot.getContainers()) {
-    //   if (container.getId() === lower) {
-    //     return container;
+    // let parent = this.parent;
+    // while (parent != null) {
+    //   if(parent.tag == 'container'){
+    //     return parent as Container
     //   }
+    //   parent = parent.parent
     // }
+    // console.log('getContainer? root=', this.root) 
+    // debugger
+    //? somehow: this.root.containers() == []
+    const lower = containerId.toLowerCase();
+    for (const container of this.root.children) {
+      if (container.tag == 'container' && container.id === lower) {
+        return container;
+      }
+    }
     throw new Error(`Could not find a container with the id; "${containerId}"`);
   }
 
@@ -750,8 +753,9 @@ export default class SystemObject extends BaseObject {
    *
    * @ret The value of the left vu meter.
    */
-  getleftvumeter(): number {
-    return this._uiRoot.audio._vuMeter * 255;
+  getLeftVuMeter(): number {
+    return 100;
+    // return this._uiRoot.audio._vuMeter * 255;
   }
 
   /**
@@ -760,7 +764,8 @@ export default class SystemObject extends BaseObject {
    *
    * @ret The value of the right vu meter.
    */
-  getrightvumeter(): number {
+  getRightVuMeter(): number {
+    return 100
     return this._uiRoot.audio._vuMeter * 255;
   }
 
@@ -769,7 +774,8 @@ export default class SystemObject extends BaseObject {
    *
    * @ret The current volume.
    **/
-  getvolume(): number {
+  getVolume(): number {
+    return 100
     return this._uiRoot.audio.getVolume() * 255;
   }
 
@@ -779,10 +785,10 @@ export default class SystemObject extends BaseObject {
    *
    *  @param vol  The desired volume value.
    */
-  setvolume(_vol: number) {
+  setVolume(_vol: number) {
     const vol = clamp(_vol, 0, 255);
 
-    this._uiRoot.audio.setVolume(vol / 255);
+    // this._uiRoot.audio.setVolume(vol / 255);
   }
 
   /**
@@ -1581,7 +1587,7 @@ export default class SystemObject extends BaseObject {
    *
    *  @ret The EQ's state.
    */
-  geteq(): number {
+  getEq(): number {
     return unimplemented(1);
   }
 
@@ -1641,9 +1647,10 @@ export default class SystemObject extends BaseObject {
   @ret       The value of the band.
   @param  band  The eq band number you want to get.
   */
-  geteqband(band: number): number {
+  getEqBand(band: number): number {
     // console.log('getEqBand',band, this._uiRoot.audio.getEq(String(band + 1)) * 255 - 127);
-    return this._uiRoot.audio.getEq(String(band + 1)) * 255 - 127;
+    return 100
+    // return this._uiRoot.audio.getEq(String(band + 1)) * 255 - 127;
   }
 
   //maki need it

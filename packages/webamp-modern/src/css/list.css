@@ -39,6 +39,7 @@ colorthemeslist > select {
   background: none;
 }
 .pl > .content-list {
+  pointer-events: all;
   margin:0;
   padding:0;
   margin-right: 15px;

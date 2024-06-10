@@ -19,8 +19,9 @@ export default class MakiMap extends BaseObject {
 
   loadMap(bitmapId: string) {
     const root: SkinEngine = this.root as SkinEngine;
-    const bitmap: XmlElement = root.bitmaps[bitmapId]
-    const image = root.image[bitmap.attributes.file]
+    // const bitmap: XmlElement = root.bitmaps()[bitmapId] why this returns array(0)?
+    const bitmap: XmlElement = root._bitmap[bitmapId]
+    const image = root._image[bitmap.attributes.file].img
     const ctx = this._canvas.getContext("2d")
     ctx.drawImage(image,0,0)
     console.log('map loaded:', this.id)

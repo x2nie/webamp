@@ -58,6 +58,7 @@ export class Edges {
     };
     this._parseCanvasTransparency(canvas, null, null);
   }
+  
 
   _parseCanvasTransparency(
     canvas: HTMLCanvasElement,

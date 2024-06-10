@@ -68,7 +68,6 @@ export class SystemUI extends Component {
 
     onMounted(() => {
       console.log(`script ${this.script.maki_id} loaded!`);
-      debugger
       this.system.emitter.trigger("onScriptLoaded");
       // setTimeout(() => {
       //   //simulate play
@@ -84,7 +83,7 @@ export class SystemUI extends Component {
     try{
       node.emitter.on(event, callback);
     } catch (e) {
-      console.warn(`Failed to attach event: ${event} ${node.id? node.id : node} @${this.script.maki_id}`,e)
+      console.info(`Failed to attach event: ${event} ${node.id? node.id : node} @${this.script.maki_id}`,e)
     }
   }
   unsubscribe() {
