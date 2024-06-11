@@ -938,7 +938,7 @@ export default class GuiObj extends XmlObj {
    *
    * @param  x   The target X position of the object.
    */
-  settargetx(x: number) {
+  setTargetX(x: number) {
     this._targetX = x;
   }
 
@@ -948,7 +948,7 @@ export default class GuiObj extends XmlObj {
    *
    * @param  y   The target Y position of the object.
    */
-  settargety(y: number) {
+  setTargetY(y: number) {
     this._targetY = y;
   }
 
@@ -987,24 +987,24 @@ export default class GuiObj extends XmlObj {
    *
    * @param  insecond    The number of seconds in which to reach the target.
    */
-  settargetspeed(insecond: number) {
+  setTargetSpeed(insecond: number) {
     this._targetSpeed = insecond;
   }
 
   /**
    * Begin transition to previously set target.
    */
-  gototarget() {
+  gotoTarget() {
     this._goingToTarget = true;
     const duration = this._targetSpeed * 1000;
     const startTime = performance.now();
 
     const pairs = [
-      ["_x", "_targetX", "_renderX"],
-      ["_y", "_targetY", "_renderY"],
-      ["_w", "_targetWidth", "_renderWidth"],
-      ["_h", "_targetHeight", "_renderHeight"],
-      ["_alpha", "_targetAlpha", "_renderAlpha"],
+      ["x", "_targetX", "_renderX"],
+      ["y", "_targetY", "_renderY"],
+      ["w", "_targetWidth", "_renderWidth"],
+      ["h", "_targetHeight", "_renderHeight"],
+      ["alpha", "_targetAlpha", "_renderAlpha"],
     ];
 
     const changes: {
@@ -1020,7 +1020,7 @@ export default class GuiObj extends XmlObj {
     for (const [key, targetKey, renderKey] of pairs) {
       const target = this[targetKey];
       if (target != null) {
-        const start = this[key];
+        const start = this.attributes[key];
         const positive = target > start;
         const delta = target - start;
         changes[key] = { start, delta, renderKey, target, positive };
@@ -1042,15 +1042,16 @@ export default class GuiObj extends XmlObj {
         key,
         { start, delta, renderKey, target, positive },
       ] of Object.entries(changes)) {
-        this[key] = clamp(start + delta * progress, target, positive);
-        this[renderKey]();
+        this.attributes[key] = clamp(start + delta * progress, target, positive);
+        // console.log('update:',key, '=', clamp(start + delta * progress, target, positive) )
+        // this[renderKey]();
       }
       if (timeDiff < duration && this._goingToTarget) {
         window.requestAnimationFrame(update);
       } else {
         this._goingToTarget = false;
         // TODO: Clear targets?
-        this.ontargetreached();
+        this.onTargetReached();
       }
     };
 
@@ -1103,8 +1104,9 @@ export default class GuiObj extends XmlObj {
    * Hookable. Event happens when the object has reached
    * it's previously set target.
    */
-  ontargetreached() {
-    this._uiRoot.vm.dispatch(this, "ontargetreached");
+  onTargetReached() {
+    // this._uiRoot.vm.dispatch(this, "ontargetreached");
+    this.emitter.trigger('onTargetReached')
   }
 
   canceltarget() {

@@ -152,7 +152,7 @@ class Interpreter {
           );
           assume(
             typeof a.value === typeof current.value || current.value == null,
-            `Assigned from one type to a different type ${typeof a.value}, ${typeof current.value}. #${
+            `Assigned from one type to a different type ${typeof a.value} to --> ${typeof current.value}. #${
               this.maki_id
             }`
           );
