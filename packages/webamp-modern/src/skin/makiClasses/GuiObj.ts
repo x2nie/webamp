@@ -1137,7 +1137,6 @@ export default class GuiObj extends XmlObj {
    * @param  alpha   The alpha value.
    */
   setAlpha(alpha: number) {
-    console.log(this.id, "setAlpha:", alpha);
     this.attributes.alpha = alpha;
     // this._renderAlpha();
   }

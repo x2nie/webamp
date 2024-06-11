@@ -370,7 +370,7 @@ export class WinampModern extends SkinEngine {
       case "text":
         this._textBeta.push(node);
         break;
-      case "email":
+      case "colorthemes:list":
         // debugger;
         break;
       default:
