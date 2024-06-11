@@ -687,7 +687,8 @@ export default class SystemObject extends BaseObject {
     // return new Group('group', {id: group_id})
     // debugger
     const group = new Group('group', {id: group_id})
-    const engine = (this.el as SystemUI).getEngine()
+    // const engine = (this.el as SystemUI).getEngine()
+    const engine = this.root
     engine.populateGroup(group, group_id)
     return group
   }

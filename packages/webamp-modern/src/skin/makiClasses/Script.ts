@@ -184,6 +184,7 @@ export class SystemUI extends Component {
   }
 
   getEngine(): SkinEngine {
+    return this.system.root;
     return this.env.engine;
   }
 

@@ -421,7 +421,7 @@ class Interpreter {
             if (afunction && afunction.constructor.name === "AsyncFunction") {
               console.log(
                 "calling fun type:",
-                afunction.constructor.name,
+                //afunction.constructor.name,
                 `@${klass.name}.${methodName}`
               );
               // result = await afunction(...methodArgs);
@@ -430,7 +430,7 @@ class Interpreter {
             //   //
             //   result = this.systemUi.getScriptGroup()
             } else {
-              // afunction = afunction.bind(obj)
+              // afunction = afunction.bind(obj.value)
               // result = afunction(...methodArgs);
               result = obj.value[methodName](...methodArgs);
             }
@@ -439,7 +439,7 @@ class Interpreter {
               .replace("[", "")
               .replace("]", "");
             console.warn(
-              `error call: ${klass?klass.name: 'unknownClass'}.${methodName}(${args}) @${obj.value.constructor.name}`,
+              `error call: ${klass?klass.name: 'unknownClass'}.${methodName}(${args}) @${obj.value.constructor.name}#${obj.value.id}`,
               // `error call: .${methodName}(${args})`,
               `err: ${err.message} obj:`,
               obj

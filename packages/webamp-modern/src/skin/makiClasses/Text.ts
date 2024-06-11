@@ -31,7 +31,7 @@ export class TextUI extends UI {
     super.setup();
     useEffect(
       ()=>{
-        this.node.emitter.trigger('onTextChanged', this.att.text)
+        this.node.emitter.trigger('onTextChanged', [{type:'STRING', value:this.att.text}] )
       }, 
       () => [this.att.text]
     )
