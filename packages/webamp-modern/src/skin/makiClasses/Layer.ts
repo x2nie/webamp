@@ -12,7 +12,7 @@ export class LayerUI extends UI {
     super.setup()
     onWillStart(()=>{
       if(this.att.sysregion && !this.att.clippath){
-        debugger
+        // debugger
         const bitmap = this.env.ui.bitmaps[this.att.image];
         const image = this.node.root._image[bitmap.attributes.file].img
         const canvas = document.createElement('canvas');
