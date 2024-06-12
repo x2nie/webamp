@@ -141,7 +141,7 @@ export class XmlElement {
     // super()
     this.tag = tag.toLowerCase();
     //transform, as needed
-    this.attributes = {id: `${++seq_id}`};
+    this.attributes = {oid: `${++seq_id}`};
     for (let [k, v] of Object.entries(attributes)) {
       this.setXmlParam(k, v)
       // if (k in forbidden_keys) {
