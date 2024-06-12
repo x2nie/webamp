@@ -5,11 +5,45 @@ import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { GroupUI } from "./Group";
 import { UI } from "../Children";
 import { ButtonUI } from "./Button";
+import { onWillStart } from "@odoo/owl";
 
 export class LayerUI extends UI {
+  setup(): void {
+    super.setup()
+    onWillStart(()=>{
+      if(this.att.sysregion && !this.att.clippath){
+        debugger
+        const bitmap = this.env.ui.bitmaps[this.att.image];
+        const image = this.node.root._image[bitmap.attributes.file].img
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width
+        canvas.height = image.height
+        const ctx = canvas.getContext("2d")
+        ctx.drawImage(image,0,0)
+        // if (this._sysregion == 1 && this._image) {
+          // const bitmap = this._uiRoot.getBitmap(this._image);
+          // if (bitmap && bitmap.getImg()) {
+            // const canvas = bitmap.getCanvas();
+            const edge = new Edges();
+            edge.parseCanvasTransparency(canvas, image.width, image.height);
+            if (!edge.isSimpleRect()) {
+              this.att.clippath = edge.getPolygon();
+              // return;
+            }
+          // }
+          // if anything failed, don't repeat:
+          // this.setXmlAttr("sysregion", "0");
+      }
+    })
+  }
 
+  style(): string {
+    let style = super.style();
+    if(this.att.clippath) style += `clip-path: ${this.att.clippath};`
+    return style;
+  }
 }
-uiRegistry.add('layer', UI)
+uiRegistry.add('layer', LayerUI)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Clayer.2F.3E
 export default class Layer extends Movable {

@@ -185,6 +185,7 @@ pl
 }
 group {
   overflow: visible;
+  pointer-events: none !important;
 }
 albumart {
   /* background-size: cover; */
