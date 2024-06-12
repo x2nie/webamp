@@ -760,15 +760,16 @@ export default class GuiObj extends XmlObj {
     return this._relaty == "1" ? 1 : 0;
   }
   getAutoWidth(): number {
-    return 78;
-    const child = !this._autowidthsource
+    // return 78;
+    const child = !this.attributes.autowidthsource
       ? this
       : findLast(
-          this._children,
-          (c) => c._id.toLowerCase() == this._autowidthsource
+          this.children,
+          (c) => c.id.toLowerCase() == this.attributes.autowidthsource
         );
     if (child) {
-      return child._div.getBoundingClientRect().width;
+      return child.attributes.w;
+      // return child._div.getBoundingClientRect().width;
     }
     return 1;
   }

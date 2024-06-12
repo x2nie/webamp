@@ -10,6 +10,7 @@ export const value2lower = [
   "inherit_group",
   "action",
   "action_target",
+  "autowidthsource",
   "droptarget",
   "color",
   // event
@@ -237,14 +238,25 @@ export class XmlElement {
     // return structuredClone(this); //* this will transform XMLElement class into an Object
     // Mengkloning atribut secara mendalam
     const attributesClone = { ...this.attributes };
+    
+    // Membuat instance baru dari constructor yang sama dengan yang asli
+    const Klass = this.constructor as typeof XmlElement;
+    const cloning =  new Klass(this.tag, attributesClone);
+
+
     // Mengkloning anak-anak secara rekursif jika mereka juga merupakan instansi dari XMLElement
-    const childrenClone : XmlElement[] = this.children.map(child => child.clone() );
+    const childrenClone : XmlElement[] = this.children.map(child => {
+      const twin = child.clone() 
+      twin.attachTo(cloning)
+
+      return twin
+    });
 
 
     // return new XmlElement(this.name, attributesClone, childrenClone);
     // Membuat instance baru dari constructor yang sama dengan yang asli
-    const Klass = this.constructor as typeof XmlElement;
-    const cloning =  new Klass(this.tag, attributesClone, childrenClone);
+    // const Klass = this.constructor as typeof XmlElement;
+    // const cloning =  new Klass(this.tag, attributesClone, childrenClone);
     // cloning.oid = ++seq_id
     return cloning;
   }
