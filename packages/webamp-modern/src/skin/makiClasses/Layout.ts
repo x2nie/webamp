@@ -6,7 +6,7 @@ import { px, unimplemented } from "../../utils";
 import { UIRoot } from "../../UIRoot";
 import { Component, xml } from "@odoo/owl";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
-import Children, { UI } from "../Children";
+import { UI } from "../Children";
 
 export class LayoutGui extends GroupUI {
   // static template = xml`<t t-call="{{ node_template() }}" />`
@@ -20,8 +20,8 @@ export class LayoutGui extends GroupUI {
 
 }
 
-// uiRegistry.add('layout', LayoutGui)
-uiRegistry.add('layout', UI)
+uiRegistry.add('layout', LayoutGui)
+// uiRegistry.add('layout', UI)
 
 // > A layout is a special kind of group, which shown inside a container. Each
 // > layout represents an appearance for that window. Layouts give you the ability

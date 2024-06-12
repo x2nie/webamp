@@ -36,7 +36,7 @@ import GroupXFade from "./makiClasses/GroupXFade";
 import WasabiButton from "./makiClasses/WasabiButton";
 import PlayListGui from "./makiClasses/PlayListGui";
 import XuiElement from "./makiClasses/XuiElement";
-import NStateButton from "./makiClasses/NStateButton";
+import NStatesButton from "./makiClasses/NStateButton";
 import EqVis from "./makiClasses/EqVis";
 import Images from "./makiClasses/Images";
 import { registerSkinEngine, SkinEngine } from "./SkinEngine";
@@ -818,7 +818,7 @@ export default class SkinEngineWAL extends SkinEngine {
   }
 
   async nStateButton(node: XmlElement, parent: any) {
-    return this.newGui(NStateButton, node, parent);
+    return this.newGui(NStatesButton, node, parent);
   }
 
   async color(node: XmlElement, parent: any) {

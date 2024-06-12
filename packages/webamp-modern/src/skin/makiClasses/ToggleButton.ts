@@ -21,8 +21,8 @@ export default class ToggleButton extends Button {
 
   _cfgAttribChanged(newValue: string) {
     //do something when configAttrib broadcast message `datachanged` by other object
-    this.setactivated(newValue != "0");
-    this.ontoggle(this._active);
+    this.setActivated(newValue != "0");
+    this.onToggle(this._active);
   }
 
   /**
@@ -34,10 +34,10 @@ export default class ToggleButton extends Button {
     // implementation of standard mouse down
     this.setactivated(!this._active);
     this.updateCfgAttib(this._active ? "1" : "0");
-    this.ontoggle(this._active);
+    this.onToggle(this._active);
   }
 
-  ontoggle(onoff: boolean) {
+  onToggle(onoff: boolean) {
     this._uiRoot.vm.dispatch(this, "ontoggle", [V.newBool(onoff)]);
   }
 

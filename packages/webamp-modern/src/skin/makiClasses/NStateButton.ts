@@ -1,8 +1,14 @@
+import { uiRegistry, xmlRegistry } from "@lib/registry";
 import { num } from "../../utils";
-import ToggleButton from "./ToggleButton";
+import ToggleButton, { ToggleButtonUi } from "./ToggleButton";
+
+export class NStatesButtonUi extends ToggleButtonUi  {
+
+}
+uiRegistry.add('nstatesbutton', NStatesButtonUi)
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cnstatesbutton.2F.3E
-export default class NStateButton extends ToggleButton {
+export default class NStatesButton extends ToggleButton {
   static GUID = "OFFICIALLY-NO-GUID";
   //   static GUID = "b4dccfff4bcc81fe0f721b96ff0fbed5";
   _statesCount: number = 2;
@@ -48,7 +54,7 @@ export default class NStateButton extends ToggleButton {
       this._stateIndex = newIndex;
       this._updateBitmaps();
     }
-    this.setactivated(newIndex != 0);
+    this.setActivated(newIndex != 0);
   }
 
   /**
@@ -60,7 +66,7 @@ export default class NStateButton extends ToggleButton {
     // implementation of standard mouse down
     this._cycleState();
     this.updateCfgAttib(String(this._states[this._stateIndex]));
-    this.setactivated(this._states[this._stateIndex] != 0);
+    this.setActivated(this._states[this._stateIndex] != 0);
   }
 
   _cycleState() {
@@ -69,7 +75,7 @@ export default class NStateButton extends ToggleButton {
       this._stateIndex = 0;
     }
     this._updateBitmaps();
-    this.ontoggle(this._states[this._stateIndex] != 0);
+    this.onToggle(this._states[this._stateIndex] != 0);
   }
 
   /**
@@ -99,3 +105,4 @@ export default class NStateButton extends ToggleButton {
     this._div.setAttribute("data-obj-name", "NStateButton");
   }
 }
+xmlRegistry.add('nstatesbutton', NStatesButton)

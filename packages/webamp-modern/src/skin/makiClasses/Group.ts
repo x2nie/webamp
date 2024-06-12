@@ -1,11 +1,38 @@
 import * as Utils from "../../utils";
-import GuiObj, {UI} from "./GuiObj";
+import GuiObj, { UI } from "./GuiObj";
 import SystemObject from "./SystemObject";
 import Movable from "./Movable";
 import Layout from "./Layout";
 import { uiRegistry, xmlRegistry } from "@lib/registry";
+import { onMounted } from "@odoo/owl";
+import { V } from "../../maki/v";
 
 export class GroupUI extends UI {
+  setup() {
+    super.setup();
+    onMounted(() => {
+      // setTimeout(() => {
+        // debugger
+        if (this.gui.el&& this.gui.el.getBoundingClientRect) {
+          const r = this.gui.el.getBoundingClientRect();
+          const { x, y, width, height } = r;
+          console.log('resizing:',x,y,width,height)
+          this.node.emitter.trigger("onResize", [
+            V.newInt(height),
+            V.newInt(width),
+            V.newInt(x),
+            V.newInt(y),
+
+            // V.newInt(x),
+            // V.newInt(y),
+            // V.newInt(width),
+            // V.newInt(height),
+
+          ]);
+        }
+      // }, 1000);
+    });
+  }
   // static template = xml`
   // <t t-tag="props.node.tag" t-att-id="props.node.getId()" t-att-class="getCssClass()" t-att-style="style()">
   //  <Children children="props.node.children" />
@@ -35,13 +62,12 @@ export class GroupUI extends UI {
   //         });
   //         img.addEventListener("error", () => {
   //           console.warn(`cant load empty image: ${this.att.image}. ::`, url);
-            
+
   //         });
   //         // img.src = `url(${url})`
   //         img.src = url
   //       }
 
-        
   //       if (bitmap.attributes.w) style += `width:${bitmap.attributes.w}px;`;
   //       if (bitmap.attributes.h) style += `height:${bitmap.attributes.h}px;`;
   //     }
@@ -55,7 +81,7 @@ export class GroupUI extends UI {
   // }
 }
 
-uiRegistry.add('group', GroupUI)
+uiRegistry.add("group", GroupUI);
 
 // http://wiki.winamp.com/wiki/XML_GUI_Objects#.3Cgroup.2F.3E
 export default class Group extends Movable {
@@ -99,14 +125,18 @@ export default class Group extends Movable {
     return true;
   }
 
-  sendXuiParam(param, value){
+  sendXuiParam(param, value) {
     // debugger
-    const scripts = this.children.filter(c => c.tag == 'script') as SystemObject[]
+    const scripts = this.children.filter(
+      (c) => c.tag == "script"
+    ) as SystemObject[];
     // console.log('redirecting XuiParam', param, '=', value, 'cripts:', scripts.length)
-    scripts.forEach(s => s.dispatch(s, 'onSetXuiParam', [
-      {type:'STRING', value:value},
-      {type:'STRING', value:param},
-    ]))
+    scripts.forEach((s) =>
+      s.dispatch(s, "onSetXuiParam", [
+        { type: "STRING", value: value },
+        { type: "STRING", value: param },
+      ])
+    );
   }
   // setXmlParam(key, value){
   //   console.log('receiving XmlParam:',key, '=', value)
@@ -176,8 +206,8 @@ export default class Group extends Movable {
   getParentLayout(): Layout {
     let obj: Group = this;
     while (obj) {
-      if (obj.tag == 'layout') {
-        return obj as Layout
+      if (obj.tag == "layout") {
+        return obj as Layout;
       }
       obj = obj.parent;
     }
@@ -206,8 +236,8 @@ export default class Group extends Movable {
 
   // This shadows `getwidth()` on GuiObj
   getWidth0(): number {
-    if(this.el){
-      return (this.el as unknown as HTMLElement).offsetWidth
+    if (this.el) {
+      return (this.el as unknown as HTMLElement).offsetWidth;
     }
     return 76;
     if (this._autowidthsource) {
@@ -374,4 +404,4 @@ export default class Group extends Movable {
   }
 }
 
-xmlRegistry.add('group', Group)
+xmlRegistry.add("group", Group);

@@ -1797,7 +1797,7 @@ export default class SystemObject extends BaseObject {
     return Math.random() * max;
   }
 
-  oneqfreqchanged(isiso: number) {}
+  onEqFreqChanged(isiso: number) {}
 
   getsonginfotext(): string {
     const track = this._currentTrack();
@@ -1816,11 +1816,11 @@ export default class SystemObject extends BaseObject {
     return this.getplayitemstring();
   }
 
-  lockui() {
+  lockUI() {
     //TODO:
   }
 
-  unlockui() {
+  unlockUI() {
     //TODO:
   }
 

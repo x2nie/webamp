@@ -735,17 +735,17 @@ export default class GuiObj extends XmlObj {
     const _ = this["_" + param];
     return _ != null ? _.toString() : null;
   }
-  getguiw(): number {
-    return this._w;
+  getGuiW(): number {
+    return this.attributes.w;
   }
-  getguih(): number {
-    return this._h;
+  getGuiH(): number {
+    return this.attributes.h;
   }
-  getguix(): number {
-    return this._x;
+  getGuiX(): number {
+    return this.attributes.x;
   }
-  getguiy(): number {
-    return this._y;
+  getGuiY(): number {
+    return this.attributes.y;
   }
   getguirelatw(): number {
     return this._relatw == "1" ? 1 : 0;
@@ -958,7 +958,7 @@ export default class GuiObj extends XmlObj {
    *
    * @param  w   The target width of the object.
    */
-  settargetw(w: number) {
+  setTargetW(w: number) {
     this._targetWidth = w;
   }
 
@@ -967,7 +967,7 @@ export default class GuiObj extends XmlObj {
    *
    * @param  h   The target height of the object.
    */
-  settargeth(h: number) {
+  setTargetH(h: number) {
     this._targetHeight = h;
   }
 
@@ -978,7 +978,7 @@ export default class GuiObj extends XmlObj {
    *
    * @param  alpha   The target alpha value.
    */
-  settargeta(alpha: number) {
+  setTargetA(alpha: number) {
     this._targetAlpha = alpha;
   }
 

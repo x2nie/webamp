@@ -25,7 +25,8 @@ export const value2lower = [
   "thumb",
   "downthumb",
   "notfoundimage", // ALbumArt
-  "gammagroup",
+  "gammagroup", // <color>
+  "next prev normal hover down".split(' '),  // <menu>
 ];
 
 export const value2number = [
@@ -59,6 +60,7 @@ export const value2number = [
   "hspacing",
   "vspacing",
   "timecolonwidth",
+  "padtitleright", "padtitleleft", // wasabi:titlebar
   //bool
   "ghost",
   "move",
