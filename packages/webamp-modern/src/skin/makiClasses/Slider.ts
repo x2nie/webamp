@@ -302,7 +302,7 @@ export default class Slider extends GuiObj {
 
   // extern Int Slider.getPosition();
   getPosition(): number {
-    return this.attributes.position * this._high;
+    return this.attributes.position * this.attributes.h;
   }
 
   /**
@@ -310,7 +310,7 @@ export default class Slider extends GuiObj {
    * @param newpos 0..MAX
    */
   setposition(newpos: number) {
-    this._position = newpos / this._high;
+    this.attributes.position = newpos / this.attributes.h;
     this._renderThumbPosition();
     this.doSetPosition(this.getPosition());
   }
@@ -327,7 +327,7 @@ export default class Slider extends GuiObj {
     // );
   }
   doSetPosition(newPos: number) {
-    this.onsetposition(newPos);
+    this.onSetPosition(newPos);
     if (this._actionHandler != null) {
       this._actionHandler.onsetposition(newPos);
     }

@@ -65,7 +65,7 @@ export default class TimeFace extends Text {
   }
 
   _renderDigit(font: BitmapFont) {
-    let text = this.gettext();
+    let text = this.getText();
     if (text != null) {
       // text = text.replace(":", "");
       // if (text.length < 4) {

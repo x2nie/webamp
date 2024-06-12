@@ -392,7 +392,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       this._displayValue = newValue;
       this._renderText();
       this._uiRoot.vm.dispatch(this, "ontextchanged", [
-        { type: "STRING", value: this.gettext() },
+        { type: "STRING", value: this.getText() },
       ]);
     }
   }
@@ -421,19 +421,19 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   ontextchanged(s: string) {
     this._uiRoot.vm.dispatch(this, "ontextchanged", [
-      { type: "STRING", value: this.gettext() },
+      { type: "STRING", value: this.getText() },
     ]);
   }
 
-  gettext(): string {
+  getText(): string {
     if (this._alternateText) {
       // alternate text is used in Winamp3 to show a hint of a Play button while mouse down.
       return this._alternateText;
     }
     if ((this._text || "").startsWith(":") && this._drawn) {
-      const layout = this.getparentlayout();
+      const layout = this.getParentLayout();
       if (layout) {
-        return layout.getcontainer()._name || this._text;
+        return layout.getContainer()._name || this._text;
       }
     }
     if (this._display) {
@@ -550,7 +550,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
       // this._textWrapper.innerHTML = '<pre>'+ this.gettext().replace(/[\n\r]/g,'<br/>') + '</pre>';
       // this._textWrapper.innerHTML = '<div>'+ this.gettext().replace(/[\n]/g,'<br/>') + '</div>';
       // this._textWrapper.innerHTML = '<pre>'+ this.gettext() + '</pre>';
-      this._textWrapper.innerText = this.gettext();
+      this._textWrapper.innerText = this.getText();
       //? workaround of titlebar.text
       // this._div.style.lineHeight = this._div.style.height;
     }
@@ -573,8 +573,8 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     removeAllChildNodes(this._textWrapper);
     this._div.style.whiteSpace = "nowrap";
     const useColonWidth = this._useColonWidth();
-    if (this.gettext() != null) {
-      for (const char of this.gettext().split("")) {
+    if (this.getText() != null) {
+      for (const char of this.getText().split("")) {
         const charNode = font.renderLetter(char);
         // TODO: This is quite hacky.
         if (char === ":" && useColonWidth) {
@@ -589,7 +589,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
   _renderBitmapFont1(font: BitmapFont) {
     this._div.style.whiteSpace = "nowrap";
     let s = "";
-    for (const char of this.gettext().split("")) {
+    for (const char of this.getText().split("")) {
       s += `<i>${char}</i>`;
     }
     this._div.innerHTML = s;
@@ -633,7 +633,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
 
   _getBitmapFontTextWidth(font: BitmapFont): number {
     const charWidth = font._charWidth;
-    return this.gettext().length * charWidth + this._paddingX * 2;
+    return this.getText().length * charWidth + this._paddingX * 2;
   }
 
   _getTrueTypeTextWidth(font: TrueTypeFont): number {
@@ -651,7 +651,7 @@ offsety - (int) Extra pixels to be added to or subtracted from the calculated x 
     context.font = `${this._fontSize || 11}px ${
       (font && font.getFontFamily()) || "Arial"
     }`;
-    const metrics = context.measureText(this.gettext());
+    const metrics = context.measureText(this.getText());
     return metrics.width + self._paddingX * 2;
   }
 
