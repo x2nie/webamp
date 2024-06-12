@@ -139,12 +139,12 @@ export class UI extends Component {
     this.node.emitter.trigger("onLeftClick");
   }
   handleMouseEnter(ev:MouseEvent){
-    console.log('mouse-enter...')
+    // console.log('mouse-enter...')
     if(this.node.emitter)
     this.node.emitter.trigger("onEnterArea");
   }
   handleMouseLeave(ev:MouseEvent){
-    console.log('mouse-out...')
+    // console.log('mouse-out...')
     if(this.node.emitter)
     this.node.emitter.trigger("onLeaveArea");
   }
