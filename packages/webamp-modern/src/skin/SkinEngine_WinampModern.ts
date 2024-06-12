@@ -34,6 +34,11 @@ export class WinampModern extends SkinEngine {
   _script: { [file: string]: ParsedMaki } = {};
   _containers: XmlElement[] = [];
 
+  // temporary missing things
+  _missing_groupdef: XmlElement[] = [];
+  _missing_xuitag: XmlElement[] = [];
+  _missing_tag: XmlElement[] = [];
+
   setEnv(env: { [key: string]: any }) {
     this._env = env;
     // this._audio = env.audio
@@ -49,8 +54,8 @@ export class WinampModern extends SkinEngine {
     return this._env.playlist;
   }
 
-  image(file:string) : HTMLImageElement {
-    return this._image[file].img
+  image(file: string): HTMLImageElement {
+    return this._image[file].img;
   }
 
   async parseSkin() {
@@ -70,7 +75,14 @@ export class WinampModern extends SkinEngine {
     await this.loadRes();
     // await this.loadBitmaps();
     // await this.loadScripts();
-    this.attachGroupChild();
+    // this.attachGroupChild();
+    if (this._missing_groupdef.length)
+      console.warn("missing groupdef:", this._missing_groupdef);
+    if (this._missing_xuitag.length)
+      console.warn(
+        "missing xuitag:",
+        this._missing_xuitag.map((x) => `${x.attributes._xuitag}#${x.id}`)
+      );
 
     // debugger
     this._env.ui.bitmapFonts = markRaw(this._bitmapFont); // ractive not needed
@@ -83,7 +95,7 @@ export class WinampModern extends SkinEngine {
     return await Promise.all([
       this.loadBitmaps(),
       this.loadScripts(),
-      // this.attachGroupChild(),
+      this.attachGroupChild(),
     ]);
   }
 
@@ -152,7 +164,7 @@ export class WinampModern extends SkinEngine {
       const parsedScript = parseMaki(scriptContents, file);
       this._script[file] = parsedScript;
     };
-    return await Promise.all(Object.keys(this._script).map(loadScript));
+    return Promise.all(Object.keys(this._script).map(loadScript));
   }
 
   resolveTextFont() {
@@ -165,28 +177,10 @@ export class WinampModern extends SkinEngine {
       }
     );
   }
+  /*
   async resolveXui() {
     const Xui = xmlRegistry.get("xui", XmlElement);
-    /*
-    this._xuiBeta.forEach((el) => {
-      const groupdef = this._xuidef[el.tag];
-      if (groupdef) {
-        // debugger
-        el.attributes.xuitag = el.tag
-        el.tag = "xui";
-        el = el.cast(Xui);
-        //? don't do populate here, 
-        //? it may have another unresolved xui as children/ grandchild
-        // if (!el.attributes.content) {
-          // el.merge(groupdef.clone());
-        // }
-        // el.attributes.instance_id = el.id
-        // el.attributes.id = groupdef.id
-        // this._groupBeta.push(el)
-      }
-    });
-    */
-
+    
     const scanXui = (el: XmlElement) => {
       //recursive, child first
       for (const child of el.children) {
@@ -227,6 +221,7 @@ export class WinampModern extends SkinEngine {
     };
     this._xuiBeta.forEach(loadXui);
   }
+  */
 
   populateGroupDef(def: XmlElement) {
     if (def.attributes.populated) return;
@@ -285,18 +280,18 @@ export class WinampModern extends SkinEngine {
         group.merge(groupdef.clone());
         if (group.id) {
           // this._groupBeta.push(group);
-          this._populateGroup(group)
+          this._populateGroup(group);
         }
       } else {
-        this._xuiBeta.push(group)
+        // this._xuiBeta.push(group)
+        this._missing_xuitag.push(group);
       }
+    } else if (group.tag == "group") {
+      this._populateGroup(group);
     }
-    else if (group.tag == "group") {
-      this._populateGroup(group)
-    } 
   }
 
-  attachGroupChild() {
+  async attachGroupChild() {
     const loadGroup = (group: XmlElement) => {
       this.populateGroup(group);
       // const groupdef = this._groupdef[group.id];
@@ -315,13 +310,13 @@ export class WinampModern extends SkinEngine {
     this._groupBeta = [];
   }
 
-  async attachXuiChild() {
+  /*async attachXuiChild() {
     const loadGroup = async (group: XmlElement) => {
       this.populateGroup(group);
     };
     await Promise.all(this._groupBeta.map(loadGroup));
     this._groupBeta = [];
-  }
+  }*/
 
   async traverseChild(node: XmlElement, parent: any, path: string[] = []) {
     const tag = node.tag;
@@ -374,7 +369,7 @@ export class WinampModern extends SkinEngine {
         // debugger;
         break;
       default:
-        if (tag.includes(':')) {
+        if (tag.includes(":")) {
           node.attributes._xuitag = tag;
           node.tag = "xui";
           this._groupBeta.push(node);
@@ -562,7 +557,7 @@ export class WinampModern extends SkinEngine {
   }
 
   async component(node: XmlElement) {
-    console.warn('--component:',node)
+    console.warn("--component:", node);
     // this._bitmapFont[node.id] = node.detach();
     const alias = guid2alias(node.attributes.param.toLowerCase());
     switch (alias) {
@@ -663,7 +658,11 @@ export class WinampModern extends SkinEngine {
           this.playlist.appendFolder(true);
         }
         break;
-    }
+      case "switch":
+        debugger
+        // this.playlist.previous();
+        break;
+      }
   }
 }
 
