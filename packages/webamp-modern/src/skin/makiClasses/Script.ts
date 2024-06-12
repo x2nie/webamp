@@ -88,7 +88,9 @@ export class SystemUI extends Component {
   }
   unsubscribe() {
     this.subscription.forEach(({ node, event, callback }) => {
-      node.emitter.off(event, callback);
+      // if(!node.emitter) debugger
+      // var offset==1 :: has no emitter?
+      node.emitter && node.emitter.off(event, callback);
     });
   }
 
