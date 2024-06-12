@@ -23,21 +23,30 @@ export class WinampModern extends SkinEngine {
   // }
   _env: { [key: string]: any };
   _groupdef: { [key: string]: XmlElement } = {};
-  _groupBeta: XmlElement[] = []; // children needed. it is group that groupdef may unparsed
   _xuidef: { [key: string]: XmlElement } = {};
-  _xuiBeta: XmlElement[] = []; // children needed. it is a wasabi:group that groupdef may unparsed
-  _unknownTag: XmlElement[] = []; // may later cast'ed with xuitag
+  
+  //? persistent. even when zip is unloaded
   _image: { [file: string]: { img: HTMLImageElement; url: string } } = {};
   _bitmap: { [key: string]: XmlElement } = {};
+  _color: { [key: string]: XmlElement } = {};
+  _gammaset: XmlElement[]  = [];
   _bitmapFont: { [key: string]: XmlElement } = {};
-  _textBeta: XmlElement[] = []; // for later detect it's font-type:
   _script: { [file: string]: ParsedMaki } = {};
+  
+  // beta means: parsed is not enough, need more process
+  _groupBeta: XmlElement[] = []; // children needed. it is group that groupdef may unparsed
+  _xuiBeta: XmlElement[] = []; // children needed. it is a wasabi:group that groupdef may unparsed
+  _textBeta: XmlElement[] = []; // for later detect it's font-type:
+  
+  // should be removed soon.
   _containers: XmlElement[] = [];
 
   // temporary missing things
   _missing_groupdef: XmlElement[] = [];
   _missing_xuitag: XmlElement[] = [];
   _missing_tag: XmlElement[] = [];
+  _missing_bitmap: string[] = [];
+  _unknownTag: XmlElement[] = []; // may later cast'ed with xuitag
 
   setEnv(env: { [key: string]: any }) {
     this._env = env;
@@ -77,7 +86,7 @@ export class WinampModern extends SkinEngine {
     // await this.loadScripts();
     // this.attachGroupChild();
     if (this._missing_groupdef.length)
-      console.warn("missing groupdef:", this._missing_groupdef);
+      console.warn("missing groupdef:", this._missing_groupdef.map(x => x.id));
     if (this._missing_xuitag.length)
       console.warn(
         "missing xuitag:",
@@ -238,6 +247,7 @@ export class WinampModern extends SkinEngine {
     const groupdef = this._groupdef[group.id];
     // const groupdef = this._groupdef[group.id] || this._xuidef[group.id];
     if (!groupdef) {
+      this._missing_groupdef.push(group)
       console.log("failed to get groupdef:", group.id);
     } else {
       if (!groupdef.attributes.populated) {
@@ -357,10 +367,13 @@ export class WinampModern extends SkinEngine {
         return this.bitmap(node, parent, path);
       case "bitmapfont":
         return await this.bitmapFont(node);
-      // case "color":
-      //   return await this.color(node, parent);
+      case "color":
+        this._color[node.id] = node
+        node.detach(); 
+        break;
       case "gammaset":
-        node.detach(); //? trial to cleanup, to see what the rest
+        this._gammaset.push(node)
+        node.detach(); 
         break;
       case "text":
         this._textBeta.push(node);
