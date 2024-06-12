@@ -214,7 +214,7 @@ export class UI extends Component {
     return style;
   }
   bgStyle(bitmap_id: any): string {
-    if (bitmap_id == "wasabi.frame.top") {
+    if (this.att.id == "playeroverlay") {
       // debugger
     }
     let style = "";
@@ -1050,6 +1050,13 @@ export default class GuiObj extends XmlObj {
         window.requestAnimationFrame(update);
       } else {
         this._goingToTarget = false;
+        //? assuring target reached
+        for (const [key, targetKey, renderKey] of pairs) {
+          const target = this[targetKey];
+          if (target != null) {
+            this.attributes[key] = target
+          }
+        }
         // TODO: Clear targets?
         this.onTargetReached();
       }
