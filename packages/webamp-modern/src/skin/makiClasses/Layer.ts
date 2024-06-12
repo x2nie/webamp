@@ -39,7 +39,8 @@ export class LayerUI extends UI {
 
   style(): string {
     let style = super.style();
-    if(this.att.clippath) style += `clip-path: ${this.att.clippath};`
+    const {clippath} = this.att;
+    if(clippath==1 || clippath==-2 ) style += `clip-path: ${clippath};`
     return style;
   }
 }
