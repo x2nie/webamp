@@ -121,6 +121,20 @@ export class XmlElement {
     return root
   }
 
+  // * get nearest parent with tag
+  nearest(tag:string): XmlElement {
+    let node:XmlElement = this;
+    while (true){
+      if(node.tag == tag)
+        return node;
+
+      if(!node.parent)
+        return null;
+      
+      node = node.parent
+    }
+  }
+
   get id(): string {
     return String(this.attributes.id || "");
   }

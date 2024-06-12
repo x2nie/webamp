@@ -659,8 +659,9 @@ export class WinampModern extends SkinEngine {
         }
         break;
       case "switch":
-        debugger
-        // this.playlist.previous();
+        const container = sender.nearest('container')
+        //@ts-ignore
+        container.switchToLayout(param);
         break;
       }
   }
