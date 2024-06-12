@@ -10,7 +10,7 @@ import Config from "./skin/makiClasses/Config";
 import WinampConfig from "./skin/makiClasses/WinampConfig";
 
 const templates = `<odoo>
-  <t t-name="childs" t-foreach="nodeChildren()" t-as="child" t-key="child.attributes.oid">
+  <t t-name="childs" t-foreach="nodeChildren()" t-as="child" t-key="child.oid">
       <t t-component="lookupTag(child.tag)" t-props="{node:child}" />
   </t>
 

@@ -86,6 +86,10 @@ const forbidden_keys = {
   // default_h: 'h',
 };
 
+const preseved_id_tag = [
+  'gammaset', // let id as is:: `<gammaset id="Debian" ...`
+]
+
 let seq_id = 1;
 
 /**
@@ -96,6 +100,8 @@ export class XmlElement {
    * Name of this element.
    */
   tag: string;
+
+  oid: number; //for render/rerender identify
 
   /**
    * Attributes on this element.
@@ -152,10 +158,11 @@ export class XmlElement {
     attributes: { [attrName: string]: string | any } = Object.create(null),
     children: Array<XmlElement> = []
   ) {
+    this.oid= ++seq_id;
     // super()
     this.tag = tag.toLowerCase();
     //transform, as needed
-    this.attributes = {oid: `${++seq_id}`};
+    this.attributes = {};
     for (let [k, v] of Object.entries(attributes)) {
       this.setXmlParam(k, v)
       // if (k in forbidden_keys) {
@@ -169,6 +176,9 @@ export class XmlElement {
       // } else {
       //   this.attributes[k] = v;
       // }
+    }
+    if(preseved_id_tag.includes(this.tag)){
+      this.attributes.id = attributes.id
     }
 
     // this.attributes = attributes;
@@ -234,7 +244,9 @@ export class XmlElement {
     // return new XmlElement(this.name, attributesClone, childrenClone);
     // Membuat instance baru dari constructor yang sama dengan yang asli
     const Klass = this.constructor as typeof XmlElement;
-    return new Klass(this.tag, attributesClone, childrenClone);
+    const cloning =  new Klass(this.tag, attributesClone, childrenClone);
+    // cloning.oid = ++seq_id
+    return cloning;
   }
 
   /**
